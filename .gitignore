@@ -7,3 +7,12 @@ node_modules
 .env
 dist
 *.sqlite
+
+# VSCode
+.vscode
+
+# VSCodeCounter
+.VSCodeCounter
+
+# secret folder
+secrets
