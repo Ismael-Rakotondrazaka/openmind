@@ -1,0 +1,5 @@
+export const passwordConfig = {
+  PASSWORD_RESET_TOKEN_VALIDITY: 3600000, // in ms
+  PASSWORD_RESET_TOKEN_SIZE: 30,
+  PASSWORD_MIN_LENGTH: 8,
+};
