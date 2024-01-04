@@ -16,3 +16,4 @@ dist
 
 # secret folder
 secrets
+GCSServiceAccount.json

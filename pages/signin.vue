@@ -2,9 +2,7 @@
   <div class="flex items-center justify-center h-screen p-5 bg-sky-50">
     <form class="w-full max-w-lg" @submit.prevent="onSubmit">
       <PrimeCard>
-        <template #title>
-          Sign In to Your Account
-        </template>
+        <template #title> Sign In to Your Account </template>
 
         <template #subtitle>
           Sign in to access your account and enjoy personalized features. Enter

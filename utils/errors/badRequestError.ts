@@ -11,17 +11,20 @@ export type BadRequestError<T> = {
 
 export const isBadRequestError = <T>(
   error: unknown,
-): error is BadRequestError<T> =>
+): error is BadRequestError<T> => {
+  return (
     typeof error === "object" &&
-  error !== null &&
-  "errorMessage" in error &&
-  typeof (error as any).errorMessage !== "undefined" &&
-  "message" in error &&
-  typeof (error as any).message === "string" &&
-  "statusCode" in error &&
-  (error as any).statusCode === StatusCodes.BAD_REQUEST &&
-  "statusMessage" in error &&
-  typeof (error as any).statusMessage === "string";
+    error !== null &&
+    "errorMessage" in error &&
+    typeof (error as any).errorMessage !== "undefined" &&
+    "message" in error &&
+    typeof (error as any).message === "string" &&
+    "statusCode" in error &&
+    (error as any).statusCode === StatusCodes.BAD_REQUEST &&
+    "statusMessage" in error &&
+    typeof (error as any).statusMessage === "string"
+  );
+};
 
 export const createBadRequestError = <T>(
   event: H3Event,

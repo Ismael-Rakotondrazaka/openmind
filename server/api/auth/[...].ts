@@ -5,7 +5,7 @@ import { prisma } from "~/server/middleware/0.prisma";
 import { storeLoginBodySchema } from "~/utils";
 
 export default NuxtAuthHandler({
-  secret: process.env.AUTH_SECRET,
+  secret: useRuntimeConfig().authSecret,
   pages: {
     signIn: "/signin",
   },
@@ -71,7 +71,7 @@ export default NuxtAuthHandler({
     strategy: "jwt",
   },
   callbacks: {
-    session ({ session, token }) {
+    session: ({ session, token }) => {
       // TODO make type accessible to front end
       type SessionUserData = {
         id: number;
@@ -84,7 +84,7 @@ export default NuxtAuthHandler({
 
       return session;
     },
-    jwt ({ token, user, account }) {
+    jwt: ({ token, user, account }) => {
       if (account && user) {
         return {
           ...token,

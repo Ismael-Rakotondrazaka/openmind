@@ -15,6 +15,10 @@ export default defineNuxtConfig({
     smtpUser: "",
     smtpPassword: "",
     informationEmail: "",
+    bucketName: "",
+    bucketEntryPoint: "",
+    signedMutationUrlLifetime: 0,
+    authSecret: "",
     public: {
       appUrl: "http://localhost:3000",
     },
@@ -35,17 +39,8 @@ export default defineNuxtConfig({
     },
     components: {
       prefix: "Prime",
-      include: [
-        "Button",
-        "InputText",
-        "Toast",
-        "Card",
-        "Password",
-        "InputGroup",
-        "InputGroupAddon",
-        "Dialog",
-        "FileUpload",
-      ],
+      include: "*",
+      exclude: ["Galleria", "Chart"],
     },
   },
   css: [

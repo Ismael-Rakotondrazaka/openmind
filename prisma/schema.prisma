@@ -23,8 +23,9 @@ model User {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @default(now())
   deletedAt          DateTime?
-  activationToken  ActivationToken?
+  activationToken    ActivationToken?
   passwordResetToken PasswordResetToken?
+  articles           Article[]
 }
 
 enum Role {
@@ -47,7 +48,16 @@ model ActivationToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Example {
-  id      String @id @default(uuid())
-  details String
+model Article {
+  id        Int       @id @default(autoincrement())
+  title     String
+  slug      String
+  userId    Int
+  summary   String?   @db.Text
+  content   String    @db.Text
+  isVisible Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deletedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id])
 }
