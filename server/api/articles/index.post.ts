@@ -12,6 +12,7 @@ import {
   articleConfig,
 } from "~/utils";
 import {
+  createArticleId,
   formatArticleContent,
   getAuthUser,
   storeArticleBodySchema,
@@ -54,7 +55,8 @@ export default defineEventHandler(
       slug += `-${createRandomString(articleConfig.SLUG_SUFFIX_LENGTH)}`;
     }
 
-    const now = new Date();
+    const articleId: string = createArticleId();
+    const now: Date = new Date();
 
     let summary: string | null | undefined = storeArticleBodySPR.data.summary;
     if (summary !== null && summary !== undefined) {
@@ -63,7 +65,7 @@ export default defineEventHandler(
 
     const { content, filesToUpload } = formatArticleContent(
       storeArticleBodySPR.data.content,
-      authUser.id,
+      articleId,
     );
 
     Promise.all(filesToUpload.map(uploadFileFromBase64));
@@ -72,6 +74,7 @@ export default defineEventHandler(
       user: Omit<User, "password" | "email" | "emailVerifiedAt">;
     } = await event.context.prisma.article.create({
       data: {
+        id: articleId,
         content,
         title,
         slug,

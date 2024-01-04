@@ -1,4 +1,5 @@
 export const articleConfig = {
+  ID_LENGTH: 21,
   TITLE_MIN_LENGTH: 5,
   TITLE_MAX_LENGTH: 70,
   SUMMARY_MIN_LENGTH: 5,

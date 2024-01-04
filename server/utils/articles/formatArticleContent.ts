@@ -4,7 +4,7 @@ import { articleImageConfig } from "~/utils";
 
 export const formatArticleContent = (
   content: string,
-  userId: number,
+  articleId: string,
 ): {
   content: string;
   filesToUpload: {
@@ -56,7 +56,7 @@ export const formatArticleContent = (
 
     const { path, url } = formatArticleImagePath({
       mimeType,
-      userId,
+      articleId,
     });
 
     imagesToUpload.push({

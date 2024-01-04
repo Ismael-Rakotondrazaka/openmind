@@ -2,11 +2,11 @@ import { formatFilename } from "./formatFileName";
 
 export const formatArticleImagePath = ({
   filename,
-  userId,
+  articleId,
   mimeType,
 }: {
   filename?: string;
-  userId: number;
+  articleId: string;
   mimeType: string;
 }): { path: string; filename: string; url: string } => {
   const runtimeConfig = useRuntimeConfig();
@@ -16,7 +16,7 @@ export const formatArticleImagePath = ({
     mimeType,
   });
 
-  const path: string = `public/users/${userId}/articles/${formattedFilename}`;
+  const path: string = `public/articles/${articleId}/${formattedFilename}`;
   return {
     path,
     filename: formattedFilename,
