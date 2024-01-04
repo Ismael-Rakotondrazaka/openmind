@@ -11,7 +11,7 @@ export const updateArticleParamSchema = z.object({
   slug: z.string().trim(),
 });
 
-export type updateArticleParam = z.infer<typeof updateArticleParamSchema>;
+export type UpdateArticleParam = z.infer<typeof updateArticleParamSchema>;
 
 /* -------------------------------------------------------------------------- */
 /*                             Update article body                            */
