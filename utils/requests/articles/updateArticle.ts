@@ -3,6 +3,20 @@ import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
 
+/* -------------------------------------------------------------------------- */
+/*                            Update article param                            */
+/* -------------------------------------------------------------------------- */
+
+export const updateArticleParamSchema = z.object({
+  slug: z.string().trim(),
+});
+
+export type updateArticleParam = z.infer<typeof updateArticleParamSchema>;
+
+/* -------------------------------------------------------------------------- */
+/*                             Update article body                            */
+/* -------------------------------------------------------------------------- */
+
 export const updateArticleBodyBaseSchema = z
   .object({
     title: z
