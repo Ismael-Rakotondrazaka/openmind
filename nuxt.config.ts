@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     "nuxt-primevue",
     "@sidebase/nuxt-auth",
     "@vee-validate/nuxt",
+    "nuxt-typed-router",
   ],
   typescript: {
     shim: false,
