@@ -114,4 +114,5 @@ export type UpdateArticleData = {
 export type UpdateArticleError =
   | BadRequestError<UpdateArticleBodyPEM>
   | UnauthorizedError
+  | ForbiddenError
   | NotFoundError;
