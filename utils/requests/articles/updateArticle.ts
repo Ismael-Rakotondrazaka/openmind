@@ -60,7 +60,7 @@ export const updateArticleBodyBaseSchema = z
   })
   .partial();
 
-export const updateArticleBodyClientSchema = updateArticleBodyBaseSchema.and(
+export const updateArticleBodyClientSchema = updateArticleBodyBaseSchema.merge(
   z
     .object({
       content: z

@@ -44,7 +44,7 @@ export const storeArticleBodyBaseSchema = z.object({
   isVisible: z.boolean().default(articleConfig.IS_VISIBLE_DEFAULT_VALUE),
 });
 
-export const storeArticleBodyClientSchema = storeArticleBodyBaseSchema.and(
+export const storeArticleBodyClientSchema = storeArticleBodyBaseSchema.merge(
   z.object({
     content: z
       .string()

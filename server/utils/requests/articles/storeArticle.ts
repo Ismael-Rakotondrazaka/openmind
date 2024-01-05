@@ -6,7 +6,7 @@ import {
   countHtmlAsTextLength,
 } from "~/utils";
 
-export const storeArticleBodySchema = storeArticleBodyBaseSchema.and(
+export const storeArticleBodySchema = storeArticleBodyBaseSchema.merge(
   z.object({
     content: z
       .string()
