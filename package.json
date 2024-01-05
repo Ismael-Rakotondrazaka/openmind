@@ -59,6 +59,7 @@
     "xss": "^1.0.14",
     "zod": "^3.22.4",
     "zod_utilz": "^0.7.3",
-    "zod-form-data": "^2.0.2"
+    "zod-form-data": "^2.0.2",
+    "zod-prisma-types": "^3.1.6"
   }
 }
