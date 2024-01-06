@@ -63,6 +63,25 @@ export default defineEventHandler(
       });
     }
 
+    // Check if one change is made
+    if (
+      !(
+        (updateArticleBodySPR.data.content !== undefined &&
+          updateArticleBodySPR.data.content !== article.content) ||
+        (updateArticleBodySPR.data.title !== undefined &&
+          updateArticleBodySPR.data.title !== article.title) ||
+        (updateArticleBodySPR.data.summary !== undefined &&
+          updateArticleBodySPR.data.summary !== article.summary) ||
+        (updateArticleBodySPR.data.isVisible !== undefined &&
+          updateArticleBodySPR.data.isVisible !== article.isVisible)
+      )
+    ) {
+      return createBadRequestError(event, {
+        message: "At least one change is required.",
+        errorMessage: {},
+      });
+    }
+
     let newTitle: string | undefined;
     if (updateArticleBodySPR.data.title !== undefined) {
       newTitle = sanitize(updateArticleBodySPR.data.title);
