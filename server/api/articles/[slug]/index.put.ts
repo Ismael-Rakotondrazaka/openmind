@@ -141,7 +141,9 @@ export default defineEventHandler(
 
       newContent = content;
 
-      deleteFolder(`public/articles/${article.id}`).finally(() =>
+      deleteFolder({
+        folderPath: `public/articles/${article.id}`,
+      }).finally(() =>
         Promise.allSettled(filesToUpload.map(uploadFileFromBase64)),
       );
     }
