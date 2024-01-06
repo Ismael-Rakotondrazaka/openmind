@@ -83,7 +83,10 @@ export default defineEventHandler(
     }
 
     let newTitle: string | undefined;
-    if (updateArticleBodySPR.data.title !== undefined) {
+    if (
+      updateArticleBodySPR.data.title !== undefined &&
+      updateArticleBodySPR.data.title !== article.title
+    ) {
       newTitle = sanitize(updateArticleBodySPR.data.title);
     }
 
@@ -106,19 +109,31 @@ export default defineEventHandler(
 
     const now: Date = new Date();
 
-    let newSummary: string | null | undefined =
-      updateArticleBodySPR.data.summary;
-    if (newSummary !== null && newSummary !== undefined) {
-      newSummary = sanitize(newSummary);
+    let newSummary: string | null | undefined;
+    if (
+      updateArticleBodySPR.data.summary !== undefined &&
+      updateArticleBodySPR.data.summary !== article.summary
+    ) {
+      if (updateArticleBodySPR.data.summary === null) {
+        newSummary = updateArticleBodySPR.data.summary;
+      } else {
+        newSummary = sanitize(updateArticleBodySPR.data.summary);
+      }
     }
 
     let newIsVisible: boolean | undefined;
-    if (updateArticleBodySPR.data.isVisible !== undefined) {
+    if (
+      updateArticleBodySPR.data.isVisible !== undefined &&
+      updateArticleBodySPR.data.isVisible !== article.isVisible
+    ) {
       newIsVisible = updateArticleBodySPR.data.isVisible;
     }
 
     let newContent: string | undefined;
-    if (updateArticleBodySPR.data.content !== undefined) {
+    if (
+      updateArticleBodySPR.data.content !== undefined &&
+      updateArticleBodySPR.data.content !== article.content
+    ) {
       const { content, filesToUpload } = formatArticleContent(
         updateArticleBodySPR.data.content,
         article.id,
