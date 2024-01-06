@@ -2,6 +2,8 @@ import type { Article, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
+import { articleSchema } from "~/utils/requests/articles/model";
+import { userSchema } from "~/utils/requests/users/model";
 
 /* -------------------------------------------------------------------------- */
 /*                            Update article param                            */
@@ -104,6 +106,18 @@ export const updateArticleBodyClientSchema = updateArticleBodyBaseSchema.merge(
 export type UpdateArticleBody = z.infer<typeof updateArticleBodyClientSchema>;
 
 export type UpdateArticleBodyPEM = RequestErrorMessage<UpdateArticleBody>;
+
+/* -------------------------------------------------------------------------- */
+/*                             Update article data                            */
+/* -------------------------------------------------------------------------- */
+
+export const updateArticleDataSchema = z.object({
+  article: articleSchema.and(
+    z.object({
+      user: userSchema,
+    }),
+  ),
+});
 
 export type UpdateArticleData = {
   article: Article & {
