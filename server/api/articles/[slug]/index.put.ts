@@ -1,6 +1,5 @@
 import type { SafeParseError, SafeParseReturnType } from "zod";
 import type { Article, User } from "@prisma/client";
-import slugify from "slugify";
 import {
   type UpdateArticleData,
   type UpdateArticleError,
@@ -17,6 +16,7 @@ import {
   getAuthUser,
   safeParseRequestBodyAs,
   updateArticleBodySchema,
+  slugify,
 } from "~/server/utils";
 
 export default defineEventHandler(

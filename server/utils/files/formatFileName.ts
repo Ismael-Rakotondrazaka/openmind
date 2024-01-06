@@ -1,7 +1,7 @@
-import slugify from "slugify";
 import mime from "mime";
 import { extractNamePart } from "./extractNamePart";
 import { fileConfig } from "~/utils";
+import { slugify } from "~/server/utils/strings";
 
 export const formatFilename = ({
   filename,
@@ -18,9 +18,10 @@ export const formatFilename = ({
   if (filename !== undefined) {
     const filenamePart = extractNamePart(filename);
 
-    formattedFilename = `${slugify(filenamePart, {
-      lower: true,
-    }).slice(0, fileConfig.NAME_MAX_LENGTH)}-${suffix}`;
+    formattedFilename = `${slugify(filenamePart).slice(
+      0,
+      fileConfig.NAME_MAX_LENGTH,
+    )}-${suffix}`;
   } else {
     formattedFilename = `-${suffix}`;
   }

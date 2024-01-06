@@ -1,7 +1,6 @@
 import { zfd } from "zod-form-data";
 import type { SafeParseError } from "zod";
 import type { Article, User } from "@prisma/client";
-import slugify from "slugify";
 import {
   type StoreArticleData,
   type StoreArticleError,
@@ -15,6 +14,7 @@ import {
   createArticleId,
   formatArticleContent,
   getAuthUser,
+  slugify,
   storeArticleBodySchema,
 } from "~/server/utils";
 
