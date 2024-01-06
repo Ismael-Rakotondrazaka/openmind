@@ -1,7 +1,7 @@
 import type { File } from "@google-cloud/storage";
 import { bucket } from "./bucket";
 
-export const deleteFolder = async ({
+export const deleteFilesInFolder = async ({
   folderPath,
   excludes = [],
 }: {
@@ -14,7 +14,15 @@ export const deleteFolder = async ({
 
   return Promise.allSettled(
     files
-      .filter((file: File) => !excludes.includes(file.publicUrl()))
+      .filter((file: File): boolean => {
+        const publicUrl: string = file.publicUrl();
+
+        try {
+          return !excludes.includes(decodeURIComponent(publicUrl));
+        } catch (error) {
+          return !excludes.includes(publicUrl);
+        }
+      })
       .map((file: File) => file.delete()),
   ).then();
 };

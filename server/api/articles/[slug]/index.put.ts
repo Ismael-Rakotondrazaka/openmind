@@ -134,15 +134,14 @@ export default defineEventHandler(
       updateArticleBodySPR.data.content !== undefined &&
       updateArticleBodySPR.data.content !== article.content
     ) {
-      const { content, filesToUpload } = formatArticleContent(
-        updateArticleBodySPR.data.content,
-        article.id,
-      );
+      const { content, filesToUpload, fileUrlsToExclude } =
+        formatArticleContent(updateArticleBodySPR.data.content, article.id);
 
       newContent = content;
 
-      deleteFolder({
+      deleteFilesInFolder({
         folderPath: `public/articles/${article.id}`,
+        excludes: fileUrlsToExclude,
       }).finally(() =>
         Promise.allSettled(filesToUpload.map(uploadFileFromBase64)),
       );

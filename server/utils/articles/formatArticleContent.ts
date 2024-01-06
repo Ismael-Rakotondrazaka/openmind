@@ -13,6 +13,7 @@ export const formatArticleContent = (
     isPublic: boolean;
     mimeType: string;
   }[];
+  fileUrlsToExclude: string[];
 } => {
   const dom = new JSDOM(sanitize(content));
 
@@ -24,6 +25,8 @@ export const formatArticleContent = (
     isPublic: boolean;
     mimeType: string;
   }[] = [];
+
+  const fileUrlsToExclude: string[] = [];
 
   imageElements.forEach((imageElement) => {
     const src: string | null = imageElement.getAttribute("src");
@@ -38,6 +41,11 @@ export const formatArticleContent = (
     const matches = src.match(regex);
 
     if (matches === null) {
+      try {
+        fileUrlsToExclude.push(decodeURIComponent(src));
+      } catch (error) {
+        fileUrlsToExclude.push(src);
+      }
       return;
     }
 
@@ -83,5 +91,6 @@ export const formatArticleContent = (
   return {
     content: finalContent,
     filesToUpload: imagesToUpload,
+    fileUrlsToExclude,
   };
 };
