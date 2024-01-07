@@ -1,12 +1,12 @@
 import type { Article, User } from "@prisma/client";
 import { z } from "zod";
-import { makePageSizeSchema, PageSchema } from "../models/paginations";
+import { makePageSizeSchema, PageSchema } from "../../models/paginations";
 import {
   ArticleOrderByWithRelationInputSchema,
   ArticleWhereInputSchema,
   ArticleSchema,
-} from "~/utils/requests/models/articles";
-import { UserSchema } from "~/utils/requests/models/users";
+} from "~/utils/models/articles";
+import { UserSchema } from "~/utils/models/users";
 
 /* -------------------------------------------------------------------------- */
 /*                             Index article query                            */

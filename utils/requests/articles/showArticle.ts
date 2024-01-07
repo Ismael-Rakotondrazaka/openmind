@@ -1,7 +1,7 @@
 import type { Article, User } from "@prisma/client";
 import { z } from "zod";
-import { UserSchema } from "~/utils/requests/models/users";
-import { ArticleSchema } from "~/utils/requests/models/articles";
+import { UserSchema } from "~/utils/models/users";
+import { ArticleSchema } from "~/utils/models/articles";
 
 /* -------------------------------------------------------------------------- */
 /*                             Show article param                             */

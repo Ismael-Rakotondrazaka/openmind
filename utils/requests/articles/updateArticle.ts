@@ -2,8 +2,8 @@ import type { Article, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
-import { ArticleSchema } from "~/utils/requests/models/articles";
-import { UserSchema } from "~/utils/requests/models/users";
+import { ArticleSchema } from "~/utils/models/articles";
+import { UserSchema } from "~/utils/models/users";
 
 /* -------------------------------------------------------------------------- */
 /*                            Update article param                            */
