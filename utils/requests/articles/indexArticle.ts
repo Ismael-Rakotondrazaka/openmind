@@ -1,11 +1,16 @@
 import { z } from "zod";
-import { makePageSizeSchema, PageSchema } from "../../models/paginations";
+import {
+  makePageSizeSchema,
+  PageSchema,
+  PaginationSchema,
+} from "../../models/paginations";
 import {
   ArticleOrderByWithRelationInputSchema,
   ArticleWhereInputSchema,
   ArticleSchema,
 } from "~/utils/models/articles";
 import { UserSchema } from "~/utils/models/users";
+import { articleConfig } from "~/utils/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                             Index article query                            */
@@ -21,6 +26,8 @@ export const IndexArticleQuerySchema = z
   .partial();
 
 export type IndexArticleQuery = z.infer<typeof IndexArticleQuerySchema>;
+
+export type IndexArticleQueryPEM = RequestErrorMessage<IndexArticleQuery>;
 
 /* -------------------------------------------------------------------------- */
 /*                             Index article data                             */
@@ -44,4 +51,4 @@ export type IndexArticleData = z.infer<typeof IndexArticleDataSchema>;
 /*                             Index article error                            */
 /* -------------------------------------------------------------------------- */
 
-export type IndexArticleError = RequestErrorMessage<IndexArticleQuery>;
+export type IndexArticleError = BadRequestError<IndexArticleQueryPEM>;
