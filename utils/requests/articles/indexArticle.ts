@@ -1,6 +1,6 @@
 import type { Article, User } from "@prisma/client";
 import { z } from "zod";
-import { makePageSizeSchema, PageSchema } from "../paginations";
+import { makePageSizeSchema, PageSchema } from "../models/paginations";
 import {
   ArticleOrderByWithRelationInputSchema,
   ArticleWhereInputSchema,
