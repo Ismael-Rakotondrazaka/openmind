@@ -12,7 +12,7 @@ export const ArticleSchema = z.object({
   id: z.string(),
   title: z.string(),
   slug: z.string(),
-  userId: z.number().int(),
+  userId: z.coerce.number().int(),
   summary: z.string().nullable(),
   content: z.string(),
   isVisible: z.boolean(),
@@ -42,7 +42,9 @@ export const ArticleWhereInputSchema: z.ZodType<Prisma.ArticleWhereInput> = z
     id: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
     title: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
     slug: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
-    userId: z.union([z.lazy(() => IntFilterSchema), z.number()]).optional(),
+    userId: z
+      .union([z.lazy(() => IntFilterSchema), z.coerce.number()])
+      .optional(),
     summary: z
       .union([z.lazy(() => StringNullableFilterSchema), z.string()])
       .optional()
