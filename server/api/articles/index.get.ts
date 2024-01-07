@@ -28,15 +28,12 @@ export default defineEventHandler(
     const totalCounts: number = await event.context.prisma.article.count({
       where: {
         ...indexArticleQuerySPR.data.where,
-        // deletedAt: {
-        //   not: null,
-        // },
-        // deletedAt:
-        //   authUser !== null &&
-        //   (authUser.role !== "user" ||
-        //     indexArticleQuerySPR.data.where?.userId === authUser.id)
-        //     ? indexArticleQuerySPR.data.where?.deletedAt
-        //     : null,
+        deletedAt:
+          authUser !== null &&
+          (authUser.role !== "user" ||
+            indexArticleQuerySPR.data.where?.userId === authUser.id)
+            ? indexArticleQuerySPR.data.where?.deletedAt
+            : null,
         isVisible:
           authUser !== null &&
           (authUser.role !== "user" ||
