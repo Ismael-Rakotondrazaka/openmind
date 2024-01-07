@@ -8,4 +8,5 @@ export const articleConfig = {
   CONTENT_MAX_LENGTH: 10000,
   IS_VISIBLE_DEFAULT_VALUE: true,
   SLUG_SUFFIX_LENGTH: 6,
+  DEFAULT_PAGE_SIZE: 30,
 };
