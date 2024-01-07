@@ -15,3 +15,9 @@ export type PaginationLinks = {
   previous: string | null;
   next: string | null;
 };
+
+export const PaginationLinksSchema = z.object({
+  current: z.string(),
+  previous: z.string().nullable(),
+  next: z.string().nullable(),
+});
