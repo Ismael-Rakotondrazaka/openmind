@@ -108,7 +108,7 @@ const {
   setErrors,
   setValues,
 } = useForm({
-  validationSchema: toTypedSchema(storeArticleBodyClientSchema),
+  validationSchema: toTypedSchema(StoreArticleBodyClientSchema),
   initialValues: {
     title: article.value?.title ?? "",
     summary: article.value?.summary ?? null,
@@ -143,7 +143,7 @@ const {
   immediate: false,
   watch: false,
   transform: (value): UpdateArticleData["article"] =>
-    updateArticleDataSchema.parse(value).article,
+    UpdateArticleDataSchema.parse(value).article,
 });
 
 const submitHandler = handleSubmit(async () => {

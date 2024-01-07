@@ -63,7 +63,7 @@ const toast = useToast();
 const fatalError = ref<null | string>(null);
 
 const { errors, defineField, handleSubmit, resetForm, isSubmitting } = useForm({
-  validationSchema: toTypedSchema(storeLoginBodySchema),
+  validationSchema: toTypedSchema(StoreLoginBodySchema),
 });
 const [emailOrUsername] = defineField("usernameOrEmail");
 const [password] = defineField("password");

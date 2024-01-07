@@ -2,24 +2,24 @@ import type { Article, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
-import { articleSchema } from "~/utils/requests/articles/model";
-import { userSchema } from "~/utils/requests/users/model";
+import { ArticleSchema } from "~/utils/requests/models/articles";
+import { UserSchema } from "~/utils/requests/models/users";
 
 /* -------------------------------------------------------------------------- */
 /*                            Update article param                            */
 /* -------------------------------------------------------------------------- */
 
-export const updateArticleParamSchema = z.object({
+export const UpdateArticleParamSchema = z.object({
   slug: z.string().trim(),
 });
 
-export type UpdateArticleParam = z.infer<typeof updateArticleParamSchema>;
+export type UpdateArticleParam = z.infer<typeof UpdateArticleParamSchema>;
 
 /* -------------------------------------------------------------------------- */
 /*                             Update article body                            */
 /* -------------------------------------------------------------------------- */
 
-export const updateArticleBodyBaseSchema = z
+export const UpdateArticleBodyBaseSchema = z
   .object({
     title: z
       .string()
@@ -62,7 +62,7 @@ export const updateArticleBodyBaseSchema = z
   })
   .partial();
 
-export const updateArticleBodyClientSchema = updateArticleBodyBaseSchema.merge(
+export const UpdateArticleBodyClientSchema = UpdateArticleBodyBaseSchema.merge(
   z
     .object({
       content: z
@@ -103,7 +103,7 @@ export const updateArticleBodyClientSchema = updateArticleBodyBaseSchema.merge(
     .partial(),
 );
 
-export type UpdateArticleBody = z.infer<typeof updateArticleBodyClientSchema>;
+export type UpdateArticleBody = z.infer<typeof UpdateArticleBodyClientSchema>;
 
 export type UpdateArticleBodyPEM = RequestErrorMessage<UpdateArticleBody>;
 
@@ -111,10 +111,10 @@ export type UpdateArticleBodyPEM = RequestErrorMessage<UpdateArticleBody>;
 /*                             Update article data                            */
 /* -------------------------------------------------------------------------- */
 
-export const updateArticleDataSchema = z.object({
-  article: articleSchema.and(
+export const UpdateArticleDataSchema = z.object({
+  article: ArticleSchema.and(
     z.object({
-      user: userSchema,
+      user: UserSchema,
     }),
   ),
 });

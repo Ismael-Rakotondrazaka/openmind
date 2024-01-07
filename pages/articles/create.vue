@@ -94,7 +94,7 @@ const {
   setErrors,
   setValues,
 } = useForm({
-  validationSchema: toTypedSchema(storeArticleBodyClientSchema),
+  validationSchema: toTypedSchema(StoreArticleBodyClientSchema),
   initialValues: {
     title: "",
     summary: null,

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
 
-export const storeArticleBodyBaseSchema = z.object({
+export const StoreArticleBodyBaseSchema = z.object({
   title: z
     .string()
     .trim()
@@ -44,7 +44,7 @@ export const storeArticleBodyBaseSchema = z.object({
   isVisible: z.boolean().default(articleConfig.IS_VISIBLE_DEFAULT_VALUE),
 });
 
-export const storeArticleBodyClientSchema = storeArticleBodyBaseSchema.merge(
+export const StoreArticleBodyClientSchema = StoreArticleBodyBaseSchema.merge(
   z.object({
     content: z
       .string()
@@ -83,7 +83,7 @@ export const storeArticleBodyClientSchema = storeArticleBodyBaseSchema.merge(
   }),
 );
 
-export type StoreArticleBody = z.infer<typeof storeArticleBodyClientSchema>;
+export type StoreArticleBody = z.infer<typeof StoreArticleBodyClientSchema>;
 
 export type StoreArticleBodyPEM = RequestErrorMessage<StoreArticleBody>;
 

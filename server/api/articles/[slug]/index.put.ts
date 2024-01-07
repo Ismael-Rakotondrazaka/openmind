@@ -8,7 +8,7 @@ import {
   createBadRequestError,
   createUnauthorizedError,
   getRequestErrorMessage,
-  updateArticleParamSchema,
+  UpdateArticleParamSchema,
 } from "~/utils";
 import {
   createArticleSlugSuffix,
@@ -24,7 +24,7 @@ export default defineEventHandler(
     const updateArticleParamSPR: SafeParseReturnType<
       UpdateArticleParam,
       UpdateArticleParam
-    > = await safeParseRequestParamAs(event, updateArticleParamSchema);
+    > = await safeParseRequestParamAs(event, UpdateArticleParamSchema);
 
     if (!updateArticleParamSPR.success) {
       return createNotFoundError(event);

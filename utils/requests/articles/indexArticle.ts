@@ -1,12 +1,12 @@
 import type { Article, User } from "@prisma/client";
 import { z } from "zod";
+import { makePageSizeSchema, PageSchema } from "../paginations";
 import {
   ArticleOrderByWithRelationInputSchema,
   ArticleWhereInputSchema,
-} from "../models/articles";
-import { makePageSizeSchema, PageSchema } from "../paginations";
-import { userSchema } from "~/utils/requests/users";
-import { articleSchema } from "~/utils/requests/articles";
+  ArticleSchema,
+} from "~/utils/requests/models/articles";
+import { UserSchema } from "~/utils/requests/models/users";
 
 /* -------------------------------------------------------------------------- */
 /*                             Index article query                            */
@@ -29,9 +29,9 @@ export type IndexArticleQuery = z.infer<typeof IndexArticleQuerySchema>;
 
 export const IndexArticleDataSchema = z.object({
   articles: z.array(
-    articleSchema.and(
+    ArticleSchema.and(
       z.object({
-        user: userSchema,
+        user: UserSchema,
       }),
     ),
   ),

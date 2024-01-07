@@ -8,6 +8,19 @@ import { IntFilterSchema } from "../types/ints";
 import { DateTimeFilterSchema } from "../types/dates";
 import { SortOrderInputSchema, SortOrderSchema } from "../types/prisma";
 
+export const ArticleSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  slug: z.string(),
+  userId: z.number().int(),
+  summary: z.string().nullable(),
+  content: z.string(),
+  isVisible: z.boolean(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  deletedAt: z.coerce.date().nullable(),
+});
+
 export const ArticleWhereInputSchema: z.ZodType<Prisma.ArticleWhereInput> = z
   .object({
     AND: z

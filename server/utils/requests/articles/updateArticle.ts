@@ -3,10 +3,10 @@ import { JSDOM } from "jsdom";
 import {
   countHtmlAsTextLength,
   articleConfig,
-  updateArticleBodyBaseSchema,
+  UpdateArticleBodyBaseSchema,
 } from "~/utils";
 
-export const updateArticleBodySchema = updateArticleBodyBaseSchema.merge(
+export const updateArticleBodySchema = UpdateArticleBodyBaseSchema.merge(
   z
     .object({
       content: z

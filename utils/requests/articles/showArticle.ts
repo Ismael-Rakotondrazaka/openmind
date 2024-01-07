@@ -1,7 +1,7 @@
 import type { Article, User } from "@prisma/client";
 import { z } from "zod";
-import { userSchema } from "~/utils/requests/users";
-import { articleSchema } from "~/utils/requests/articles";
+import { UserSchema } from "~/utils/requests/models/users";
+import { ArticleSchema } from "~/utils/requests/models/articles";
 
 /* -------------------------------------------------------------------------- */
 /*                             Show article param                             */
@@ -18,9 +18,9 @@ export type ShowArticleParam = z.infer<typeof showArticleParamSchema>;
 /* -------------------------------------------------------------------------- */
 
 export const showArticleDataSchema = z.object({
-  article: articleSchema.and(
+  article: ArticleSchema.and(
     z.object({
-      user: userSchema,
+      user: UserSchema,
     }),
   ),
 });

@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { JSDOM } from "jsdom";
 import {
-  storeArticleBodyBaseSchema,
+  StoreArticleBodyBaseSchema,
   articleConfig,
   countHtmlAsTextLength,
 } from "~/utils";
 
-export const storeArticleBodySchema = storeArticleBodyBaseSchema.merge(
+export const storeArticleBodySchema = StoreArticleBodyBaseSchema.merge(
   z.object({
     content: z
       .string()

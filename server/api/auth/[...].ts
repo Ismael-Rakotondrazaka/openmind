@@ -2,7 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import type { Role, User } from "@prisma/client";
 import { NuxtAuthHandler } from "#auth";
 import { prisma } from "~/server/middleware/0.prisma";
-import { storeLoginBodySchema } from "~/utils";
+import { StoreLoginBodySchema } from "~/utils";
 
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().authSecret,
@@ -26,7 +26,7 @@ export default NuxtAuthHandler({
         },
       },
       authorize: async (credentials: any) => {
-        const storeLoginSPR = storeLoginBodySchema.safeParse(credentials);
+        const storeLoginSPR = StoreLoginBodySchema.safeParse(credentials);
 
         if (storeLoginSPR.success) {
           const user: User | null = await prisma.user.findFirst({

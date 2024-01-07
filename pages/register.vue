@@ -129,7 +129,7 @@ const {
   isSubmitting,
   setErrors,
 } = useForm({
-  validationSchema: toTypedSchema(storeRegisterBodySchema),
+  validationSchema: toTypedSchema(StoreRegisterBodySchema),
 });
 const [name] = defineField("name");
 const [firstName] = defineField("firstName");
