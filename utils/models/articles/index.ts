@@ -5,7 +5,11 @@ import {
   StringNullableFilterSchema,
 } from "../types/strings";
 import { IntFilterSchema } from "../types/ints";
-import { DateTimeFilterSchema } from "../types/dates";
+import {
+  DateTimeFilterSchema,
+  DateTimeNullableFilterSchema,
+} from "../types/dates";
+import { BoolFilterSchema } from "../types/booleans";
 import { SortOrderInputSchema, SortOrderSchema } from "../types/prisma";
 
 export const ArticleSchema = z.object({
@@ -50,12 +54,19 @@ export const ArticleWhereInputSchema: z.ZodType<Prisma.ArticleWhereInput> =
       .optional()
       .nullable(),
     content: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
+    isVisible: z
+      .union([z.lazy(() => BoolFilterSchema), z.boolean()])
+      .optional(),
     createdAt: z
       .union([z.lazy(() => DateTimeFilterSchema), z.coerce.date()])
       .optional(),
     updatedAt: z
       .union([z.lazy(() => DateTimeFilterSchema), z.coerce.date()])
       .optional(),
+    deletedAt: z
+      .union([z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date()])
+      .optional()
+      .nullable(),
   });
 
 export const ArticleOrderByWithRelationInputSchema: z.ZodType<Prisma.ArticleOrderByWithRelationInput> =
