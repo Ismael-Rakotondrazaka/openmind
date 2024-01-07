@@ -21,8 +21,8 @@ export const ArticleSchema = z.object({
   deletedAt: z.coerce.date().nullable(),
 });
 
-export const ArticleWhereInputSchema: z.ZodType<Prisma.ArticleWhereInput> = z
-  .object({
+export const ArticleWhereInputSchema: z.ZodType<Prisma.ArticleWhereInput> =
+  z.object({
     AND: z
       .union([
         z.lazy(() => ArticleWhereInputSchema),
@@ -56,31 +56,28 @@ export const ArticleWhereInputSchema: z.ZodType<Prisma.ArticleWhereInput> = z
     updatedAt: z
       .union([z.lazy(() => DateTimeFilterSchema), z.coerce.date()])
       .optional(),
-  })
-  .strict();
+  });
 
 export const ArticleOrderByWithRelationInputSchema: z.ZodType<Prisma.ArticleOrderByWithRelationInput> =
-  z
-    .object({
-      id: z.lazy(() => SortOrderSchema).optional(),
-      title: z.lazy(() => SortOrderSchema).optional(),
-      slug: z.lazy(() => SortOrderSchema).optional(),
-      userId: z.lazy(() => SortOrderSchema).optional(),
-      summary: z
-        .union([
-          z.lazy(() => SortOrderSchema),
-          z.lazy(() => SortOrderInputSchema),
-        ])
-        .optional(),
-      content: z.lazy(() => SortOrderSchema).optional(),
-      isVisible: z.lazy(() => SortOrderSchema).optional(),
-      createdAt: z.lazy(() => SortOrderSchema).optional(),
-      updatedAt: z.lazy(() => SortOrderSchema).optional(),
-      deletedAt: z
-        .union([
-          z.lazy(() => SortOrderSchema),
-          z.lazy(() => SortOrderInputSchema),
-        ])
-        .optional(),
-    })
-    .strict();
+  z.object({
+    id: z.lazy(() => SortOrderSchema).optional(),
+    title: z.lazy(() => SortOrderSchema).optional(),
+    slug: z.lazy(() => SortOrderSchema).optional(),
+    userId: z.lazy(() => SortOrderSchema).optional(),
+    summary: z
+      .union([
+        z.lazy(() => SortOrderSchema),
+        z.lazy(() => SortOrderInputSchema),
+      ])
+      .optional(),
+    content: z.lazy(() => SortOrderSchema).optional(),
+    isVisible: z.lazy(() => SortOrderSchema).optional(),
+    createdAt: z.lazy(() => SortOrderSchema).optional(),
+    updatedAt: z.lazy(() => SortOrderSchema).optional(),
+    deletedAt: z
+      .union([
+        z.lazy(() => SortOrderSchema),
+        z.lazy(() => SortOrderInputSchema),
+      ])
+      .optional(),
+  });
