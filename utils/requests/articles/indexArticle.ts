@@ -20,10 +20,14 @@ export const IndexArticleQuerySchema = z
   .object({
     where: ArticleWhereInputSchema,
     orderBy: ArticleOrderByWithRelationInputSchema,
-    page: PageSchema,
-    pageSize: makePageSizeSchema(articleConfig.DEFAULT_PAGE_SIZE),
   })
-  .partial();
+  .partial()
+  .merge(
+    z.object({
+      page: PageSchema,
+      pageSize: makePageSizeSchema(articleConfig.DEFAULT_PAGE_SIZE),
+    }),
+  );
 
 export type IndexArticleQuery = z.infer<typeof IndexArticleQuerySchema>;
 
