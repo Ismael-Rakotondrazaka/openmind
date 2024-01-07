@@ -1,5 +1,5 @@
-import qs from "qs";
 import type { EventHandlerRequest, H3Event } from "h3";
+import { withQuery } from "ufo";
 import type { PaginationLinks } from "~/utils";
 
 export const makePaginationLinks = (
@@ -9,30 +9,27 @@ export const makePaginationLinks = (
   pageSize: number,
 ): PaginationLinks => {
   const url: URL = getRequestURL(event);
-  const queryString = url.search;
-  const parsedQuery: qs.ParsedQs = qs.parse(queryString, {
-    ignoreQueryPrefix: true,
-  });
+  const query = getQuery(event);
 
-  parsedQuery.pageSize = `${pageSize}`;
+  query.pageSize = pageSize;
 
-  const makeCurrentLink = () => {
-    parsedQuery.page = `${currentPage}`;
+  const makeCurrentLink = () =>
+    withQuery(url.pathname, {
+      ...query,
+      page: currentPage,
+    });
 
-    return `${url.pathname}?${qs.stringify(parsedQuery)}`;
-  };
+  const makePreviousLink = () =>
+    withQuery(url.pathname, {
+      ...query,
+      page: currentPage - 1,
+    });
 
-  const makePreviousLink = () => {
-    parsedQuery.page = `${currentPage - 1}`;
-
-    return `${url.pathname}?${qs.stringify(parsedQuery)}`;
-  };
-
-  const makeNextLink = () => {
-    parsedQuery.page = `${currentPage + 1}`;
-
-    return `${url.pathname}?${qs.stringify(parsedQuery)}`;
-  };
+  const makeNextLink = () =>
+    withQuery(url.pathname, {
+      ...query,
+      page: currentPage + 1,
+    });
 
   const links: PaginationLinks = {
     current: makeCurrentLink(),
