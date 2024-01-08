@@ -104,7 +104,7 @@ const rowsPerPageOptions: ComputedRef<number[]> = computed(() => {
   const result: number[] = [];
 
   for (let i = 0; i < size; i++) {
-    result.push((i + 1) * articleConfig.DEFAULT_PAGE_SIZE);
+    result.push((i + 1) * articleConfig.PAGE_SIZE_DEFAULT_VALUE);
   }
 
   return result;
@@ -128,7 +128,7 @@ const pagination: ComputedRef<Pagination> = computed(() => {
   } else {
     return {
       page: 1,
-      pageSize: articleConfig.DEFAULT_PAGE_SIZE,
+      pageSize: articleConfig.PAGE_SIZE_DEFAULT_VALUE,
       count: 0,
       totalCounts: 0,
       totalPages: 1,

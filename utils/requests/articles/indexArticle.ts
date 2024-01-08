@@ -25,7 +25,7 @@ export const IndexArticleQuerySchema = z
   .merge(
     z.object({
       page: PageSchema,
-      pageSize: makePageSizeSchema(articleConfig.DEFAULT_PAGE_SIZE),
+      pageSize: makePageSizeSchema(articleConfig.PAGE_SIZE_DEFAULT_VALUE),
     }),
   );
 
