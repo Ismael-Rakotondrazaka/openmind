@@ -3,13 +3,13 @@ import {
   makePageSizeSchema,
   PageSchema,
   PaginationSchema,
-} from "../../models/paginations";
+} from "../../schemas/paginations";
 import {
   ArticleOrderByWithRelationInputSchema,
   ArticleWhereInputSchema,
   ArticleSchema,
-} from "~/utils/models/articles";
-import { UserSchema } from "~/utils/models/users";
+} from "~/utils/schemas/articles";
+import { UserSchema } from "~/utils/schemas/users";
 import { articleConfig } from "~/utils/configs";
 
 /* -------------------------------------------------------------------------- */
