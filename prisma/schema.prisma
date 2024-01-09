@@ -58,6 +58,7 @@ model Article {
   slug      String
   userId    Int
   summary   String?   @db.Text
+  coverUrl  String?   @db.Text
   content   String    @db.Text
   isVisible Boolean   @default(true)
   createdAt DateTime  @default(now())

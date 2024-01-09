@@ -19,6 +19,7 @@ export const ArticleSchema = z.object({
   userId: z.coerce.number().int(),
   summary: z.string().nullable(),
   content: z.string(),
+  coverUrl: z.string().nullable(),
   isVisible: z.boolean(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
