@@ -15,7 +15,7 @@ import {
   formatArticleContent,
   getAuthUser,
   safeParseRequestBodyAs,
-  updateArticleBodySchema,
+  UpdateArticleBodySchema,
   slugify,
 } from "~/server/utils";
 
@@ -52,7 +52,7 @@ export default defineEventHandler(
 
     const updateArticleBodySPR = await safeParseRequestBodyAs(
       event,
-      updateArticleBodySchema,
+      UpdateArticleBodySchema,
     );
 
     if (!updateArticleBodySPR.success) {

@@ -6,7 +6,7 @@ import {
   UpdateArticleBodyBaseSchema,
 } from "~/utils";
 
-export const updateArticleBodySchema = UpdateArticleBodyBaseSchema.merge(
+export const UpdateArticleBodySchema = UpdateArticleBodyBaseSchema.merge(
   z
     .object({
       content: z

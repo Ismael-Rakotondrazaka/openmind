@@ -15,7 +15,7 @@ import {
   formatArticleContent,
   getAuthUser,
   slugify,
-  storeArticleBodySchema,
+  StoreArticleBodySchema,
 } from "~/server/utils";
 
 export default defineEventHandler(
@@ -28,7 +28,7 @@ export default defineEventHandler(
     const requestBody: unknown = await getRequestBody(event);
 
     const storeArticleBodySPR = await zfd
-      .formData(storeArticleBodySchema)
+      .formData(StoreArticleBodySchema)
       .safeParseAsync(requestBody);
 
     if (!storeArticleBodySPR.success) {
