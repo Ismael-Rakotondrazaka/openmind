@@ -2,6 +2,7 @@ import type { Article, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
+import { CustomBooleanSchema } from "~/utils/schemas";
 
 export const StoreArticleBodyBaseSchema = z.object({
   title: z
@@ -41,7 +42,9 @@ export const StoreArticleBodyBaseSchema = z.object({
 
       return value;
     }),
-  isVisible: z.boolean().default(articleConfig.IS_VISIBLE_DEFAULT_VALUE),
+  isVisible: CustomBooleanSchema.default(
+    articleConfig.IS_VISIBLE_DEFAULT_VALUE,
+  ),
 });
 
 export const StoreArticleBodyClientSchema = StoreArticleBodyBaseSchema.merge(
