@@ -7,6 +7,8 @@ import {
   type UpdateArticleParam,
   createBadRequestError,
   createUnauthorizedError,
+  createNotFoundError,
+  createForbiddenError,
   getRequestErrorMessage,
   UpdateArticleParamSchema,
 } from "~/utils";
