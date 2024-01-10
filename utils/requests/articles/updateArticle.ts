@@ -4,6 +4,7 @@ import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
 import { ArticleSchema } from "~/utils/schemas/articles";
 import { UserSchema } from "~/utils/schemas/users";
+import { CustomBooleanSchema } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
 /*                            Update article param                            */
@@ -58,7 +59,9 @@ export const UpdateArticleBodyBaseSchema = z
 
         return value;
       }),
-    isVisible: z.boolean().default(articleConfig.IS_VISIBLE_DEFAULT_VALUE),
+    isVisible: CustomBooleanSchema.default(
+      articleConfig.IS_VISIBLE_DEFAULT_VALUE,
+    ),
   })
   .partial();
 
