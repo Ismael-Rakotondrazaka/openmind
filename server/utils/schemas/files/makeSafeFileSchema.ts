@@ -1,6 +1,6 @@
 import { fileTypeFromBuffer, type FileTypeResult } from "file-type";
 import { z } from "zod";
-import { FileSchema } from "./fileSchema";
+import { FileSchema } from "~/utils";
 
 export type UploadedFile = {
   file: File;
