@@ -9,7 +9,6 @@ export const saveUploadedFile = ({
   path: string;
   file: UploadedFile;
   isPublic: boolean;
-  mimeType: string;
 }): Promise<void> => {
   const bucketFile = bucket.file(path);
 
