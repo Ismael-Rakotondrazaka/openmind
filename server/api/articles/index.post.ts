@@ -68,7 +68,7 @@ export default defineEventHandler(
       articleId,
     );
 
-    Promise.allSettled(filesToUpload.map(uploadFileFromBase64));
+    Promise.allSettled(filesToUpload.map(saveFileFromBase64));
 
     const article: Article & {
       user: Omit<User, "password" | "email" | "emailVerifiedAt">;

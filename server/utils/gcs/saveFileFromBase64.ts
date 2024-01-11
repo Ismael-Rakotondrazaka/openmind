@@ -1,6 +1,6 @@
 import { bucket } from "./bucket";
 
-export const uploadFileFromBase64 = ({
+export const saveFileFromBase64 = ({
   path,
   base64,
   isPublic,

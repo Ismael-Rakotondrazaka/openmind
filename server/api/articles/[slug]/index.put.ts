@@ -145,7 +145,7 @@ export default defineEventHandler(
         folderPath: `public/articles/${article.id}`,
         excludes: fileUrlsToExclude,
       }).finally(() =>
-        Promise.allSettled(filesToUpload.map(uploadFileFromBase64)),
+        Promise.allSettled(filesToUpload.map(saveFileFromBase64)),
       );
     }
 
