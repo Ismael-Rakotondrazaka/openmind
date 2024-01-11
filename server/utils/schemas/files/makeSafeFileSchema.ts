@@ -1,11 +1,7 @@
 import { fileTypeFromBuffer, type FileTypeResult } from "file-type";
 import { z } from "zod";
 import { FileSchema } from "~/utils";
-
-export type UploadedFile = {
-  file: File;
-  buffer: Buffer;
-};
+import { UploadedFile } from "~/server/utils/files";
 
 export const makeSafeFileSchema = (maxSize: number, mimeTypes: string[]) =>
   FileSchema.transform(async (val: File, ctx): Promise<UploadedFile> => {
@@ -50,18 +46,16 @@ export const makeSafeFileSchema = (maxSize: number, mimeTypes: string[]) =>
       return z.NEVER;
     }
 
-    return {
-      file: new File(
-        [val],
-        formatFilename({
-          filename: val.name,
-          mimeType: fileTypeResult.mime,
-        }),
-        {
-          type: fileTypeResult.mime,
-          lastModified: val.lastModified,
-        },
-      ),
+    return new UploadedFile({
+      blobParts: [val],
+      name: formatFilename({
+        filename: val.name,
+        mimeType: fileTypeResult.mime,
+      }),
+      options: {
+        type: fileTypeResult.mime,
+        lastModified: val.lastModified,
+      },
       buffer: Buffer.from(arrayBuffer),
-    };
+    });
   });
