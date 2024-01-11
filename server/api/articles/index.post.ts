@@ -70,6 +70,14 @@ export default defineEventHandler(
 
     Promise.allSettled(filesToUpload.map(saveFileFromBase64));
 
+    let coverUrl: string | undefined;
+    if (storeArticleBodySPR.data.cover !== undefined) {
+      coverUrl = uploadArticleCover({
+        file: storeArticleBodySPR.data.cover,
+        articleId,
+      });
+    }
+
     const article: Article & {
       user: Omit<User, "password" | "email" | "emailVerifiedAt">;
     } = await event.context.prisma.article.create({
@@ -83,6 +91,7 @@ export default defineEventHandler(
         isVisible: storeArticleBodySPR.data.isVisible,
         summary,
         userId: authUser.id,
+        coverUrl,
       },
       include: {
         user: {
