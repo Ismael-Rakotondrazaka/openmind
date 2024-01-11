@@ -2,7 +2,7 @@ import type { Article, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
-import { CustomBooleanSchema } from "~/utils/schemas";
+import { CustomBooleanSchema, FileSchema } from "~/utils/schemas";
 
 export const StoreArticleBodyBaseSchema = z.object({
   title: z
@@ -83,6 +83,7 @@ export const StoreArticleBodyClientSchema = StoreArticleBodyBaseSchema.merge(
           return z.NEVER;
         }
       }),
+    cover: FileSchema.optional(),
   }),
 );
 
