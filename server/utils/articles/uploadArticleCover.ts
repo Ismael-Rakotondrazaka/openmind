@@ -13,11 +13,15 @@ export const uploadArticleCover = ({
     mimeType: file.type,
   });
 
-  saveUploadedFile({
-    file,
-    isPublic: true,
-    path,
-  });
+  deleteFilesInFolder({
+    folderPath: `public/articles/${articleId}/cover`,
+  }).finally(() =>
+    saveUploadedFile({
+      file,
+      isPublic: true,
+      path,
+    }),
+  );
 
   return url;
 };
