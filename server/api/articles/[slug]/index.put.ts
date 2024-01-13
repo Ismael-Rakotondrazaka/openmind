@@ -164,37 +164,37 @@ export default defineEventHandler(
       });
     }
 
-    const updatedArticle: Article & {
-      user: Omit<User, "password" | "email" | "emailVerifiedAt">;
-    } = await event.context.prisma.article.update({
-      where: {
-        id: article.id,
-      },
-      data: {
-        content: newContent,
-        title: newTitle,
-        slug: newSlug,
-        updatedAt: now,
-        isVisible: newIsVisible,
-        summary: newSummary,
-        coverUrl: newCoverUrl,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            firstName: true,
-            profileUrl: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true,
-            deletedAt: true,
-          },
+    const updatedArticle: UpdateArticleData["article"] =
+      await event.context.prisma.article.update({
+        where: {
+          id: article.id,
         },
-      },
-    });
+        data: {
+          content: newContent,
+          title: newTitle,
+          slug: newSlug,
+          updatedAt: now,
+          isVisible: newIsVisible,
+          summary: newSummary,
+          coverUrl: newCoverUrl,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              name: true,
+              firstName: true,
+              profileUrl: true,
+              role: true,
+              createdAt: true,
+              updatedAt: true,
+              deletedAt: true,
+            },
+          },
+          tags: true,
+        },
+      });
 
     return {
       article: updatedArticle,

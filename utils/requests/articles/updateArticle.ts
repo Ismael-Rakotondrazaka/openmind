@@ -1,13 +1,13 @@
-import type { Article, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
-import { ArticleSchema } from "~/utils/schemas/articles";
-import { UserSchema } from "~/utils/schemas/users";
 import {
   CustomBooleanSchema,
   FileSchema,
+  ArticleSchema,
   CustomNullSchema,
+  TagSchema,
+  UserSchema,
 } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
@@ -121,14 +121,14 @@ export const UpdateArticleDataSchema = z.object({
     z.object({
       user: UserSchema,
     }),
+  ).and(
+    z.object({
+      tags: z.array(TagSchema),
+    }),
   ),
 });
 
-export type UpdateArticleData = {
-  article: Article & {
-    user: Omit<User, "password" | "email" | "emailVerifiedAt">;
-  };
-};
+export type UpdateArticleData = z.infer<typeof UpdateArticleDataSchema>;
 
 export type UpdateArticleError =
   | BadRequestError<UpdateArticleBodyPEM>
