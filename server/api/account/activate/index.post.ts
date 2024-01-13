@@ -5,7 +5,7 @@ import {
   type StoreAccountActivateData,
   type StoreAccountActivateError,
   type StoreAccountActivateBody,
-  storeAccountActivateBodySchema,
+  StoreAccountActivateBodySchema,
   createBadRequestError,
   getRequestErrorMessage,
 } from "~/utils";
@@ -17,7 +17,7 @@ export default defineEventHandler(
     const requestBody: unknown = await getRequestBody(event);
 
     const storeAccountActivateBodySPR = await zfd
-      .formData(storeAccountActivateBodySchema)
+      .formData(StoreAccountActivateBodySchema)
       .safeParseAsync(requestBody);
 
     if (!storeAccountActivateBodySPR.success) {

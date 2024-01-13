@@ -13,9 +13,7 @@
     <div class="cards">
       <div class="card prisma__card">
         <div class="card__body">
-          <h2 class="card__title">
-            Prisma ORM
-          </h2>
+          <h2 class="card__title">Prisma ORM</h2>
           <p>
             Prisma unlocks a new level of developer experience when working with
             databases thanks to its intuitive data model, automated migrations,
@@ -35,9 +33,7 @@
       </div>
       <div class="card auth__card">
         <div class="card__body">
-          <h2 class="card__title">
-            Authentication
-          </h2>
+          <h2 class="card__title">Authentication</h2>
           <p>
             Nuxt user authentication and sessions through nuxt-auth. nuxt-auth
             wraps NextAuth.js to offer the reliability & convenience of a 12k
@@ -60,9 +56,7 @@
       </div>
       <div class="card trpc__card">
         <div class="card__body">
-          <h2 class="card__title">
-            tRPC
-          </h2>
+          <h2 class="card__title">tRPC</h2>
           <p>
             tRPC allows you to easily build & consume fully typesafe APIs
             without schemas or code generation.

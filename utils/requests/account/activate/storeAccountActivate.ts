@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { authConfig } from "~/utils";
+import { authConfig } from "~/utils/configs";
 
-export const storeAccountActivateBodySchema = z.object({
+export const StoreAccountActivateBodySchema = z.object({
   t: z.string().length(authConfig.TOKEN_SIZE),
 });
 
 export type StoreAccountActivateBody = z.infer<
-  typeof storeAccountActivateBodySchema
+  typeof StoreAccountActivateBodySchema
 >;
 
 export type StoreAccountActivateBodyPEM =

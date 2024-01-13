@@ -11,3 +11,5 @@ dist
 public
 
 presets
+
+prisma/generated

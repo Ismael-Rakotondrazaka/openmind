@@ -5,7 +5,7 @@ import {
   type StoreRegisterData,
   type StoreRegisterError,
   type StoreRegisterBodyPEM,
-  storeRegisterBodySchema,
+  StoreRegisterBodySchema,
   createBadRequestError,
   userConfig,
   authConfig,
@@ -20,7 +20,7 @@ export default defineEventHandler(
     const requestBody: unknown = await getRequestBody(event);
 
     const storeRegisterBodySPR = await zfd
-      .formData(storeRegisterBodySchema)
+      .formData(StoreRegisterBodySchema)
       .safeParseAsync(requestBody);
 
     if (!storeRegisterBodySPR.success) {

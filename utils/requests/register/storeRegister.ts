@@ -2,7 +2,7 @@ import type { User } from "@prisma/client";
 import { z } from "zod";
 import { userConfig, passwordConfig } from "~/utils/configs";
 
-export const storeRegisterBodySchema = z.object({
+export const StoreRegisterBodySchema = z.object({
   name: z
     .string()
     .trim()
@@ -22,7 +22,7 @@ export const storeRegisterBodySchema = z.object({
   password: z.string().min(passwordConfig.PASSWORD_MIN_LENGTH),
 });
 
-export type StoreRegisterBody = z.infer<typeof storeRegisterBodySchema>;
+export type StoreRegisterBody = z.infer<typeof StoreRegisterBodySchema>;
 
 export type StoreRegisterBodyPEM = RequestErrorMessage<StoreRegisterBody>;
 

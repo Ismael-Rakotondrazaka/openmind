@@ -2,9 +2,7 @@
   <div class="flex items-center justify-center h-screen p-5 bg-sky-50">
     <form class="w-full max-w-xl" @submit.prevent="onSubmit">
       <PrimeCard>
-        <template #title>
-          Create Your Account
-        </template>
+        <template #title> Create Your Account </template>
 
         <template #subtitle>
           Join us by creating your account! Unlock a world of possibilities and
@@ -131,7 +129,7 @@ const {
   isSubmitting,
   setErrors,
 } = useForm({
-  validationSchema: toTypedSchema(storeRegisterBodySchema),
+  validationSchema: toTypedSchema(StoreRegisterBodySchema),
 });
 const [name] = defineField("name");
 const [firstName] = defineField("firstName");
