@@ -39,6 +39,21 @@ export default defineEventHandler(
       });
     }
 
+    const tagsCount: number = await event.context.prisma.tag.count({
+      where: {
+        id: {
+          in: storeArticleBodySPR.data.tagIds,
+        },
+      },
+    });
+    if (tagsCount !== storeArticleBodySPR.data.tagIds.length) {
+      return createBadRequestError(event, {
+        errorMessage: {
+          tagIds: "One or more tags do not exist.",
+        },
+      });
+    }
+
     const title: string = sanitize(storeArticleBodySPR.data.title);
 
     let slug: string = slugify(title);
@@ -93,6 +108,11 @@ export default defineEventHandler(
           summary,
           userId: authUser.id,
           coverUrl,
+          tags: {
+            connect: storeArticleBodySPR.data.tagIds.map((tagId) => ({
+              id: tagId,
+            })),
+          },
         },
         include: {
           user: {
