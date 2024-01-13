@@ -75,7 +75,9 @@ export default defineEventHandler(
         (updateArticleBodySPR.data.summary !== undefined &&
           updateArticleBodySPR.data.summary !== article.summary) ||
         (updateArticleBodySPR.data.isVisible !== undefined &&
-          updateArticleBodySPR.data.isVisible !== article.isVisible)
+          updateArticleBodySPR.data.isVisible !== article.isVisible) ||
+        (updateArticleBodySPR.data.cover !== undefined &&
+          updateArticleBodySPR.data.cover !== article.coverUrl)
       )
     ) {
       return createBadRequestError(event, {
