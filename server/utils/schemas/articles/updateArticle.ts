@@ -3,6 +3,7 @@ import { JSDOM } from "jsdom";
 import {
   countHtmlAsTextLength,
   articleConfig,
+  articleImageConfig,
   UpdateArticleBodyBaseSchema,
 } from "~/utils";
 
@@ -43,6 +44,10 @@ export const UpdateArticleBodySchema = UpdateArticleBodyBaseSchema.merge(
             return z.NEVER;
           }
         }),
+      cover: makeSafeFileSchema(
+        articleImageConfig.MAX_SIZE,
+        articleImageConfig.MIME_TYPES,
+      ),
     })
     .partial(),
 );
