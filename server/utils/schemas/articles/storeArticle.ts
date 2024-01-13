@@ -5,6 +5,7 @@ import {
   articleConfig,
   articleImageConfig,
   countHtmlAsTextLength,
+  CustomNullSchema,
 } from "~/utils";
 
 export const StoreArticleBodySchema = StoreArticleBodyBaseSchema.merge(
@@ -37,9 +38,14 @@ export const StoreArticleBodySchema = StoreArticleBodyBaseSchema.merge(
           return z.NEVER;
         }
       }),
-    cover: makeSafeFileSchema(
-      articleImageConfig.MAX_SIZE,
-      articleImageConfig.MIME_TYPES,
-    ).optional(),
+    cover: z
+      .union([
+        makeSafeFileSchema(
+          articleImageConfig.MAX_SIZE,
+          articleImageConfig.MIME_TYPES,
+        ),
+        CustomNullSchema,
+      ])
+      .optional(),
   }),
 );

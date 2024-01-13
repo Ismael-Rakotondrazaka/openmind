@@ -2,7 +2,11 @@ import type { Article, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
-import { CustomBooleanSchema, FileSchema } from "~/utils/schemas";
+import {
+  CustomBooleanSchema,
+  FileSchema,
+  CustomNullSchema,
+} from "~/utils/schemas";
 
 export const StoreArticleBodyBaseSchema = z.object({
   title: z
@@ -10,38 +14,38 @@ export const StoreArticleBodyBaseSchema = z.object({
     .trim()
     .min(articleConfig.TITLE_MIN_LENGTH)
     .max(articleConfig.TITLE_MAX_LENGTH),
-  summary: z
-    .string()
-    .trim()
-    .nullable()
-    .optional()
-    .transform((value: string | null | undefined, ctx) => {
-      if (typeof value === "string") {
-        if (value === "") {
-          return null;
-        } else if (value.length < articleConfig.SUMMARY_MIN_LENGTH) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.too_small,
-            minimum: articleConfig.SUMMARY_MIN_LENGTH,
-            inclusive: true,
-            type: "string",
-          });
+  summary: z.union([
+    CustomNullSchema,
+    z
+      .string()
+      .trim()
+      .transform((value: string, ctx): string => {
+        if (typeof value === "string") {
+          if (value.length < articleConfig.SUMMARY_MIN_LENGTH) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.too_small,
+              minimum: articleConfig.SUMMARY_MIN_LENGTH,
+              inclusive: true,
+              type: "string",
+            });
 
-          return z.NEVER;
-        } else if (value.length > articleConfig.SUMMARY_MAX_LENGTH) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.too_big,
-            maximum: articleConfig.SUMMARY_MIN_LENGTH,
-            inclusive: true,
-            type: "string",
-          });
+            return z.NEVER;
+          } else if (value.length > articleConfig.SUMMARY_MAX_LENGTH) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.too_big,
+              maximum: articleConfig.SUMMARY_MIN_LENGTH,
+              inclusive: true,
+              type: "string",
+            });
 
-          return z.NEVER;
+            return z.NEVER;
+          }
         }
-      }
 
-      return value;
-    }),
+        return value;
+      })
+      .optional(),
+  ]),
   isVisible: CustomBooleanSchema.default(
     articleConfig.IS_VISIBLE_DEFAULT_VALUE,
   ),
@@ -83,7 +87,7 @@ export const StoreArticleBodyClientSchema = StoreArticleBodyBaseSchema.merge(
           return z.NEVER;
         }
       }),
-    cover: FileSchema.optional(),
+    cover: z.union([FileSchema, CustomNullSchema]).optional(),
   }),
 );
 
