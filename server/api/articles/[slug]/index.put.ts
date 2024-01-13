@@ -154,6 +154,9 @@ export default defineEventHandler(
     let newCoverUrl: string | null | undefined;
     if (updateArticleBodySPR.data.cover === null) {
       newCoverUrl = null;
+      deleteFilesInFolder({
+        folderPath: `public/articles/${article.id}/cover`,
+      });
     } else if (updateArticleBodySPR.data.cover !== undefined) {
       newCoverUrl = uploadArticleCover({
         file: updateArticleBodySPR.data.cover,
