@@ -9,3 +9,7 @@ nuxt.d.ts
 node_modules
 dist
 public
+
+presets
+
+prisma/generated

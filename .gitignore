@@ -16,3 +16,6 @@ dist
 
 # secret folder
 secrets
+GCSServiceAccount.json
+
+prisma/generated

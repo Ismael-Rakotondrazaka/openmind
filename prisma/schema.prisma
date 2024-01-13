@@ -5,15 +5,64 @@ generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  // NOTE: You probably want to change this to another database later on
-  provider = "sqlite"
+generator zod {
+  provider = "zod-prisma-types"
+}
 
-  // This value is read from the .env file.
+datasource db {
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Example {
-  id          String @id @default(uuid())
-  details     String
+model User {
+  id                 Int                 @id @default(autoincrement())
+  username           String              @unique
+  name               String
+  firstName          String
+  email              String              @unique
+  emailVerifiedAt    DateTime?
+  password           String              @db.Text
+  profileUrl         String?
+  role               Role
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @default(now())
+  deletedAt          DateTime?
+  activationToken    ActivationToken?
+  passwordResetToken PasswordResetToken?
+  articles           Article[]
+}
+
+enum Role {
+  admin
+  modo
+  user
+}
+
+model PasswordResetToken {
+  token     String   @id
+  expiresAt DateTime
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ActivationToken {
+  token     String   @id
+  expiresAt DateTime
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Article {
+  id        String    @id
+  title     String
+  slug      String
+  userId    Int
+  summary   String?   @db.Text
+  coverUrl  String?   @db.Text
+  content   String    @db.Text
+  isVisible Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deletedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id])
 }
