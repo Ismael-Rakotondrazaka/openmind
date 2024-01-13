@@ -5,3 +5,4 @@ export * from "./authConfig";
 export * from "./articleConfig";
 export * from "./articleImageConfig";
 export * from "./fileConfig";
+export * from "./tagConfig";
