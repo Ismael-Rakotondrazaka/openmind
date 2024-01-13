@@ -1,4 +1,4 @@
-import type { Article, User } from "@prisma/client";
+import type { Article, Tag, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
@@ -7,6 +7,10 @@ import {
   FileSchema,
   CustomNullSchema,
 } from "~/utils/schemas";
+
+/* -------------------------------------------------------------------------- */
+/*                             Store article body                             */
+/* -------------------------------------------------------------------------- */
 
 export const StoreArticleBodyBaseSchema = z.object({
   title: z
@@ -95,11 +99,21 @@ export type StoreArticleBody = z.infer<typeof StoreArticleBodyClientSchema>;
 
 export type StoreArticleBodyPEM = RequestErrorMessage<StoreArticleBody>;
 
+/* -------------------------------------------------------------------------- */
+/*                             Store article data                             */
+/* -------------------------------------------------------------------------- */
+
 export type StoreArticleData = {
   article: Article & {
     user: Omit<User, "password" | "email" | "emailVerifiedAt">;
+  } & {
+    tags: Tag[];
   };
 };
+
+/* -------------------------------------------------------------------------- */
+/*                             Store article error                            */
+/* -------------------------------------------------------------------------- */
 
 export type StoreArticleError =
   | BadRequestError<StoreArticleBodyPEM>
