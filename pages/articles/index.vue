@@ -9,48 +9,59 @@
                 name: 'articles-slug',
                 params: { slug: article.slug },
               }"
-              class="w-60 block shrink-0"
+              class="w-60 max-h-[12rem], block shrink-0 bg-[--surface-200]"
             >
-              <img
+              <NuxtImg
+                v-if="article.coverUrl !== null"
+                :src="article.coverUrl"
                 class="w-60 h-full object-cover"
-                src="/images/pexels-google-deepmind-17483868.jpg"
-                alt=""
-                width="384"
-                height="512"
+                width="240"
+                height="192"
+              />
+
+              <div
+                v-else
+                class="w-60 h-full object-cover"
+                width="240"
+                height="192"
               />
             </NuxtLink>
-            <div class="p-3 text-left">
-              <div class="flex items-center justify-start mb-2">
-                <PrimeAvatar
-                  v-if="article.user.profileUrl !== null"
-                  :image="article.user.profileUrl"
-                  class="mr-2"
-                  shape="circle"
-                />
-                <PrimeAvatar
-                  v-else
-                  icon="pi pi-user"
-                  class="mr-2"
-                  shape="circle"
-                />
-                <div class="text-sm">
-                  {{ article.user.firstName }}&nbsp;{{ article.user.firstName }}
+            <div class="p-3 text-left flex flex-col w-full justify-between">
+              <div>
+                <div class="flex items-center justify-start mb-2">
+                  <PrimeAvatar
+                    v-if="article.user.profileUrl !== null"
+                    :image="article.user.profileUrl"
+                    class="mr-2"
+                    shape="circle"
+                  />
+                  <PrimeAvatar
+                    v-else
+                    icon="pi pi-user"
+                    class="mr-2"
+                    shape="circle"
+                  />
+                  <div class="text-sm">
+                    {{ article.user.firstName }}&nbsp;{{
+                      article.user.firstName
+                    }}
+                  </div>
                 </div>
+
+                <h2 class="font-bold text-xl text-slate-900 line-clamp-2">
+                  <NuxtLink
+                    :to="{
+                      name: 'articles-slug',
+                      params: { slug: article.slug },
+                    }"
+                    >{{ article.title }}</NuxtLink
+                  >
+                </h2>
+
+                <p class="text-ellipsis text-gray-600 mb-2 line-clamp-2">
+                  {{ article.summary ?? "&nbsp;" }}
+                </p>
               </div>
-
-              <h2 class="font-bold text-xl text-slate-900 line-clamp-2">
-                <NuxtLink
-                  :to="{
-                    name: 'articles-slug',
-                    params: { slug: article.slug },
-                  }"
-                  >{{ article.title }}</NuxtLink
-                >
-              </h2>
-
-              <p class="text-ellipsis text-gray-600 mb-2 line-clamp-2">
-                {{ article.summary ?? "&nbsp;" }}
-              </p>
 
               <p class="text-sm text-gray-600">
                 {{ dayjs(article.createdAt).fromNow() }} ·
