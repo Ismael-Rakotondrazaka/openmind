@@ -144,7 +144,7 @@ export default defineEventHandler(
       newContent = content;
 
       deleteFilesInFolder({
-        folderPath: `public/articles/${article.id}`,
+        folderPath: `public/articles/${article.id}/illustrations`,
         excludes: fileUrlsToExclude,
       }).finally(() =>
         Promise.allSettled(filesToUpload.map(saveFileFromBase64)),

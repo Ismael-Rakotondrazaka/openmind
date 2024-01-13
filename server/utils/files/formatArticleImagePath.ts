@@ -16,7 +16,7 @@ export const formatArticleImagePath = ({
     mimeType,
   });
 
-  const path: string = `public/articles/${articleId}/${formattedFilename}`;
+  const path: string = `public/articles/${articleId}/illustrations/${formattedFilename}`;
   return {
     path,
     filename: formattedFilename,
