@@ -9,4 +9,5 @@ export const articleConfig = {
   IS_VISIBLE_DEFAULT_VALUE: true,
   SLUG_SUFFIX_LENGTH: 6,
   PAGE_SIZE_DEFAULT_VALUE: 30,
+  TAGS_MAX_SIZE: 3,
 };
