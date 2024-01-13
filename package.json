@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^7.7.0",
+    "@nuxt/image": "^1.2.0",
     "@prisma/client": "^5.4.1",
     "@vee-validate/nuxt": "^4.12.3",
     "@vee-validate/zod": "^4.12.3",

@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     "@sidebase/nuxt-auth",
     "@vee-validate/nuxt",
     "nuxt-typed-router",
+    "@nuxt/image",
   ],
   typescript: {
     shim: false,
@@ -56,5 +57,9 @@ export default defineNuxtConfig({
       FieldArray: "VeeFieldArray",
       ErrorMessage: "VeeErrorMessage",
     },
+  },
+
+  image: {
+    domains: ["storage.googleapis.com"],
   },
 });
