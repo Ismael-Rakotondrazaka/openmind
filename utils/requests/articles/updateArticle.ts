@@ -31,16 +31,13 @@ export const UpdateArticleBodyBaseSchema = z
       .trim()
       .min(articleConfig.TITLE_MIN_LENGTH)
       .max(articleConfig.TITLE_MAX_LENGTH),
-    summary: z
-      .string()
-      .trim()
-      .nullable()
-      .optional()
-      .transform((value: string | null | undefined, ctx) => {
-        if (typeof value === "string") {
-          if (value === "") {
-            return null;
-          } else if (value.length < articleConfig.SUMMARY_MIN_LENGTH) {
+    summary: z.union([
+      CustomNullSchema,
+      z
+        .string()
+        .trim()
+        .transform((value: string, ctx): string => {
+          if (value.length < articleConfig.SUMMARY_MIN_LENGTH) {
             ctx.addIssue({
               code: z.ZodIssueCode.too_small,
               minimum: articleConfig.SUMMARY_MIN_LENGTH,
@@ -59,10 +56,10 @@ export const UpdateArticleBodyBaseSchema = z
 
             return z.NEVER;
           }
-        }
 
-        return value;
-      }),
+          return value;
+        }),
+    ]),
     isVisible: CustomBooleanSchema.default(
       articleConfig.IS_VISIBLE_DEFAULT_VALUE,
     ),
