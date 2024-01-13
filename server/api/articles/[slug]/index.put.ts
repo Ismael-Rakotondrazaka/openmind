@@ -1,5 +1,5 @@
 import type { SafeParseError, SafeParseReturnType } from "zod";
-import type { Article, User } from "@prisma/client";
+import type { Article, Tag, User } from "@prisma/client";
 import {
   type UpdateArticleData,
   type UpdateArticleError,
@@ -32,12 +32,19 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    const article: Article | null =
-      await event.context.prisma.article.findFirst({
-        where: {
-          slug: updateArticleParamSPR.data.slug,
-        },
-      });
+    let article:
+      | (Article & {
+          tags: Tag[];
+        })
+      | null = null;
+    article = await event.context.prisma.article.findFirst({
+      where: {
+        slug: updateArticleParamSPR.data.slug,
+      },
+      include: {
+        tags: true,
+      },
+    });
 
     if (article === null) {
       return createNotFoundError(event);
@@ -77,13 +84,43 @@ export default defineEventHandler(
         (updateArticleBodySPR.data.isVisible !== undefined &&
           updateArticleBodySPR.data.isVisible !== article.isVisible) ||
         (updateArticleBodySPR.data.cover !== undefined &&
-          updateArticleBodySPR.data.cover !== article.coverUrl)
+          updateArticleBodySPR.data.cover !== article.coverUrl) ||
+        (updateArticleBodySPR.data.tagIds !== undefined &&
+          !(
+            article.tags.every((tag: Tag) => {
+              if (updateArticleBodySPR.data.tagIds !== undefined) {
+                return updateArticleBodySPR.data.tagIds.includes(tag.id);
+              } else {
+                return false;
+              }
+            }) &&
+            article.tags.length === updateArticleBodySPR.data.tagIds.length
+          ))
       )
     ) {
       return createBadRequestError(event, {
         message: "At least one change is required.",
         errorMessage: {},
       });
+    }
+
+    let newTags: Tag[] = [];
+    if (updateArticleBodySPR.data.tagIds !== undefined) {
+      newTags = await event.context.prisma.tag.findMany({
+        where: {
+          id: {
+            in: updateArticleBodySPR.data.tagIds,
+          },
+        },
+      });
+
+      if (newTags.length !== updateArticleBodySPR.data.tagIds.length) {
+        return createBadRequestError(event, {
+          errorMessage: {
+            tagIds: "One or more tags do not exist.",
+          },
+        });
+      }
     }
 
     let newTitle: string | undefined;
@@ -164,6 +201,28 @@ export default defineEventHandler(
       });
     }
 
+    const oldTagIdsSet: Set<number> = new Set(
+      article.tags.map((val: Tag) => val.id),
+    );
+    const newTagIdsSet: Set<number> = new Set(
+      newTags.map((val: Tag) => val.id),
+    );
+
+    const tagsToDisconnect: { id: number }[] = [];
+    const tagsToConnect: { id: number }[] = [];
+
+    article.tags.forEach((val: Tag) => {
+      if (!newTagIdsSet.has(val.id)) {
+        tagsToDisconnect.push({ id: val.id });
+      }
+    });
+
+    newTags.forEach((val: Tag) => {
+      if (!oldTagIdsSet.has(val.id)) {
+        tagsToConnect.push({ id: val.id });
+      }
+    });
+
     const updatedArticle: UpdateArticleData["article"] =
       await event.context.prisma.article.update({
         where: {
@@ -177,6 +236,10 @@ export default defineEventHandler(
           isVisible: newIsVisible,
           summary: newSummary,
           coverUrl: newCoverUrl,
+          tags: {
+            connect: tagsToConnect,
+            disconnect: tagsToDisconnect,
+          },
         },
         include: {
           user: {

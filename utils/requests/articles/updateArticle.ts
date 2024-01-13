@@ -63,6 +63,20 @@ export const UpdateArticleBodyBaseSchema = z
     isVisible: CustomBooleanSchema.default(
       articleConfig.IS_VISIBLE_DEFAULT_VALUE,
     ),
+    tagIds: z.union([
+      z
+        .array(z.coerce.number().int().positive())
+        .min(1)
+        .max(articleConfig.TAGS_MAX_SIZE)
+        .refine((val: number[]) => val.length === [...new Set(val)].length, {
+          message: "Tags must be unique",
+        }),
+      z.coerce
+        .number()
+        .int()
+        .positive()
+        .transform((val: number): number[] => [val]),
+    ]),
   })
   .partial();
 
