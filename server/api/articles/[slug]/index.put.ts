@@ -149,6 +149,16 @@ export default defineEventHandler(
       );
     }
 
+    let newCoverUrl: string | null | undefined;
+    if (updateArticleBodySPR.data.cover === null) {
+      newCoverUrl = null;
+    } else if (updateArticleBodySPR.data.cover !== undefined) {
+      newCoverUrl = uploadArticleCover({
+        file: updateArticleBodySPR.data.cover,
+        articleId: article.id,
+      });
+    }
+
     const updatedArticle: Article & {
       user: Omit<User, "password" | "email" | "emailVerifiedAt">;
     } = await event.context.prisma.article.update({
@@ -162,6 +172,7 @@ export default defineEventHandler(
         updatedAt: now,
         isVisible: newIsVisible,
         summary: newSummary,
+        coverUrl: newCoverUrl,
       },
       include: {
         user: {
