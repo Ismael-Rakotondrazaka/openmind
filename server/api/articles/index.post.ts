@@ -70,8 +70,10 @@ export default defineEventHandler(
 
     Promise.allSettled(filesToUpload.map(saveFileFromBase64));
 
-    let coverUrl: string | undefined;
-    if (storeArticleBodySPR.data.cover !== undefined) {
+    let coverUrl: string | null | undefined;
+    if (storeArticleBodySPR.data.cover === null) {
+      coverUrl = null;
+    } else if (storeArticleBodySPR.data.cover !== undefined) {
       coverUrl = uploadArticleCover({
         file: storeArticleBodySPR.data.cover,
         articleId,
