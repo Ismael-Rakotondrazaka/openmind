@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { UserSchema } from "~/utils/schemas/users";
-import { ArticleSchema } from "~/utils/schemas/articles";
+import { ArticleSchema, TagSchema, UserSchema } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
 /*                            Destroy article param                           */
