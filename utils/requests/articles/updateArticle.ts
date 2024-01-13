@@ -4,7 +4,11 @@ import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
 import { ArticleSchema } from "~/utils/schemas/articles";
 import { UserSchema } from "~/utils/schemas/users";
-import { CustomBooleanSchema, FileSchema } from "~/utils/schemas";
+import {
+  CustomBooleanSchema,
+  FileSchema,
+  CustomNullSchema,
+} from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
 /*                            Update article param                            */
@@ -102,7 +106,7 @@ export const UpdateArticleBodyClientSchema = UpdateArticleBodyBaseSchema.merge(
             return z.NEVER;
           }
         }),
-      cover: FileSchema,
+      cover: z.union([FileSchema, CustomNullSchema]),
     })
     .partial(),
 );

@@ -5,6 +5,7 @@ import {
   articleConfig,
   articleImageConfig,
   UpdateArticleBodyBaseSchema,
+  CustomNullSchema,
 } from "~/utils";
 
 export const UpdateArticleBodySchema = UpdateArticleBodyBaseSchema.merge(
@@ -44,10 +45,13 @@ export const UpdateArticleBodySchema = UpdateArticleBodyBaseSchema.merge(
             return z.NEVER;
           }
         }),
-      cover: makeSafeFileSchema(
-        articleImageConfig.MAX_SIZE,
-        articleImageConfig.MIME_TYPES,
-      ),
+      cover: z.union([
+        makeSafeFileSchema(
+          articleImageConfig.MAX_SIZE,
+          articleImageConfig.MIME_TYPES,
+        ),
+        CustomNullSchema,
+      ]),
     })
     .partial(),
 );
