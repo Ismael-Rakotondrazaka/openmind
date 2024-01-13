@@ -37,7 +37,22 @@
             </div>
           </div>
 
-          <input ref="invisibleButton" class="" />
+          <div class="flex gap-2 flex-col">
+            <label for="cover">Cover</label>
+
+            <input
+              id="cover"
+              ref="coverRef"
+              type="file"
+              class="block w-full file:mr-4 file:py-4 file:px-5 file:rounded-md file:border-0 file:font-bold file:bg-[#14b8a6] file:text-white hover:file:bg-[#0d9488] hover:cursor-pointer"
+              name="cover"
+              @change="onCoverChangeHandler"
+            />
+
+            <small id="cover-text-error" class="text-red-600">{{
+              validationErrors.cover || "&nbsp;"
+            }}</small>
+          </div>
 
           <div class="flex gap-2 flex-col">
             <label for="email">Content</label>
@@ -79,10 +94,9 @@ definePageMeta({
   },
 });
 
-const invisibleButton = ref<HTMLInputElement | null>(null);
-
 const toast = useToast();
 
+const coverRef: Ref<HTMLInputElement | null> = ref(null);
 const fatalError = ref<null | string>(null);
 
 const {
@@ -106,21 +120,61 @@ const [title] = defineField("title");
 const [summary] = defineField("summary");
 const [isVisible] = defineField("isVisible");
 const [content] = defineField("content");
+const [cover] = defineField("cover");
+
+const formData: ComputedRef<FormData> = computed(() => {
+  const formData: FormData = new FormData();
+
+  if (title.value !== undefined) {
+    formData.append("title", title.value);
+  }
+  if (summary.value !== undefined && summary.value !== null) {
+    formData.append("summary", summary.value);
+  }
+  if (isVisible.value !== undefined) {
+    formData.append("isVisible", isVisible.value.toString());
+  }
+  if (content.value !== undefined) {
+    formData.append("content", content.value);
+  }
+  if (cover.value !== undefined) {
+    formData.append("cover", cover.value as File);
+  }
+
+  return formData;
+});
 
 const { error: fetchError, execute: storeRegister } = useFetch<
   StoreArticleData,
   FetchError<StoreArticleError>
 >("/api/articles", {
   method: "POST",
-  body: {
-    title,
-    summary,
-    content,
-    isVisible,
-  },
+  body: formData,
   immediate: false,
   watch: false,
 });
+
+const resetCoverFiles = () => {
+  if (coverRef.value !== null) {
+    coverRef.value.files = new DataTransfer().files;
+  }
+};
+
+const onCoverChangeHandler = (event: Event) => {
+  const target: HTMLInputElement | null =
+    event.target as HTMLInputElement | null;
+  if (target === null) return;
+
+  const files: FileList | null = target.files;
+  if (files === null) return;
+
+  const file: File | null = files.item(0);
+  if (file === null) return;
+
+  setValues({
+    cover: file,
+  });
+};
 
 const submitHandler = handleSubmit(async () => {
   fatalError.value = null;
@@ -136,6 +190,7 @@ const submitHandler = handleSubmit(async () => {
     });
 
     resetForm();
+    resetCoverFiles();
     // TODO redirect to show-article page
   } else {
     fatalError.value =
@@ -163,4 +218,8 @@ const onPublishArticleHandler = () => {
   setValues({ isVisible: true });
   submitHandler();
 };
+
+onMounted(() => {
+  resetCoverFiles();
+});
 </script>
