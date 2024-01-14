@@ -30,6 +30,7 @@ model User {
   activationToken    ActivationToken?
   passwordResetToken PasswordResetToken?
   articles           Article[]
+  savedArticles      SavedArticle[]
   tags               Tag[]
 }
 
@@ -54,19 +55,30 @@ model ActivationToken {
 }
 
 model Article {
-  id        String    @id
-  title     String
-  slug      String
+  id            String         @id
+  title         String
+  slug          String
+  userId        Int
+  summary       String?        @db.Text
+  coverUrl      String?        @db.Text
+  content       String         @db.Text
+  isVisible     Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  deletedAt     DateTime?
+  user          User           @relation(fields: [userId], references: [id])
+  tags          Tag[]
+  savedArticles SavedArticle[]
+}
+
+model SavedArticle {
+  articleId String
   userId    Int
-  summary   String?   @db.Text
-  coverUrl  String?   @db.Text
-  content   String    @db.Text
-  isVisible Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  deletedAt DateTime?
-  user      User      @relation(fields: [userId], references: [id])
-  tags      Tag[]
+  user      User     @relation(fields: [userId], references: [id])
+  article   Article  @relation(fields: [articleId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@id([userId, articleId])
 }
 
 model Tag {
