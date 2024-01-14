@@ -30,6 +30,7 @@ model User {
   activationToken    ActivationToken?
   passwordResetToken PasswordResetToken?
   articles           Article[]
+  tags               Tag[]
 }
 
 enum Role {
@@ -72,4 +73,5 @@ model Tag {
   id       Int       @id @default(autoincrement())
   value    String    @unique
   articles Article[]
+  users    User[]
 }
