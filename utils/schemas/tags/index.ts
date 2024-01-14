@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
+import { IntFilterSchema, StringFilterSchema } from "~/utils/schemas";
 
 export const TagSchema = z.object({
   id: z.number().int(),
@@ -32,3 +33,12 @@ export const TagOrderByWithRelationInputSchema: z.ZodType<Prisma.TagOrderByWithR
     id: z.lazy(() => SortOrderSchema).optional(),
     value: z.lazy(() => SortOrderSchema).optional(),
   });
+
+export const TagListRelationFilterSchema: z.ZodType<Prisma.TagListRelationFilter> =
+  z
+    .object({
+      every: z.lazy(() => TagWhereInputSchema).optional(),
+      some: z.lazy(() => TagWhereInputSchema).optional(),
+      none: z.lazy(() => TagWhereInputSchema).optional(),
+    })
+    .strict();

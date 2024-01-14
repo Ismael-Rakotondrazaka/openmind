@@ -11,6 +11,7 @@ import {
 } from "../types/dates";
 import { BoolFilterSchema } from "../types/booleans";
 import { SortOrderInputSchema, SortOrderSchema } from "../types/prisma";
+import { TagListRelationFilterSchema } from "../tags";
 
 export const ArticleSchema = z.object({
   id: z.string(),
@@ -68,6 +69,7 @@ export const ArticleWhereInputSchema: z.ZodType<Prisma.ArticleWhereInput> =
       .union([z.lazy(() => DateTimeNullableFilterSchema), z.coerce.date()])
       .optional()
       .nullable(),
+    tags: z.lazy(() => TagListRelationFilterSchema).optional(),
   });
 
 export const ArticleOrderByWithRelationInputSchema: z.ZodType<Prisma.ArticleOrderByWithRelationInput> =
