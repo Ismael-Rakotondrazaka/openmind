@@ -6,6 +6,7 @@ import {
   ArticleSchema,
   UserSchema,
   TagSchema,
+  PaginationSchema,
 } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
@@ -36,21 +37,25 @@ export type IndexSavedArticleQueryPEM =
 /*                          Index saved article data                          */
 /* -------------------------------------------------------------------------- */
 
-export const IndexSavedArticleDataSchema = z.object({
-  savedArticle: SavedArticleSchema.and(
-    z.object({
-      article: ArticleSchema.and(
+export const IndexSavedArticleDataSchema = z
+  .object({
+    savedArticles: z.array(
+      SavedArticleSchema.and(
         z.object({
-          user: UserSchema,
-        }),
-      ).and(
-        z.object({
-          tags: z.array(TagSchema),
+          article: ArticleSchema.and(
+            z.object({
+              user: UserSchema,
+            }),
+          ).and(
+            z.object({
+              tags: z.array(TagSchema),
+            }),
+          ),
         }),
       ),
-    }),
-  ),
-});
+    ),
+  })
+  .merge(PaginationSchema);
 
 export type IndexSavedArticleData = z.infer<typeof IndexSavedArticleDataSchema>;
 
