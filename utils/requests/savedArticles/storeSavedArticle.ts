@@ -1,8 +1,13 @@
 import { z } from "zod";
-import { SavedArticleSchema } from "~/utils/schemas";
+import {
+  SavedArticleSchema,
+  ArticleSchema,
+  UserSchema,
+  TagSchema,
+} from "~/utils/schemas";
 
 export const StoreSavedArticleBodySchema = z.object({
-  articleId: z.coerce.number().int().positive(),
+  articleId: z.string(),
 });
 
 export type StoreSavedArticleBody = z.infer<typeof StoreSavedArticleBodySchema>;
