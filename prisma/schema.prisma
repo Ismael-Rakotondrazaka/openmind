@@ -30,6 +30,7 @@ model User {
   activationToken    ActivationToken?
   passwordResetToken PasswordResetToken?
   articles           Article[]
+  tags               Tag[]
 }
 
 enum Role {
@@ -65,4 +66,12 @@ model Article {
   updatedAt DateTime  @default(now())
   deletedAt DateTime?
   user      User      @relation(fields: [userId], references: [id])
+  tags      Tag[]
+}
+
+model Tag {
+  id       Int       @id @default(autoincrement())
+  value    String    @unique
+  articles Article[]
+  users    User[]
 }

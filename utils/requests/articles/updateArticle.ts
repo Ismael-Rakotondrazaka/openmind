@@ -1,13 +1,13 @@
-import type { Article, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
-import { ArticleSchema } from "~/utils/schemas/articles";
-import { UserSchema } from "~/utils/schemas/users";
 import {
   CustomBooleanSchema,
   FileSchema,
+  ArticleSchema,
   CustomNullSchema,
+  TagSchema,
+  UserSchema,
 } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
@@ -63,6 +63,20 @@ export const UpdateArticleBodyBaseSchema = z
     isVisible: CustomBooleanSchema.default(
       articleConfig.IS_VISIBLE_DEFAULT_VALUE,
     ),
+    tagIds: z.union([
+      z
+        .array(z.coerce.number().int().positive())
+        .min(1)
+        .max(articleConfig.TAGS_MAX_SIZE)
+        .refine((val: number[]) => val.length === [...new Set(val)].length, {
+          message: "Tags must be unique",
+        }),
+      z.coerce
+        .number()
+        .int()
+        .positive()
+        .transform((val: number): number[] => [val]),
+    ]),
   })
   .partial();
 
@@ -121,14 +135,14 @@ export const UpdateArticleDataSchema = z.object({
     z.object({
       user: UserSchema,
     }),
+  ).and(
+    z.object({
+      tags: z.array(TagSchema),
+    }),
   ),
 });
 
-export type UpdateArticleData = {
-  article: Article & {
-    user: Omit<User, "password" | "email" | "emailVerifiedAt">;
-  };
-};
+export type UpdateArticleData = z.infer<typeof UpdateArticleDataSchema>;
 
 export type UpdateArticleError =
   | BadRequestError<UpdateArticleBodyPEM>

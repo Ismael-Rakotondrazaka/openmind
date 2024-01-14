@@ -1,4 +1,4 @@
-import type { Article, User } from "@prisma/client";
+import type { Article, Tag, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
@@ -7,6 +7,10 @@ import {
   FileSchema,
   CustomNullSchema,
 } from "~/utils/schemas";
+
+/* -------------------------------------------------------------------------- */
+/*                             Store article body                             */
+/* -------------------------------------------------------------------------- */
 
 export const StoreArticleBodyBaseSchema = z.object({
   title: z
@@ -49,6 +53,20 @@ export const StoreArticleBodyBaseSchema = z.object({
   isVisible: CustomBooleanSchema.default(
     articleConfig.IS_VISIBLE_DEFAULT_VALUE,
   ),
+  tagIds: z.union([
+    z
+      .array(z.coerce.number().int().positive())
+      .min(1)
+      .max(articleConfig.TAGS_MAX_SIZE)
+      .refine((val: number[]) => val.length === [...new Set(val)].length, {
+        message: "Tags must be unique",
+      }),
+    z.coerce
+      .number()
+      .int()
+      .positive()
+      .transform((val: number): number[] => [val]),
+  ]),
 });
 
 export const StoreArticleBodyClientSchema = StoreArticleBodyBaseSchema.merge(
@@ -95,11 +113,21 @@ export type StoreArticleBody = z.infer<typeof StoreArticleBodyClientSchema>;
 
 export type StoreArticleBodyPEM = RequestErrorMessage<StoreArticleBody>;
 
+/* -------------------------------------------------------------------------- */
+/*                             Store article data                             */
+/* -------------------------------------------------------------------------- */
+
 export type StoreArticleData = {
   article: Article & {
     user: Omit<User, "password" | "email" | "emailVerifiedAt">;
+  } & {
+    tags: Tag[];
   };
 };
+
+/* -------------------------------------------------------------------------- */
+/*                             Store article error                            */
+/* -------------------------------------------------------------------------- */
 
 export type StoreArticleError =
   | BadRequestError<StoreArticleBodyPEM>

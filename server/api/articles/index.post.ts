@@ -1,6 +1,6 @@
 import { zfd } from "zod-form-data";
 import type { SafeParseError } from "zod";
-import type { Article, User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import {
   type StoreArticleData,
   type StoreArticleError,
@@ -36,6 +36,21 @@ export default defineEventHandler(
         errorMessage: getRequestErrorMessage(
           storeArticleBodySPR as SafeParseError<StoreArticleBody>,
         ),
+      });
+    }
+
+    const tagsCount: number = await event.context.prisma.tag.count({
+      where: {
+        id: {
+          in: storeArticleBodySPR.data.tagIds,
+        },
+      },
+    });
+    if (tagsCount !== storeArticleBodySPR.data.tagIds.length) {
+      return createBadRequestError(event, {
+        errorMessage: {
+          tagIds: "One or more tags do not exist.",
+        },
       });
     }
 
@@ -80,37 +95,42 @@ export default defineEventHandler(
       });
     }
 
-    const article: Article & {
-      user: Omit<User, "password" | "email" | "emailVerifiedAt">;
-    } = await event.context.prisma.article.create({
-      data: {
-        id: articleId,
-        content,
-        title,
-        slug,
-        createdAt: now,
-        updatedAt: now,
-        isVisible: storeArticleBodySPR.data.isVisible,
-        summary,
-        userId: authUser.id,
-        coverUrl,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            firstName: true,
-            profileUrl: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true,
-            deletedAt: true,
+    const article: StoreArticleData["article"] =
+      await event.context.prisma.article.create({
+        data: {
+          id: articleId,
+          content,
+          title,
+          slug,
+          createdAt: now,
+          updatedAt: now,
+          isVisible: storeArticleBodySPR.data.isVisible,
+          summary,
+          userId: authUser.id,
+          coverUrl,
+          tags: {
+            connect: storeArticleBodySPR.data.tagIds.map((tagId) => ({
+              id: tagId,
+            })),
           },
         },
-      },
-    });
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              name: true,
+              firstName: true,
+              profileUrl: true,
+              role: true,
+              createdAt: true,
+              updatedAt: true,
+              deletedAt: true,
+            },
+          },
+          tags: true,
+        },
+      });
 
     return {
       article,

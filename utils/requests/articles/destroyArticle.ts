@@ -1,7 +1,5 @@
-import type { Article, User } from "@prisma/client";
 import { z } from "zod";
-import { UserSchema } from "~/utils/schemas/users";
-import { ArticleSchema } from "~/utils/schemas/articles";
+import { ArticleSchema, TagSchema, UserSchema } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
 /*                            Destroy article param                           */
@@ -22,14 +20,14 @@ export const DestroyArticleDataSchema = z.object({
     z.object({
       user: UserSchema,
     }),
+  ).and(
+    z.object({
+      tags: z.array(TagSchema),
+    }),
   ),
 });
 
-export type DestroyArticleData = {
-  article: Article & {
-    user: Omit<User, "password" | "email" | "emailVerifiedAt">;
-  };
-};
+export type DestroyArticleData = z.infer<typeof DestroyArticleDataSchema>;
 
 /* -------------------------------------------------------------------------- */
 /*                            Destroy article error                           */

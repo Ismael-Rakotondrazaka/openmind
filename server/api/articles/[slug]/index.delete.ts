@@ -66,6 +66,7 @@ export default defineEventHandler(
               deletedAt: true,
             },
           },
+          tags: true,
         },
       });
 

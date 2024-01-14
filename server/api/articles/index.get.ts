@@ -90,6 +90,7 @@ export default defineEventHandler(
               deletedAt: true,
             },
           },
+          tags: true,
         },
         orderBy: indexArticleQuerySPR.data.orderBy,
         take: pageSize,
