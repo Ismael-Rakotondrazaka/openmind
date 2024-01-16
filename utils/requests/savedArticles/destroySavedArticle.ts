@@ -7,20 +7,22 @@ import {
 } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
-/*                            Destroy article param                           */
+/*                         Destroy saved article param                        */
 /* -------------------------------------------------------------------------- */
 
-export const DestroyArticleParamSchema = z.object({
-  slug: z.string().trim(),
+export const DestroySavedArticleParamSchema = z.object({
+  articleId: z.string().trim(),
 });
 
-export type DestroyArticleParam = z.infer<typeof DestroyArticleParamSchema>;
+export type DestroySavedArticleParam = z.infer<
+  typeof DestroySavedArticleParamSchema
+>;
 
 /* -------------------------------------------------------------------------- */
-/*                            Destroy article data                            */
+/*                         Destroy saved article data                         */
 /* -------------------------------------------------------------------------- */
 
-export const DestroyArticleDataSchema = z.object({
+export const DestroySavedArticleDataSchema = z.object({
   article: ArticleSchema.and(
     z.object({
       user: UserSchema,
@@ -40,13 +42,15 @@ export const DestroyArticleDataSchema = z.object({
     ),
 });
 
-export type DestroyArticleData = z.infer<typeof DestroyArticleDataSchema>;
+export type DestroySavedArticleData = z.infer<
+  typeof DestroySavedArticleDataSchema
+>;
 
 /* -------------------------------------------------------------------------- */
-/*                            Destroy article error                           */
+/*                         Destroy saved article error                        */
 /* -------------------------------------------------------------------------- */
 
-export type DestroyArticleError =
+export type DestroySavedArticleError =
   | NotFoundError
   | UnauthorizedError
   | ForbiddenError;

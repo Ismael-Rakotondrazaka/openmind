@@ -129,6 +129,11 @@ export default defineEventHandler(
             },
           },
           tags: true,
+          savedArticles: {
+            where: {
+              userId: authUser.id,
+            },
+          },
         },
       });
 

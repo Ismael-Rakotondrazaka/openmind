@@ -1,4 +1,3 @@
-import type { Article, Tag, User } from "@prisma/client";
 import { z } from "zod";
 import { articleConfig } from "~/utils/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
@@ -6,6 +5,10 @@ import {
   CustomBooleanSchema,
   FileSchema,
   CustomNullSchema,
+  SavedArticleSchema,
+  ArticleSchema,
+  TagSchema,
+  UserSchema,
 } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
@@ -117,13 +120,27 @@ export type StoreArticleBodyPEM = RequestErrorMessage<StoreArticleBody>;
 /*                             Store article data                             */
 /* -------------------------------------------------------------------------- */
 
-export type StoreArticleData = {
-  article: Article & {
-    user: Omit<User, "password" | "email" | "emailVerifiedAt">;
-  } & {
-    tags: Tag[];
-  };
-};
+export const storeArticleDataSchema = z.object({
+  article: ArticleSchema.and(
+    z.object({
+      user: UserSchema,
+    }),
+  )
+    .and(
+      z.object({
+        tags: z.array(TagSchema),
+      }),
+    )
+    .and(
+      z
+        .object({
+          savedArticles: z.array(SavedArticleSchema),
+        })
+        .optional(),
+    ),
+});
+
+export type StoreArticleData = z.infer<typeof storeArticleDataSchema>;
 
 /* -------------------------------------------------------------------------- */
 /*                             Store article error                            */

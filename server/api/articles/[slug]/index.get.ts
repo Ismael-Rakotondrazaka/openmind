@@ -41,6 +41,16 @@ export default defineEventHandler(
             },
           },
           tags: true,
+          /* eslint-disable indent */
+          savedArticles:
+            authUser === null
+              ? undefined
+              : {
+                  where: {
+                    userId: authUser.id,
+                  },
+                },
+          /* eslint-enable indent */
         },
       });
 

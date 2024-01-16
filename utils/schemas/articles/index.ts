@@ -95,3 +95,9 @@ export const ArticleOrderByWithRelationInputSchema: z.ZodType<Prisma.ArticleOrde
       ])
       .optional(),
   });
+
+export const ArticleRelationFilterSchema: z.ZodType<Prisma.ArticleRelationFilter> =
+  z.object({
+    is: z.lazy(() => ArticleWhereInputSchema).optional(),
+    isNot: z.lazy(() => ArticleWhereInputSchema).optional(),
+  });
