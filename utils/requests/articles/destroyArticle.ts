@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { ArticleSchema, TagSchema, UserSchema } from "~/utils/schemas";
+import {
+  ArticleSchema,
+  TagSchema,
+  UserSchema,
+  SavedArticleSchema,
+} from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
 /*                            Destroy article param                           */
@@ -20,11 +25,19 @@ export const DestroyArticleDataSchema = z.object({
     z.object({
       user: UserSchema,
     }),
-  ).and(
-    z.object({
-      tags: z.array(TagSchema),
-    }),
-  ),
+  )
+    .and(
+      z.object({
+        tags: z.array(TagSchema),
+      }),
+    )
+    .and(
+      z
+        .object({
+          savedArticles: z.array(SavedArticleSchema),
+        })
+        .optional(),
+    ),
 });
 
 export type DestroyArticleData = z.infer<typeof DestroyArticleDataSchema>;
