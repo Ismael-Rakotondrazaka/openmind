@@ -11,7 +11,7 @@ import {
 /* -------------------------------------------------------------------------- */
 
 export const DestroySavedArticleParamSchema = z.object({
-  slug: z.string().trim(),
+  articleId: z.string().trim(),
 });
 
 export type DestroySavedArticleParam = z.infer<
