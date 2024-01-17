@@ -5,3 +5,4 @@ export * from "./articles";
 export * from "./tags";
 export * from "./userTags";
 export * from "./savedArticles";
+export * from "./recommendedArticles";
