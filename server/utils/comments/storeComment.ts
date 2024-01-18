@@ -6,7 +6,7 @@ import { StoreCommentBodyBaseSchema, commentConfig } from "~/utils";
 /*                             Store comment body                             */
 /* -------------------------------------------------------------------------- */
 
-export const StoreCommentBodyClientSchema = StoreCommentBodyBaseSchema.merge(
+export const StoreCommentBodySchema = StoreCommentBodyBaseSchema.merge(
   z.object({
     content: makeContentServerSchema(
       commentConfig.CONTENT_MIN_LENGTH,
