@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { JSDOM } from "jsdom";
 import { countHtmlAsTextLength } from "~/utils/strings";
 
 export const makeContentServerSchema = (minLength: number, maxLength: number) =>
@@ -6,11 +7,9 @@ export const makeContentServerSchema = (minLength: number, maxLength: number) =>
     .string()
     .trim()
     .superRefine((value: string, ctx) => {
-      const parser = new DOMParser();
-      const document = parser.parseFromString(value, "text/html");
-      const body = document.body;
+      const dom = new JSDOM(value);
 
-      const length: number = countHtmlAsTextLength(body);
+      const length: number = countHtmlAsTextLength(dom.window.document.body);
 
       if (length < minLength) {
         ctx.addIssue({
