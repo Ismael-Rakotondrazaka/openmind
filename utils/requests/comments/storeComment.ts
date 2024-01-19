@@ -12,7 +12,9 @@ import {
 /* -------------------------------------------------------------------------- */
 
 export const StoreCommentBodyBaseSchema = z.object({
-  parentId: z.union([z.coerce.number().int().positive(), CustomNullSchema]),
+  parentId: z
+    .union([z.coerce.number().int().positive(), CustomNullSchema])
+    .optional(),
   articleId: z.string(),
 });
 
