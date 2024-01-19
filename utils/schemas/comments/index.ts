@@ -2,7 +2,6 @@ import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 import {
   StringFilterSchema,
-  IntNullableFilterSchema,
   SortOrderInputSchema,
   SortOrderSchema,
   DateTimeFilterSchema,
@@ -12,9 +11,9 @@ import {
 } from "~/utils/schemas";
 
 export const CommentSchema = z.object({
-  id: z.number().int(),
+  id: z.string(),
   content: z.string(),
-  parentId: z.number().int().nullable(),
+  parentId: z.string().nullable(),
   userId: z.number().int(),
   articleId: z.string(),
   createdAt: z.coerce.date(),
@@ -22,8 +21,8 @@ export const CommentSchema = z.object({
   deletedAt: z.coerce.date().nullable(),
 });
 
-export const CommentWhereInputSchema: z.ZodType<Prisma.CommentWhereInput> =
-  z.object({
+export const CommentWhereInputSchema: z.ZodType<Prisma.CommentWhereInput> = z
+  .object({
     AND: z
       .union([
         z.lazy(() => CommentWhereInputSchema),
@@ -40,10 +39,10 @@ export const CommentWhereInputSchema: z.ZodType<Prisma.CommentWhereInput> =
         z.lazy(() => CommentWhereInputSchema).array(),
       ])
       .optional(),
-    id: z.union([z.lazy(() => IntFilterSchema), z.number()]).optional(),
+    id: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
     content: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
     parentId: z
-      .union([z.lazy(() => IntNullableFilterSchema), z.number()])
+      .union([z.lazy(() => StringNullableFilterSchema), z.string()])
       .optional()
       .nullable(),
     userId: z.union([z.lazy(() => IntFilterSchema), z.number()]).optional(),
@@ -74,7 +73,8 @@ export const CommentWhereInputSchema: z.ZodType<Prisma.CommentWhereInput> =
         z.lazy(() => ArticleWhereInputSchema),
       ])
       .optional(),
-  });
+  })
+  .strict();
 
 export const CommentOrderByWithRelationInputSchema: z.ZodType<Prisma.CommentOrderByWithRelationInput> =
   z.object({
