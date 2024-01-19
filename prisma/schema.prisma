@@ -91,9 +91,9 @@ model Tag {
 }
 
 model Comment {
-  id        Int       @id @default(autoincrement())
-  content   String
-  parentId  Int?
+  id        String    @id
+  content   String    @db.Text
+  parentId  String?
   parent    Comment?  @relation("ParentComment", fields: [parentId], references: [id])
   replies   Comment[] @relation("ParentComment")
   userId    Int
