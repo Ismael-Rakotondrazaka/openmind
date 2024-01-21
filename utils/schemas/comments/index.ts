@@ -8,6 +8,7 @@ import {
   DateTimeNullableFilterSchema,
   IntFilterSchema,
   ArticleRelationFilterSchema,
+  StringNullableFilterSchema,
 } from "~/utils/schemas";
 
 export const CommentSchema = z.object({
@@ -21,8 +22,8 @@ export const CommentSchema = z.object({
   deletedAt: z.coerce.date().nullable(),
 });
 
-export const CommentWhereInputSchema: z.ZodType<Prisma.CommentWhereInput> = z
-  .object({
+export const CommentWhereInputSchema: z.ZodType<Prisma.CommentWhereInput> =
+  z.object({
     AND: z
       .union([
         z.lazy(() => CommentWhereInputSchema),
@@ -73,8 +74,7 @@ export const CommentWhereInputSchema: z.ZodType<Prisma.CommentWhereInput> = z
         z.lazy(() => ArticleWhereInputSchema),
       ])
       .optional(),
-  })
-  .strict();
+  });
 
 export const CommentOrderByWithRelationInputSchema: z.ZodType<Prisma.CommentOrderByWithRelationInput> =
   z.object({
