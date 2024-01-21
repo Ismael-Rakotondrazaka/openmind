@@ -3,3 +3,4 @@ export * from "./formatCommentContent";
 export * from "./formatCommentImagePath";
 export * from "./saveCommentImage";
 export * from "./createCommentId";
+export * from "./updateComment";
