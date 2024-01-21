@@ -106,6 +106,15 @@ export default defineEventHandler(
               deletedAt: true,
             },
           },
+          _count: {
+            select: {
+              replies: {
+                where: {
+                  deletedAt: null,
+                },
+              },
+            },
+          },
         },
       });
 

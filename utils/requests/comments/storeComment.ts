@@ -38,6 +38,12 @@ export const StoreCommentDataSchema = z.object({
     z.object({
       user: UserSchema,
     }),
+  ).and(
+    z.object({
+      _count: z.object({
+        replies: z.coerce.number().positive().int(),
+      }),
+    }),
   ),
 });
 
