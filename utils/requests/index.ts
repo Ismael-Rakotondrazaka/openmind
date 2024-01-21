@@ -6,3 +6,4 @@ export * from "./tags";
 export * from "./userTags";
 export * from "./savedArticles";
 export * from "./recommendedArticles";
+export * from "./comments";

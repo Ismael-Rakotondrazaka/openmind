@@ -32,6 +32,7 @@ model User {
   articles           Article[]
   savedArticles      SavedArticle[]
   tags               Tag[]
+  comments           Comment[]
 }
 
 enum Role {
@@ -69,6 +70,7 @@ model Article {
   user          User           @relation(fields: [userId], references: [id])
   tags          Tag[]
   savedArticles SavedArticle[]
+  comments      Comment[]
 }
 
 model SavedArticle {
@@ -86,4 +88,19 @@ model Tag {
   value    String    @unique
   articles Article[]
   users    User[]
+}
+
+model Comment {
+  id        String    @id
+  content   String    @db.Text
+  parentId  String?
+  parent    Comment?  @relation("ParentComment", fields: [parentId], references: [id])
+  replies   Comment[] @relation("ParentComment")
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  articleId String
+  article   Article   @relation(fields: [articleId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deletedAt DateTime?
 }
