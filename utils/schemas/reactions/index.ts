@@ -14,14 +14,32 @@ export const ReactionTypeSchema = z.enum(["like", "love", "celebrate"]);
 
 export type ReactionType = z.infer<typeof ReactionTypeSchema>;
 
-export const ReactionSchema = z.object({
+export const ReactionBaseSchema = z.object({
   type: ReactionTypeSchema,
   id: z.number().int(),
   createdAt: z.coerce.date(),
   userId: z.number().int(),
-  articleId: z.string().nullable(),
-  commentId: z.string().nullable(),
 });
+
+export const ReactionArticleSchema = ReactionBaseSchema.merge(
+  z.object({
+    articleId: z.string(),
+    commentId: z.null(),
+  }),
+);
+export type ReactionArticle = z.infer<typeof ReactionArticleSchema>;
+
+export const ReactionCommentSchema = ReactionBaseSchema.merge(
+  z.object({
+    commentId: z.string(),
+    articleId: z.null(),
+  }),
+);
+export type ReactionComment = z.infer<typeof ReactionCommentSchema>;
+
+export const ReactionSchema: z.ZodType<ReactionArticle | ReactionComment> =
+  z.lazy(() => z.union([ReactionArticleSchema, ReactionCommentSchema]));
+export type Reaction = z.infer<typeof ReactionSchema>;
 
 export const NestedEnumReactionTypeFilterSchema: z.ZodType<Prisma.NestedEnumReactionTypeFilter> =
   z.object({
