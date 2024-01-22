@@ -7,3 +7,4 @@ export * from "./articleImageConfig";
 export * from "./fileConfig";
 export * from "./tagConfig";
 export * from "./commentConfig";
+export * from "./reactionConfig";
