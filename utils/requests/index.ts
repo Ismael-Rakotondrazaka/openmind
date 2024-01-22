@@ -7,3 +7,4 @@ export * from "./userTags";
 export * from "./savedArticles";
 export * from "./recommendedArticles";
 export * from "./comments";
+export * from "./reactions";
