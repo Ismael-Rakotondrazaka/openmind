@@ -101,3 +101,15 @@ export const ArticleRelationFilterSchema: z.ZodType<Prisma.ArticleRelationFilter
     is: z.lazy(() => ArticleWhereInputSchema).optional(),
     isNot: z.lazy(() => ArticleWhereInputSchema).optional(),
   });
+
+export const ArticleNullableRelationFilterSchema: z.ZodType<Prisma.ArticleNullableRelationFilter> =
+  z.object({
+    is: z
+      .lazy(() => ArticleWhereInputSchema)
+      .optional()
+      .nullable(),
+    isNot: z
+      .lazy(() => ArticleWhereInputSchema)
+      .optional()
+      .nullable(),
+  });
