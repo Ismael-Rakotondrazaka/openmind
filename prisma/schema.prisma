@@ -34,6 +34,7 @@ model User {
   tags               Tag[]
   comments           Comment[]
   reactions          Reaction[]
+  views              View[]
 }
 
 enum Role {
@@ -79,6 +80,7 @@ model Article {
   savedArticles SavedArticle[]
   comments      Comment[]
   reactions     Reaction[]
+  views         View[]
 }
 
 model SavedArticle {
@@ -128,4 +130,14 @@ model Reaction {
   // Unique constraint to ensure one reaction per user for an article or comment
   @@unique([userId, articleId])
   @@unique([userId, commentId])
+}
+
+model View {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id])
 }
