@@ -12,6 +12,8 @@ import {
 import { BoolFilterSchema } from "../types/booleans";
 import { SortOrderInputSchema, SortOrderSchema } from "../types/prisma";
 import { TagListRelationFilterSchema } from "../tags";
+import { SavedArticleSchema } from "~/utils/schemas/savedArticles";
+import { ViewSchema } from "~/utils/schemas/views";
 
 export const ArticleSchema = z.object({
   id: z.string(),
@@ -113,3 +115,25 @@ export const ArticleNullableRelationFilterSchema: z.ZodType<Prisma.ArticleNullab
       .optional()
       .nullable(),
   });
+
+export const ArticleCountSchema = z.object({
+  _count: z.object({
+    views: z.number().nonnegative().int(),
+    tags: z.number().nonnegative().int(),
+    comments: z.number().nonnegative().int(),
+    reactions: z.number().nonnegative().int(),
+  }),
+});
+
+export type ArticleCount = z.infer<typeof ArticleCountSchema>;
+
+export const ArticleAuthSchema = z.object({
+  auth: z
+    .object({
+      savedArticle: SavedArticleSchema.nullable(),
+      view: ViewSchema.nullable(),
+    })
+    .nullable(),
+});
+
+export type ArticleAuth = z.infer<typeof ArticleAuthSchema>;
