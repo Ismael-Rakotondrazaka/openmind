@@ -11,6 +11,7 @@ import {
   createForbiddenError,
   getRequestErrorMessage,
   UpdateArticleParamSchema,
+  UpdateArticleDataSchema,
 } from "~/utils";
 import {
   createArticleSlugSuffix,
@@ -224,48 +225,85 @@ export default defineEventHandler(
     });
 
     const updatedArticle: UpdateArticleData["article"] =
-      await event.context.prisma.article.update({
-        where: {
-          id: article.id,
-        },
-        data: {
-          content: newContent,
-          title: newTitle,
-          slug: newSlug,
-          updatedAt: now,
-          isVisible: newIsVisible,
-          summary: newSummary,
-          coverUrl: newCoverUrl,
-          tags: {
-            connect: tagsToConnect,
-            disconnect: tagsToDisconnect,
+      await event.context.prisma.article
+        .update({
+          where: {
+            id: article.id,
           },
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
+          data: {
+            content: newContent,
+            title: newTitle,
+            slug: newSlug,
+            updatedAt: now,
+            isVisible: newIsVisible,
+            summary: newSummary,
+            coverUrl: newCoverUrl,
+            tags: {
+              connect: tagsToConnect,
+              disconnect: tagsToDisconnect,
             },
           },
-          tags: true,
-          savedArticles: {
-            where: {
-              userId: authUser.id,
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                firstName: true,
+                profileUrl: true,
+                role: true,
+                createdAt: true,
+                updatedAt: true,
+                deletedAt: true,
+              },
+            },
+            tags: true,
+            savedArticles: {
+              where: {
+                userId: authUser.id,
+              },
+            },
+            views: {
+              where: {
+                userId: authUser.id,
+              },
+            },
+            _count: {
+              select: {
+                comments: {
+                  where: {
+                    deletedAt: null,
+                  },
+                },
+                reactions: true,
+                tags: true,
+                views: true,
+              },
             },
           },
-        },
-      });
+        })
+        .then((article) => {
+          const auth: StoreArticleData["article"]["auth"] = {
+            savedArticle: null,
+            view: null,
+          };
 
-    return {
+          if (article.savedArticles.length > 0) {
+            auth.savedArticle = article.savedArticles[0];
+          }
+
+          if (article.views.length > 0) {
+            auth.view = article.views[0];
+          }
+
+          return {
+            ...article,
+            auth,
+          };
+        });
+
+    return UpdateArticleDataSchema.parse({
       article: updatedArticle,
-    };
+    });
   },
 );
