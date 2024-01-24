@@ -6,6 +6,7 @@ import {
   type ShowArticleParam,
   showArticleParamSchema,
   createNotFoundError,
+  ShowArticleDataSchema,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -22,37 +23,81 @@ export default defineEventHandler(
     const authUser: User | null = await getAuthUser(event);
 
     const article: ShowArticleData["article"] | null =
-      await event.context.prisma.article.findFirst({
-        where: {
-          slug: showArticleParamSPR.data.slug,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
+      await event.context.prisma.article
+        .findFirst({
+          where: {
+            slug: showArticleParamSPR.data.slug,
           },
-          tags: true,
-          /* eslint-disable indent */
-          savedArticles:
-            authUser === null
-              ? undefined
-              : {
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                firstName: true,
+                profileUrl: true,
+                role: true,
+                createdAt: true,
+                updatedAt: true,
+                deletedAt: true,
+              },
+            },
+            tags: true,
+            /* eslint-disable indent */
+            savedArticles:
+              authUser === null
+                ? undefined
+                : {
+                    where: {
+                      userId: authUser.id,
+                    },
+                  },
+            views:
+              authUser === null
+                ? undefined
+                : {
+                    where: {
+                      userId: authUser.id,
+                    },
+                  },
+            /* eslint-enable indent */
+            _count: {
+              select: {
+                comments: {
                   where: {
-                    userId: authUser.id,
+                    deletedAt: null,
                   },
                 },
-          /* eslint-enable indent */
-        },
-      });
+                reactions: true,
+                tags: true,
+                views: true,
+              },
+            },
+          },
+        })
+        .then((article) => {
+          if (article !== null) {
+            const auth: StoreArticleData["article"]["auth"] = {
+              savedArticle: null,
+              view: null,
+            };
+
+            if (article.savedArticles.length > 0) {
+              auth.savedArticle = article.savedArticles[0];
+            }
+
+            if (article.views.length > 0) {
+              auth.view = article.views[0];
+            }
+
+            return {
+              ...article,
+              auth,
+            };
+          } else {
+            return null;
+          }
+        });
 
     if (
       article === null ||
@@ -65,8 +110,8 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    return {
+    return ShowArticleDataSchema.parse({
       article,
-    };
+    });
   },
 );

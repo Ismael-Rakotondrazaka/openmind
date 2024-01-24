@@ -9,6 +9,7 @@ import {
   createUnauthorizedError,
   getRequestErrorMessage,
   articleConfig,
+  StoreArticleDataSchema,
 } from "~/utils";
 import {
   createArticleId,
@@ -96,49 +97,86 @@ export default defineEventHandler(
     }
 
     const article: StoreArticleData["article"] =
-      await event.context.prisma.article.create({
-        data: {
-          id: articleId,
-          content,
-          title,
-          slug,
-          createdAt: now,
-          updatedAt: now,
-          isVisible: storeArticleBodySPR.data.isVisible,
-          summary,
-          userId: authUser.id,
-          coverUrl,
-          tags: {
-            connect: storeArticleBodySPR.data.tagIds.map((tagId) => ({
-              id: tagId,
-            })),
-          },
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
+      await event.context.prisma.article
+        .create({
+          data: {
+            id: articleId,
+            content,
+            title,
+            slug,
+            createdAt: now,
+            updatedAt: now,
+            isVisible: storeArticleBodySPR.data.isVisible,
+            summary,
+            userId: authUser.id,
+            coverUrl,
+            tags: {
+              connect: storeArticleBodySPR.data.tagIds.map((tagId) => ({
+                id: tagId,
+              })),
             },
           },
-          tags: true,
-          savedArticles: {
-            where: {
-              userId: authUser.id,
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                firstName: true,
+                profileUrl: true,
+                role: true,
+                createdAt: true,
+                updatedAt: true,
+                deletedAt: true,
+              },
+            },
+            tags: true,
+            savedArticles: {
+              where: {
+                userId: authUser.id,
+              },
+            },
+            views: {
+              where: {
+                userId: authUser.id,
+              },
+            },
+            _count: {
+              select: {
+                comments: {
+                  where: {
+                    deletedAt: null,
+                  },
+                },
+                reactions: true,
+                tags: true,
+                views: true,
+              },
             },
           },
-        },
-      });
+        })
+        .then((article) => {
+          const auth: StoreArticleData["article"]["auth"] = {
+            savedArticle: null,
+            view: null,
+          };
 
-    return {
+          if (article.savedArticles.length > 0) {
+            auth.savedArticle = article.savedArticles[0];
+          }
+
+          if (article.views.length > 0) {
+            auth.view = article.views[0];
+          }
+
+          return {
+            ...article,
+            auth,
+          };
+        });
+
+    return StoreArticleDataSchema.parse({
       article,
-    };
+    });
   },
 );

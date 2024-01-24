@@ -4,6 +4,8 @@ import {
   ArticleSchema,
   UserSchema,
   TagSchema,
+  ArticleCountSchema,
+  ArticleAuthSchema,
 } from "~/utils/schemas";
 
 export const StoreSavedArticleBodySchema = z.object({
@@ -23,9 +25,12 @@ export const StoreSavedArticleDataSchema = z.object({
           user: UserSchema,
         }),
       ).and(
-        z.object({
-          tags: z.array(TagSchema),
-        }),
+        z
+          .object({
+            tags: z.array(TagSchema),
+          })
+          .and(ArticleCountSchema)
+          .and(ArticleAuthSchema),
       ),
     }),
   ),

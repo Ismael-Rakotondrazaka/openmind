@@ -8,6 +8,7 @@ import {
   createNotFoundError,
   createUnauthorizedError,
   createForbiddenError,
+  DestroyArticleDataSchema,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -44,39 +45,76 @@ export default defineEventHandler(
     const now = new Date();
 
     const deletedArticle: DestroyArticleData["article"] =
-      await event.context.prisma.article.update({
-        where: {
-          id: article.id,
-        },
-        data: {
-          deletedAt: now,
-          updatedAt: now,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
+      await event.context.prisma.article
+        .update({
+          where: {
+            id: article.id,
+          },
+          data: {
+            deletedAt: now,
+            updatedAt: now,
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                firstName: true,
+                profileUrl: true,
+                role: true,
+                createdAt: true,
+                updatedAt: true,
+                deletedAt: true,
+              },
+            },
+            tags: true,
+            savedArticles: {
+              where: {
+                userId: authUser.id,
+              },
+            },
+            views: {
+              where: {
+                userId: authUser.id,
+              },
+            },
+            _count: {
+              select: {
+                comments: {
+                  where: {
+                    deletedAt: null,
+                  },
+                },
+                reactions: true,
+                tags: true,
+                views: true,
+              },
             },
           },
-          tags: true,
-          savedArticles: {
-            where: {
-              userId: authUser.id,
-            },
-          },
-        },
-      });
+        })
+        .then((article) => {
+          const auth: StoreArticleData["article"]["auth"] = {
+            savedArticle: null,
+            view: null,
+          };
 
-    return {
+          if (article.savedArticles.length > 0) {
+            auth.savedArticle = article.savedArticles[0];
+          }
+
+          if (article.views.length > 0) {
+            auth.view = article.views[0];
+          }
+
+          return {
+            ...article,
+            auth,
+          };
+        });
+
+    return DestroyArticleDataSchema.parse({
       article: deletedArticle,
-    };
+    });
   },
 );

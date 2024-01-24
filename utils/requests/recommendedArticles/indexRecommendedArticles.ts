@@ -6,7 +6,8 @@ import {
   PageSchema,
   PaginationSchema,
   TagSchema,
-  SavedArticleSchema,
+  ArticleCountSchema,
+  ArticleAuthSchema,
   ArticleOrderByWithRelationInputSchema,
 } from "~/utils/schemas";
 import { articleConfig } from "~/utils/configs";
@@ -51,13 +52,8 @@ export const IndexRecommendedArticleDataSchema = z
             tags: z.array(TagSchema),
           }),
         )
-        .and(
-          z
-            .object({
-              savedArticles: z.array(SavedArticleSchema),
-            })
-            .optional(),
-        ),
+        .and(ArticleCountSchema)
+        .and(ArticleAuthSchema),
     ),
   })
   .merge(PaginationSchema);

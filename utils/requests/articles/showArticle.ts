@@ -3,7 +3,8 @@ import {
   ArticleSchema,
   TagSchema,
   UserSchema,
-  SavedArticleSchema,
+  ArticleCountSchema,
+  ArticleAuthSchema,
 } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
@@ -20,7 +21,7 @@ export type ShowArticleParam = z.infer<typeof showArticleParamSchema>;
 /*                              Show article data                             */
 /* -------------------------------------------------------------------------- */
 
-export const showArticleDataSchema = z.object({
+export const ShowArticleDataSchema = z.object({
   article: ArticleSchema.and(
     z.object({
       user: UserSchema,
@@ -31,16 +32,11 @@ export const showArticleDataSchema = z.object({
         tags: z.array(TagSchema),
       }),
     )
-    .and(
-      z
-        .object({
-          savedArticles: z.array(SavedArticleSchema),
-        })
-        .optional(),
-    ),
+    .and(ArticleCountSchema)
+    .and(ArticleAuthSchema),
 });
 
-export type ShowArticleData = z.infer<typeof showArticleDataSchema>;
+export type ShowArticleData = z.infer<typeof ShowArticleDataSchema>;
 
 /* -------------------------------------------------------------------------- */
 /*                             Show article error                             */

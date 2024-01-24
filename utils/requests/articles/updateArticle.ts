@@ -8,7 +8,8 @@ import {
   CustomNullSchema,
   TagSchema,
   UserSchema,
-  SavedArticleSchema,
+  ArticleCountSchema,
+  ArticleAuthSchema,
 } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
@@ -142,13 +143,8 @@ export const UpdateArticleDataSchema = z.object({
         tags: z.array(TagSchema),
       }),
     )
-    .and(
-      z
-        .object({
-          savedArticles: z.array(SavedArticleSchema),
-        })
-        .optional(),
-    ),
+    .and(ArticleCountSchema)
+    .and(ArticleAuthSchema),
 });
 
 export type UpdateArticleData = z.infer<typeof UpdateArticleDataSchema>;

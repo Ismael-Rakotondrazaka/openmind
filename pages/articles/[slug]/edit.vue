@@ -93,7 +93,7 @@ const {
     opts?: AsyncDataExecuteOptions | undefined,
   ) => Promise<ShowArticleData["article"] | null>;
 } = await useFetch(() => `/api/articles/${slug.value}`, {
-  transform: (value) => showArticleDataSchema.parse(value).article,
+  transform: (value) => ShowArticleDataSchema.parse(value).article,
 });
 
 const toast = useToast();

@@ -6,6 +6,7 @@ import {
   createUnauthorizedError,
   getRequestErrorMessage,
   StoreSavedArticleBodySchema,
+  StoreSavedArticleDataSchema,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -61,35 +62,80 @@ export default defineEventHandler(
     }
 
     const savedArticle: StoreSavedArticleData["savedArticle"] =
-      await event.context.prisma.savedArticle.create({
-        data: {
-          articleId: storeSavedArticleBodySPR.data.articleId,
-          userId: authUser.id,
-        },
-        include: {
-          article: {
-            include: {
-              tags: true,
-              user: {
-                select: {
-                  id: true,
-                  username: true,
-                  name: true,
-                  firstName: true,
-                  profileUrl: true,
-                  role: true,
-                  createdAt: true,
-                  updatedAt: true,
-                  deletedAt: true,
+      await event.context.prisma.savedArticle
+        .create({
+          data: {
+            articleId: storeSavedArticleBodySPR.data.articleId,
+            userId: authUser.id,
+          },
+          include: {
+            article: {
+              include: {
+                tags: true,
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    name: true,
+                    firstName: true,
+                    profileUrl: true,
+                    role: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    deletedAt: true,
+                  },
+                },
+                savedArticles: {
+                  where: {
+                    userId: authUser.id,
+                  },
+                },
+                views: {
+                  where: {
+                    userId: authUser.id,
+                  },
+                },
+                _count: {
+                  select: {
+                    comments: {
+                      where: {
+                        deletedAt: null,
+                      },
+                    },
+                    reactions: true,
+                    tags: true,
+                    views: true,
+                  },
                 },
               },
             },
           },
-        },
-      });
+        })
+        .then((savedArticle) => {
+          const auth: StoreArticleData["article"]["auth"] = {
+            savedArticle: null,
+            view: null,
+          };
 
-    return {
+          if (savedArticle.article.savedArticles.length > 0) {
+            auth.savedArticle = savedArticle.article.savedArticles[0];
+          }
+
+          if (savedArticle.article.views.length > 0) {
+            auth.view = savedArticle.article.views[0];
+          }
+
+          return {
+            ...savedArticle,
+            article: {
+              ...savedArticle.article,
+              auth,
+            },
+          };
+        });
+
+    return StoreSavedArticleDataSchema.parse({
       savedArticle,
-    };
+    });
   },
 );

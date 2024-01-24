@@ -19,7 +19,7 @@ const {
   data: Ref<ShowArticleData["article"] | null>;
   error: Ref<H3Error<ShowArticleError> | null>;
 } = await useFetch(() => `/api/articles/${slug.value}`, {
-  transform: (value) => showArticleDataSchema.parse(value).article,
+  transform: (value) => ShowArticleDataSchema.parse(value).article,
 });
 
 const showArticleError: ComputedRef<ShowArticleError | null> = computed(() => {
