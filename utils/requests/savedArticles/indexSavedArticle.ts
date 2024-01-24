@@ -9,6 +9,8 @@ import {
   PaginationSchema,
   PageSchema,
   makePageSizeSchema,
+  ArticleCountSchema,
+  ArticleAuthSchema,
 } from "~/utils/schemas";
 import { articleConfig } from "~/utils/configs";
 
@@ -49,11 +51,14 @@ export const IndexSavedArticleDataSchema = z
             z.object({
               user: UserSchema,
             }),
-          ).and(
-            z.object({
-              tags: z.array(TagSchema),
-            }),
-          ),
+          )
+            .and(
+              z.object({
+                tags: z.array(TagSchema),
+              }),
+            )
+            .and(ArticleCountSchema)
+            .and(ArticleAuthSchema),
         }),
       ),
     ),
