@@ -8,7 +8,8 @@ import {
   PageSchema,
   PaginationSchema,
   TagSchema,
-  SavedArticleSchema,
+  ArticleCountSchema,
+  ArticleAuthSchema,
 } from "~/utils/schemas";
 import { articleConfig } from "~/utils/configs";
 
@@ -50,13 +51,8 @@ export const IndexArticleDataSchema = z
             tags: z.array(TagSchema),
           }),
         )
-        .and(
-          z
-            .object({
-              savedArticles: z.array(SavedArticleSchema),
-            })
-            .optional(),
-        ),
+        .and(ArticleCountSchema)
+        .and(ArticleAuthSchema),
     ),
   })
   .merge(PaginationSchema);
