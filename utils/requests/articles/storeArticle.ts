@@ -5,10 +5,11 @@ import {
   CustomBooleanSchema,
   FileSchema,
   CustomNullSchema,
-  SavedArticleSchema,
   ArticleSchema,
   TagSchema,
   UserSchema,
+  ArticleCountSchema,
+  ArticleAuthSchema,
 } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
@@ -120,7 +121,7 @@ export type StoreArticleBodyPEM = RequestErrorMessage<StoreArticleBody>;
 /*                             Store article data                             */
 /* -------------------------------------------------------------------------- */
 
-export const storeArticleDataSchema = z.object({
+export const StoreArticleDataSchema = z.object({
   article: ArticleSchema.and(
     z.object({
       user: UserSchema,
@@ -131,16 +132,11 @@ export const storeArticleDataSchema = z.object({
         tags: z.array(TagSchema),
       }),
     )
-    .and(
-      z
-        .object({
-          savedArticles: z.array(SavedArticleSchema),
-        })
-        .optional(),
-    ),
+    .and(ArticleCountSchema)
+    .and(ArticleAuthSchema),
 });
 
-export type StoreArticleData = z.infer<typeof storeArticleDataSchema>;
+export type StoreArticleData = z.infer<typeof StoreArticleDataSchema>;
 
 /* -------------------------------------------------------------------------- */
 /*                             Store article error                            */
