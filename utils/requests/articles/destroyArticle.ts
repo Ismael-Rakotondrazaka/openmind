@@ -3,7 +3,8 @@ import {
   ArticleSchema,
   TagSchema,
   UserSchema,
-  SavedArticleSchema,
+  ArticleCountSchema,
+  ArticleAuthSchema,
 } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
@@ -31,13 +32,8 @@ export const DestroyArticleDataSchema = z.object({
         tags: z.array(TagSchema),
       }),
     )
-    .and(
-      z
-        .object({
-          savedArticles: z.array(SavedArticleSchema),
-        })
-        .optional(),
-    ),
+    .and(ArticleCountSchema)
+    .and(ArticleAuthSchema),
 });
 
 export type DestroyArticleData = z.infer<typeof DestroyArticleDataSchema>;
