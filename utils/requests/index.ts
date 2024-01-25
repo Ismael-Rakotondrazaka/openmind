@@ -9,3 +9,4 @@ export * from "./recommendedArticles";
 export * from "./comments";
 export * from "./reactions";
 export * from "./views";
+export * from "./follows";

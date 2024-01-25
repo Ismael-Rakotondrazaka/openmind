@@ -35,6 +35,8 @@ model User {
   comments           Comment[]
   reactions          Reaction[]
   views              View[]
+  following          Follow[]            @relation("UserFollowing")
+  followers          Follow[]            @relation("UserFollowers")
 }
 
 enum Role {
@@ -140,4 +142,15 @@ model View {
   user      User     @relation(fields: [userId], references: [id])
   articleId String
   article   Article  @relation(fields: [articleId], references: [id])
+}
+
+model Follow {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  follower    User     @relation("UserFollowing", fields: [followerId], references: [id])
+  followerId  Int
+  following   User     @relation("UserFollowers", fields: [followingId], references: [id])
+  followingId Int
+
+  @@unique([followerId, followingId])
 }
