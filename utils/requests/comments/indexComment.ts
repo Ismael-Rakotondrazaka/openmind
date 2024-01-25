@@ -7,6 +7,8 @@ import {
   makePageSizeSchema,
   PageSchema,
   PaginationSchema,
+  CommentAuthSchema,
+  CommentCountSchema,
 } from "~/utils/schemas";
 import { commentConfig } from "~/utils/configs";
 
@@ -42,13 +44,9 @@ export const IndexCommentDataSchema = z
         z.object({
           user: UserSchema,
         }),
-      ).and(
-        z.object({
-          _count: z.object({
-            replies: z.coerce.number().positive().int(),
-          }),
-        }),
-      ),
+      )
+        .and(CommentCountSchema)
+        .and(CommentAuthSchema),
     ),
   })
   .merge(PaginationSchema);

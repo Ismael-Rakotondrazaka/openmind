@@ -5,6 +5,8 @@ import {
   UserSchema,
   CommentSchema,
   makeContentClientSchema,
+  CommentCountSchema,
+  CommentAuthSchema,
 } from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
@@ -38,13 +40,9 @@ export const StoreCommentDataSchema = z.object({
     z.object({
       user: UserSchema,
     }),
-  ).and(
-    z.object({
-      _count: z.object({
-        replies: z.coerce.number().positive().int(),
-      }),
-    }),
-  ),
+  )
+    .and(CommentCountSchema)
+    .and(CommentAuthSchema),
 });
 
 export type StoreCommentData = z.infer<typeof StoreCommentDataSchema>;
