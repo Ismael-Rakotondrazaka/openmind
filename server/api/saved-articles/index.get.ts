@@ -8,6 +8,7 @@ import {
   createBadRequestError,
   getRequestErrorMessage,
   IndexSavedArticleDataSchema,
+  type Reaction,
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
 
@@ -87,6 +88,11 @@ export default defineEventHandler(
                     userId: authUser.id,
                   },
                 },
+                reactions: {
+                  where: {
+                    userId: authUser.id,
+                  },
+                },
                 _count: {
                   select: {
                     comments: {
@@ -112,6 +118,7 @@ export default defineEventHandler(
               {
                 savedArticle: null,
                 view: null,
+                reaction: null,
               };
 
             if (savedArticle.article.savedArticles.length > 0) {
@@ -120,6 +127,10 @@ export default defineEventHandler(
 
             if (savedArticle.article.views.length > 0) {
               auth.view = savedArticle.article.views[0];
+            }
+
+            if (savedArticle.article.reactions.length > 0) {
+              auth.reaction = savedArticle.article.reactions[0] as Reaction;
             }
 
             return {
