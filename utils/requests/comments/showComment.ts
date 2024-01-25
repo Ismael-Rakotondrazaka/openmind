@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { UserSchema, CommentSchema } from "~/utils/schemas";
+import {
+  UserSchema,
+  CommentSchema,
+  CommentCountSchema,
+  CommentAuthSchema,
+} from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
 /*                             Show comment param                             */
@@ -20,13 +25,9 @@ export const ShowCommentDataSchema = z.object({
     z.object({
       user: UserSchema,
     }),
-  ).and(
-    z.object({
-      _count: z.object({
-        replies: z.coerce.number().positive().int(),
-      }),
-    }),
-  ),
+  )
+    .and(CommentCountSchema)
+    .and(CommentAuthSchema),
 });
 
 export type ShowCommentData = z.infer<typeof ShowCommentDataSchema>;
