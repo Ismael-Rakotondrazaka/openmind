@@ -12,7 +12,7 @@ export const ShowFollowParamSchema = z.object({
 export type ShowFollowParam = z.infer<typeof ShowFollowParamSchema>;
 
 /* -------------------------------------------------------------------------- */
-/*                              Show article data                             */
+/*                              Show follow data                              */
 /* -------------------------------------------------------------------------- */
 
 export const ShowFollowDataSchema = z.object({
@@ -30,7 +30,7 @@ export const ShowFollowDataSchema = z.object({
 export type ShowFollowData = z.infer<typeof ShowFollowDataSchema>;
 
 /* -------------------------------------------------------------------------- */
-/*                             Show article error                             */
+/*                              Show follow error                             */
 /* -------------------------------------------------------------------------- */
 
 export type ShowFollowError = NotFoundError;
