@@ -10,6 +10,7 @@ import {
   ArticleRelationFilterSchema,
   StringNullableFilterSchema,
 } from "~/utils/schemas";
+import { ReactionSchema } from "~/utils/schemas/reactions";
 
 export const CommentSchema = z.object({
   id: z.string(),
@@ -126,3 +127,22 @@ export const CommentListRelationFilterSchema: z.ZodType<Prisma.CommentListRelati
     some: z.lazy(() => CommentWhereInputSchema).optional(),
     none: z.lazy(() => CommentWhereInputSchema).optional(),
   });
+
+export const CommentCountSchema = z.object({
+  _count: z.object({
+    replies: z.number().nonnegative().int(),
+    reactions: z.number().nonnegative().int(),
+  }),
+});
+
+export type CommentCount = z.infer<typeof CommentCountSchema>;
+
+export const CommentAuthSchema = z.object({
+  auth: z
+    .object({
+      reaction: ReactionSchema.nullable(),
+    })
+    .nullable(),
+});
+
+export type CommentAuth = z.infer<typeof CommentAuthSchema>;
