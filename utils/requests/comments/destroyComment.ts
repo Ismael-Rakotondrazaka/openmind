@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { CommentSchema, UserSchema } from "~/utils/schemas";
+import {
+  CommentSchema,
+  UserSchema,
+  CommentCountSchema,
+  CommentAuthSchema,
+} from "~/utils/schemas";
 
 /* -------------------------------------------------------------------------- */
 /*                            Destroy comment param                           */
@@ -20,13 +25,9 @@ export const DestroyCommentDataSchema = z.object({
     z.object({
       user: UserSchema,
     }),
-  ).and(
-    z.object({
-      _count: z.object({
-        replies: z.coerce.number().positive().int(),
-      }),
-    }),
-  ),
+  )
+    .and(CommentCountSchema)
+    .and(CommentAuthSchema),
 });
 
 export type DestroyCommentData = z.infer<typeof DestroyCommentDataSchema>;

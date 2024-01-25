@@ -6,6 +6,7 @@ import {
   createNotFoundError,
   createUnauthorizedError,
   createForbiddenError,
+  DestroyCommentDataSchema,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -42,42 +43,75 @@ export default defineEventHandler(
     const now = new Date();
 
     const deletedComment: DestroyCommentData["comment"] =
-      await event.context.prisma.comment.update({
-        where: {
-          id: comment.id,
-        },
-        data: {
-          deletedAt: now,
-          updatedAt: now,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
+      await event.context.prisma.comment
+        .update({
+          where: {
+            id: comment.id,
           },
-          _count: {
-            select: {
-              replies: {
-                where: {
-                  deletedAt: null,
+          data: {
+            deletedAt: now,
+            updatedAt: now,
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                firstName: true,
+                profileUrl: true,
+                role: true,
+                createdAt: true,
+                updatedAt: true,
+                deletedAt: true,
+              },
+            },
+            /* eslint-disable indent */
+            reactions:
+              authUser === null
+                ? undefined
+                : {
+                    where: {
+                      userId: authUser.id,
+                    },
+                  },
+            /* eslint-enable indent */
+            _count: {
+              select: {
+                replies: {
+                  where: {
+                    deletedAt: null,
+                  },
                 },
+                reactions: true,
               },
             },
           },
-        },
-      });
+        })
+        .then((comment) => {
+          if (authUser !== null) {
+            const auth: ShowCommentData["comment"]["auth"] = {
+              reaction: null,
+            };
 
-    return {
+            if (comment.reactions.length > 0) {
+              auth.reaction = comment.reactions[0] as Reaction;
+            }
+
+            return {
+              ...comment,
+              auth,
+            };
+          } else {
+            return {
+              ...comment,
+              auth: null,
+            };
+          }
+        });
+
+    return DestroyCommentDataSchema.parse({
       comment: deletedComment,
-    };
+    });
   },
 );
