@@ -9,6 +9,7 @@ import {
   getRequestErrorMessage,
   IndexRecommendedArticleDataSchema,
   createUnauthorizedError,
+  type Reaction,
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
 
@@ -174,6 +175,14 @@ export default defineEventHandler(
                     userId: authUser.id,
                   },
                 },
+          reactions:
+            authUser === null
+              ? undefined
+              : {
+                  where: {
+                    userId: authUser.id,
+                  },
+                },
           /* eslint-enable indent */
           _count: {
             select: {
@@ -198,6 +207,7 @@ export default defineEventHandler(
             const auth: IndexArticleData["articles"][0]["auth"] = {
               savedArticle: null,
               view: null,
+              reaction: null,
             };
 
             if (article.savedArticles.length > 0) {
@@ -206,6 +216,10 @@ export default defineEventHandler(
 
             if (article.views.length > 0) {
               auth.view = article.views[0];
+            }
+
+            if (article.reactions.length > 0) {
+              auth.reaction = article.reactions[0] as Reaction;
             }
 
             return {

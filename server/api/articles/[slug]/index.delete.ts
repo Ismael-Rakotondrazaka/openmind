@@ -9,6 +9,7 @@ import {
   createUnauthorizedError,
   createForbiddenError,
   DestroyArticleDataSchema,
+  type Reaction,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -79,6 +80,11 @@ export default defineEventHandler(
                 userId: authUser.id,
               },
             },
+            reactions: {
+              where: {
+                userId: authUser.id,
+              },
+            },
             _count: {
               select: {
                 comments: {
@@ -97,6 +103,7 @@ export default defineEventHandler(
           const auth: StoreArticleData["article"]["auth"] = {
             savedArticle: null,
             view: null,
+            reaction: null,
           };
 
           if (article.savedArticles.length > 0) {
@@ -105,6 +112,10 @@ export default defineEventHandler(
 
           if (article.views.length > 0) {
             auth.view = article.views[0];
+          }
+
+          if (article.reactions.length > 0) {
+            auth.reaction = article.reactions[0] as Reaction;
           }
 
           return {

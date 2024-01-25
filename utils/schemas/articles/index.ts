@@ -14,6 +14,7 @@ import { SortOrderInputSchema, SortOrderSchema } from "../types/prisma";
 import { TagListRelationFilterSchema } from "../tags";
 import { SavedArticleSchema } from "~/utils/schemas/savedArticles";
 import { ViewSchema } from "~/utils/schemas/views";
+import { ReactionSchema } from "~/utils/schemas/reactions";
 
 export const ArticleSchema = z.object({
   id: z.string(),
@@ -132,6 +133,7 @@ export const ArticleAuthSchema = z.object({
     .object({
       savedArticle: SavedArticleSchema.nullable(),
       view: ViewSchema.nullable(),
+      reaction: ReactionSchema.nullable(),
     })
     .nullable(),
 });
