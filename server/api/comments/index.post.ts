@@ -5,6 +5,8 @@ import {
   createBadRequestError,
   createUnauthorizedError,
   getRequestErrorMessage,
+  type Reaction,
+  StoreCommentDataSchema,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -82,44 +84,77 @@ export default defineEventHandler(
     Promise.allSettled(filesToSave.map(saveUploadedFile));
 
     const comment: StoreCommentData["comment"] =
-      await event.context.prisma.comment.create({
-        data: {
-          id: commentId,
-          content,
-          createdAt: now,
-          updatedAt: now,
-          userId: authUser.id,
-          articleId: article.id,
-          parentId: storeCommentBodySPR.data.parentId,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
+      await event.context.prisma.comment
+        .create({
+          data: {
+            id: commentId,
+            content,
+            createdAt: now,
+            updatedAt: now,
+            userId: authUser.id,
+            articleId: article.id,
+            parentId: storeCommentBodySPR.data.parentId,
           },
-          _count: {
-            select: {
-              replies: {
-                where: {
-                  deletedAt: null,
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                firstName: true,
+                profileUrl: true,
+                role: true,
+                createdAt: true,
+                updatedAt: true,
+                deletedAt: true,
+              },
+            },
+            /* eslint-disable indent */
+            reactions:
+              authUser === null
+                ? undefined
+                : {
+                    where: {
+                      userId: authUser.id,
+                    },
+                  },
+            /* eslint-enable indent */
+            _count: {
+              select: {
+                replies: {
+                  where: {
+                    deletedAt: null,
+                  },
                 },
+                reactions: true,
               },
             },
           },
-        },
-      });
+        })
+        .then((comment) => {
+          if (authUser !== null) {
+            const auth: ShowCommentData["comment"]["auth"] = {
+              reaction: null,
+            };
 
-    return {
+            if (comment.reactions.length > 0) {
+              auth.reaction = comment.reactions[0] as Reaction;
+            }
+
+            return {
+              ...comment,
+              auth,
+            };
+          } else {
+            return {
+              ...comment,
+              auth: null,
+            };
+          }
+        });
+
+    return StoreCommentDataSchema.parse({
       comment,
-    };
+    });
   },
 );
