@@ -9,3 +9,4 @@ export * from "./tagConfig";
 export * from "./commentConfig";
 export * from "./reactionConfig";
 export * from "./viewConfig";
+export * from "./followConfig";
