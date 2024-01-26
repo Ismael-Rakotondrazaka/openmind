@@ -52,3 +52,12 @@ export const FollowOrderByWithRelationInputSchema: z.ZodType<Prisma.FollowOrderB
     follower: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
     following: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   });
+
+export const FollowListRelationFilterSchema: z.ZodType<Prisma.FollowListRelationFilter> =
+  z
+    .object({
+      every: z.lazy(() => FollowWhereInputSchema).optional(),
+      some: z.lazy(() => FollowWhereInputSchema).optional(),
+      none: z.lazy(() => FollowWhereInputSchema).optional(),
+    })
+    .strict();
