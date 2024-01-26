@@ -10,3 +10,4 @@ export * from "./commentConfig";
 export * from "./reactionConfig";
 export * from "./viewConfig";
 export * from "./followConfig";
+export * from "./userProfileConfig";

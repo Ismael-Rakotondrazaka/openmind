@@ -9,6 +9,7 @@ export const userConfig: {
   USER_ROLE_DEFAULT_VALUE: "user";
   TAGS_MIN_SIZE: number;
   TAGS_MAX_SIZE: number;
+  PAGE_SIZE_DEFAULT_VALUE: number;
 } = {
   USERNAME_MIN_LENGTH: 6,
   USERNAME_MAX_LENGTH: 50,
@@ -20,4 +21,5 @@ export const userConfig: {
   USER_ROLE_DEFAULT_VALUE: "user",
   TAGS_MIN_SIZE: 3,
   TAGS_MAX_SIZE: 10,
+  PAGE_SIZE_DEFAULT_VALUE: 50,
 };
