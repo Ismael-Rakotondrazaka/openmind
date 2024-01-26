@@ -8,3 +8,4 @@ export * from "./articles";
 export * from "./schemas";
 export * from "./comments";
 export * from "./contents";
+export * from "./users";
