@@ -10,7 +10,7 @@ import {
   UserCountSchema,
   UserAuthSchema,
 } from "~/utils/schemas";
-import { userConfig } from "~/utils/configs";
+import { userConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                              Index user query                              */

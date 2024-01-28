@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { commentConfig } from "~/utils/configs";
+import { commentConfig } from "~/configs";
 import {
   UserSchema,
   makeContentClientSchema,

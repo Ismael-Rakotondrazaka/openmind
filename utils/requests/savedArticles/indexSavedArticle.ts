@@ -12,7 +12,7 @@ import {
   ArticleCountSchema,
   ArticleAuthSchema,
 } from "~/utils/schemas";
-import { articleConfig } from "~/utils/configs";
+import { articleConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                          Index saved article query                         */

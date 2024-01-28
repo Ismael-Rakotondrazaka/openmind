@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { authConfig } from "~/utils/configs";
+import { authConfig } from "~/configs";
 
 export const StoreAccountActivateBodySchema = z.object({
   t: z.string().length(authConfig.TOKEN_SIZE),

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { articleConfig } from "~/utils/configs";
+import { articleConfig } from "~/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
 import {
   CustomBooleanSchema,

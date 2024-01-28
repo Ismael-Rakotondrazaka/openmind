@@ -8,7 +8,7 @@ import {
   PaginationSchema,
   FollowSchema,
 } from "~/utils/schemas";
-import { followConfig } from "~/utils/configs";
+import { followConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                             Index follow query                             */

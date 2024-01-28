@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { passwordConfig } from "~/utils/configs";
+import { passwordConfig } from "~/configs";
 
 export const StoreLoginBodySchema = z
   .object({

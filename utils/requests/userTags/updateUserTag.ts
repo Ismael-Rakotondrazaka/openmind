@@ -1,6 +1,6 @@
 import type { Tag } from "@prisma/client";
 import { z } from "zod";
-import { userConfig } from "~/utils/configs";
+import { userConfig } from "~/configs";
 
 export const UpdateUserTagBodySchema = z.object({
   tagIds: z

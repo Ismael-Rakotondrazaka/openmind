@@ -8,7 +8,7 @@ import {
   PageSchema,
   PaginationSchema,
 } from "~/utils/schemas";
-import { reactionConfig } from "~/utils/configs";
+import { reactionConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                            Index reaction query                            */

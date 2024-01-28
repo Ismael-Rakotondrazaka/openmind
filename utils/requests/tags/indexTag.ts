@@ -9,7 +9,7 @@ import {
   TagWhereInputSchema,
   TagSchema,
 } from "~/utils/schemas";
-import { tagConfig } from "~/utils/configs";
+import { tagConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                               Index tag query                              */

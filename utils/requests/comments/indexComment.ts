@@ -10,7 +10,7 @@ import {
   CommentAuthSchema,
   CommentCountSchema,
 } from "~/utils/schemas";
-import { commentConfig } from "~/utils/configs";
+import { commentConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                             Index comment query                            */

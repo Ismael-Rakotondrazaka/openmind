@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { userConfig } from "~/utils/configs";
+import { userConfig } from "~/configs";
 import {
   FileSchema,
   CustomNullSchema,

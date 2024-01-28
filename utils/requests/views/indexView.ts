@@ -8,7 +8,7 @@ import {
   PageSchema,
   PaginationSchema,
 } from "~/utils/schemas";
-import { viewConfig } from "~/utils/configs";
+import { viewConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                              Index view query                              */

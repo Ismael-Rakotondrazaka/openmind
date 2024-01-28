@@ -10,7 +10,7 @@ import {
   ArticleAuthSchema,
   ArticleOrderByWithRelationInputSchema,
 } from "~/utils/schemas";
-import { articleConfig } from "~/utils/configs";
+import { articleConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                       Index recommended article query                      */

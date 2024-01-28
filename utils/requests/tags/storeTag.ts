@@ -1,6 +1,6 @@
 import type { Tag } from "@prisma/client";
 import { z } from "zod";
-import { tagConfig } from "~/utils/configs";
+import { tagConfig } from "~/configs";
 
 export const StoreTagBodySchema = z.object({
   value: z.string().trim().min(1).max(tagConfig.VALUE_MAX_LENGTH).toLowerCase(),

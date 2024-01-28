@@ -1,6 +1,6 @@
 import type { User } from "@prisma/client";
 import { z } from "zod";
-import { userConfig, passwordConfig } from "~/utils/configs";
+import { userConfig, passwordConfig } from "~/configs";
 
 export const StoreRegisterBodySchema = z.object({
   name: z
