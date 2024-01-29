@@ -5,6 +5,10 @@ import {
   CustomNullSchema,
 } from "~/utils";
 
+/* -------------------------------------------------------------------------- */
+/*                              Update user body                              */
+/* -------------------------------------------------------------------------- */
+
 export const UpdateUserBodySchema = UpdateUserBodyBaseSchema.merge(
   z
     .object({

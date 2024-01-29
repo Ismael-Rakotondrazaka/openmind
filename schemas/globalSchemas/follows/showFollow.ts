@@ -3,7 +3,7 @@ import { FollowSchema } from "~/schemas/globalSchemas/follows/follow";
 import { UserSchema } from "~/schemas/globalSchemas/users";
 
 /* -------------------------------------------------------------------------- */
-/*                             Show article param                             */
+/*                              Show follow param                             */
 /* -------------------------------------------------------------------------- */
 
 export const ShowFollowParamSchema = z.object({
