@@ -1,10 +1,7 @@
-import { zfd } from "zod-form-data";
-import type { SafeParseError } from "zod";
 import type { User } from "@prisma/client";
 import {
   type StoreArticleData,
   type StoreArticleError,
-  type StoreArticleBody,
   createBadRequestError,
   createUnauthorizedError,
   getRequestErrorMessage,
@@ -27,17 +24,14 @@ export default defineEventHandler(
       return createUnauthorizedError(event);
     }
 
-    const requestBody: unknown = await getRequestBody(event);
-
-    const storeArticleBodySPR = await zfd
-      .formData(StoreArticleBodySchema)
-      .safeParseAsync(requestBody);
+    const storeArticleBodySPR = await safeParseRequestBodyAs(
+      event,
+      StoreArticleBodySchema,
+    );
 
     if (!storeArticleBodySPR.success) {
       return createBadRequestError(event, {
-        errorMessage: getRequestErrorMessage(
-          storeArticleBodySPR as SafeParseError<StoreArticleBody>,
-        ),
+        errorMessage: getRequestErrorMessage(storeArticleBodySPR),
       });
     }
 
@@ -112,7 +106,7 @@ export default defineEventHandler(
             userId: authUser.id,
             coverUrl,
             tags: {
-              connect: storeArticleBodySPR.data.tagIds.map((tagId) => ({
+              connect: storeArticleBodySPR.data.tagIds.map((tagId: number) => ({
                 id: tagId,
               })),
             },

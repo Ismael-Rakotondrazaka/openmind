@@ -1,12 +1,9 @@
-import { zfd } from "zod-form-data";
-import type { z } from "zod";
 import type { ActivationToken, User } from "@prisma/client";
 import {
   createBadRequestError,
   getRequestErrorMessage,
   type StoreAccountActivateData,
   type StoreAccountActivateError,
-  type StoreAccountActivateBody,
   StoreAccountActivateBodySchema,
 } from "~/utils";
 
@@ -14,17 +11,14 @@ export default defineEventHandler(
   async (
     event,
   ): Promise<StoreAccountActivateData | StoreAccountActivateError> => {
-    const requestBody: unknown = await getRequestBody(event);
-
-    const storeAccountActivateBodySPR = await zfd
-      .formData(StoreAccountActivateBodySchema)
-      .safeParseAsync(requestBody);
+    const storeAccountActivateBodySPR = await safeParseRequestBodyAs(
+      event,
+      StoreAccountActivateBodySchema,
+    );
 
     if (!storeAccountActivateBodySPR.success) {
       return createBadRequestError(event, {
-        errorMessage: getRequestErrorMessage(
-          storeAccountActivateBodySPR as z.SafeParseError<StoreAccountActivateBody>,
-        ),
+        errorMessage: getRequestErrorMessage(storeAccountActivateBodySPR),
       });
     }
     const activationToken: (ActivationToken & { user: User }) | null =

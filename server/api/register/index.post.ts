@@ -1,4 +1,3 @@
-import { zfd } from "zod-form-data";
 import type { z } from "zod";
 import type { User } from "@prisma/client";
 import {
@@ -17,11 +16,10 @@ export default defineEventHandler(
   async (event): Promise<StoreRegisterData | StoreRegisterError> => {
     const runtimeConfig = useRuntimeConfig();
 
-    const requestBody: unknown = await getRequestBody(event);
-
-    const storeRegisterBodySPR = await zfd
-      .formData(StoreRegisterBodySchema)
-      .safeParseAsync(requestBody);
+    const storeRegisterBodySPR = await safeParseRequestBodyAs(
+      event,
+      StoreRegisterBodySchema,
+    );
 
     if (!storeRegisterBodySPR.success) {
       return createBadRequestError(event, {
