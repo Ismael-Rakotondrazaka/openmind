@@ -1,4 +1,4 @@
-import { formatFilename } from "./formatFileName";
+import { formatFilename } from "../files/formatFileName";
 
 export const formatUserProfilePath = ({
   filename,
