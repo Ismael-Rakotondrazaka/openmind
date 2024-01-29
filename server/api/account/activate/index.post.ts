@@ -2,12 +2,12 @@ import { zfd } from "zod-form-data";
 import type { z } from "zod";
 import type { ActivationToken, User } from "@prisma/client";
 import {
+  createBadRequestError,
+  getRequestErrorMessage,
   type StoreAccountActivateData,
   type StoreAccountActivateError,
   type StoreAccountActivateBody,
   StoreAccountActivateBodySchema,
-  createBadRequestError,
-  getRequestErrorMessage,
 } from "~/utils";
 
 export default defineEventHandler(

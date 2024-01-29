@@ -5,7 +5,7 @@ export * from "./auths";
 export * from "./gcs";
 export * from "./files";
 export * from "./articles";
-export * from "./schemas";
+export * from "../../schemas/serverSchemas";
 export * from "./comments";
 export * from "./contents";
 export * from "./users";
