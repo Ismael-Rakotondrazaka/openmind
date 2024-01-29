@@ -1,4 +1,4 @@
-export * from "./storeFile";
+export * from "./saveFile";
 export * from "./bucket";
 export * from "./storage";
 export * from "./saveFileFromBase64";

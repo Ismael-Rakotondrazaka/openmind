@@ -1,7 +1,7 @@
 import { type File as GCSFile } from "@google-cloud/storage";
 import { bucket } from "./bucket";
 
-export const storeFile = async ({
+export const saveFile = async ({
   file,
   destination,
   mimeType,
