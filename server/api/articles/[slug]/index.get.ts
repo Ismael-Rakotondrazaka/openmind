@@ -4,7 +4,7 @@ import {
   type ShowArticleData,
   type ShowArticleError,
   type ShowArticleParam,
-  showArticleParamSchema,
+  ShowArticleParamSchema,
   createNotFoundError,
   ShowArticleDataSchema,
   type Reaction,
@@ -15,7 +15,7 @@ export default defineEventHandler(
     const showArticleParamSPR: SafeParseReturnType<
       ShowArticleParam,
       ShowArticleParam
-    > = await safeParseRequestParamAs(event, showArticleParamSchema);
+    > = await safeParseRequestParamAs(event, ShowArticleParamSchema);
 
     if (!showArticleParamSPR.success) {
       return createNotFoundError(event);

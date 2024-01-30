@@ -9,11 +9,11 @@ import { TagSchema } from "~/schemas/globalSchemas/tags";
 /*                             Show article param                             */
 /* -------------------------------------------------------------------------- */
 
-export const showArticleParamSchema = z.object({
+export const ShowArticleParamSchema = z.object({
   slug: z.string().trim(),
 });
 
-export type ShowArticleParam = z.infer<typeof showArticleParamSchema>;
+export type ShowArticleParam = z.infer<typeof ShowArticleParamSchema>;
 
 /* -------------------------------------------------------------------------- */
 /*                              Show article data                             */
