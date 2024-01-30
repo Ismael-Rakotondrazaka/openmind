@@ -1,4 +1,8 @@
 import { z } from "zod";
+import { UserSchema } from "~/schemas/globalSchemas/users";
+import { TagSchema } from "~/schemas/globalSchemas/tags";
+import { ArticleCountSchema } from "~/schemas/globalSchemas/articles/articleCount";
+import { ArticleAuthSchema } from "~/schemas/globalSchemas/articles/articleAuth";
 
 export const ArticleSchema = z.object({
   id: z.string(),

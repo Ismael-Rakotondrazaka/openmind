@@ -1,16 +1,12 @@
 import { z } from "zod";
 import { articleConfig } from "~/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
-import { ArticleSchema } from "~/schemas/globalSchemas/articles/article";
-import { ArticleCountSchema } from "~/schemas/globalSchemas/articles/articleCount";
-import { ArticleAuthSchema } from "~/schemas/globalSchemas/articles/articleAuth";
-import { TagSchema } from "~/schemas/globalSchemas/tags";
+import { ArticleFullSchema } from "~/schemas/globalSchemas/articles/article";
 import {
   CustomBooleanSchema,
   CustomNullSchema,
 } from "~/schemas/globalSchemas/types";
 import { FileSchema } from "~/schemas/globalSchemas/files";
-import { UserSchema } from "~/schemas/globalSchemas/users";
 
 /* -------------------------------------------------------------------------- */
 /*                             Store article body                             */
@@ -122,18 +118,7 @@ export type StoreArticleBodyPEM = RequestErrorMessage<StoreArticleBody>;
 /* -------------------------------------------------------------------------- */
 
 export const StoreArticleDataSchema = z.object({
-  article: ArticleSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  )
-    .and(
-      z.object({
-        tags: z.array(TagSchema),
-      }),
-    )
-    .and(ArticleCountSchema)
-    .and(ArticleAuthSchema),
+  article: ArticleFullSchema,
 });
 
 export type StoreArticleData = z.infer<typeof StoreArticleDataSchema>;

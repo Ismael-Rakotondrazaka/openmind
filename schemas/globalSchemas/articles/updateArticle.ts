@@ -1,11 +1,7 @@
 import { z } from "zod";
 import { articleConfig } from "~/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
-import { UserSchema } from "~/schemas/globalSchemas/users";
-import { ArticleCountSchema } from "~/schemas/globalSchemas/articles/articleCount";
-import { ArticleAuthSchema } from "~/schemas/globalSchemas/articles/articleAuth";
-import { ArticleSchema } from "~/schemas/globalSchemas/articles/article";
-import { TagSchema } from "~/schemas/globalSchemas/tags";
+import { ArticleFullSchema } from "~/schemas/globalSchemas/articles";
 import {
   CustomBooleanSchema,
   CustomNullSchema,
@@ -133,18 +129,7 @@ export type UpdateArticleBodyPEM = RequestErrorMessage<UpdateArticleBody>;
 /* -------------------------------------------------------------------------- */
 
 export const UpdateArticleDataSchema = z.object({
-  article: ArticleSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  )
-    .and(
-      z.object({
-        tags: z.array(TagSchema),
-      }),
-    )
-    .and(ArticleCountSchema)
-    .and(ArticleAuthSchema),
+  article: ArticleFullSchema,
 });
 
 export type UpdateArticleData = z.infer<typeof UpdateArticleDataSchema>;

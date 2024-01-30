@@ -1,11 +1,7 @@
 import { z } from "zod";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { ArticleFullSchema } from "~/schemas/globalSchemas/articles";
 import { ArticleOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/articles/articleOrderBy";
 import { ArticleWhereInputSchema } from "~/schemas/globalSchemas/articles/articleWhere";
-import { ArticleCountSchema } from "~/schemas/globalSchemas/articles/articleCount";
-import { ArticleAuthSchema } from "~/schemas/globalSchemas/articles/articleAuth";
-import { ArticleSchema } from "~/schemas/globalSchemas/articles/article";
-import { TagSchema } from "~/schemas/globalSchemas/tags";
 import {
   makePageSizeSchema,
   PageSchema,
@@ -40,20 +36,7 @@ export type IndexArticleQueryPEM = RequestErrorMessage<IndexArticleQuery>;
 
 export const IndexArticleDataSchema = z
   .object({
-    articles: z.array(
-      ArticleSchema.and(
-        z.object({
-          user: UserSchema,
-        }),
-      )
-        .and(
-          z.object({
-            tags: z.array(TagSchema),
-          }),
-        )
-        .and(ArticleCountSchema)
-        .and(ArticleAuthSchema),
-    ),
+    articles: z.array(ArticleFullSchema),
   })
   .merge(PaginationSchema);
 

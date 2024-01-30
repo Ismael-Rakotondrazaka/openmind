@@ -1,11 +1,5 @@
 import { z } from "zod";
-import { UserSchema } from "~/schemas/globalSchemas/users";
-import { TagSchema } from "~/schemas/globalSchemas/tags";
-import {
-  ArticleSchema,
-  ArticleCountSchema,
-  ArticleAuthSchema,
-} from "~/schemas/globalSchemas/articles";
+import { ArticleFullSchema } from "~/schemas/globalSchemas/articles";
 import {
   SavedArticleSchema,
   SavedArticleWhereInputSchema,
@@ -51,18 +45,7 @@ export const IndexSavedArticleDataSchema = z
     savedArticles: z.array(
       SavedArticleSchema.and(
         z.object({
-          article: ArticleSchema.and(
-            z.object({
-              user: UserSchema,
-            }),
-          )
-            .and(
-              z.object({
-                tags: z.array(TagSchema),
-              }),
-            )
-            .and(ArticleCountSchema)
-            .and(ArticleAuthSchema),
+          article: ArticleFullSchema,
         }),
       ),
     ),

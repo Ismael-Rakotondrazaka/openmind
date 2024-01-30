@@ -1,15 +1,11 @@
 import { z } from "zod";
-import { UserSchema } from "~/schemas/globalSchemas/users";
 import {
   makePageSizeSchema,
   PageSchema,
   PaginationSchema,
 } from "~/schemas/globalSchemas/paginations";
-import { TagSchema } from "~/schemas/globalSchemas/tags";
 import {
-  ArticleSchema,
-  ArticleCountSchema,
-  ArticleAuthSchema,
+  ArticleFullSchema,
   ArticleOrderByWithRelationInputSchema,
 } from "~/schemas/globalSchemas/articles";
 import { articleConfig } from "~/configs";
@@ -43,20 +39,7 @@ export type IndexRecommendedArticleQueryPEM =
 
 export const IndexRecommendedArticleDataSchema = z
   .object({
-    articles: z.array(
-      ArticleSchema.and(
-        z.object({
-          user: UserSchema,
-        }),
-      )
-        .and(
-          z.object({
-            tags: z.array(TagSchema),
-          }),
-        )
-        .and(ArticleCountSchema)
-        .and(ArticleAuthSchema),
-    ),
+    articles: z.array(ArticleFullSchema),
   })
   .merge(PaginationSchema);
 
