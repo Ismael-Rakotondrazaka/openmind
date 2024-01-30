@@ -1,4 +1,5 @@
 import type { Article, User } from "@prisma/client";
+import { articleRepository } from "~/repositories";
 import {
   type StoreViewData,
   type StoreViewError,
@@ -26,14 +27,13 @@ export default defineEventHandler(
       });
     }
 
-    const article: Article | null =
-      await event.context.prisma.article.findUnique({
-        where: {
-          id: storeViewBodySPR.data.articleId,
-          deletedAt: null,
-          isVisible: true,
-        },
-      });
+    const article: Article | null = await articleRepository.findOne({
+      where: {
+        id: storeViewBodySPR.data.articleId,
+        deletedAt: null,
+        isVisible: true,
+      },
+    });
     if (article === null) {
       return createBadRequestError(event, {
         errorMessage: {

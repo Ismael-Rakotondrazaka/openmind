@@ -1,4 +1,5 @@
 import type { Article, User, Comment } from "@prisma/client";
+import { articleRepository } from "~/repositories";
 import {
   type StoreCommentData,
   type StoreCommentError,
@@ -27,14 +28,13 @@ export default defineEventHandler(
       });
     }
 
-    const article: Article | null =
-      await event.context.prisma.article.findFirst({
-        where: {
-          id: storeCommentBodySPR.data.articleId,
-          deletedAt: null,
-          isVisible: true,
-        },
-      });
+    const article: Article | null = await articleRepository.findOne({
+      where: {
+        id: storeCommentBodySPR.data.articleId,
+        deletedAt: null,
+        isVisible: true,
+      },
+    });
 
     if (article === null) {
       return createBadRequestError(event, {

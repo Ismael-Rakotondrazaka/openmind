@@ -12,7 +12,6 @@ import {
   getRequestErrorMessage,
   UpdateArticleParamSchema,
   UpdateArticleDataSchema,
-  type Reaction,
 } from "~/utils";
 import {
   createArticleSlugSuffix,
@@ -22,6 +21,7 @@ import {
   UpdateArticleBodySchema,
   slugify,
 } from "~/server/utils";
+import { articleRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<UpdateArticleData | UpdateArticleError> => {
@@ -226,92 +226,25 @@ export default defineEventHandler(
     });
 
     const updatedArticle: UpdateArticleData["article"] =
-      await event.context.prisma.article
-        .update({
-          where: {
-            id: article.id,
+      await articleRepository.updateFullOne({
+        where: {
+          id: article.id,
+        },
+        data: {
+          content: newContent,
+          title: newTitle,
+          slug: newSlug,
+          updatedAt: now,
+          isVisible: newIsVisible,
+          summary: newSummary,
+          coverUrl: newCoverUrl,
+          tags: {
+            connect: tagsToConnect,
+            disconnect: tagsToDisconnect,
           },
-          data: {
-            content: newContent,
-            title: newTitle,
-            slug: newSlug,
-            updatedAt: now,
-            isVisible: newIsVisible,
-            summary: newSummary,
-            coverUrl: newCoverUrl,
-            tags: {
-              connect: tagsToConnect,
-              disconnect: tagsToDisconnect,
-            },
-          },
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-                name: true,
-                firstName: true,
-                profileUrl: true,
-                role: true,
-                createdAt: true,
-                updatedAt: true,
-                deletedAt: true,
-              },
-            },
-            tags: true,
-            savedArticles: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            views: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            reactions: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            _count: {
-              select: {
-                comments: {
-                  where: {
-                    deletedAt: null,
-                  },
-                },
-                reactions: true,
-                tags: true,
-                views: true,
-              },
-            },
-          },
-        })
-        .then((article) => {
-          const auth: StoreArticleData["article"]["auth"] = {
-            savedArticle: null,
-            view: null,
-            reaction: null,
-          };
-
-          if (article.savedArticles.length > 0) {
-            auth.savedArticle = article.savedArticles[0];
-          }
-
-          if (article.views.length > 0) {
-            auth.view = article.views[0];
-          }
-
-          if (article.reactions.length > 0) {
-            auth.reaction = article.reactions[0] as Reaction;
-          }
-
-          return {
-            ...article,
-            auth,
-          };
-        });
+        },
+        authUser,
+      });
 
     return UpdateArticleDataSchema.parse({
       article: updatedArticle,

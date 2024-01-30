@@ -1,0 +1,21 @@
+import { findFullMany } from "./findFullMany";
+import { findFullOne } from "./findFullOne";
+import { createFullOne } from "./createFullOne";
+import { createOne } from "./createOne";
+import { updateFullOne } from "./updateFullOne";
+import { findFullOneOrThrow } from "./findFullOneOrThrow";
+import { updateOne } from "./updateOne";
+import { findOne } from "./findOne";
+import { count } from "./count";
+
+export const articleRepository = {
+  findFullMany,
+  findFullOne,
+  createFullOne,
+  updateFullOne,
+  createOne,
+  findFullOneOrThrow,
+  updateOne,
+  findOne,
+  count,
+};

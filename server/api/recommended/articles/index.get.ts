@@ -12,6 +12,7 @@ import {
   type Reaction,
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
+import { articleRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (
@@ -100,7 +101,7 @@ export default defineEventHandler(
       new Set(tagPreferenceIds.concat(...savedArticleTagIds)),
     ).sort((a: number, b: number) => a - b);
 
-    const totalCounts: number = await event.context.prisma.article.count({
+    const totalCounts: number = await articleRepository.count({
       where: {
         tags: {
           some: {

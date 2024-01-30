@@ -11,6 +11,7 @@ import {
   DestroySavedArticleDataSchema,
   type Reaction,
 } from "~/utils";
+import { articleRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (
@@ -25,12 +26,11 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    const article: Article | null =
-      await event.context.prisma.article.findUnique({
-        where: {
-          id: destroySavedArticleParamSPR.data.articleId,
-        },
-      });
+    const article: Article | null = await articleRepository.findOne({
+      where: {
+        id: destroySavedArticleParamSPR.data.articleId,
+      },
+    });
 
     if (article === null || article.deletedAt !== null) {
       return createNotFoundError(event);

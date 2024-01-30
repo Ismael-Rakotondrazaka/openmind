@@ -1,4 +1,5 @@
 import type { Article, SavedArticle, User } from "@prisma/client";
+import { articleRepository } from "~/repositories";
 import {
   type StoreSavedArticleData,
   type StoreSavedArticleError,
@@ -28,14 +29,13 @@ export default defineEventHandler(
       });
     }
 
-    const article: Article | null =
-      await event.context.prisma.article.findFirst({
-        where: {
-          id: storeSavedArticleBodySPR.data.articleId,
-          isVisible: true,
-          deletedAt: null,
-        },
-      });
+    const article: Article | null = await articleRepository.findOne({
+      where: {
+        id: storeSavedArticleBodySPR.data.articleId,
+        isVisible: true,
+        deletedAt: null,
+      },
+    });
 
     if (article === null) {
       return createBadRequestError(event, {

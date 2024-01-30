@@ -15,3 +15,18 @@ export const ArticleSchema = z.object({
 });
 
 export type Article = z.infer<typeof ArticleSchema>;
+
+export const ArticleFullSchema = ArticleSchema.and(
+  z.object({
+    user: UserSchema,
+  }),
+)
+  .and(
+    z.object({
+      tags: z.array(TagSchema),
+    }),
+  )
+  .and(ArticleCountSchema)
+  .and(ArticleAuthSchema);
+
+export type ArticleFull = z.infer<typeof ArticleFullSchema>;

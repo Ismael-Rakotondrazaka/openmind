@@ -28,3 +28,7 @@ export const ArticleOrderByWithRelationInputSchema: z.ZodType<Prisma.ArticleOrde
       ])
       .optional(),
   });
+
+export type ArticleOrderByWithRelationInput = z.infer<
+  typeof ArticleOrderByWithRelationInputSchema
+>;
