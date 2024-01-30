@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { ReactionSchema } from "~/schemas/globalSchemas/reactions/reaction";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
 
 /* -------------------------------------------------------------------------- */
 /*                           Destroy reaction param                           */
@@ -17,11 +16,7 @@ export type DestroyReactionParam = z.infer<typeof DestroyReactionParamSchema>;
 /* -------------------------------------------------------------------------- */
 
 export const DestroyReactionDataSchema = z.object({
-  reaction: ReactionSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  ),
+  reaction: ReactionFullSchema,
 });
 
 export type DestroyReactionData = z.infer<typeof DestroyReactionDataSchema>;

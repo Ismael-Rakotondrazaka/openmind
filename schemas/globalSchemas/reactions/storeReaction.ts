@@ -1,8 +1,7 @@
 import { z } from "zod";
-import { ReactionSchema } from "~/schemas/globalSchemas/reactions/reaction";
-import { UserSchema } from "~/schemas/globalSchemas/users";
 import { CustomNullSchema } from "~/schemas/globalSchemas/types";
 import { ReactionTypeSchema } from "~/schemas/globalSchemas/reactions/reactionType";
+import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
 
 /* -------------------------------------------------------------------------- */
 /*                             Store reaction body                            */
@@ -23,11 +22,7 @@ export type StoreReactionBodyPEM = RequestErrorMessage<StoreReactionBody>;
 /* -------------------------------------------------------------------------- */
 
 export const StoreReactionDataSchema = z.object({
-  reaction: ReactionSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  ),
+  reaction: ReactionFullSchema,
 });
 
 export type StoreReactionData = z.infer<typeof StoreReactionDataSchema>;

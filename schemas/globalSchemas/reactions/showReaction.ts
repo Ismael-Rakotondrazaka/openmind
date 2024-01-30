@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { ReactionSchema } from "~/schemas/globalSchemas/reactions/reaction";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
 
 /* -------------------------------------------------------------------------- */
 /*                             Show reaction param                            */
@@ -17,11 +16,7 @@ export type ShowReactionParam = z.infer<typeof ShowReactionParamSchema>;
 /* -------------------------------------------------------------------------- */
 
 export const ShowReactionDataSchema = z.object({
-  reaction: ReactionSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  ),
+  reaction: ReactionFullSchema,
 });
 
 export type ShowReactionData = z.infer<typeof ShowReactionDataSchema>;

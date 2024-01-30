@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { ReactionSchema } from "~/schemas/globalSchemas/reactions/reaction";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
 import { ReactionOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/reactions/reactionOrder";
 import { ReactionWhereInputSchema } from "~/schemas/globalSchemas/reactions/reactionWhere";
 import {
@@ -37,13 +36,7 @@ export type IndexReactionQueryPEM = RequestErrorMessage<IndexReactionQuery>;
 
 export const IndexReactionDataSchema = z
   .object({
-    reactions: z.array(
-      ReactionSchema.and(
-        z.object({
-          user: UserSchema,
-        }),
-      ),
-    ),
+    reactions: z.array(ReactionFullSchema),
   })
   .merge(PaginationSchema);
 

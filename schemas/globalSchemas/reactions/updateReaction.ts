@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { ReactionSchema } from "~/schemas/globalSchemas/reactions/reaction";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
 import { ReactionTypeSchema } from "~/schemas/globalSchemas/reactions/reactionType";
 
 /* -------------------------------------------------------------------------- */
@@ -30,11 +29,7 @@ export type UpdateReactionBodyPEM = RequestErrorMessage<UpdateReactionBody>;
 /* -------------------------------------------------------------------------- */
 
 export const UpdateReactionDataSchema = z.object({
-  reaction: ReactionSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  ),
+  reaction: ReactionFullSchema,
 });
 
 export type UpdateReactionData = z.infer<typeof UpdateReactionDataSchema>;
