@@ -1,10 +1,8 @@
 import { z } from "zod";
+import { CommentFullSchema } from "~/schemas/globalSchemas/comments/comment";
+
 import { commentConfig } from "~/configs";
-import { UserSchema } from "~/schemas/globalSchemas/users";
 import { makeContentClientSchema } from "~/schemas/globalSchemas/contents";
-import { CommentSchema } from "~/schemas/globalSchemas/comments/comment";
-import { CommentCountSchema } from "~/schemas/globalSchemas/comments/commentCount";
-import { CommentAuthSchema } from "~/schemas/globalSchemas/comments/commentAuth";
 import { CustomNullSchema } from "~/schemas/globalSchemas/types";
 
 /* -------------------------------------------------------------------------- */
@@ -34,13 +32,7 @@ export type StoreCommentBodyPEM = RequestErrorMessage<StoreCommentBody>;
 /* -------------------------------------------------------------------------- */
 
 export const StoreCommentDataSchema = z.object({
-  comment: CommentSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  )
-    .and(CommentCountSchema)
-    .and(CommentAuthSchema),
+  comment: CommentFullSchema,
 });
 
 export type StoreCommentData = z.infer<typeof StoreCommentDataSchema>;

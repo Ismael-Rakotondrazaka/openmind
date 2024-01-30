@@ -1,10 +1,8 @@
 import { z } from "zod";
 import { commentConfig } from "~/configs";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { CommentFullSchema } from "~/schemas/globalSchemas/comments/comment";
+
 import { makeContentClientSchema } from "~/schemas/globalSchemas/contents";
-import { CommentSchema } from "~/schemas/globalSchemas/comments/comment";
-import { CommentCountSchema } from "~/schemas/globalSchemas/comments/commentCount";
-import { CommentAuthSchema } from "~/schemas/globalSchemas/comments/commentAuth";
 
 /* -------------------------------------------------------------------------- */
 /*                            Update comment param                            */
@@ -38,13 +36,7 @@ export type UpdateCommentBodyPEM = RequestErrorMessage<UpdateCommentBody>;
 /* -------------------------------------------------------------------------- */
 
 export const UpdateCommentDataSchema = z.object({
-  comment: CommentSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  )
-    .and(CommentCountSchema)
-    .and(CommentAuthSchema),
+  comment: CommentFullSchema,
 });
 
 export type UpdateCommentData = z.infer<typeof UpdateCommentDataSchema>;

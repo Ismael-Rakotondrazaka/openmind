@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { UserSchema } from "~/schemas/globalSchemas/users";
+import { CommentCountSchema } from "~/schemas/globalSchemas/comments/commentCount";
+import { CommentAuthSchema } from "~/schemas/globalSchemas/comments/commentAuth";
 
 export const CommentSchema = z.object({
   id: z.string(),
@@ -12,3 +15,13 @@ export const CommentSchema = z.object({
 });
 
 export type Comment = z.infer<typeof CommentSchema>;
+
+export const CommentFullSchema = CommentSchema.and(
+  z.object({
+    user: UserSchema,
+  }),
+)
+  .and(CommentCountSchema)
+  .and(CommentAuthSchema);
+
+export type CommentFull = z.infer<typeof CommentFullSchema>;

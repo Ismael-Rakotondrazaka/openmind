@@ -1,8 +1,5 @@
 import { z } from "zod";
-import { CommentSchema } from "~/schemas/globalSchemas/comments/comment";
-import { UserSchema } from "~/schemas/globalSchemas/users";
-import { CommentCountSchema } from "~/schemas/globalSchemas/comments/commentCount";
-import { CommentAuthSchema } from "~/schemas/globalSchemas/comments/commentAuth";
+import { CommentFullSchema } from "~/schemas/globalSchemas/comments/comment";
 
 /* -------------------------------------------------------------------------- */
 /*                            Destroy comment param                           */
@@ -19,13 +16,7 @@ export type DestroyCommentParam = z.infer<typeof DestroyCommentParamSchema>;
 /* -------------------------------------------------------------------------- */
 
 export const DestroyCommentDataSchema = z.object({
-  comment: CommentSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  )
-    .and(CommentCountSchema)
-    .and(CommentAuthSchema),
+  comment: CommentFullSchema,
 });
 
 export type DestroyCommentData = z.infer<typeof DestroyCommentDataSchema>;
