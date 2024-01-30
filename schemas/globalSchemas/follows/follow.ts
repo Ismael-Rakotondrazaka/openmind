@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { UserSchema } from "~/schemas/globalSchemas/users";
 
 export const FollowSchema = z.object({
   id: z.number().int(),
@@ -8,3 +9,12 @@ export const FollowSchema = z.object({
 });
 
 export type Follow = z.infer<typeof FollowSchema>;
+
+export const FollowFullSchema = FollowSchema.merge(
+  z.object({
+    following: UserSchema,
+    follower: UserSchema,
+  }),
+);
+
+export type FollowFull = z.infer<typeof FollowFullSchema>;

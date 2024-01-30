@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { FollowSchema } from "~/schemas/globalSchemas/follows/follow";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { FollowFullSchema } from "~/schemas/globalSchemas/follows/follow";
 import { FollowOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/follows/followOrder";
 import { FollowWhereInputSchema } from "~/schemas/globalSchemas/follows/followWhere";
 import {
@@ -37,17 +36,7 @@ export type IndexFollowQueryPEM = RequestErrorMessage<IndexFollowQuery>;
 
 export const IndexFollowDataSchema = z
   .object({
-    follows: z.array(
-      FollowSchema.and(
-        z.object({
-          following: UserSchema,
-        }),
-      ).and(
-        z.object({
-          follower: UserSchema,
-        }),
-      ),
-    ),
+    follows: z.array(FollowFullSchema),
   })
   .merge(PaginationSchema);
 

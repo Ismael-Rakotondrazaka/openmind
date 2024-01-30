@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { FollowSchema } from "~/schemas/globalSchemas/follows/follow";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { FollowFullSchema } from "~/schemas/globalSchemas/follows/follow";
 
 /* -------------------------------------------------------------------------- */
 /*                            Destroy follow param                            */
@@ -17,15 +16,7 @@ export type DestroyFollowParam = z.infer<typeof DestroyFollowParamSchema>;
 /* -------------------------------------------------------------------------- */
 
 export const DestroyFollowDataSchema = z.object({
-  follow: FollowSchema.and(
-    z.object({
-      follower: UserSchema,
-    }),
-  ).and(
-    z.object({
-      following: UserSchema,
-    }),
-  ),
+  follow: FollowFullSchema,
 });
 
 export type DestroyFollowData = z.infer<typeof DestroyFollowDataSchema>;

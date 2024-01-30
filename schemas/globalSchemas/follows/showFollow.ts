@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { FollowSchema } from "~/schemas/globalSchemas/follows/follow";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { FollowFullSchema } from "~/schemas/globalSchemas/follows/follow";
 
 /* -------------------------------------------------------------------------- */
 /*                              Show follow param                             */
@@ -17,15 +16,7 @@ export type ShowFollowParam = z.infer<typeof ShowFollowParamSchema>;
 /* -------------------------------------------------------------------------- */
 
 export const ShowFollowDataSchema = z.object({
-  follow: FollowSchema.and(
-    z.object({
-      follower: UserSchema,
-    }),
-  ).and(
-    z.object({
-      following: UserSchema,
-    }),
-  ),
+  follow: FollowFullSchema,
 });
 
 export type ShowFollowData = z.infer<typeof ShowFollowDataSchema>;

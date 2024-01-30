@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { FollowSchema } from "~/schemas/globalSchemas/follows/follow";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { FollowFullSchema } from "~/schemas/globalSchemas/follows/follow";
 
 /* -------------------------------------------------------------------------- */
 /*                              Store follow body                             */
@@ -19,15 +18,7 @@ export type StoreFollowBodyPEM = RequestErrorMessage<StoreFollowBody>;
 /* -------------------------------------------------------------------------- */
 
 export const StoreFollowDataSchema = z.object({
-  follow: FollowSchema.and(
-    z.object({
-      following: UserSchema,
-    }),
-  ).and(
-    z.object({
-      follower: UserSchema,
-    }),
-  ),
+  follow: FollowFullSchema,
 });
 
 export type StoreFollowData = z.infer<typeof StoreFollowDataSchema>;
