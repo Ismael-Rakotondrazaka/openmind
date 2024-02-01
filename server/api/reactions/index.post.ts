@@ -9,7 +9,7 @@ import {
   ReactionSchema,
 } from "~/utils";
 import { getAuthUser } from "~/server/utils";
-import { articleRepository } from "~/repositories";
+import { articleRepository, commentRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<StoreReactionData | StoreReactionError> => {
@@ -90,14 +90,12 @@ export default defineEventHandler(
     }
 
     if (typeof storeReactionBodySPR.data.commentId === "string") {
-      const isCommentExists: boolean = await event.context.prisma.comment
-        .count({
-          where: {
-            id: storeReactionBodySPR.data.commentId,
-            deletedAt: null,
-          },
-        })
-        .then((count) => count > 0);
+      const isCommentExists: boolean = await commentRepository.exist({
+        where: {
+          id: storeReactionBodySPR.data.commentId,
+          deletedAt: null,
+        },
+      });
 
       if (!isCommentExists) {
         return createBadRequestError(event, {

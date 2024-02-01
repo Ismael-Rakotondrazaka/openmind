@@ -5,10 +5,10 @@ import {
   IndexCommentQuerySchema,
   createBadRequestError,
   getRequestErrorMessage,
-  type Reaction,
   IndexCommentDataSchema,
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
+import { commentRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<IndexCommentData | IndexCommentError> => {
@@ -25,7 +25,7 @@ export default defineEventHandler(
 
     const authUser: User | null = await getAuthUser(event);
 
-    const totalCounts: number = await event.context.prisma.comment.count({
+    const totalCounts: number = await commentRepository.count({
       where: {
         ...indexCommentQuerySPR.data.where,
         deletedAt:
@@ -54,79 +54,21 @@ export default defineEventHandler(
     );
 
     const comments: IndexCommentData["comments"] =
-      await event.context.prisma.comment
-        .findMany({
-          where: {
-            ...indexCommentQuerySPR.data.where,
-            deletedAt:
-              authUser !== null &&
-              (authUser.role !== "user" ||
-                indexCommentQuerySPR.data.where?.userId === authUser.id)
-                ? indexCommentQuerySPR.data.where?.deletedAt
-                : null,
-          },
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-                name: true,
-                firstName: true,
-                profileUrl: true,
-                role: true,
-                createdAt: true,
-                updatedAt: true,
-                deletedAt: true,
-              },
-            },
-            /* eslint-disable indent */
-            reactions:
-              authUser === null
-                ? undefined
-                : {
-                    where: {
-                      userId: authUser.id,
-                    },
-                  },
-            /* eslint-enable indent */
-            _count: {
-              select: {
-                replies: {
-                  where: {
-                    deletedAt: null,
-                  },
-                },
-                reactions: true,
-              },
-            },
-          },
-          orderBy: indexCommentQuerySPR.data.orderBy,
-          take: pageSize,
-          skip: calculatePaginationSkip(currentPage, pageSize),
-        })
-        .then((comments) => {
-          if (authUser !== null) {
-            return comments.map((comment) => {
-              const auth: IndexCommentData["comments"][0]["auth"] = {
-                reaction: null,
-              };
-
-              if (comment.reactions.length > 0) {
-                auth.reaction = comment.reactions[0] as Reaction;
-              }
-
-              return {
-                ...comment,
-                auth,
-              };
-            });
-          } else {
-            return comments.map((article) => ({
-              ...article,
-              auth: null,
-            }));
-          }
-        });
+      await commentRepository.findFullMany({
+        where: {
+          ...indexCommentQuerySPR.data.where,
+          deletedAt:
+            authUser !== null &&
+            (authUser.role !== "user" ||
+              indexCommentQuerySPR.data.where?.userId === authUser.id)
+              ? indexCommentQuerySPR.data.where?.deletedAt
+              : null,
+        },
+        orderBy: indexCommentQuerySPR.data.orderBy,
+        take: pageSize,
+        skip: calculatePaginationSkip(currentPage, pageSize),
+        authUser,
+      });
 
     return IndexCommentDataSchema.parse({
       comments,
