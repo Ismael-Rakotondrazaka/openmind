@@ -8,9 +8,9 @@ import {
   createBadRequestError,
   getRequestErrorMessage,
   IndexSavedArticleDataSchema,
-  type Reaction,
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
+import { savedArticleRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<IndexSavedArticleData | IndexSavedArticleError> => {
@@ -31,7 +31,7 @@ export default defineEventHandler(
     }
 
     // TODO how about deleted and invisible article
-    const totalCounts: number = await event.context.prisma.savedArticle.count({
+    const totalCounts: number = await savedArticleRepository.count({
       where: {
         ...indexArticleQuerySPR.data.where,
         userId: authUser.id,
@@ -55,93 +55,16 @@ export default defineEventHandler(
     );
 
     const savedArticles: IndexSavedArticleData["savedArticles"] =
-      await event.context.prisma.savedArticle
-        .findMany({
-          where: {
-            ...indexArticleQuerySPR.data.where,
-            userId: authUser.id,
-          },
-          include: {
-            article: {
-              include: {
-                user: {
-                  select: {
-                    id: true,
-                    username: true,
-                    name: true,
-                    firstName: true,
-                    profileUrl: true,
-                    role: true,
-                    createdAt: true,
-                    updatedAt: true,
-                    deletedAt: true,
-                  },
-                },
-                tags: true,
-                savedArticles: {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-                views: {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-                reactions: {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-                _count: {
-                  select: {
-                    comments: {
-                      where: {
-                        deletedAt: null,
-                      },
-                    },
-                    reactions: true,
-                    tags: true,
-                    views: true,
-                  },
-                },
-              },
-            },
-          },
-          orderBy: indexArticleQuerySPR.data.orderBy,
-          take: pageSize,
-          skip: calculatePaginationSkip(currentPage, pageSize),
-        })
-        .then((savedArticles) => {
-          return savedArticles.map((savedArticle) => {
-            const auth: IndexSavedArticleData["savedArticles"][0]["article"]["auth"] =
-              {
-                savedArticle: null,
-                view: null,
-                reaction: null,
-              };
-
-            if (savedArticle.article.savedArticles.length > 0) {
-              auth.savedArticle = savedArticle.article.savedArticles[0];
-            }
-
-            if (savedArticle.article.views.length > 0) {
-              auth.view = savedArticle.article.views[0];
-            }
-
-            if (savedArticle.article.reactions.length > 0) {
-              auth.reaction = savedArticle.article.reactions[0] as Reaction;
-            }
-
-            return {
-              ...savedArticle,
-              article: {
-                ...savedArticle.article,
-                auth,
-              },
-            };
-          });
-        });
+      await savedArticleRepository.findFullMany({
+        where: {
+          ...indexArticleQuerySPR.data.where,
+          userId: authUser.id,
+        },
+        orderBy: indexArticleQuerySPR.data.orderBy,
+        take: pageSize,
+        skip: calculatePaginationSkip(currentPage, pageSize),
+        authUser,
+      });
 
     return IndexSavedArticleDataSchema.parse({
       savedArticles,

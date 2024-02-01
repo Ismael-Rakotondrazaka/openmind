@@ -10,7 +10,7 @@ import {
   createForbiddenError,
   DestroySavedArticleDataSchema,
 } from "~/utils";
-import { articleRepository } from "~/repositories";
+import { articleRepository, savedArticleRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (
@@ -41,7 +41,7 @@ export default defineEventHandler(
     }
 
     const savedArticle: SavedArticle | null =
-      await event.context.prisma.savedArticle.findFirst({
+      await savedArticleRepository.findOne({
         where: {
           articleId: article.id,
           userId: authUser.id,
@@ -52,7 +52,7 @@ export default defineEventHandler(
       return createForbiddenError(event);
     }
 
-    await event.context.prisma.savedArticle.delete({
+    await savedArticleRepository.deleteOne({
       where: {
         userId_articleId: {
           userId: authUser.id,
