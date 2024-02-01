@@ -1,3 +1,4 @@
+import { viewRepository } from "~/repositories";
 import {
   type IndexViewData,
   type IndexViewError,
@@ -19,7 +20,7 @@ export default defineEventHandler(
       });
     }
 
-    const totalCounts: number = await event.context.prisma.view.count({
+    const totalCounts: number = await viewRepository.count({
       where: indexViewQuerySPR.data.where,
     });
 
@@ -38,28 +39,12 @@ export default defineEventHandler(
       pageSize,
     );
 
-    const views: IndexViewData["views"] =
-      await event.context.prisma.view.findMany({
-        where: indexViewQuerySPR.data.where,
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-        },
-        orderBy: indexViewQuerySPR.data.orderBy,
-        take: pageSize,
-        skip: calculatePaginationSkip(currentPage, pageSize),
-      });
+    const views: IndexViewData["views"] = await viewRepository.findFullMany({
+      where: indexViewQuerySPR.data.where,
+      orderBy: indexViewQuerySPR.data.orderBy,
+      take: pageSize,
+      skip: calculatePaginationSkip(currentPage, pageSize),
+    });
 
     return {
       views,

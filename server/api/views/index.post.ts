@@ -1,5 +1,5 @@
 import type { Article, User } from "@prisma/client";
-import { articleRepository } from "~/repositories";
+import { articleRepository, viewRepository } from "~/repositories";
 import {
   type StoreViewData,
   type StoreViewError,
@@ -42,14 +42,12 @@ export default defineEventHandler(
       });
     }
 
-    const isAlreadyViewed: boolean = await event.context.prisma.view
-      .count({
-        where: {
-          articleId: storeViewBodySPR.data.articleId,
-          userId: authUser.id,
-        },
-      })
-      .then((count: number) => count > 0);
+    const isAlreadyViewed: boolean = await viewRepository.exist({
+      where: {
+        articleId: storeViewBodySPR.data.articleId,
+        userId: authUser.id,
+      },
+    });
     if (isAlreadyViewed) {
       return createBadRequestError(event, {
         errorMessage: {
@@ -60,27 +58,12 @@ export default defineEventHandler(
 
     const now = new Date();
 
-    const view: StoreViewData["view"] = await event.context.prisma.view.create({
+    const view: StoreViewData["view"] = await viewRepository.createFullOne({
       data: {
         articleId: storeViewBodySPR.data.articleId,
         userId: authUser.id,
         createdAt: now,
         updatedAt: now,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            firstName: true,
-            profileUrl: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true,
-            deletedAt: true,
-          },
-        },
       },
     });
 
