@@ -16,6 +16,7 @@ import {
   StoreArticleBodySchema,
 } from "~/server/utils";
 import { articleRepository } from "~/repositories";
+import { tagRepository } from "~/repositories/tags";
 
 export default defineEventHandler(
   async (event): Promise<StoreArticleData | StoreArticleError> => {
@@ -35,7 +36,7 @@ export default defineEventHandler(
       });
     }
 
-    const tagsCount: number = await event.context.prisma.tag.count({
+    const tagsCount: number = await tagRepository.count({
       where: {
         id: {
           in: storeArticleBodySPR.data.tagIds,

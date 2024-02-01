@@ -22,6 +22,7 @@ import {
   slugify,
 } from "~/server/utils";
 import { articleRepository } from "~/repositories";
+import { tagRepository } from "~/repositories/tags";
 
 export default defineEventHandler(
   async (event): Promise<UpdateArticleData | UpdateArticleError> => {
@@ -108,7 +109,7 @@ export default defineEventHandler(
 
     let newTags: Tag[] = [];
     if (updateArticleBodySPR.data.tagIds !== undefined) {
-      newTags = await event.context.prisma.tag.findMany({
+      newTags = await tagRepository.findMany({
         where: {
           id: {
             in: updateArticleBodySPR.data.tagIds,

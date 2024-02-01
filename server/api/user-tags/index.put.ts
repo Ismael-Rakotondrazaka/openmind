@@ -1,4 +1,5 @@
 import type { Tag, User } from "@prisma/client";
+import { tagRepository } from "~/repositories/tags";
 import {
   type UpdateUserTagData,
   type UpdateUserTagError,
@@ -26,7 +27,7 @@ export default defineEventHandler(
       });
     }
 
-    const oldTags: Tag[] = await event.context.prisma.tag.findMany({
+    const oldTags: Tag[] = await tagRepository.findMany({
       where: {
         users: {
           every: {
@@ -36,7 +37,7 @@ export default defineEventHandler(
       },
     });
 
-    const newTags: Tag[] = await event.context.prisma.tag.findMany({
+    const newTags: Tag[] = await tagRepository.findMany({
       where: {
         id: {
           in: updateUserTagBodySPR.data.tagIds,

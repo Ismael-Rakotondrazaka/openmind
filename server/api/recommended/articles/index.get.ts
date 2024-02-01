@@ -13,6 +13,7 @@ import {
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
 import { articleRepository } from "~/repositories";
+import { tagRepository } from "~/repositories/tags";
 
 export default defineEventHandler(
   async (
@@ -38,7 +39,7 @@ export default defineEventHandler(
       });
     }
 
-    const tagPreferenceIds: number[] = await event.context.prisma.tag
+    const tagPreferenceIds: number[] = await tagRepository
       .findMany({
         where: {
           users: {
@@ -47,17 +48,8 @@ export default defineEventHandler(
             },
           },
         },
-        select: {
-          id: true,
-        },
       })
-      .then(
-        (
-          tags: {
-            id: Tag["id"];
-          }[],
-        ) => tags.map((tag: { id: Tag["id"] }) => tag.id),
-      );
+      .then((tags: Tag[]): number[] => tags.map((tag: Tag): number => tag.id));
 
     const savedArticleTagIds: number[] = await event.context.prisma.savedArticle
       .findMany({
