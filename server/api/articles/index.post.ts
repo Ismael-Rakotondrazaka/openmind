@@ -54,13 +54,11 @@ export default defineEventHandler(
 
     let slug: string = slugify(title);
 
-    const isDuplicate: boolean = await event.context.prisma.article
-      .count({
-        where: {
-          slug,
-        },
-      })
-      .then((count: number) => count > 0);
+    const isDuplicate: boolean = await articleRepository.exist({
+      where: {
+        slug,
+      },
+    });
 
     if (isDuplicate) {
       slug += `-${createRandomString(articleConfig.SLUG_SUFFIX_LENGTH)}`;

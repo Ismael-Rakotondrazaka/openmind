@@ -137,13 +137,11 @@ export default defineEventHandler(
     if (newTitle !== undefined) {
       newSlug = slugify(newTitle);
 
-      const isDuplicate: boolean = await event.context.prisma.article
-        .count({
-          where: {
-            slug: newSlug,
-          },
-        })
-        .then((count: number) => count > 0);
+      const isDuplicate: boolean = await articleRepository.exist({
+        where: {
+          slug: newSlug,
+        },
+      });
 
       if (isDuplicate) {
         newSlug += `-${createArticleSlugSuffix()}`;

@@ -9,7 +9,6 @@ import {
   createUnauthorizedError,
   createForbiddenError,
   DestroySavedArticleDataSchema,
-  type Reaction,
 } from "~/utils";
 import { articleRepository } from "~/repositories";
 
@@ -63,83 +62,12 @@ export default defineEventHandler(
     });
 
     const articleSavedDeleted: DestroySavedArticleData["article"] | null =
-      await event.context.prisma.article
-        .findFirst({
-          where: {
-            id: article.id,
-          },
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-                name: true,
-                firstName: true,
-                profileUrl: true,
-                role: true,
-                createdAt: true,
-                updatedAt: true,
-                deletedAt: true,
-              },
-            },
-            tags: true,
-            savedArticles: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            views: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            reactions: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            _count: {
-              select: {
-                comments: {
-                  where: {
-                    deletedAt: null,
-                  },
-                },
-                reactions: true,
-                tags: true,
-                views: true,
-              },
-            },
-          },
-        })
-        .then((article) => {
-          if (article !== null) {
-            const auth: DestroySavedArticleData["article"]["auth"] = {
-              savedArticle: null,
-              view: null,
-              reaction: null,
-            };
-
-            if (article.savedArticles.length > 0) {
-              auth.savedArticle = article.savedArticles[0];
-            }
-
-            if (article.views.length > 0) {
-              auth.view = article.views[0];
-            }
-
-            if (article.reactions.length > 0) {
-              auth.reaction = article.reactions[0] as Reaction;
-            }
-
-            return {
-              ...article,
-              auth,
-            };
-          } else {
-            return null;
-          }
-        });
+      await articleRepository.findFullOne({
+        where: {
+          id: article.id,
+        },
+        authUser,
+      });
 
     if (articleSavedDeleted === null) {
       return createNotFoundError(event);

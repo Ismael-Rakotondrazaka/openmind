@@ -9,6 +9,7 @@ import {
   ReactionSchema,
 } from "~/utils";
 import { getAuthUser } from "~/server/utils";
+import { articleRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<StoreReactionData | StoreReactionError> => {
@@ -70,15 +71,13 @@ export default defineEventHandler(
     }
 
     if (typeof storeReactionBodySPR.data.articleId === "string") {
-      const isArticleExists: boolean = await event.context.prisma.article
-        .count({
-          where: {
-            id: storeReactionBodySPR.data.articleId,
-            deletedAt: null,
-            isVisible: true,
-          },
-        })
-        .then((count) => count > 0);
+      const isArticleExists: boolean = await articleRepository.exist({
+        where: {
+          id: storeReactionBodySPR.data.articleId,
+          deletedAt: null,
+          isVisible: true,
+        },
+      });
 
       if (!isArticleExists) {
         return createBadRequestError(event, {

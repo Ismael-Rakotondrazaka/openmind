@@ -9,7 +9,7 @@ import {
   getRequestErrorMessage,
   IndexRecommendedArticleDataSchema,
   createUnauthorizedError,
-  type Reaction,
+  type ArticleFull,
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
 import { articleRepository } from "~/repositories";
@@ -131,110 +131,23 @@ export default defineEventHandler(
       pageSize,
     );
 
-    const articles = await event.context.prisma.article
-      .findMany({
-        where: {
-          tags: {
-            some: {
-              id: {
-                in: recommendedTagIds,
-              },
-            },
-          },
-          deletedAt: null,
-          isVisible: true,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-          tags: true,
-          /* eslint-disable indent */
-          savedArticles:
-            authUser === null
-              ? undefined
-              : {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-          views:
-            authUser === null
-              ? undefined
-              : {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-          reactions:
-            authUser === null
-              ? undefined
-              : {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-          /* eslint-enable indent */
-          _count: {
-            select: {
-              comments: {
-                where: {
-                  deletedAt: null,
-                },
-              },
-              reactions: true,
-              tags: true,
-              views: true,
+    const articles: ArticleFull[] = await articleRepository.findFullMany({
+      where: {
+        tags: {
+          some: {
+            id: {
+              in: recommendedTagIds,
             },
           },
         },
-        orderBy: indexRecommendedArticleQuerySPR.data.orderBy,
-        take: pageSize,
-        skip: calculatePaginationSkip(currentPage, pageSize),
-      })
-      .then((articles) => {
-        if (authUser !== null) {
-          return articles.map((article) => {
-            const auth: IndexArticleData["articles"][0]["auth"] = {
-              savedArticle: null,
-              view: null,
-              reaction: null,
-            };
-
-            if (article.savedArticles.length > 0) {
-              auth.savedArticle = article.savedArticles[0];
-            }
-
-            if (article.views.length > 0) {
-              auth.view = article.views[0];
-            }
-
-            if (article.reactions.length > 0) {
-              auth.reaction = article.reactions[0] as Reaction;
-            }
-
-            return {
-              ...article,
-              auth,
-            };
-          });
-        } else {
-          return articles.map((article) => ({
-            ...article,
-            auth: null,
-          }));
-        }
-      });
+        deletedAt: null,
+        isVisible: true,
+      },
+      orderBy: indexRecommendedArticleQuerySPR.data.orderBy,
+      take: pageSize,
+      skip: calculatePaginationSkip(currentPage, pageSize),
+      authUser,
+    });
 
     return IndexRecommendedArticleDataSchema.parse({
       articles,
