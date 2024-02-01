@@ -6,10 +6,14 @@ import {
   createUnauthorizedError,
   getRequestErrorMessage,
   StoreReactionBodySchema,
-  ReactionSchema,
+  StoreReactionDataSchema,
 } from "~/utils";
 import { getAuthUser } from "~/server/utils";
-import { articleRepository, commentRepository } from "~/repositories";
+import {
+  articleRepository,
+  commentRepository,
+  reactionRepository,
+} from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<StoreReactionData | StoreReactionError> => {
@@ -44,15 +48,13 @@ export default defineEventHandler(
       });
     }
 
-    const isReactionAlreadyExists: boolean = await event.context.prisma.reaction
-      .findFirst({
-        where: {
-          userId: authUser.id,
-          articleId: storeReactionBodySPR.data.articleId,
-          commentId: storeReactionBodySPR.data.commentId,
-        },
-      })
-      .then((value) => value !== null);
+    const isReactionAlreadyExists: boolean = await reactionRepository.exist({
+      where: {
+        userId: authUser.id,
+        articleId: storeReactionBodySPR.data.articleId,
+        commentId: storeReactionBodySPR.data.commentId,
+      },
+    });
 
     if (isReactionAlreadyExists) {
       return createBadRequestError(event, {
@@ -107,37 +109,18 @@ export default defineEventHandler(
       }
     }
 
-    const createdReactionRaw = await event.context.prisma.reaction.create({
-      data: {
-        type: storeReactionBodySPR.data.type,
-        userId: authUser.id,
-        articleId: storeReactionBodySPR.data.articleId,
-        commentId: storeReactionBodySPR.data.commentId,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            firstName: true,
-            profileUrl: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true,
-            deletedAt: true,
-          },
+    const createdReaction: StoreReactionData["reaction"] =
+      await reactionRepository.createFullOne({
+        data: {
+          type: storeReactionBodySPR.data.type,
+          userId: authUser.id,
+          articleId: storeReactionBodySPR.data.articleId,
+          commentId: storeReactionBodySPR.data.commentId,
         },
-      },
+      });
+
+    return StoreReactionDataSchema.parse({
+      reaction: createdReaction,
     });
-
-    const createdReactionFormatted: StoreReactionData["reaction"] = {
-      ...ReactionSchema.parse(createdReactionRaw),
-      user: createdReactionRaw.user,
-    };
-
-    return {
-      reaction: createdReactionFormatted,
-    };
   },
 );

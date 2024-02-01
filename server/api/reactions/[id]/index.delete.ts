@@ -1,4 +1,5 @@
-import type { Reaction, User } from "@prisma/client";
+import type { User } from "@prisma/client";
+import { reactionRepository } from "~/repositories";
 import {
   type DestroyReactionData,
   type DestroyReactionError,
@@ -6,7 +7,6 @@ import {
   createNotFoundError,
   createUnauthorizedError,
   createForbiddenError,
-  ReactionSchema,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -20,32 +20,12 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    /* eslint-disable indent */
-    const reaction:
-      | (Reaction & {
-          user: Omit<User, "password" | "email" | "emailVerifiedAt">;
-        })
-      | null = await event.context.prisma.reaction.findFirst({
-      where: {
-        id: destroyReactionParamSPR.data.id,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            firstName: true,
-            profileUrl: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true,
-            deletedAt: true,
-          },
+    const reaction: DestroyReactionData["reaction"] | null =
+      await reactionRepository.findFullOne({
+        where: {
+          id: destroyReactionParamSPR.data.id,
         },
-      },
-    });
-    /* eslint-enable indent */
+      });
 
     if (reaction === null) {
       return createNotFoundError(event);
@@ -60,19 +40,14 @@ export default defineEventHandler(
       return createForbiddenError(event);
     }
 
-    await event.context.prisma.reaction.delete({
+    await reactionRepository.deleteOne({
       where: {
         id: reaction.id,
       },
     });
 
-    const deletedReaction: DestroyReactionData["reaction"] = {
-      ...ReactionSchema.parse(reaction),
-      user: reaction.user,
-    };
-
     return {
-      reaction: deletedReaction,
+      reaction,
     };
   },
 );
