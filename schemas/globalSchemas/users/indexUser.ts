@@ -4,12 +4,9 @@ import {
   PageSchema,
   PaginationSchema,
 } from "~/schemas/globalSchemas/paginations";
-import { TagSchema } from "~/schemas/globalSchemas/tags/tag";
-import { UserSchema } from "~/schemas/globalSchemas/users/user";
 import { UserOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/users/userOrder";
 import { UserWhereInputSchema } from "~/schemas/globalSchemas/users/userWhere";
-import { UserCountSchema } from "~/schemas/globalSchemas/users/userCount";
-import { UserAuthSchema } from "~/schemas/globalSchemas/users/userAuth";
+import { UserFullSchema } from "~/schemas/globalSchemas/users/userFull";
 import { userConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
@@ -39,15 +36,7 @@ export type IndexUserQueryPEM = RequestErrorMessage<IndexUserQuery>;
 
 export const IndexUserDataSchema = z
   .object({
-    users: z.array(
-      UserSchema.and(
-        z.object({
-          tags: z.array(TagSchema),
-        }),
-      )
-        .and(UserCountSchema)
-        .and(UserAuthSchema),
-    ),
+    users: z.array(UserFullSchema),
   })
   .merge(PaginationSchema);
 

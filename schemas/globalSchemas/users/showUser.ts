@@ -1,8 +1,5 @@
 import { z } from "zod";
-import { TagSchema } from "~/schemas/globalSchemas/tags/tag";
-import { UserSchema } from "~/schemas/globalSchemas/users/user";
-import { UserCountSchema } from "~/schemas/globalSchemas/users/userCount";
-import { UserAuthSchema } from "~/schemas/globalSchemas/users/userAuth";
+import { UserFullSchema } from "~/schemas/globalSchemas/users/userFull";
 
 /* -------------------------------------------------------------------------- */
 /*                               Show user param                              */
@@ -18,13 +15,7 @@ export type ShowUserParam = z.infer<typeof ShowUserParamSchema>;
 /*                               Show user data                               */
 /* -------------------------------------------------------------------------- */
 export const ShowUserDataSchema = z.object({
-  user: UserSchema.and(
-    z.object({
-      tags: z.array(TagSchema),
-    }),
-  )
-    .and(UserCountSchema)
-    .and(UserAuthSchema),
+  user: UserFullSchema,
 });
 
 export type ShowUserData = z.infer<typeof ShowUserDataSchema>;

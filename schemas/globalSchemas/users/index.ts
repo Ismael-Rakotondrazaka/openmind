@@ -6,3 +6,4 @@ export * from "./userWhere";
 export * from "./indexUser";
 export * from "./showUser";
 export * from "./updateUser";
+export * from "./userFull";

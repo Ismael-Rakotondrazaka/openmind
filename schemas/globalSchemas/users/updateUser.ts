@@ -1,11 +1,8 @@
 import { z } from "zod";
 import { userConfig } from "~/configs";
-import { TagSchema } from "~/schemas/globalSchemas/tags/tag";
-import { UserSchema } from "~/schemas/globalSchemas/users/user";
-import { UserCountSchema } from "~/schemas/globalSchemas/users/userCount";
-import { UserAuthSchema } from "~/schemas/globalSchemas/users/userAuth";
 import { FileSchema } from "~/schemas/globalSchemas/files";
 import { CustomNullSchema } from "~/schemas/globalSchemas/types";
+import { UserFullSchema } from "~/schemas/globalSchemas/users/userFull";
 
 /* -------------------------------------------------------------------------- */
 /*                              Update user param                             */
@@ -53,13 +50,7 @@ export type UpdateUserBodyPEM = RequestErrorMessage<UpdateUserBody>;
 /* -------------------------------------------------------------------------- */
 
 export const UpdateUserDataSchema = z.object({
-  user: UserSchema.and(
-    z.object({
-      tags: z.array(TagSchema),
-    }),
-  )
-    .and(UserCountSchema)
-    .and(UserAuthSchema),
+  user: UserFullSchema,
 });
 
 export type UpdateUserData = z.infer<typeof UpdateUserDataSchema>;
