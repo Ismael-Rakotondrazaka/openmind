@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ReactionBaseSchema } from "~/schemas/globalSchemas/reactions/reaction";
+import { ReactionBaseSchema } from "~/schemas/globalSchemas/reactions/reactionBase";
 
 export const ReactionCommentSchema = ReactionBaseSchema.merge(
   z.object({
