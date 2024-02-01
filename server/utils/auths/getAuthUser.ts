@@ -2,6 +2,7 @@ import type { Session } from "next-auth";
 import type { H3Event, EventHandlerRequest } from "h3";
 import type { User } from "@prisma/client";
 import { getServerSession } from "#auth";
+import { userRepository } from "~/repositories";
 
 export const getAuthUser = async (
   event: H3Event<EventHandlerRequest>,
@@ -15,7 +16,7 @@ export const getAuthUser = async (
   let authAdmin: User | null = null;
 
   if (id !== undefined) {
-    authAdmin = await event.context.prisma.user.findFirst({
+    authAdmin = await userRepository.findOne({
       where: {
         AND: {
           id,

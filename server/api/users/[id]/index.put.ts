@@ -13,6 +13,7 @@ import {
   UpdateUserDataSchema,
 } from "~/utils";
 import { UpdateUserBodySchema } from "~/server/utils";
+import { userRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<UpdateUserData | UpdateUserError> => {
@@ -25,7 +26,7 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    const user: User | null = await event.context.prisma.user.findFirst({
+    const user: User | null = await userRepository.findOne({
       where: {
         id: updateArticleParamSPR.data.id,
       },

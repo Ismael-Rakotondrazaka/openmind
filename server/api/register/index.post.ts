@@ -11,6 +11,7 @@ import {
   getRequestErrorMessage,
 } from "~/utils";
 import { useDayjs } from "~/composables";
+import { userRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<StoreRegisterData | StoreRegisterError> => {
@@ -33,7 +34,7 @@ export default defineEventHandler(
 
     const errorMessage: StoreRegisterBodyPEM = {};
 
-    const usedEmailCount: number = await event.context.prisma.user.count({
+    const usedEmailCount: number = await userRepository.count({
       where: {
         email: storeRegisterBodySPR.data.email,
       },
@@ -46,7 +47,7 @@ export default defineEventHandler(
         "The email address is already associated with an account.";
     }
 
-    const usedUsernameCount: number = await event.context.prisma.user.count({
+    const usedUsernameCount: number = await userRepository.count({
       where: {
         username: storeRegisterBodySPR.data.username,
       },
@@ -68,7 +69,7 @@ export default defineEventHandler(
       storeRegisterBodySPR.data.password,
     );
 
-    const user: User = await event.context.prisma.user.create({
+    const user: User = await userRepository.createOne({
       data: {
         username: storeRegisterBodySPR.data.username,
         email: storeRegisterBodySPR.data.email,

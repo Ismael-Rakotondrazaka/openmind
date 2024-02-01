@@ -1,8 +1,8 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { Role, User } from "@prisma/client";
 import { NuxtAuthHandler } from "#auth";
-import { prisma } from "~/server/middleware/0.prisma";
 import { StoreLoginBodySchema } from "~/utils";
+import { userRepository } from "~/repositories";
 
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().authSecret,
@@ -29,7 +29,7 @@ export default NuxtAuthHandler({
         const storeLoginSPR = StoreLoginBodySchema.safeParse(credentials);
 
         if (storeLoginSPR.success) {
-          const user: User | null = await prisma.user.findFirst({
+          const user: User | null = await userRepository.findOne({
             where: {
               AND: {
                 deletedAt: null,

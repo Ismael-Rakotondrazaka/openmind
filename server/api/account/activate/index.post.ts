@@ -1,4 +1,5 @@
 import type { ActivationToken, User } from "@prisma/client";
+import { userRepository } from "~/repositories";
 import {
   createBadRequestError,
   getRequestErrorMessage,
@@ -58,7 +59,7 @@ export default defineEventHandler(
       });
     }
 
-    await event.context.prisma.user.update({
+    await userRepository.updateOne({
       where: {
         id: activationToken.userId,
       },
