@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { ArticleFullSchema } from "~/schemas/globalSchemas/articles";
-import { SavedArticleSchema } from "~/schemas/globalSchemas/savedArticles";
+import { SavedArticleFullSchema } from "~/schemas/globalSchemas/savedArticles/savedArticleFull";
 
 export const StoreSavedArticleBodySchema = z.object({
   articleId: z.string(),
@@ -12,11 +11,7 @@ export type StoreSavedArticleBodyPEM =
   RequestErrorMessage<StoreSavedArticleBody>;
 
 export const StoreSavedArticleDataSchema = z.object({
-  savedArticle: SavedArticleSchema.and(
-    z.object({
-      article: ArticleFullSchema,
-    }),
-  ),
+  savedArticle: SavedArticleFullSchema,
 });
 
 export type StoreSavedArticleData = z.infer<typeof StoreSavedArticleDataSchema>;

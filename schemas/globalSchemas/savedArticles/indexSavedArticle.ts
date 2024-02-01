@@ -1,10 +1,7 @@
 import { z } from "zod";
-import { ArticleFullSchema } from "~/schemas/globalSchemas/articles";
-import {
-  SavedArticleSchema,
-  SavedArticleWhereInputSchema,
-  SavedArticleOrderByWithRelationInputSchema,
-} from "~/schemas/globalSchemas/savedArticles";
+import { SavedArticleOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/savedArticles/savedArticleOrder";
+import { SavedArticleWhereInputSchema } from "~/schemas/globalSchemas/savedArticles/savedArticleWhere";
+import { SavedArticleFullSchema } from "~/schemas/globalSchemas/savedArticles/savedArticleFull";
 import {
   PaginationSchema,
   PageSchema,
@@ -42,13 +39,7 @@ export type IndexSavedArticleQueryPEM =
 
 export const IndexSavedArticleDataSchema = z
   .object({
-    savedArticles: z.array(
-      SavedArticleSchema.and(
-        z.object({
-          article: ArticleFullSchema,
-        }),
-      ),
-    ),
+    savedArticles: z.array(SavedArticleFullSchema),
   })
   .merge(PaginationSchema);
 

@@ -4,3 +4,4 @@ export * from "./savedArticleWhere";
 export * from "./storeSavedArticle";
 export * from "./indexSavedArticle";
 export * from "./destroySavedArticle";
+export * from "./savedArticleFull";
