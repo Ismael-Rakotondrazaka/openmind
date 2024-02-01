@@ -1,4 +1,5 @@
 import type { Follow, User } from "@prisma/client";
+import { followRepository } from "~/repositories";
 import {
   type StoreFollowData,
   type StoreFollowError,
@@ -69,39 +70,11 @@ export default defineEventHandler(
     const now: Date = new Date();
 
     const follow: StoreFollowData["follow"] =
-      await event.context.prisma.follow.create({
+      await followRepository.createFullOne({
         data: {
           followerId: authUser.id,
           followingId: user.id,
           createdAt: now,
-        },
-        include: {
-          follower: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-          following: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
         },
       });
 

@@ -7,6 +7,7 @@ import {
   IndexFollowDataSchema,
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
+import { followRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<IndexFollowData | IndexFollowError> => {
@@ -21,7 +22,7 @@ export default defineEventHandler(
       });
     }
 
-    const totalCounts: number = await event.context.prisma.follow.count({
+    const totalCounts: number = await followRepository.count({
       where: indexFollowQuerySPR.data.where,
     });
 
@@ -41,36 +42,8 @@ export default defineEventHandler(
     );
 
     const follows: IndexFollowData["follows"] =
-      await event.context.prisma.follow.findMany({
+      await followRepository.findFullMany({
         where: indexFollowQuerySPR.data.where,
-        include: {
-          follower: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-          following: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-        },
         orderBy: indexFollowQuerySPR.data.orderBy,
         take: pageSize,
         skip: calculatePaginationSkip(currentPage, pageSize),

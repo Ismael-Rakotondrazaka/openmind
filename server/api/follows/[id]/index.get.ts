@@ -1,3 +1,4 @@
+import { followRepository } from "~/repositories";
 import {
   type ShowFollowData,
   type ShowFollowError,
@@ -18,37 +19,9 @@ export default defineEventHandler(
     }
 
     const follow: ShowFollowData["follow"] | null =
-      await event.context.prisma.follow.findFirst({
+      await followRepository.findFullOne({
         where: {
           id: showFollowParamSPR.data.id,
-        },
-        include: {
-          follower: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-          following: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
         },
       });
 
