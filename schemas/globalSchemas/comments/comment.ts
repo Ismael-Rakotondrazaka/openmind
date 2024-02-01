@@ -16,12 +16,12 @@ export const CommentSchema = z.object({
 
 export type Comment = z.infer<typeof CommentSchema>;
 
-export const CommentFullSchema = CommentSchema.and(
+export const CommentFullSchema = CommentSchema.merge(
   z.object({
     user: UserSchema,
   }),
 )
-  .and(CommentCountSchema)
-  .and(CommentAuthSchema);
+  .merge(CommentCountSchema)
+  .merge(CommentAuthSchema);
 
 export type CommentFull = z.infer<typeof CommentFullSchema>;
