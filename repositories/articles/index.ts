@@ -7,6 +7,7 @@ import { findFullOneOrThrow } from "./findFullOneOrThrow";
 import { updateOne } from "./updateOne";
 import { findOne } from "./findOne";
 import { count } from "./count";
+import { exist } from "./exist";
 
 export const articleRepository = {
   findFullMany,
@@ -18,4 +19,5 @@ export const articleRepository = {
   updateOne,
   findOne,
   count,
+  exist,
 };
