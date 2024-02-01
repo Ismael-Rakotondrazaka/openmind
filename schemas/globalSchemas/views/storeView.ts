@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { ViewSchema } from "~/schemas/globalSchemas/views/view";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { ViewFullSchema } from "~/schemas/globalSchemas/views/viewFull";
 
 /* -------------------------------------------------------------------------- */
 /*                               Store view body                              */
@@ -19,11 +18,7 @@ export type StoreViewBodyPEM = RequestErrorMessage<StoreViewBody>;
 /* -------------------------------------------------------------------------- */
 
 export const StoreViewDataSchema = z.object({
-  view: ViewSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  ),
+  view: ViewFullSchema,
 });
 
 export type StoreViewData = z.infer<typeof StoreViewDataSchema>;

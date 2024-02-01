@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { ViewSchema } from "~/schemas/globalSchemas/views/view";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { ViewFullSchema } from "~/schemas/globalSchemas/views/viewFull";
 import {
   makePageSizeSchema,
   PageSchema,
@@ -37,13 +36,7 @@ export type IndexViewQueryPEM = RequestErrorMessage<IndexViewQuery>;
 
 export const IndexViewDataSchema = z
   .object({
-    views: z.array(
-      ViewSchema.and(
-        z.object({
-          user: UserSchema,
-        }),
-      ),
-    ),
+    views: z.array(ViewFullSchema),
   })
   .merge(PaginationSchema);
 

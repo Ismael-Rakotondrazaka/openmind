@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { ViewSchema } from "~/schemas/globalSchemas/views/view";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { ViewFullSchema } from "~/schemas/globalSchemas/views/viewFull";
 
 /* -------------------------------------------------------------------------- */
 /*                               Show view param                              */
@@ -17,11 +16,7 @@ export type ShowViewParam = z.infer<typeof ShowViewParamSchema>;
 /* -------------------------------------------------------------------------- */
 
 export const ShowViewDataSchema = z.object({
-  view: ViewSchema.and(
-    z.object({
-      user: UserSchema,
-    }),
-  ),
+  view: ViewFullSchema,
 });
 
 export type ShowViewData = z.infer<typeof ShowViewDataSchema>;
