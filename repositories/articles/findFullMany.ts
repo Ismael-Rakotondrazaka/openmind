@@ -17,19 +17,7 @@ export const findFullMany = ({
 }): Promise<ArticleFull[]> => {
   return prisma.article
     .findMany({
-      where: {
-        ...where,
-        deletedAt:
-          authUser !== null &&
-          (authUser.role !== "user" || where?.userId === authUser.id)
-            ? where?.deletedAt
-            : null,
-        isVisible:
-          authUser !== null &&
-          (authUser.role !== "user" || where?.userId === authUser.id)
-            ? where?.isVisible
-            : true,
-      },
+      where,
       include: {
         user: {
           select: {
