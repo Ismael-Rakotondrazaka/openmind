@@ -11,7 +11,7 @@ import {
   getRequestErrorMessage,
 } from "~/utils";
 import { useDayjs } from "~/composables";
-import { userRepository } from "~/repositories";
+import { activationTokenRepository, userRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<StoreRegisterData | StoreRegisterError> => {
@@ -86,7 +86,7 @@ export default defineEventHandler(
       .add(authConfig.TOKEN_VALIDITY, "milliseconds")
       .toDate();
 
-    await event.context.prisma.activationToken.create({
+    await activationTokenRepository.createOne({
       data: {
         token,
         expiresAt,

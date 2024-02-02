@@ -35,17 +35,9 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    let article:
-      | (Article & {
-          tags: Tag[];
-        })
-      | null = null;
-    article = await event.context.prisma.article.findFirst({
+    const article: Article | null = await articleRepository.findOne({
       where: {
         slug: updateArticleParamSPR.data.slug,
-      },
-      include: {
-        tags: true,
       },
     });
 
@@ -75,6 +67,16 @@ export default defineEventHandler(
       });
     }
 
+    const articleTags: Tag[] = await tagRepository.findMany({
+      where: {
+        articles: {
+          some: {
+            id: article.id,
+          },
+        },
+      },
+    });
+
     // Check if one change is made
     if (
       !(
@@ -90,14 +92,13 @@ export default defineEventHandler(
           updateArticleBodySPR.data.cover !== article.coverUrl) ||
         (updateArticleBodySPR.data.tagIds !== undefined &&
           !(
-            article.tags.every((tag: Tag) => {
+            articleTags.every((tag: Tag) => {
               if (updateArticleBodySPR.data.tagIds !== undefined) {
                 return updateArticleBodySPR.data.tagIds.includes(tag.id);
               } else {
                 return false;
               }
-            }) &&
-            article.tags.length === updateArticleBodySPR.data.tagIds.length
+            }) && articleTags.length === updateArticleBodySPR.data.tagIds.length
           ))
       )
     ) {
@@ -203,7 +204,7 @@ export default defineEventHandler(
     }
 
     const oldTagIdsSet: Set<number> = new Set(
-      article.tags.map((val: Tag) => val.id),
+      articleTags.map((val: Tag) => val.id),
     );
     const newTagIdsSet: Set<number> = new Set(
       newTags.map((val: Tag) => val.id),
@@ -212,7 +213,7 @@ export default defineEventHandler(
     const tagsToDisconnect: { id: number }[] = [];
     const tagsToConnect: { id: number }[] = [];
 
-    article.tags.forEach((val: Tag) => {
+    articleTags.forEach((val: Tag) => {
       if (!newTagIdsSet.has(val.id)) {
         tagsToDisconnect.push({ id: val.id });
       }

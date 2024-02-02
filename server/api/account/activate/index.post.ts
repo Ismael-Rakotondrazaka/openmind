@@ -1,5 +1,5 @@
 import type { ActivationToken, User } from "@prisma/client";
-import { userRepository } from "~/repositories";
+import { activationTokenRepository, userRepository } from "~/repositories";
 import {
   createBadRequestError,
   getRequestErrorMessage,
@@ -22,13 +22,10 @@ export default defineEventHandler(
         errorMessage: getRequestErrorMessage(storeAccountActivateBodySPR),
       });
     }
-    const activationToken: (ActivationToken & { user: User }) | null =
-      await event.context.prisma.activationToken.findUnique({
+    const activationToken: ActivationToken | null =
+      await activationTokenRepository.findOne({
         where: {
           token: storeAccountActivateBodySPR.data.t,
-        },
-        include: {
-          user: true,
         },
       });
 
@@ -45,7 +42,7 @@ export default defineEventHandler(
 
     // check if the token is active
     if (activationToken.expiresAt < now) {
-      await event.context.prisma.activationToken.delete({
+      await activationTokenRepository.deleteOne({
         where: {
           token: storeAccountActivateBodySPR.data.t,
         },
@@ -69,15 +66,21 @@ export default defineEventHandler(
       },
     });
 
-    await event.context.prisma.activationToken.delete({
+    await activationTokenRepository.deleteOne({
       where: {
         token: storeAccountActivateBodySPR.data.t,
       },
     });
 
+    const user: User = await userRepository.findOneOrThrow({
+      where: {
+        id: activationToken.userId,
+      },
+    });
+
     sendAccountActivated({
-      email: activationToken.user.email,
-      firstName: activationToken.user.firstName,
+      email: user.email,
+      firstName: user.firstName,
     });
 
     return {
