@@ -1,4 +1,5 @@
 import type { Tag, User } from "@prisma/client";
+import { tagRepository } from "~/repositories/tags";
 import {
   type StoreTagData,
   type StoreTagError,
@@ -26,13 +27,11 @@ export default defineEventHandler(
       });
     }
 
-    const isDuplicate: boolean = await event.context.prisma.tag
-      .count({
-        where: {
-          value: storeTagBodySPR.data.value,
-        },
-      })
-      .then((count: number) => count > 0);
+    const isDuplicate: boolean = await tagRepository.exist({
+      where: {
+        value: storeTagBodySPR.data.value,
+      },
+    });
 
     if (isDuplicate) {
       return createBadRequestError(event, {
@@ -42,7 +41,7 @@ export default defineEventHandler(
       });
     }
 
-    const tag: Tag = await event.context.prisma.tag.create({
+    const tag: Tag = await tagRepository.createOne({
       data: {
         value: storeTagBodySPR.data.value,
       },

@@ -1,3 +1,4 @@
+import { viewRepository } from "~/repositories";
 import {
   type ShowViewData,
   type ShowViewError,
@@ -16,27 +17,11 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    const view: ShowViewData["view"] | null =
-      await event.context.prisma.view.findFirst({
-        where: {
-          id: showViewParamSPR.data.id,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-        },
-      });
+    const view: ShowViewData["view"] | null = await viewRepository.findFullOne({
+      where: {
+        id: showViewParamSPR.data.id,
+      },
+    });
 
     if (view === null) {
       return createNotFoundError(event);

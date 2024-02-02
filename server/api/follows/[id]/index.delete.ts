@@ -1,4 +1,5 @@
 import type { User } from "@prisma/client";
+import { followRepository } from "~/repositories";
 import {
   type DestroyFollowData,
   type DestroyFollowError,
@@ -21,37 +22,9 @@ export default defineEventHandler(
     }
 
     const follow: DestroyFollowData["follow"] | null =
-      await event.context.prisma.follow.findFirst({
+      await followRepository.findFullOne({
         where: {
           id: destroyFollowParamSPR.data.id,
-        },
-        include: {
-          follower: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-          following: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
         },
       });
 
@@ -68,7 +41,7 @@ export default defineEventHandler(
       return createForbiddenError(event);
     }
 
-    await event.context.prisma.follow.delete({
+    await followRepository.deleteOne({
       where: {
         id: destroyFollowParamSPR.data.id,
       },

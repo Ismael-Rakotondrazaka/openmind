@@ -1,4 +1,5 @@
-import type { Follow, User } from "@prisma/client";
+import type { User } from "@prisma/client";
+import { followRepository, userRepository } from "~/repositories";
 import {
   type StoreFollowData,
   type StoreFollowError,
@@ -35,20 +36,12 @@ export default defineEventHandler(
       });
     }
 
-    const user: (User & { followers: Follow[] }) | null =
-      await event.context.prisma.user.findFirst({
-        where: {
-          id: storeFollowBodySPR.data.userId,
-          deletedAt: null,
-        },
-        include: {
-          followers: {
-            where: {
-              followerId: authUser.id,
-            },
-          },
-        },
-      });
+    const user: User | null = await userRepository.findOne({
+      where: {
+        id: storeFollowBodySPR.data.userId,
+        deletedAt: null,
+      },
+    });
 
     if (user === null) {
       return createBadRequestError(event, {
@@ -58,7 +51,14 @@ export default defineEventHandler(
       });
     }
 
-    if (user.followers.length > 0) {
+    const isAlreadyAFollower: boolean = await followRepository.exist({
+      where: {
+        followingId: user.id,
+        followerId: authUser.id,
+      },
+    });
+
+    if (isAlreadyAFollower) {
       return createBadRequestError(event, {
         errorMessage: {
           userId: "You already follow this user.",
@@ -69,39 +69,11 @@ export default defineEventHandler(
     const now: Date = new Date();
 
     const follow: StoreFollowData["follow"] =
-      await event.context.prisma.follow.create({
+      await followRepository.createFullOne({
         data: {
           followerId: authUser.id,
           followingId: user.id,
           createdAt: now,
-        },
-        include: {
-          follower: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-          following: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
         },
       });
 

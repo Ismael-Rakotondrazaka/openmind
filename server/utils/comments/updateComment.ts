@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { makeContentServerSchema } from "~/server/utils/contents";
+import { makeContentServerSchema } from "~/server/utils";
 import { commentConfig } from "~/utils";
 
 /* -------------------------------------------------------------------------- */

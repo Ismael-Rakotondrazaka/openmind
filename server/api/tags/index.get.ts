@@ -8,6 +8,7 @@ import {
   getRequestErrorMessage,
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
+import { tagRepository } from "~/repositories/tags";
 
 export default defineEventHandler(
   async (event): Promise<IndexTagData | IndexTagError> => {
@@ -20,7 +21,7 @@ export default defineEventHandler(
       });
     }
 
-    const totalCounts: number = await event.context.prisma.tag.count({
+    const totalCounts: number = await tagRepository.count({
       where: indexTagQuerySPR.data.where,
       orderBy: indexTagQuerySPR.data.orderBy,
     });
@@ -40,7 +41,7 @@ export default defineEventHandler(
       pageSize,
     );
 
-    const tags: IndexTagData["tags"] = await event.context.prisma.tag.findMany({
+    const tags: IndexTagData["tags"] = await tagRepository.findMany({
       where: indexTagQuerySPR.data.where,
       orderBy: indexTagQuerySPR.data.orderBy,
       take: pageSize,

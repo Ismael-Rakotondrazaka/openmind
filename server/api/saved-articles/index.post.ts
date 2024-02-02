@@ -1,4 +1,5 @@
-import type { Article, SavedArticle, User } from "@prisma/client";
+import type { Article, User } from "@prisma/client";
+import { articleRepository, savedArticleRepository } from "~/repositories";
 import {
   type StoreSavedArticleData,
   type StoreSavedArticleError,
@@ -7,7 +8,6 @@ import {
   getRequestErrorMessage,
   StoreSavedArticleBodySchema,
   StoreSavedArticleDataSchema,
-  type Reaction,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -28,14 +28,13 @@ export default defineEventHandler(
       });
     }
 
-    const article: Article | null =
-      await event.context.prisma.article.findFirst({
-        where: {
-          id: storeSavedArticleBodySPR.data.articleId,
-          isVisible: true,
-          deletedAt: null,
-        },
-      });
+    const article: Article | null = await articleRepository.findOne({
+      where: {
+        id: storeSavedArticleBodySPR.data.articleId,
+        isVisible: true,
+        deletedAt: null,
+      },
+    });
 
     if (article === null) {
       return createBadRequestError(event, {
@@ -45,14 +44,12 @@ export default defineEventHandler(
       });
     }
 
-    const isAlreadySaved: boolean = await event.context.prisma.savedArticle
-      .findFirst({
-        where: {
-          userId: authUser.id,
-          articleId: storeSavedArticleBodySPR.data.articleId,
-        },
-      })
-      .then((val: SavedArticle | null) => val !== null);
+    const isAlreadySaved: boolean = await savedArticleRepository.exist({
+      where: {
+        userId: authUser.id,
+        articleId: storeSavedArticleBodySPR.data.articleId,
+      },
+    });
 
     if (isAlreadySaved) {
       return createBadRequestError(event, {
@@ -63,87 +60,13 @@ export default defineEventHandler(
     }
 
     const savedArticle: StoreSavedArticleData["savedArticle"] =
-      await event.context.prisma.savedArticle
-        .create({
-          data: {
-            articleId: storeSavedArticleBodySPR.data.articleId,
-            userId: authUser.id,
-          },
-          include: {
-            article: {
-              include: {
-                tags: true,
-                user: {
-                  select: {
-                    id: true,
-                    username: true,
-                    name: true,
-                    firstName: true,
-                    profileUrl: true,
-                    role: true,
-                    createdAt: true,
-                    updatedAt: true,
-                    deletedAt: true,
-                  },
-                },
-                savedArticles: {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-                views: {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-                reactions: {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-                _count: {
-                  select: {
-                    comments: {
-                      where: {
-                        deletedAt: null,
-                      },
-                    },
-                    reactions: true,
-                    tags: true,
-                    views: true,
-                  },
-                },
-              },
-            },
-          },
-        })
-        .then((savedArticle) => {
-          const auth: StoreArticleData["article"]["auth"] = {
-            savedArticle: null,
-            view: null,
-            reaction: null,
-          };
-
-          if (savedArticle.article.savedArticles.length > 0) {
-            auth.savedArticle = savedArticle.article.savedArticles[0];
-          }
-
-          if (savedArticle.article.views.length > 0) {
-            auth.view = savedArticle.article.views[0];
-          }
-
-          if (savedArticle.article.reactions.length > 0) {
-            auth.reaction = savedArticle.article.reactions[0] as Reaction;
-          }
-
-          return {
-            ...savedArticle,
-            article: {
-              ...savedArticle.article,
-              auth,
-            },
-          };
-        });
+      await savedArticleRepository.createFullOne({
+        data: {
+          articleId: storeSavedArticleBodySPR.data.articleId,
+          userId: authUser.id,
+        },
+        authUser,
+      });
 
     return StoreSavedArticleDataSchema.parse({
       savedArticle,

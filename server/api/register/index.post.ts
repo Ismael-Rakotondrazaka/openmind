@@ -1,4 +1,3 @@
-import { zfd } from "zod-form-data";
 import type { z } from "zod";
 import type { User } from "@prisma/client";
 import {
@@ -12,16 +11,16 @@ import {
   getRequestErrorMessage,
 } from "~/utils";
 import { useDayjs } from "~/composables";
+import { activationTokenRepository, userRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<StoreRegisterData | StoreRegisterError> => {
     const runtimeConfig = useRuntimeConfig();
 
-    const requestBody: unknown = await getRequestBody(event);
-
-    const storeRegisterBodySPR = await zfd
-      .formData(StoreRegisterBodySchema)
-      .safeParseAsync(requestBody);
+    const storeRegisterBodySPR = await safeParseRequestBodyAs(
+      event,
+      StoreRegisterBodySchema,
+    );
 
     if (!storeRegisterBodySPR.success) {
       return createBadRequestError(event, {
@@ -35,7 +34,7 @@ export default defineEventHandler(
 
     const errorMessage: StoreRegisterBodyPEM = {};
 
-    const usedEmailCount: number = await event.context.prisma.user.count({
+    const usedEmailCount: number = await userRepository.count({
       where: {
         email: storeRegisterBodySPR.data.email,
       },
@@ -48,7 +47,7 @@ export default defineEventHandler(
         "The email address is already associated with an account.";
     }
 
-    const usedUsernameCount: number = await event.context.prisma.user.count({
+    const usedUsernameCount: number = await userRepository.count({
       where: {
         username: storeRegisterBodySPR.data.username,
       },
@@ -70,7 +69,7 @@ export default defineEventHandler(
       storeRegisterBodySPR.data.password,
     );
 
-    const user: User = await event.context.prisma.user.create({
+    const user: User = await userRepository.createOne({
       data: {
         username: storeRegisterBodySPR.data.username,
         email: storeRegisterBodySPR.data.email,
@@ -87,7 +86,7 @@ export default defineEventHandler(
       .add(authConfig.TOKEN_VALIDITY, "milliseconds")
       .toDate();
 
-    await event.context.prisma.activationToken.create({
+    await activationTokenRepository.createOne({
       data: {
         token,
         expiresAt,

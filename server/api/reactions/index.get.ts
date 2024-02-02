@@ -1,4 +1,5 @@
 import type { SafeParseReturnType } from "zod";
+import { reactionRepository } from "~/repositories";
 import {
   type IndexReactionData,
   type IndexReactionError,
@@ -6,7 +7,7 @@ import {
   IndexReactionQuerySchema,
   createBadRequestError,
   getRequestErrorMessage,
-  ReactionSchema,
+  IndexReactionDataSchema,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -22,7 +23,7 @@ export default defineEventHandler(
       });
     }
 
-    const totalCounts: number = await event.context.prisma.reaction.count({
+    const totalCounts: number = await reactionRepository.count({
       where: indexReactionQuerySPR.data.where,
       orderBy: indexReactionQuerySPR.data.orderBy,
     });
@@ -43,38 +44,14 @@ export default defineEventHandler(
     );
 
     const reactions: IndexReactionData["reactions"] =
-      await event.context.prisma.reaction
-        .findMany({
-          where: indexReactionQuerySPR.data.where,
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-                name: true,
-                firstName: true,
-                profileUrl: true,
-                role: true,
-                createdAt: true,
-                updatedAt: true,
-                deletedAt: true,
-              },
-            },
-          },
-          orderBy: indexReactionQuerySPR.data.orderBy,
-          take: pageSize,
-          skip: calculatePaginationSkip(currentPage, pageSize),
-        })
-        .then((reactions) =>
-          reactions.map((reaction) => {
-            return {
-              ...ReactionSchema.parse(reaction),
-              user: reaction.user,
-            };
-          }),
-        );
+      await reactionRepository.findFullMany({
+        where: indexReactionQuerySPR.data.where,
+        orderBy: indexReactionQuerySPR.data.orderBy,
+        take: pageSize,
+        skip: calculatePaginationSkip(currentPage, pageSize),
+      });
 
-    return {
+    return IndexReactionDataSchema.parse({
       reactions,
       count: reactions.length,
       totalCounts,
@@ -82,6 +59,6 @@ export default defineEventHandler(
       pageSize,
       totalPages,
       links,
-    };
+    });
   },
 );

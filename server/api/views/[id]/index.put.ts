@@ -1,4 +1,5 @@
 import type { User, View } from "@prisma/client";
+import { viewRepository } from "~/repositories";
 import {
   type UpdateViewData,
   type UpdateViewError,
@@ -19,7 +20,7 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    const view: View | null = await event.context.prisma.view.findFirst({
+    const view: View | null = await viewRepository.findOne({
       where: {
         id: updateArticleParamSPR.data.id,
       },
@@ -41,27 +42,12 @@ export default defineEventHandler(
     const now: Date = new Date();
 
     const updatedView: UpdateViewData["view"] =
-      await event.context.prisma.view.update({
+      await viewRepository.updateFullOne({
         where: {
           id: view.id,
         },
         data: {
           updatedAt: now,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
         },
       });
 

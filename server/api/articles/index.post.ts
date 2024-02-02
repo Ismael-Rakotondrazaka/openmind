@@ -1,16 +1,12 @@
-import { zfd } from "zod-form-data";
-import type { SafeParseError } from "zod";
 import type { User } from "@prisma/client";
 import {
   type StoreArticleData,
   type StoreArticleError,
-  type StoreArticleBody,
   createBadRequestError,
   createUnauthorizedError,
   getRequestErrorMessage,
   articleConfig,
   StoreArticleDataSchema,
-  type Reaction,
 } from "~/utils";
 import {
   createArticleId,
@@ -19,6 +15,8 @@ import {
   slugify,
   StoreArticleBodySchema,
 } from "~/server/utils";
+import { articleRepository } from "~/repositories";
+import { tagRepository } from "~/repositories/tags";
 
 export default defineEventHandler(
   async (event): Promise<StoreArticleData | StoreArticleError> => {
@@ -27,21 +25,18 @@ export default defineEventHandler(
       return createUnauthorizedError(event);
     }
 
-    const requestBody: unknown = await getRequestBody(event);
-
-    const storeArticleBodySPR = await zfd
-      .formData(StoreArticleBodySchema)
-      .safeParseAsync(requestBody);
+    const storeArticleBodySPR = await safeParseRequestBodyAs(
+      event,
+      StoreArticleBodySchema,
+    );
 
     if (!storeArticleBodySPR.success) {
       return createBadRequestError(event, {
-        errorMessage: getRequestErrorMessage(
-          storeArticleBodySPR as SafeParseError<StoreArticleBody>,
-        ),
+        errorMessage: getRequestErrorMessage(storeArticleBodySPR),
       });
     }
 
-    const tagsCount: number = await event.context.prisma.tag.count({
+    const tagsCount: number = await tagRepository.count({
       where: {
         id: {
           in: storeArticleBodySPR.data.tagIds,
@@ -60,13 +55,11 @@ export default defineEventHandler(
 
     let slug: string = slugify(title);
 
-    const isDuplicate: boolean = await event.context.prisma.article
-      .count({
-        where: {
-          slug,
-        },
-      })
-      .then((count: number) => count > 0);
+    const isDuplicate: boolean = await articleRepository.exist({
+      where: {
+        slug,
+      },
+    });
 
     if (isDuplicate) {
       slug += `-${createRandomString(articleConfig.SLUG_SUFFIX_LENGTH)}`;
@@ -98,93 +91,26 @@ export default defineEventHandler(
     }
 
     const article: StoreArticleData["article"] =
-      await event.context.prisma.article
-        .create({
-          data: {
-            id: articleId,
-            content,
-            title,
-            slug,
-            createdAt: now,
-            updatedAt: now,
-            isVisible: storeArticleBodySPR.data.isVisible,
-            summary,
-            userId: authUser.id,
-            coverUrl,
-            tags: {
-              connect: storeArticleBodySPR.data.tagIds.map((tagId) => ({
-                id: tagId,
-              })),
-            },
+      await articleRepository.createFullOne({
+        data: {
+          id: articleId,
+          content,
+          title,
+          slug,
+          createdAt: now,
+          updatedAt: now,
+          isVisible: storeArticleBodySPR.data.isVisible,
+          summary,
+          userId: authUser.id,
+          coverUrl,
+          tags: {
+            connect: storeArticleBodySPR.data.tagIds.map((tagId: number) => ({
+              id: tagId,
+            })),
           },
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-                name: true,
-                firstName: true,
-                profileUrl: true,
-                role: true,
-                createdAt: true,
-                updatedAt: true,
-                deletedAt: true,
-              },
-            },
-            tags: true,
-            savedArticles: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            views: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            reactions: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            _count: {
-              select: {
-                comments: {
-                  where: {
-                    deletedAt: null,
-                  },
-                },
-                reactions: true,
-                tags: true,
-                views: true,
-              },
-            },
-          },
-        })
-        .then((article) => {
-          const auth: StoreArticleData["article"]["auth"] = {
-            savedArticle: null,
-            view: null,
-            reaction: null,
-          };
-
-          if (article.savedArticles.length > 0) {
-            auth.savedArticle = article.savedArticles[0];
-          }
-
-          if (article.views.length > 0) {
-            auth.view = article.views[0];
-          }
-
-          if (article.reactions.length > 0) {
-            auth.reaction = article.reactions[0] as Reaction;
-          }
-
-          return {
-            ...article,
-            auth,
-          };
-        });
+        },
+        authUser,
+      });
 
     return StoreArticleDataSchema.parse({
       article,

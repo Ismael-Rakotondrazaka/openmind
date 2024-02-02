@@ -9,9 +9,11 @@ import {
   getRequestErrorMessage,
   IndexRecommendedArticleDataSchema,
   createUnauthorizedError,
-  type Reaction,
+  type ArticleFull,
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
+import { articleRepository } from "~/repositories";
+import { tagRepository } from "~/repositories/tags";
 
 export default defineEventHandler(
   async (
@@ -37,7 +39,7 @@ export default defineEventHandler(
       });
     }
 
-    const tagPreferenceIds: number[] = await event.context.prisma.tag
+    const tagPreferenceIds: number[] = await tagRepository
       .findMany({
         where: {
           users: {
@@ -46,17 +48,8 @@ export default defineEventHandler(
             },
           },
         },
-        select: {
-          id: true,
-        },
       })
-      .then(
-        (
-          tags: {
-            id: Tag["id"];
-          }[],
-        ) => tags.map((tag: { id: Tag["id"] }) => tag.id),
-      );
+      .then((tags: Tag[]): number[] => tags.map((tag: Tag): number => tag.id));
 
     const savedArticleTagIds: number[] = await event.context.prisma.savedArticle
       .findMany({
@@ -100,7 +93,7 @@ export default defineEventHandler(
       new Set(tagPreferenceIds.concat(...savedArticleTagIds)),
     ).sort((a: number, b: number) => a - b);
 
-    const totalCounts: number = await event.context.prisma.article.count({
+    const totalCounts: number = await articleRepository.count({
       where: {
         tags: {
           some: {
@@ -130,110 +123,23 @@ export default defineEventHandler(
       pageSize,
     );
 
-    const articles = await event.context.prisma.article
-      .findMany({
-        where: {
-          tags: {
-            some: {
-              id: {
-                in: recommendedTagIds,
-              },
-            },
-          },
-          deletedAt: null,
-          isVisible: true,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-          tags: true,
-          /* eslint-disable indent */
-          savedArticles:
-            authUser === null
-              ? undefined
-              : {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-          views:
-            authUser === null
-              ? undefined
-              : {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-          reactions:
-            authUser === null
-              ? undefined
-              : {
-                  where: {
-                    userId: authUser.id,
-                  },
-                },
-          /* eslint-enable indent */
-          _count: {
-            select: {
-              comments: {
-                where: {
-                  deletedAt: null,
-                },
-              },
-              reactions: true,
-              tags: true,
-              views: true,
+    const articles: ArticleFull[] = await articleRepository.findFullMany({
+      where: {
+        tags: {
+          some: {
+            id: {
+              in: recommendedTagIds,
             },
           },
         },
-        orderBy: indexRecommendedArticleQuerySPR.data.orderBy,
-        take: pageSize,
-        skip: calculatePaginationSkip(currentPage, pageSize),
-      })
-      .then((articles) => {
-        if (authUser !== null) {
-          return articles.map((article) => {
-            const auth: IndexArticleData["articles"][0]["auth"] = {
-              savedArticle: null,
-              view: null,
-              reaction: null,
-            };
-
-            if (article.savedArticles.length > 0) {
-              auth.savedArticle = article.savedArticles[0];
-            }
-
-            if (article.views.length > 0) {
-              auth.view = article.views[0];
-            }
-
-            if (article.reactions.length > 0) {
-              auth.reaction = article.reactions[0] as Reaction;
-            }
-
-            return {
-              ...article,
-              auth,
-            };
-          });
-        } else {
-          return articles.map((article) => ({
-            ...article,
-            auth: null,
-          }));
-        }
-      });
+        deletedAt: null,
+        isVisible: true,
+      },
+      orderBy: indexRecommendedArticleQuerySPR.data.orderBy,
+      take: pageSize,
+      skip: calculatePaginationSkip(currentPage, pageSize),
+      authUser,
+    });
 
     return IndexRecommendedArticleDataSchema.parse({
       articles,

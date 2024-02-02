@@ -1,11 +1,11 @@
 import type { Article, User, Comment } from "@prisma/client";
+import { articleRepository, commentRepository } from "~/repositories";
 import {
   type StoreCommentData,
   type StoreCommentError,
   createBadRequestError,
   createUnauthorizedError,
   getRequestErrorMessage,
-  type Reaction,
   StoreCommentDataSchema,
 } from "~/utils";
 
@@ -27,14 +27,13 @@ export default defineEventHandler(
       });
     }
 
-    const article: Article | null =
-      await event.context.prisma.article.findFirst({
-        where: {
-          id: storeCommentBodySPR.data.articleId,
-          deletedAt: null,
-          isVisible: true,
-        },
-      });
+    const article: Article | null = await articleRepository.findOne({
+      where: {
+        id: storeCommentBodySPR.data.articleId,
+        deletedAt: null,
+        isVisible: true,
+      },
+    });
 
     if (article === null) {
       return createBadRequestError(event, {
@@ -48,13 +47,12 @@ export default defineEventHandler(
       storeCommentBodySPR.data.parentId !== null &&
       storeCommentBodySPR.data.parentId !== undefined
     ) {
-      const comment: Comment | null =
-        await event.context.prisma.comment.findFirst({
-          where: {
-            id: storeCommentBodySPR.data.parentId,
-            deletedAt: null,
-          },
-        });
+      const comment: Comment | null = await commentRepository.findOne({
+        where: {
+          id: storeCommentBodySPR.data.parentId,
+          deletedAt: null,
+        },
+      });
 
       if (comment === null) {
         return createBadRequestError(event, {
@@ -84,74 +82,18 @@ export default defineEventHandler(
     Promise.allSettled(filesToSave.map(saveUploadedFile));
 
     const comment: StoreCommentData["comment"] =
-      await event.context.prisma.comment
-        .create({
-          data: {
-            id: commentId,
-            content,
-            createdAt: now,
-            updatedAt: now,
-            userId: authUser.id,
-            articleId: article.id,
-            parentId: storeCommentBodySPR.data.parentId,
-          },
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-                name: true,
-                firstName: true,
-                profileUrl: true,
-                role: true,
-                createdAt: true,
-                updatedAt: true,
-                deletedAt: true,
-              },
-            },
-            /* eslint-disable indent */
-            reactions:
-              authUser === null
-                ? undefined
-                : {
-                    where: {
-                      userId: authUser.id,
-                    },
-                  },
-            /* eslint-enable indent */
-            _count: {
-              select: {
-                replies: {
-                  where: {
-                    deletedAt: null,
-                  },
-                },
-                reactions: true,
-              },
-            },
-          },
-        })
-        .then((comment) => {
-          if (authUser !== null) {
-            const auth: ShowCommentData["comment"]["auth"] = {
-              reaction: null,
-            };
-
-            if (comment.reactions.length > 0) {
-              auth.reaction = comment.reactions[0] as Reaction;
-            }
-
-            return {
-              ...comment,
-              auth,
-            };
-          } else {
-            return {
-              ...comment,
-              auth: null,
-            };
-          }
-        });
+      await commentRepository.createFullOne({
+        data: {
+          id: commentId,
+          content,
+          createdAt: now,
+          updatedAt: now,
+          userId: authUser.id,
+          articleId: article.id,
+          parentId: storeCommentBodySPR.data.parentId,
+        },
+        authUser,
+      });
 
     return StoreCommentDataSchema.parse({
       comment,

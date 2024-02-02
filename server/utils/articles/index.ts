@@ -3,3 +3,4 @@ export * from "./createArticleId";
 export * from "./createArticleSlugSuffix";
 export * from "./formatArticleCoverPath";
 export * from "./uploadArticleCover";
+export * from "./formatArticleImagePath";

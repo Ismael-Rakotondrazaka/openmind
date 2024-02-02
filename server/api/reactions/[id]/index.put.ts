@@ -1,4 +1,5 @@
-import type { User } from "@prisma/client";
+import type { Reaction, User } from "@prisma/client";
+import { reactionRepository } from "~/repositories";
 import {
   type UpdateReactionData,
   type UpdateReactionError,
@@ -9,7 +10,7 @@ import {
   getRequestErrorMessage,
   UpdateReactionParamSchema,
   UpdateReactionBodySchema,
-  ReactionSchema,
+  UpdateReactionDataSchema,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -23,7 +24,7 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    const article = await event.context.prisma.reaction.findFirst({
+    const article: Reaction | null = await reactionRepository.findOne({
       where: {
         id: updateReactionParamSPR.data.id,
       },
@@ -63,38 +64,19 @@ export default defineEventHandler(
 
     const now: Date = new Date();
 
-    const updatedReactionRaw = await event.context.prisma.reaction.update({
-      where: {
-        id: article.id,
-      },
-      data: {
-        type: updateReactionBodySPR.data.type,
-        createdAt: now,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            firstName: true,
-            profileUrl: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true,
-            deletedAt: true,
-          },
+    const updatedReaction: UpdateReactionData["reaction"] =
+      await reactionRepository.updateFullOne({
+        where: {
+          id: article.id,
         },
-      },
+        data: {
+          type: updateReactionBodySPR.data.type,
+          createdAt: now,
+        },
+      });
+
+    return UpdateReactionDataSchema.parse({
+      reaction: updatedReaction,
     });
-
-    const updatedReactionFormatted: UpdateReactionData["reaction"] = {
-      ...ReactionSchema.parse(updatedReactionRaw),
-      user: updatedReactionRaw.user,
-    };
-
-    return {
-      reaction: updatedReactionFormatted,
-    };
   },
 );

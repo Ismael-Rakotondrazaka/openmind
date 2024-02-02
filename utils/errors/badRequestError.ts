@@ -1,6 +1,6 @@
 import { StatusCodes, getReasonPhrase } from "http-status-codes";
 import type { H3Event } from "h3";
-import { errorConfig } from "~/utils/configs/errorConfig";
+import { errorConfig } from "~/configs/errorConfig";
 
 export type BadRequestError<T> = {
   errorMessage: T;

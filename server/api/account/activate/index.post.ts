@@ -1,39 +1,31 @@
-import { zfd } from "zod-form-data";
-import type { z } from "zod";
 import type { ActivationToken, User } from "@prisma/client";
+import { activationTokenRepository, userRepository } from "~/repositories";
 import {
-  type StoreAccountActivateData,
-  type StoreAccountActivateError,
-  type StoreAccountActivateBody,
-  StoreAccountActivateBodySchema,
   createBadRequestError,
   getRequestErrorMessage,
+  type StoreAccountActivateData,
+  type StoreAccountActivateError,
+  StoreAccountActivateBodySchema,
 } from "~/utils";
 
 export default defineEventHandler(
   async (
     event,
   ): Promise<StoreAccountActivateData | StoreAccountActivateError> => {
-    const requestBody: unknown = await getRequestBody(event);
-
-    const storeAccountActivateBodySPR = await zfd
-      .formData(StoreAccountActivateBodySchema)
-      .safeParseAsync(requestBody);
+    const storeAccountActivateBodySPR = await safeParseRequestBodyAs(
+      event,
+      StoreAccountActivateBodySchema,
+    );
 
     if (!storeAccountActivateBodySPR.success) {
       return createBadRequestError(event, {
-        errorMessage: getRequestErrorMessage(
-          storeAccountActivateBodySPR as z.SafeParseError<StoreAccountActivateBody>,
-        ),
+        errorMessage: getRequestErrorMessage(storeAccountActivateBodySPR),
       });
     }
-    const activationToken: (ActivationToken & { user: User }) | null =
-      await event.context.prisma.activationToken.findUnique({
+    const activationToken: ActivationToken | null =
+      await activationTokenRepository.findOne({
         where: {
           token: storeAccountActivateBodySPR.data.t,
-        },
-        include: {
-          user: true,
         },
       });
 
@@ -50,7 +42,7 @@ export default defineEventHandler(
 
     // check if the token is active
     if (activationToken.expiresAt < now) {
-      await event.context.prisma.activationToken.delete({
+      await activationTokenRepository.deleteOne({
         where: {
           token: storeAccountActivateBodySPR.data.t,
         },
@@ -64,7 +56,7 @@ export default defineEventHandler(
       });
     }
 
-    await event.context.prisma.user.update({
+    await userRepository.updateOne({
       where: {
         id: activationToken.userId,
       },
@@ -74,15 +66,21 @@ export default defineEventHandler(
       },
     });
 
-    await event.context.prisma.activationToken.delete({
+    await activationTokenRepository.deleteOne({
       where: {
         token: storeAccountActivateBodySPR.data.t,
       },
     });
 
+    const user: User = await userRepository.findOneOrThrow({
+      where: {
+        id: activationToken.userId,
+      },
+    });
+
     sendAccountActivated({
-      email: activationToken.user.email,
-      firstName: activationToken.user.firstName,
+      email: user.email,
+      firstName: user.firstName,
     });
 
     return {

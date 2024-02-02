@@ -12,7 +12,6 @@ import {
   getRequestErrorMessage,
   UpdateArticleParamSchema,
   UpdateArticleDataSchema,
-  type Reaction,
 } from "~/utils";
 import {
   createArticleSlugSuffix,
@@ -22,6 +21,8 @@ import {
   UpdateArticleBodySchema,
   slugify,
 } from "~/server/utils";
+import { articleRepository } from "~/repositories";
+import { tagRepository } from "~/repositories/tags";
 
 export default defineEventHandler(
   async (event): Promise<UpdateArticleData | UpdateArticleError> => {
@@ -34,17 +35,9 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    let article:
-      | (Article & {
-          tags: Tag[];
-        })
-      | null = null;
-    article = await event.context.prisma.article.findFirst({
+    const article: Article | null = await articleRepository.findOne({
       where: {
         slug: updateArticleParamSPR.data.slug,
-      },
-      include: {
-        tags: true,
       },
     });
 
@@ -74,6 +67,16 @@ export default defineEventHandler(
       });
     }
 
+    const articleTags: Tag[] = await tagRepository.findMany({
+      where: {
+        articles: {
+          some: {
+            id: article.id,
+          },
+        },
+      },
+    });
+
     // Check if one change is made
     if (
       !(
@@ -89,14 +92,13 @@ export default defineEventHandler(
           updateArticleBodySPR.data.cover !== article.coverUrl) ||
         (updateArticleBodySPR.data.tagIds !== undefined &&
           !(
-            article.tags.every((tag: Tag) => {
+            articleTags.every((tag: Tag) => {
               if (updateArticleBodySPR.data.tagIds !== undefined) {
                 return updateArticleBodySPR.data.tagIds.includes(tag.id);
               } else {
                 return false;
               }
-            }) &&
-            article.tags.length === updateArticleBodySPR.data.tagIds.length
+            }) && articleTags.length === updateArticleBodySPR.data.tagIds.length
           ))
       )
     ) {
@@ -108,7 +110,7 @@ export default defineEventHandler(
 
     let newTags: Tag[] = [];
     if (updateArticleBodySPR.data.tagIds !== undefined) {
-      newTags = await event.context.prisma.tag.findMany({
+      newTags = await tagRepository.findMany({
         where: {
           id: {
             in: updateArticleBodySPR.data.tagIds,
@@ -137,13 +139,11 @@ export default defineEventHandler(
     if (newTitle !== undefined) {
       newSlug = slugify(newTitle);
 
-      const isDuplicate: boolean = await event.context.prisma.article
-        .count({
-          where: {
-            slug: newSlug,
-          },
-        })
-        .then((count: number) => count > 0);
+      const isDuplicate: boolean = await articleRepository.exist({
+        where: {
+          slug: newSlug,
+        },
+      });
 
       if (isDuplicate) {
         newSlug += `-${createArticleSlugSuffix()}`;
@@ -204,7 +204,7 @@ export default defineEventHandler(
     }
 
     const oldTagIdsSet: Set<number> = new Set(
-      article.tags.map((val: Tag) => val.id),
+      articleTags.map((val: Tag) => val.id),
     );
     const newTagIdsSet: Set<number> = new Set(
       newTags.map((val: Tag) => val.id),
@@ -213,7 +213,7 @@ export default defineEventHandler(
     const tagsToDisconnect: { id: number }[] = [];
     const tagsToConnect: { id: number }[] = [];
 
-    article.tags.forEach((val: Tag) => {
+    articleTags.forEach((val: Tag) => {
       if (!newTagIdsSet.has(val.id)) {
         tagsToDisconnect.push({ id: val.id });
       }
@@ -226,92 +226,25 @@ export default defineEventHandler(
     });
 
     const updatedArticle: UpdateArticleData["article"] =
-      await event.context.prisma.article
-        .update({
-          where: {
-            id: article.id,
+      await articleRepository.updateFullOne({
+        where: {
+          id: article.id,
+        },
+        data: {
+          content: newContent,
+          title: newTitle,
+          slug: newSlug,
+          updatedAt: now,
+          isVisible: newIsVisible,
+          summary: newSummary,
+          coverUrl: newCoverUrl,
+          tags: {
+            connect: tagsToConnect,
+            disconnect: tagsToDisconnect,
           },
-          data: {
-            content: newContent,
-            title: newTitle,
-            slug: newSlug,
-            updatedAt: now,
-            isVisible: newIsVisible,
-            summary: newSummary,
-            coverUrl: newCoverUrl,
-            tags: {
-              connect: tagsToConnect,
-              disconnect: tagsToDisconnect,
-            },
-          },
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-                name: true,
-                firstName: true,
-                profileUrl: true,
-                role: true,
-                createdAt: true,
-                updatedAt: true,
-                deletedAt: true,
-              },
-            },
-            tags: true,
-            savedArticles: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            views: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            reactions: {
-              where: {
-                userId: authUser.id,
-              },
-            },
-            _count: {
-              select: {
-                comments: {
-                  where: {
-                    deletedAt: null,
-                  },
-                },
-                reactions: true,
-                tags: true,
-                views: true,
-              },
-            },
-          },
-        })
-        .then((article) => {
-          const auth: StoreArticleData["article"]["auth"] = {
-            savedArticle: null,
-            view: null,
-            reaction: null,
-          };
-
-          if (article.savedArticles.length > 0) {
-            auth.savedArticle = article.savedArticles[0];
-          }
-
-          if (article.views.length > 0) {
-            auth.view = article.views[0];
-          }
-
-          if (article.reactions.length > 0) {
-            auth.reaction = article.reactions[0] as Reaction;
-          }
-
-          return {
-            ...article,
-            auth,
-          };
-        });
+        },
+        authUser,
+      });
 
     return UpdateArticleDataSchema.parse({
       article: updatedArticle,

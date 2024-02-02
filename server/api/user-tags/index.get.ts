@@ -1,4 +1,5 @@
 import type { User } from "@prisma/client";
+import { tagRepository } from "~/repositories/tags";
 import type { IndexUserTagData, IndexUserTagError } from "~/utils";
 
 export default defineEventHandler(
@@ -8,16 +9,15 @@ export default defineEventHandler(
       return createUnauthorizedError(event);
     }
 
-    const tags: IndexUserTagData["tags"] =
-      await event.context.prisma.tag.findMany({
-        where: {
-          users: {
-            some: {
-              id: authUser.id,
-            },
+    const tags: IndexUserTagData["tags"] = await tagRepository.findMany({
+      where: {
+        users: {
+          some: {
+            id: authUser.id,
           },
         },
-      });
+      },
+    });
 
     return {
       tags,

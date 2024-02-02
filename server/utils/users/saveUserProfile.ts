@@ -1,4 +1,5 @@
-import { UploadedFile, formatUserProfilePath } from "~/server/utils/files";
+import { UploadedFile } from "~/server/utils/files";
+import { formatUserProfilePath } from "~/server/utils/users/formatUserProfilePath";
 
 export const saveUserProfile = ({
   file,
