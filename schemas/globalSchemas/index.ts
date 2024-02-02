@@ -16,3 +16,4 @@ export * from "./login";
 export * from "./register";
 export * from "./recommendedArticles";
 export * from "./userTags";
+export * from "./activationTokens";
