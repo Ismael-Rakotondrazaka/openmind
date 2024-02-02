@@ -5,3 +5,4 @@ export * from "./reactions";
 export * from "./savedArticles";
 export * from "./follows";
 export * from "./views";
+export * from "./activationToken";
