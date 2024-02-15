@@ -91,7 +91,7 @@ const {
   execute: (
     // eslint-disable-next-line no-unused-vars
     opts?: AsyncDataExecuteOptions | undefined,
-  ) => Promise<ShowArticleData["article"] | null>;
+  ) => Promise<void>;
 } = await useFetch(() => `/api/articles/${slug.value}`, {
   transform: (value) => ShowArticleDataSchema.parse(value).article,
 });
@@ -131,7 +131,7 @@ const {
   execute: (
     // eslint-disable-next-line no-unused-vars
     opts?: AsyncDataExecuteOptions | undefined,
-  ) => Promise<UpdateArticleData["article"] | null>;
+  ) => Promise<void>;
 } = useFetch(() => `/api/articles/${slug.value}`, {
   method: "PUT",
   body: {
