@@ -2,10 +2,6 @@ import { z } from "zod";
 import { articleConfig } from "~/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
 import { ArticleFullSchema } from "~/schemas/globalSchemas/articles/article";
-import {
-  CustomBooleanSchema,
-  CustomNullSchema,
-} from "~/schemas/globalSchemas/types";
 import { FileSchema } from "~/schemas/globalSchemas/files";
 
 /* -------------------------------------------------------------------------- */
@@ -18,9 +14,15 @@ export const StoreArticleBodyBaseSchema = z.object({
     .trim()
     .min(articleConfig.TITLE_MIN_LENGTH)
     .max(articleConfig.TITLE_MAX_LENGTH),
-  summary: z.union([
-    CustomNullSchema,
-    z
+});
+
+export const StoreArticleBodyClientSchema = StoreArticleBodyBaseSchema.merge(
+  z.object({
+    isVisible: z
+      .boolean()
+      .optional()
+      .default(articleConfig.IS_VISIBLE_DEFAULT_VALUE),
+    summary: z
       .string()
       .trim()
       .transform((value: string, ctx): string => {
@@ -48,29 +50,8 @@ export const StoreArticleBodyBaseSchema = z.object({
 
         return value;
       })
+      .nullable()
       .optional(),
-  ]),
-  isVisible: CustomBooleanSchema.default(
-    articleConfig.IS_VISIBLE_DEFAULT_VALUE,
-  ),
-  tagIds: z.union([
-    z
-      .array(z.coerce.number().int().positive())
-      .min(1)
-      .max(articleConfig.TAGS_MAX_SIZE)
-      .refine((val: number[]) => val.length === [...new Set(val)].length, {
-        message: "Tags must be unique",
-      }),
-    z.coerce
-      .number()
-      .int()
-      .positive()
-      .transform((val: number): number[] => [val]),
-  ]),
-});
-
-export const StoreArticleBodyClientSchema = StoreArticleBodyBaseSchema.merge(
-  z.object({
     content: z
       .string()
       .trim()
@@ -105,7 +86,14 @@ export const StoreArticleBodyClientSchema = StoreArticleBodyBaseSchema.merge(
           return z.NEVER;
         }
       }),
-    cover: z.union([FileSchema, CustomNullSchema]).optional(),
+    cover: FileSchema.nullable().optional(),
+    tagIds: z
+      .array(z.number().int())
+      .min(1)
+      .max(articleConfig.TAGS_MAX_SIZE)
+      .refine((val: number[]) => val.length === [...new Set(val)].length, {
+        message: "Tags must be unique",
+      }),
   }),
 );
 
