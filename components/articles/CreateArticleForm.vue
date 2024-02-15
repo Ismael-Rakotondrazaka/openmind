@@ -148,8 +148,10 @@ const {
   body: formData,
   immediate: false,
   watch: false,
-  transform: (data: StoreArticleData): StoreArticleData["article"] =>
-    StoreArticleDataSchema.parse(data.article).article,
+  transform: (
+    data: StoreArticleData | null,
+  ): StoreArticleData["article"] | null =>
+    data !== null ? StoreArticleDataSchema.parse(data).article : null,
 });
 
 const submitHandler = handleSubmit(async () => {
