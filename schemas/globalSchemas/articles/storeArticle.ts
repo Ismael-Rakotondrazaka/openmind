@@ -91,9 +91,19 @@ export const StoreArticleBodyClientSchema = StoreArticleBodyBaseSchema.merge(
       .array(z.number().int())
       .min(1)
       .max(articleConfig.TAGS_MAX_SIZE)
-      .refine((val: number[]) => val.length === [...new Set(val)].length, {
-        message: "Tags must be unique",
-      }),
+      .refine(
+        (val: number[]) => {
+          const withoutNegative: number[] = val.filter((n: number) => n >= 0);
+
+          const isExistedIdsUnique: boolean =
+            withoutNegative.length === [...new Set(withoutNegative)].length;
+
+          return isExistedIdsUnique;
+        },
+        {
+          message: "Tags must be unique",
+        },
+      ),
   }),
 );
 
