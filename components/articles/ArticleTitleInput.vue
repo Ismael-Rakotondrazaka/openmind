@@ -1,0 +1,29 @@
+<template>
+  <div>
+    <label for="name">Title</label>
+
+    <PrimeInputText
+      id="title"
+      v-model="title"
+      :class="{ 'p-invalid': haveError }"
+    />
+
+    <small id="email-or-isVisible-text-error" class="text-red-600">{{
+      errorMessage || "&nbsp;"
+    }}</small>
+  </div>
+</template>
+
+<script lang="ts" setup>
+const title = defineModel<string, string>("title");
+
+const props = defineProps({
+  errorMessage: {
+    type: String,
+    required: false,
+    default: undefined,
+  },
+});
+
+const haveError = computed<boolean>(() => props.errorMessage !== undefined);
+</script>
