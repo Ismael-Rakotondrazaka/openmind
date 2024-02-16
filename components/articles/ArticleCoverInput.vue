@@ -4,6 +4,7 @@
     v-model:image="cover"
     :error-message="errorMessage"
     :initial-url="initialUrl"
+    :accept="accept"
     label="Cover"
     name="cover"
   />
@@ -26,4 +27,6 @@ interface ArticleCoverInputProps {
 }
 
 defineProps<ArticleCoverInputProps>();
+
+const accept = computed<string>(() => articleImageConfig.MIME_TYPES.join(","));
 </script>

@@ -13,6 +13,7 @@
           type="file"
           class="hidden w-full file:mr-4 file:py-4 file:px-5 file:rounded-md file:border-0 file:font-bold file:bg-[#14b8a6] file:text-white hover:file:bg-[#0d9488] hover:cursor-pointer"
           :name="name"
+          :accept="accept"
           @change="onImageChangeHandler"
         />
 
@@ -76,8 +77,11 @@ interface ImageInputProps {
   label: string;
   name: string;
   id: string;
+  accept?: string;
 }
-const props = defineProps<ImageInputProps>();
+const props = withDefaults(defineProps<ImageInputProps>(), {
+  accept: "",
+});
 
 const canShowPreview = ref<boolean>(props.initialUrl !== undefined);
 
