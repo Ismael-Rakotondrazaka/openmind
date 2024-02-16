@@ -5,7 +5,11 @@
     <div>
       <label
         :for="id"
-        class="w-full hover:cursor-pointer aspect-video bg-[--surface-100] rounded-md flex flex-row justify-center relative"
+        class="w-full border hover:cursor-pointer aspect-video bg-[--surface-100] rounded-md flex flex-row justify-center relative"
+        :class="{
+          'border-[--surface-300]': errorMessage === undefined,
+          'border-[#e24c4c]': errorMessage !== undefined,
+        }"
       >
         <input
           :id="id"
