@@ -5,6 +5,8 @@
     :error-message="errorMessage"
     :initial-url="initialUrl"
     :accept="accept"
+    :tooltip-text="tooltipText"
+    description="Choose an eye-catching image to grab your audience's attention."
     label="Cover"
     name="cover"
   />
@@ -29,4 +31,10 @@ interface ArticleCoverInputProps {
 defineProps<ArticleCoverInputProps>();
 
 const accept = computed<string>(() => articleImageConfig.MIME_TYPES.join(","));
+
+const tooltipText = computed<string>(() => {
+  const size: number = Math.floor(articleImageConfig.MAX_SIZE / 1000000);
+
+  return `Upload an image\n• (PNG, JPEG, WebP, JPG, SVG)\n• ${size}Mb`;
+});
 </script>

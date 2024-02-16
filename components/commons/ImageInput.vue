@@ -1,6 +1,16 @@
 <template>
   <div>
-    <label :for="id">{{ label }}</label>
+    <div>
+      <label :for="id" class="font-bold mr-2">{{ label }}</label>
+
+      <i
+        v-if="tooltipText !== undefined"
+        v-tooltip="tooltipText"
+        class="pi pi-question-circle text-base"
+      />
+
+      <InputDescription :description="description" />
+    </div>
 
     <div>
       <label
@@ -82,7 +92,10 @@ interface ImageInputProps {
   name: string;
   id: string;
   accept?: string;
+  tooltipText?: string;
+  description?: string;
 }
+
 const props = withDefaults(defineProps<ImageInputProps>(), {
   accept: "",
 });

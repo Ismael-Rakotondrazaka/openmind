@@ -2,6 +2,10 @@
   <div class="flex gap-2 flex-col w-full">
     <label for="summary">Summary</label>
 
+    <InputDescription
+      description="Provide a brief overview of your article to entice readers and give them a preview of what to expect."
+    />
+
     <PrimeInputText
       id="summary"
       v-model="summary"

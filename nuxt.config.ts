@@ -42,6 +42,10 @@ export default defineNuxtConfig({
       path: "~/components/commons",
       extensions: ["vue"],
     },
+    {
+      path: "~/components/inputs",
+      extensions: ["vue"],
+    },
   ],
   imports: {
     dirs: ["composables", "~/utils/strings", "~/utils/requests/**"],

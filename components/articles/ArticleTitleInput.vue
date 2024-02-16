@@ -2,6 +2,10 @@
   <div>
     <label for="name">Title</label>
 
+    <InputDescription
+      description="Craft a captivating headline that summarizes the essence of your article and sparks curiosity."
+    />
+
     <PrimeInputText
       id="title"
       v-model="title"

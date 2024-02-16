@@ -2,6 +2,8 @@
   <div>
     <label for="tags">Tags</label>
 
+    <InputDescription :description="description" />
+
     <PrimeAutoComplete
       id="tags"
       v-model="tags"
@@ -31,13 +33,12 @@ import { type AutoCompleteCompleteEvent } from "primevue/autocomplete";
 
 const tags = defineModel<Tag[]>("tags");
 
-const props = defineProps({
-  errorMessage: {
-    type: String,
-    required: false,
-    default: undefined,
-  },
-});
+interface TagInputProps {
+  errorMessage?: string;
+  description?: string;
+}
+
+const props = defineProps<TagInputProps>();
 
 const searchTag = ref<string>("");
 

@@ -26,6 +26,7 @@
           v-model:tags="tags"
           class="flex gap-2 flex-col"
           :error-message="validationErrors.tagIds"
+          description="Add descriptive keywords to categorize your article and improve discoverability."
         />
 
         <!-- ! vee-validate turns File type (not the value) to PartialObjectDeep<File, {}> -->

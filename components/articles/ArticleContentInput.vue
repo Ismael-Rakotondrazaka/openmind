@@ -2,6 +2,10 @@
   <div>
     <label for="email">Content</label>
 
+    <InputDescription
+      description="Pour your ideas, insights, and expertise into engaging and informative prose to captivate your audience."
+    />
+
     <PrimeEditor v-model="content" editor-style="height: 320px" />
 
     <small id="email-text-error" class="text-red-600">{{
