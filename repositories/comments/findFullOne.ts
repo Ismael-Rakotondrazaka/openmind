@@ -59,24 +59,24 @@ export const findFullOne = async ({
 
   if (comment !== null) {
     if (authUser !== null) {
-      const auth: ShowCommentData["comment"]["auth"] = {
+      const _auth: ShowCommentData["comment"]["_auth"] = {
         reaction: null,
       };
 
       if (comment.reactions.length > 0) {
-        auth.reaction = comment.reactions[0] as Reaction;
+        _auth.reaction = comment.reactions[0] as Reaction;
       }
 
       const parsedComment: CommentFull = CommentFullSchema.parse({
         ...comment,
-        auth,
+        _auth,
       });
 
       return parsedComment;
     } else {
       const parsedComment: CommentFull = CommentFullSchema.parse({
         ...comment,
-        auth: null,
+        _auth: null,
       });
 
       return parsedComment;

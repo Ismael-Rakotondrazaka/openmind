@@ -2,7 +2,7 @@ import { z } from "zod";
 import { ReactionSchema } from "~/schemas/globalSchemas/reactions";
 
 export const CommentAuthSchema = z.object({
-  auth: z
+  _auth: z
     .object({
       reaction: ReactionSchema.nullable(),
     })

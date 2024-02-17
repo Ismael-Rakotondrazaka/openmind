@@ -60,17 +60,17 @@ export const findFullMany = ({
     .then((comments): CommentFull[] => {
       if (authUser !== null) {
         return comments.map((comment): CommentFull => {
-          const auth: IndexCommentData["comments"][0]["auth"] = {
+          const _auth: IndexCommentData["comments"][0]["_auth"] = {
             reaction: null,
           };
 
           if (comment.reactions.length > 0) {
-            auth.reaction = comment.reactions[0] as Reaction;
+            _auth.reaction = comment.reactions[0] as Reaction;
           }
 
           const parsedComment: CommentFull = CommentFullSchema.parse({
             ...comment,
-            auth,
+            _auth,
           });
 
           return parsedComment;
@@ -79,7 +79,7 @@ export const findFullMany = ({
         return comments.map((article): CommentFull => {
           const parsedComment: CommentFull = CommentFullSchema.parse({
             ...article,
-            auth: null,
+            _auth: null,
           });
 
           return parsedComment;
