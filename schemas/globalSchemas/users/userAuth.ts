@@ -3,7 +3,7 @@ import { UserSchema } from "~/schemas/globalSchemas/users/user";
 import { FollowSchema } from "~/schemas/globalSchemas/follows";
 
 export const UserAuthSchema = z.object({
-  auth: z
+  _auth: z
     .object({
       following: FollowSchema.and(
         z.object({

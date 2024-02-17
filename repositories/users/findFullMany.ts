@@ -116,20 +116,20 @@ export const findFullMany = ({
     .then((users): UserFull[] => {
       if (authUser !== null) {
         return users.map((user): UserFull => {
-          const auth: IndexUserData["users"][0]["auth"] = {
+          const _auth: IndexUserData["users"][0]["_auth"] = {
             follower: null,
             following: null,
           };
 
           if (user.followers !== undefined && user.followers.length > 0) {
-            auth.follower = user.followers[0] as Follow & {
+            _auth.follower = user.followers[0] as Follow & {
               following: Omit<User, "password" | "email" | "emailVerifiedAt">;
               follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
             };
           }
 
           if (user.following !== undefined && user.following.length > 0) {
-            auth.following = user.following[0] as Follow & {
+            _auth.following = user.following[0] as Follow & {
               following: Omit<User, "password" | "email" | "emailVerifiedAt">;
               follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
             };
@@ -138,7 +138,7 @@ export const findFullMany = ({
           // we parse to remove excess properties
           const parsedUser: UserFull = UserFullSchema.parse({
             ...user,
-            auth,
+            _auth,
           });
 
           return parsedUser;
@@ -147,7 +147,7 @@ export const findFullMany = ({
         return users.map((user): UserFull => {
           const parsedUser: UserFull = UserFullSchema.parse({
             ...user,
-            auth: null,
+            _auth: null,
           });
 
           return parsedUser;
