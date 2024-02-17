@@ -70,7 +70,7 @@ export const findFullOne = async ({
   });
 
   if (savedArticle !== null) {
-    const auth: SavedArticleFull["article"]["auth"] = {
+    const auth: SavedArticleFull["article"]["_auth"] = {
       savedArticle: null,
       view: null,
       reaction: null,

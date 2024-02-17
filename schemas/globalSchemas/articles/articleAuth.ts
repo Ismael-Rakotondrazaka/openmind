@@ -4,7 +4,7 @@ import { ViewSchema } from "~/schemas/globalSchemas/views";
 import { ReactionSchema } from "~/schemas/globalSchemas/reactions";
 
 export const ArticleAuthSchema = z.object({
-  auth: z
+  _auth: z
     .object({
       savedArticle: SavedArticleSchema.nullable(),
       view: ViewSchema.nullable(),

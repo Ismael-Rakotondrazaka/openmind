@@ -79,7 +79,7 @@ export const findFullMany = ({
     .then((articles): ArticleFull[] => {
       if (authUser !== null) {
         return articles.map((article): ArticleFull => {
-          const auth: ArticleFull["auth"] = {
+          const auth: ArticleFull["_auth"] = {
             savedArticle: null,
             view: null,
             reaction: null,

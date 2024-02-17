@@ -75,7 +75,7 @@ export const findFullMany = ({
     })
     .then((savedArticles): SavedArticleFull[] => {
       return savedArticles.map((savedArticle): SavedArticleFull => {
-        const auth: SavedArticleFull["article"]["auth"] = {
+        const auth: SavedArticleFull["article"]["_auth"] = {
           savedArticle: null,
           view: null,
           reaction: null,

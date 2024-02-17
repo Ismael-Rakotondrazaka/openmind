@@ -81,7 +81,7 @@ export const updateFullOne = ({
       },
     })
     .then((article) => {
-      const auth: ArticleFull["auth"] = {
+      const auth: ArticleFull["_auth"] = {
         savedArticle: null,
         view: null,
         reaction: null,

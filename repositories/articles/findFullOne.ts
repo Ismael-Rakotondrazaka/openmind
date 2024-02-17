@@ -77,21 +77,21 @@ export const findFullOne = async ({
   });
 
   if (article !== null) {
-    const auth: ArticleFull["auth"] = {
+    const auth: ArticleFull["_auth"] = {
       savedArticle: null,
       view: null,
       reaction: null,
     };
 
-    if (article.savedArticles.length > 0) {
+    if (article.savedArticles?.length > 0) {
       auth.savedArticle = article.savedArticles[0];
     }
 
-    if (article.views.length > 0) {
+    if (article.views?.length > 0) {
       auth.view = article.views[0];
     }
 
-    if (article.reactions.length > 0) {
+    if (article.reactions?.length > 0) {
       auth.reaction = article.reactions[0] as Reaction;
     }
 
