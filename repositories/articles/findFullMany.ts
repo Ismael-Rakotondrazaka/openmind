@@ -79,28 +79,28 @@ export const findFullMany = ({
     .then((articles): ArticleFull[] => {
       if (authUser !== null) {
         return articles.map((article): ArticleFull => {
-          const auth: ArticleFull["_auth"] = {
+          const _auth: ArticleFull["_auth"] = {
             savedArticle: null,
             view: null,
             reaction: null,
           };
 
           if (article.savedArticles.length > 0) {
-            auth.savedArticle = article.savedArticles[0];
+            _auth.savedArticle = article.savedArticles[0];
           }
 
           if (article.views.length > 0) {
-            auth.view = article.views[0];
+            _auth.view = article.views[0];
           }
 
           if (article.reactions.length > 0) {
-            auth.reaction = article.reactions[0] as Reaction;
+            _auth.reaction = article.reactions[0] as Reaction;
           }
 
           // parse to strip excess properties
           const parsedArticle: ArticleFull = ArticleFullSchema.parse({
             ...article,
-            auth,
+            _auth,
           });
 
           return parsedArticle;
@@ -109,7 +109,7 @@ export const findFullMany = ({
         return articles.map((article): ArticleFull => {
           const parsedArticle: ArticleFull = ArticleFullSchema.parse({
             ...article,
-            auth: null,
+            _auth: null,
           });
 
           return parsedArticle;
