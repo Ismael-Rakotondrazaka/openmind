@@ -35,6 +35,6 @@ const accept = computed<string>(() => articleImageConfig.MIME_TYPES.join(","));
 const tooltipText = computed<string>(() => {
   const size: number = Math.floor(articleImageConfig.MAX_SIZE / 1000000);
 
-  return `Upload an image\n• (PNG, JPEG, WebP, JPG, SVG)\n• ${size}Mb`;
+  return `Upload an image\n• (PNG, JPEG, WebP, JPG, SVG)\n• ${size}Mb max`;
 });
 </script>

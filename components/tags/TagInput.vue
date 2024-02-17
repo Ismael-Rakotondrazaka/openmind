@@ -1,6 +1,11 @@
 <template>
   <div>
-    <label for="tags">Tags</label>
+    <InputLabel
+      label-for="tags"
+      label="Tags"
+      :is-required="true"
+      :tooltip-text="tooltipText"
+    />
 
     <InputDescription :description="description" />
 
@@ -36,6 +41,7 @@ const tags = defineModel<Tag[]>("tags");
 interface TagInputProps {
   errorMessage?: string;
   description?: string;
+  tooltipText?: string;
 }
 
 const props = defineProps<TagInputProps>();

@@ -1,6 +1,10 @@
 <template>
   <div class="flex gap-2 flex-col w-full">
-    <label for="summary">Summary</label>
+    <InputLabel
+      label="Summary"
+      label-for="summary"
+      :tooltip-text="tooltipText"
+    />
 
     <InputDescription
       description="Provide a brief overview of your article to entice readers and give them a preview of what to expect."
@@ -30,4 +34,11 @@ const props = defineProps({
 });
 
 const haveError = computed<boolean>(() => props.errorMessage !== undefined);
+
+const tooltipText = computed<string>(() =>
+  [
+    `• ${articleConfig.SUMMARY_MIN_LENGTH} characters min`,
+    `• ${articleConfig.SUMMARY_MAX_LENGTH} characters max`,
+  ].join("\n"),
+);
 </script>

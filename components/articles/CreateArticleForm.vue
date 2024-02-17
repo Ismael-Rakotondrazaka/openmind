@@ -1,15 +1,17 @@
 <template>
   <div>
     <form class="w-full max-w-[700px]" @submit.prevent="">
-      <div>Create Your Account</div>
-
-      <div>
-        Join us by creating your account! Unlock a world of possibilities and
-        exclusive features. Fill in the required information to start your
-        personalized journey with us.
+      <div class="text-[--text-color] text-2xl font-bold mb-3">
+        Create Your Article
       </div>
 
-      <div>
+      <div class="text-[--text-color] mb-7">
+        Get ready to share your thoughts! Creating an article is easy. Just fill
+        out the form below, and let your ideas shine. Start now and be part of
+        our community!
+      </div>
+
+      <div class="mb-7">
         <ArticleTitleInput
           v-model:title="title"
           :error-message="validationErrors.title"
@@ -22,11 +24,10 @@
           class="flex gap-2 flex-col w-full"
         />
 
-        <TagInput
+        <ArticleTagInput
           v-model:tags="tags"
-          class="flex gap-2 flex-col"
           :error-message="validationErrors.tagIds"
-          description="Add descriptive keywords to categorize your article and improve discoverability."
+          class="flex gap-2 flex-col"
         />
 
         <!-- ! vee-validate turns File type (not the value) to PartialObjectDeep<File, {}> -->
@@ -48,14 +49,18 @@
       <div>
         <PrimeButton
           type="submit"
-          label="Post"
+          label="Publish"
+          icon="pi pi-globe"
           :loading="isSubmitting && isVisible === true"
+          class="mr-3"
           @click.prevent="onPublishArticleHandler"
         />
 
         <PrimeButton
           type="submit"
           label="Save for later"
+          icon="pi pi-save"
+          text
           :loading="isSubmitting && isVisible === false"
           @click.prevent="onSaveArticleHandler"
         />

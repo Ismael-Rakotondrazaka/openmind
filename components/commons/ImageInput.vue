@@ -1,13 +1,7 @@
 <template>
   <div>
     <div>
-      <label :for="id" class="font-bold mr-2">{{ label }}</label>
-
-      <i
-        v-if="tooltipText !== undefined"
-        v-tooltip="tooltipText"
-        class="pi pi-question-circle text-base"
-      />
+      <InputLabel :label-for="id" :label="label" :tooltip-text="tooltipText" />
 
       <InputDescription :description="description" />
     </div>
