@@ -47,7 +47,7 @@
       <div>
         <PrimeButton
           type="submit"
-          label="Save and publish"
+          :label="saveButtonLabel"
           icon="pi pi-globe"
           :disabled="isSaveButtonDisabled"
           :loading="isSubmitting && isVisible === true"
@@ -57,7 +57,7 @@
 
         <PrimeButton
           type="submit"
-          label="Save as draft"
+          label="Save as Draft"
           icon="pi pi-save"
           text
           :disabled="isDraftButtonDisabled"
@@ -291,6 +291,19 @@ const isSaveButtonDisabled = computed<boolean>(
 const isDraftButtonDisabled = computed<boolean>(
   () => !haveChanges.value && article.value.isVisible === false,
 );
+
+const saveButtonLabel = computed<string>(() => {
+  const saveButtonTexts = {
+    SAVE_AND_PUBLISH: "Save and Publish",
+    PUBLISH: "Publish",
+  };
+
+  if (haveChanges.value === false && article.value.isVisible === false) {
+    return saveButtonTexts.PUBLISH;
+  } else {
+    return saveButtonTexts.SAVE_AND_PUBLISH;
+  }
+});
 
 watch(summary, (newValue) => {
   if (newValue === "" || newValue === undefined) {
