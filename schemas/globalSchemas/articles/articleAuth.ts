@@ -4,13 +4,11 @@ import { ViewSchema } from "~/schemas/globalSchemas/views";
 import { ReactionSchema } from "~/schemas/globalSchemas/reactions";
 
 export const ArticleAuthSchema = z.object({
-  auth: z
-    .object({
-      savedArticle: SavedArticleSchema.nullable(),
-      view: ViewSchema.nullable(),
-      reaction: ReactionSchema.nullable(),
-    })
-    .nullable(),
+  _auth: z.object({
+    savedArticle: SavedArticleSchema.nullable(),
+    view: ViewSchema.nullable(),
+    reaction: ReactionSchema.nullable(),
+  }),
 });
 
 export type ArticleAuth = z.infer<typeof ArticleAuthSchema>;

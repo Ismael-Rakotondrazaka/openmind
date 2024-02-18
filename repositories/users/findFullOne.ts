@@ -114,28 +114,30 @@ export const findFullOne = async ({
   });
 
   if (user !== null) {
-    const auth: ShowUserData["user"]["auth"] = {
+    const _auth: ShowUserData["user"]["_auth"] = {
       follower: null,
       following: null,
     };
 
-    if (user.followers !== undefined && user.followers.length > 0) {
-      auth.follower = user.followers[0] as Follow & {
-        following: Omit<User, "password" | "email" | "emailVerifiedAt">;
-        follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
-      };
-    }
+    if (authUser !== null) {
+      if (user.followers.length > 0) {
+        _auth.follower = user.followers[0] as Follow & {
+          following: Omit<User, "password" | "email" | "emailVerifiedAt">;
+          follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
+        };
+      }
 
-    if (user.following !== undefined && user.following.length > 0) {
-      auth.following = user.following[0] as Follow & {
-        following: Omit<User, "password" | "email" | "emailVerifiedAt">;
-        follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
-      };
+      if (user.following.length > 0) {
+        _auth.following = user.following[0] as Follow & {
+          following: Omit<User, "password" | "email" | "emailVerifiedAt">;
+          follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
+        };
+      }
     }
 
     const parsedUser: UserFull = UserFullSchema.parse({
       ...user,
-      auth,
+      _auth,
     });
 
     return parsedUser;

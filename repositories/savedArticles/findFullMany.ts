@@ -75,22 +75,22 @@ export const findFullMany = ({
     })
     .then((savedArticles): SavedArticleFull[] => {
       return savedArticles.map((savedArticle): SavedArticleFull => {
-        const auth: SavedArticleFull["article"]["auth"] = {
+        const _auth: SavedArticleFull["article"]["_auth"] = {
           savedArticle: null,
           view: null,
           reaction: null,
         };
 
         if (savedArticle.article.savedArticles.length > 0) {
-          auth.savedArticle = savedArticle.article.savedArticles[0];
+          _auth.savedArticle = savedArticle.article.savedArticles[0];
         }
 
         if (savedArticle.article.views.length > 0) {
-          auth.view = savedArticle.article.views[0];
+          _auth.view = savedArticle.article.views[0];
         }
 
         if (savedArticle.article.reactions.length > 0) {
-          auth.reaction = savedArticle.article.reactions[0] as Reaction;
+          _auth.reaction = savedArticle.article.reactions[0] as Reaction;
         }
 
         const savedArticleParsed: SavedArticleFull =
@@ -98,7 +98,7 @@ export const findFullMany = ({
             ...savedArticle,
             article: {
               ...savedArticle.article,
-              auth,
+              _auth,
             },
           });
 
