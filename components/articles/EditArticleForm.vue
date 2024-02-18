@@ -2,13 +2,13 @@
   <div>
     <form class="w-full max-w-[700px]" @submit.prevent="">
       <div class="text-[--text-color] text-2xl font-bold mb-3">
-        Create Your Article
+        Edit Your Article
       </div>
 
       <div class="text-[--text-color] mb-7">
-        Get ready to share your thoughts! Creating an article is easy. Just fill
-        out the form below, and let your ideas shine. Start now and be part of
-        our community!
+        Ready to enhance your content? Update your article with fresh insights
+        or additional information. Simply fill in the form below to make your
+        changes. Keep your readers engaged with the latest updates!
       </div>
 
       <div class="mb-7">
@@ -33,6 +33,7 @@
         <ArticleCoverInput
           v-model:cover="cover"
           class="flex gap-2 flex-col"
+          :initial-url="article.coverUrl ?? undefined"
           :error-message="validationErrors.cover"
         />
 
@@ -46,20 +47,22 @@
       <div>
         <PrimeButton
           type="submit"
-          label="Publish"
+          :label="saveButtonLabel"
           icon="pi pi-globe"
+          :disabled="isSaveButtonDisabled"
           :loading="isSubmitting && isVisible === true"
           class="mr-3"
-          @click.prevent="onPublishArticleHandler"
+          @click.prevent="onSaveArticleHandler"
         />
 
         <PrimeButton
           type="submit"
-          label="Save for later"
+          label="Save as Draft"
           icon="pi pi-save"
           text
+          :disabled="isDraftButtonDisabled"
           :loading="isSubmitting && isVisible === false"
-          @click.prevent="onSaveArticleHandler"
+          @click.prevent="onDraftArticleHandler"
         />
       </div>
     </form>
@@ -76,7 +79,14 @@ const toast = useToast();
 
 const fatalError = ref<null | string>(null);
 
-const tags = ref<Tag[]>([]);
+interface EditArticleFormProps {
+  article: ArticleFull;
+}
+
+const props = defineProps<EditArticleFormProps>();
+
+const article = computed<ArticleFull>(() => props.article);
+const tags = ref<Tag[]>([...props.article.tags]);
 
 const {
   errors: validationErrors,
@@ -88,20 +98,20 @@ const {
   setValues,
   setFieldValue,
 } = useForm({
-  validationSchema: toTypedSchema(StoreArticleBodyClientSchema),
+  validationSchema: toTypedSchema(UpdateArticleBodyClientSchema),
   initialValues: {
-    title: "",
-    summary: null,
-    content: "",
-    isVisible: true,
-    tagIds: [],
+    title: article.value.title,
+    summary: article.value.summary,
+    content: article.value.content,
+    isVisible: article.value.isVisible,
+    tagIds: props.article.tags.map((tag: Tag) => tag.id), // TODO handle initial tagIds
   },
 });
 const [title] = defineField("title");
 const [summary] = defineField("summary");
 const [isVisible] = defineField("isVisible");
 const [content] = defineField("content");
-const [cover] = defineField<"cover", File | undefined | null>("cover");
+const [cover] = defineField<"cover", File | null | undefined>("cover");
 const [tagIds] = defineField("tagIds");
 
 const formData: ComputedRef<FormData> = computed(() => {
@@ -136,25 +146,25 @@ watch(tags, (newValue) => {
 });
 
 const {
-  data: article,
+  data: updatedArticle,
   error: fetchError,
-  execute: storeRegister,
+  execute: updateArticle,
 }: {
-  data: Ref<StoreArticleData["article"] | null>;
-  error: Ref<FetchError<StoreArticleError> | null>;
+  data: Ref<UpdateArticleData["article"] | null>;
+  error: Ref<FetchError<UpdateArticleError> | null>;
   execute: (
     // eslint-disable-next-line no-unused-vars
     opts?: AsyncDataExecuteOptions | undefined,
   ) => Promise<void>;
-} = useFetch("/api/articles", {
-  method: "POST",
+} = useFetch(() => `/api/articles/${article.value.slug}`, {
+  method: "PUT",
   body: formData,
   immediate: false,
   watch: false,
   transform: (
-    data: StoreArticleData | null,
-  ): StoreArticleData["article"] | null =>
-    data !== null ? StoreArticleDataSchema.parse(data).article : null,
+    data: UpdateArticleData | null,
+  ): UpdateArticleData["article"] | null =>
+    data !== null ? UpdateArticleDataSchema.parse(data).article : null,
 });
 
 const submitHandler = handleSubmit(async () => {
@@ -192,14 +202,14 @@ const submitHandler = handleSubmit(async () => {
   setFieldValue("tagIds", finalTagIds);
 
   fatalError.value = null;
-  await storeRegister();
+  await updateArticle();
 
   if (fetchError.value === null) {
     fatalError.value = null;
 
     toast.add({
       severity: "success",
-      summary: "Article successfully created!",
+      summary: "Article successfully updated!",
       life: 5000,
     });
 
@@ -207,7 +217,7 @@ const submitHandler = handleSubmit(async () => {
     navigateTo({
       name: "articles-slug",
       params: {
-        slug: article.value?.slug ?? "",
+        slug: updatedArticle.value?.slug ?? "",
       },
     });
   } else {
@@ -227,15 +237,73 @@ const submitHandler = handleSubmit(async () => {
   }
 });
 
-const onSaveArticleHandler = () => {
+const onDraftArticleHandler = () => {
   setValues({ isVisible: false });
   submitHandler();
 };
 
-const onPublishArticleHandler = () => {
+const onSaveArticleHandler = () => {
   setValues({ isVisible: true });
   submitHandler();
 };
+
+const haveChanges = computed<boolean>(() => {
+  const isTitleChanged = article.value.title !== title.value;
+  const isSummaryChanged = article.value.summary !== summary.value;
+  const isIsVisibleChanged = article.value.isVisible !== isVisible.value;
+  const isContentChanged = article.value.content !== content.value;
+  const isCoverChanged =
+    cover.value !== undefined && cover.value !== article.value.coverUrl;
+  let isTagIdsChanged = false;
+
+  if (tagIds.value !== undefined) {
+    if (tagIds.value.length !== article.value.tags.length) {
+      isTagIdsChanged = true;
+    } else {
+      const oldTagIdsSet = new Set<number>(
+        article.value.tags.map((tag: Tag) => tag.id),
+      );
+
+      for (const id of tagIds.value) {
+        if (!oldTagIdsSet.has(id)) {
+          isTagIdsChanged = true;
+          break;
+        }
+      }
+    }
+  }
+
+  const result =
+    isTitleChanged ||
+    isSummaryChanged ||
+    isIsVisibleChanged ||
+    isContentChanged ||
+    isCoverChanged ||
+    isTagIdsChanged;
+
+  return result;
+});
+
+const isSaveButtonDisabled = computed<boolean>(
+  () => !haveChanges.value && article.value.isVisible === true,
+);
+
+const isDraftButtonDisabled = computed<boolean>(
+  () => !haveChanges.value && article.value.isVisible === false,
+);
+
+const saveButtonLabel = computed<string>(() => {
+  const saveButtonTexts = {
+    SAVE_AND_PUBLISH: "Save and Publish",
+    PUBLISH: "Publish",
+  };
+
+  if (haveChanges.value === false && article.value.isVisible === false) {
+    return saveButtonTexts.PUBLISH;
+  } else {
+    return saveButtonTexts.SAVE_AND_PUBLISH;
+  }
+});
 
 watch(summary, (newValue) => {
   if (newValue === "" || newValue === undefined) {
