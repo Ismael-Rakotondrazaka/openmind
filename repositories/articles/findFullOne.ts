@@ -83,16 +83,18 @@ export const findFullOne = async ({
       reaction: null,
     };
 
-    if (article.savedArticles?.length > 0) {
-      _auth.savedArticle = article.savedArticles[0];
-    }
+    if (authUser !== null) {
+      if (article.savedArticles?.length > 0) {
+        _auth.savedArticle = article.savedArticles[0];
+      }
 
-    if (article.views?.length > 0) {
-      _auth.view = article.views[0];
-    }
+      if (article.views?.length > 0) {
+        _auth.view = article.views[0];
+      }
 
-    if (article.reactions?.length > 0) {
-      _auth.reaction = article.reactions[0] as Reaction;
+      if (article.reactions?.length > 0) {
+        _auth.reaction = article.reactions[0] as Reaction;
+      }
     }
 
     const parsedArticle: ArticleFull = ArticleFullSchema.parse({

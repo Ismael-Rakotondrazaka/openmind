@@ -119,18 +119,20 @@ export const findFullOne = async ({
       following: null,
     };
 
-    if (user.followers !== undefined && user.followers.length > 0) {
-      _auth.follower = user.followers[0] as Follow & {
-        following: Omit<User, "password" | "email" | "emailVerifiedAt">;
-        follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
-      };
-    }
+    if (authUser !== null) {
+      if (user.followers.length > 0) {
+        _auth.follower = user.followers[0] as Follow & {
+          following: Omit<User, "password" | "email" | "emailVerifiedAt">;
+          follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
+        };
+      }
 
-    if (user.following !== undefined && user.following.length > 0) {
-      _auth.following = user.following[0] as Follow & {
-        following: Omit<User, "password" | "email" | "emailVerifiedAt">;
-        follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
-      };
+      if (user.following.length > 0) {
+        _auth.following = user.following[0] as Follow & {
+          following: Omit<User, "password" | "email" | "emailVerifiedAt">;
+          follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
+        };
+      }
     }
 
     const parsedUser: UserFull = UserFullSchema.parse({

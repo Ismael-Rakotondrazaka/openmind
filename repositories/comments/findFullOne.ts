@@ -58,29 +58,22 @@ export const findFullOne = async ({
   });
 
   if (comment !== null) {
-    if (authUser !== null) {
-      const _auth: ShowCommentData["comment"]["_auth"] = {
-        reaction: null,
-      };
+    const _auth: ShowCommentData["comment"]["_auth"] = {
+      reaction: null,
+    };
 
+    if (authUser !== null) {
       if (comment.reactions.length > 0) {
         _auth.reaction = comment.reactions[0] as Reaction;
       }
-
-      const parsedComment: CommentFull = CommentFullSchema.parse({
-        ...comment,
-        _auth,
-      });
-
-      return parsedComment;
-    } else {
-      const parsedComment: CommentFull = CommentFullSchema.parse({
-        ...comment,
-        _auth: null,
-      });
-
-      return parsedComment;
     }
+
+    const parsedComment: CommentFull = CommentFullSchema.parse({
+      ...comment,
+      _auth,
+    });
+
+    return parsedComment;
   } else {
     return null;
   }

@@ -114,44 +114,35 @@ export const findFullMany = ({
       skip,
     })
     .then((users): UserFull[] => {
-      if (authUser !== null) {
-        return users.map((user): UserFull => {
-          const _auth: IndexUserData["users"][0]["_auth"] = {
-            follower: null,
-            following: null,
-          };
+      return users.map((user): UserFull => {
+        const _auth: IndexUserData["users"][0]["_auth"] = {
+          follower: null,
+          following: null,
+        };
 
-          if (user.followers !== undefined && user.followers.length > 0) {
+        if (authUser !== null) {
+          if (user.followers.length > 0) {
             _auth.follower = user.followers[0] as Follow & {
               following: Omit<User, "password" | "email" | "emailVerifiedAt">;
               follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
             };
           }
 
-          if (user.following !== undefined && user.following.length > 0) {
+          if (user.following.length > 0) {
             _auth.following = user.following[0] as Follow & {
               following: Omit<User, "password" | "email" | "emailVerifiedAt">;
               follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
             };
           }
+        }
 
-          // we parse to remove excess properties
-          const parsedUser: UserFull = UserFullSchema.parse({
-            ...user,
-            _auth,
-          });
-
-          return parsedUser;
+        // we parse to remove excess properties
+        const parsedUser: UserFull = UserFullSchema.parse({
+          ...user,
+          _auth,
         });
-      } else {
-        return users.map((user): UserFull => {
-          const parsedUser: UserFull = UserFullSchema.parse({
-            ...user,
-            _auth: null,
-          });
 
-          return parsedUser;
-        });
-      }
+        return parsedUser;
+      });
     });
 };
