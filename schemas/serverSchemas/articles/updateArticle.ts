@@ -6,6 +6,7 @@ import {
   articleImageConfig,
   UpdateArticleBodyBaseSchema,
   CustomNullSchema,
+  CustomBooleanSchema,
 } from "~/utils";
 
 /* -------------------------------------------------------------------------- */
@@ -55,6 +56,52 @@ export const UpdateArticleBodySchema = UpdateArticleBodyBaseSchema.merge(
           articleImageConfig.MIME_TYPES,
         ),
         CustomNullSchema,
+      ]),
+      summary: z.union([
+        CustomNullSchema,
+        z
+          .string()
+          .trim()
+          .transform((value: string, ctx): string => {
+            if (value.length < articleConfig.SUMMARY_MIN_LENGTH) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.too_small,
+                minimum: articleConfig.SUMMARY_MIN_LENGTH,
+                inclusive: true,
+                type: "string",
+              });
+
+              return z.NEVER;
+            } else if (value.length > articleConfig.SUMMARY_MAX_LENGTH) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.too_big,
+                maximum: articleConfig.SUMMARY_MIN_LENGTH,
+                inclusive: true,
+                type: "string",
+              });
+
+              return z.NEVER;
+            }
+
+            return value;
+          }),
+      ]),
+      isVisible: CustomBooleanSchema.default(
+        articleConfig.IS_VISIBLE_DEFAULT_VALUE,
+      ),
+      tagIds: z.union([
+        z
+          .array(z.coerce.number().int().positive())
+          .min(1)
+          .max(articleConfig.TAGS_MAX_SIZE)
+          .refine((val: number[]) => val.length === [...new Set(val)].length, {
+            message: "Tags must be unique",
+          }),
+        z.coerce
+          .number()
+          .int()
+          .positive()
+          .transform((val: number): number[] => [val]),
       ]),
     })
     .partial(),

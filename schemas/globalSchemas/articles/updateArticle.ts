@@ -2,10 +2,6 @@ import { z } from "zod";
 import { articleConfig } from "~/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
 import { ArticleFullSchema } from "~/schemas/globalSchemas/articles";
-import {
-  CustomBooleanSchema,
-  CustomNullSchema,
-} from "~/schemas/globalSchemas/types";
 import { FileSchema } from "~/schemas/globalSchemas/files";
 
 /* -------------------------------------------------------------------------- */
@@ -29,9 +25,13 @@ export const UpdateArticleBodyBaseSchema = z
       .trim()
       .min(articleConfig.TITLE_MIN_LENGTH)
       .max(articleConfig.TITLE_MAX_LENGTH),
-    summary: z.union([
-      CustomNullSchema,
-      z
+  })
+  .partial();
+
+export const UpdateArticleBodyClientSchema = UpdateArticleBodyBaseSchema.merge(
+  z
+    .object({
+      summary: z
         .string()
         .trim()
         .transform((value: string, ctx): string => {
@@ -56,31 +56,16 @@ export const UpdateArticleBodyBaseSchema = z
           }
 
           return value;
-        }),
-    ]),
-    isVisible: CustomBooleanSchema.default(
-      articleConfig.IS_VISIBLE_DEFAULT_VALUE,
-    ),
-    tagIds: z.union([
-      z
+        })
+        .nullable(),
+      isVisible: z.boolean().default(articleConfig.IS_VISIBLE_DEFAULT_VALUE),
+      tagIds: z
         .array(z.coerce.number().int().positive())
         .min(1)
         .max(articleConfig.TAGS_MAX_SIZE)
         .refine((val: number[]) => val.length === [...new Set(val)].length, {
           message: "Tags must be unique",
         }),
-      z.coerce
-        .number()
-        .int()
-        .positive()
-        .transform((val: number): number[] => [val]),
-    ]),
-  })
-  .partial();
-
-export const UpdateArticleBodyClientSchema = UpdateArticleBodyBaseSchema.merge(
-  z
-    .object({
       content: z
         .string()
         .trim()
@@ -115,7 +100,7 @@ export const UpdateArticleBodyClientSchema = UpdateArticleBodyBaseSchema.merge(
             return z.NEVER;
           }
         }),
-      cover: z.union([FileSchema, CustomNullSchema]),
+      cover: FileSchema.nullable(),
     })
     .partial(),
 );
