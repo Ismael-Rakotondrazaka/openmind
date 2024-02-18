@@ -30,14 +30,11 @@
           class="flex gap-2 flex-col"
         />
 
-        <!-- ! vee-validate turns File type (not the value) to PartialObjectDeep<File, {}> -->
-        <!-- eslint-disable vue/valid-v-model -->
         <ArticleCoverInput
-          v-model:cover="cover as File | undefined | null"
+          v-model:cover="cover"
           class="flex gap-2 flex-col"
           :error-message="validationErrors.cover"
         />
-        <!-- eslint-enable vue/valid-v-model -->
 
         <ArticleContentInput
           v-model:content="content"
@@ -73,7 +70,7 @@
 
 <script setup lang="ts">
 import { type FetchError } from "ofetch";
-import type { AsyncDataExecuteOptions } from "nuxt/dist/app/composables/asyncData";
+import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 
 const toast = useToast();
 
@@ -104,7 +101,7 @@ const [title] = defineField("title");
 const [summary] = defineField("summary");
 const [isVisible] = defineField("isVisible");
 const [content] = defineField("content");
-const [cover] = defineField("cover");
+const [cover] = defineField<"cover", File | undefined | null>("cover");
 const [tagIds] = defineField("tagIds");
 
 const formData: ComputedRef<FormData> = computed(() => {
