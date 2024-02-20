@@ -1,13 +1,12 @@
 import { z } from "zod";
 import { JSDOM } from "jsdom";
 import {
-  countHtmlAsTextLength,
-  articleConfig,
-  articleImageConfig,
   UpdateArticleBodyBaseSchema,
   CustomNullSchema,
   CustomBooleanSchema,
-} from "~/utils";
+} from "~/schemas/globalSchemas";
+import { articleConfig, articleImageConfig } from "~/configs";
+import { countHtmlAsTextLength } from "~/utils/strings";
 
 /* -------------------------------------------------------------------------- */
 /*                             Update article body                            */
