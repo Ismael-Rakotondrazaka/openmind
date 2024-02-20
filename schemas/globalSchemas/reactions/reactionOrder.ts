@@ -4,8 +4,8 @@ import {
   SortOrderInputSchema,
   SortOrderSchema,
 } from "~/schemas/globalSchemas/types";
-import { ArticleOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/articles";
-import { CommentOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/comments";
+import { ArticleOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/articles/articleOrderBy";
+import { CommentOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/comments/commentOrder";
 
 export const ReactionOrderByWithRelationInputSchema: z.ZodType<Prisma.ReactionOrderByWithRelationInput> =
   z.object({

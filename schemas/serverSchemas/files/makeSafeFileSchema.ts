@@ -1,6 +1,6 @@
 import { fileTypeFromBuffer, type FileTypeResult } from "file-type";
 import { z } from "zod";
-import { FileSchema } from "~/utils";
+import { FileSchema } from "~/schemas/globalSchemas";
 import { UploadedFile } from "~/server/utils/files";
 
 export const makeSafeFileSchema = (maxSize: number, mimeTypes: string[]) =>

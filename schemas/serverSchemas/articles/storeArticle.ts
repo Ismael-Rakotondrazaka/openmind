@@ -2,12 +2,11 @@ import { z } from "zod";
 import { JSDOM } from "jsdom";
 import {
   StoreArticleBodyBaseSchema,
-  articleConfig,
-  articleImageConfig,
-  countHtmlAsTextLength,
   CustomNullSchema,
   CustomBooleanSchema,
-} from "~/utils";
+} from "~/schemas/globalSchemas";
+import { articleConfig, articleImageConfig } from "~/configs";
+import { countHtmlAsTextLength } from "~/utils/strings";
 
 /* -------------------------------------------------------------------------- */
 /*                             Store article body                             */

@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
-import { UserOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/users";
+import { UserOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/users/userOrder";
 
 export const FollowOrderByWithRelationInputSchema: z.ZodType<Prisma.FollowOrderByWithRelationInput> =
   z.object({

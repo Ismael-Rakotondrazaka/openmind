@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ArticleFullSchema } from "~/schemas/globalSchemas/articles";
+import { ArticleFullSchema } from "~/schemas/globalSchemas/articles/article";
 
 /* -------------------------------------------------------------------------- */
 /*                             Show article param                             */

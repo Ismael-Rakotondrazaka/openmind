@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { UserSchema } from "~/schemas/globalSchemas/users/user";
-import { FollowSchema } from "~/schemas/globalSchemas/follows";
+import { FollowSchema } from "~/schemas/globalSchemas/follows/follow";
 
 export const UserAuthSchema = z.object({
   _auth: z.object({
