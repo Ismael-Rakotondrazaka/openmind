@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { articleConfig } from "~/configs";
 import { countHtmlAsTextLength } from "~/utils/strings";
-import { ArticleFullSchema } from "~/schemas/globalSchemas/articles";
+import { ArticleFullSchema } from "~/schemas/globalSchemas/articles/article";
 import { FileSchema } from "~/schemas/globalSchemas/files";
 
 /* -------------------------------------------------------------------------- */

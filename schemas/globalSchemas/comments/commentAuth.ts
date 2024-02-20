@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ReactionSchema } from "~/schemas/globalSchemas/reactions";
+import { ReactionSchema } from "~/schemas/globalSchemas/reactions/reaction";
 
 export const CommentAuthSchema = z.object({
   _auth: z.object({

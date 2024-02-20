@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { UserSchema } from "~/schemas/globalSchemas/users/user";
 
 export const FollowSchema = z.object({
   id: z.number().int(),
