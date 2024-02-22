@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -42,6 +42,7 @@
     "@prisma/client": "^5.9.1",
     "@vee-validate/nuxt": "^4.12.5",
     "@vee-validate/zod": "^4.12.5",
+    "@vueuse/nuxt": "^10.7.2",
     "bcrypt": "^5.1.1",
     "dayjs": "^1.11.10",
     "destr": "^2.0.2",
