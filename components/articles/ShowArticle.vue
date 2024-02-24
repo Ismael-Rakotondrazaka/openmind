@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="w-full max-w-screen-xl">
     <main class="pt-8 pb-16 lg:pt-16 lg:pb-24 dark:bg-gray-900 antialiased">
-      <div class="flex justify-between px-4 mx-auto max-w-screen-xl">
+      <div class="flex justify-between px-4">
         <article
           class="mx-auto w-full max-w-2xl format format-sm sm:format-base lg:format-lg format-blue dark:format-invert"
         >
@@ -96,4 +96,16 @@ const reactionsCount = ref<number>(props.article._count.reactions);
 const commentsCount = ref<number>(props.article._count.comments);
 const viewsCount = ref<number>(props.article._count.views);
 const savedArticle = ref<SavedArticle | null>(props.article._auth.savedArticle);
+
+watchDeep(
+  () => props.article,
+  (newValue) => {
+    reaction.value = newValue._auth.reaction;
+    reactionsCount.value = newValue._count.reactions;
+    commentsCount.value = newValue._count.comments;
+    viewsCount.value = newValue._count.views;
+
+    savedArticle.value = newValue._auth.savedArticle;
+  },
+);
 </script>
