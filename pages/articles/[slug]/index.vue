@@ -39,4 +39,37 @@ const showArticleError: ComputedRef<ShowArticleError | null> = computed(() => {
 
   return result;
 });
+
+const onViewCreated = (view: ViewFull) => {
+  if (article.value !== null) {
+    article.value._count.views++;
+
+    article.value._auth.view = {
+      id: view.id,
+      articleId: view.articleId,
+      createdAt: view.createdAt,
+      updatedAt: view.updatedAt,
+      userId: view.userId,
+    };
+  }
+};
+
+const onViewUpdated = (view: ViewFull) => {
+  if (article.value !== null) {
+    article.value._auth.view = {
+      id: view.id,
+      articleId: view.articleId,
+      createdAt: view.createdAt,
+      updatedAt: view.updatedAt,
+      userId: view.userId,
+    };
+  }
+};
+
+useWatchArticleView({
+  articleId: () => article.value?.id ?? "",
+  onViewCreated,
+  onViewUpdated,
+  view: () => (article.value !== null ? article.value._auth.view : null),
+});
 </script>
