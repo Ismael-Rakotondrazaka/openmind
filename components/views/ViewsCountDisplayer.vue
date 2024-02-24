@@ -14,5 +14,5 @@ interface ViewsCountDisplayerProps {
 
 const props = defineProps<ViewsCountDisplayerProps>();
 
-const formattedCount = useNumericAbbreviation(props.count);
+const formattedCount = useNumericAbbreviation(() => props.count);
 </script>
