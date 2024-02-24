@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@vee-validate/nuxt",
     "nuxt-typed-router",
     "@nuxt/image",
+    "@vueuse/nuxt",
   ],
   typescript: {
     shim: false,
@@ -46,6 +47,22 @@ export default defineNuxtConfig({
       path: "~/components/inputs",
       extensions: ["vue"],
     },
+    {
+      path: "~/components/reactions",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/comments",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/savedArticles",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/views",
+      extensions: ["vue"],
+    },
   ],
   imports: {
     dirs: ["composables", "~/utils/strings", "~/utils/requests/**"],
@@ -74,7 +91,6 @@ export default defineNuxtConfig({
       ErrorMessage: "VeeErrorMessage",
     },
   },
-
   image: {
     domains: ["storage.googleapis.com"],
   },

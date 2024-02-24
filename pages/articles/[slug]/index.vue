@@ -1,9 +1,10 @@
 <template>
-  <pre>
-    {{ article }}
+  <div class="flex items-center justify-center min-h-screen p-5 bg-white">
+    <ShowArticle v-if="article !== null" :article="article" />
+    <div>{{ showArticleError }}</div>
 
-    {{ showArticleError }}
-  </pre>
+    <PrimeToast position="top-right" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -19,7 +20,11 @@ const {
   data: Ref<ShowArticleData["article"] | null>;
   error: Ref<H3Error<ShowArticleError> | null>;
 } = await useFetch(() => `/api/articles/${slug.value}`, {
-  transform: (value) => ShowArticleDataSchema.parse(value).article,
+  transform: (value) => {
+    return value !== null && value !== undefined
+      ? ShowArticleDataSchema.parse(value).article
+      : null;
+  },
 });
 
 const showArticleError: ComputedRef<ShowArticleError | null> = computed(() => {
