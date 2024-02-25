@@ -2,6 +2,7 @@ import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { ArticleNullableRelationFilterSchema } from "~/schemas/globalSchemas/articles";
 import { CommentNullableRelationFilterSchema } from "~/schemas/globalSchemas/comments";
+import { ReactionTypeSchema } from "~/schemas/globalSchemas/reactions";
 import {
   StringNullableFilterSchema,
   DateTimeFilterSchema,
