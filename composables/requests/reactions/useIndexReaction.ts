@@ -5,9 +5,7 @@ export const useIndexReaction = (payload: {
   query: MaybeRefOrGetter<IndexReactionQuery>;
   immediate?: boolean;
 }) => {
-  const formattedQuery = computed(() =>
-    JSONStringifyNested(toValue(payload.query)),
-  );
+  const formattedQuery = computed(() => toValue(payload.query));
 
   const {
     data,
@@ -35,53 +33,32 @@ export const useIndexReaction = (payload: {
   });
 
   /* -------------------------------- Reactions ------------------------------- */
-
   const reactions = ref<ReactionFull[] | null>(data.value?.reactions ?? null);
 
-  watchImmediate(
-    (): ReactionFull[] | null => {
-      if (data.value === null) {
-        return null;
-      } else {
-        return data.value.reactions;
-      }
-    },
-    (newValue) => {
-      reactions.value = newValue;
-    },
-    {
-      deep: true,
-    },
-  );
+  const onUpdateReactionsEffect = () => {
+    if (data.value === null) {
+      reactions.value = null;
+    } else {
+      reactions.value = data.value.reactions;
+    }
+  };
 
+  watchEffect(onUpdateReactionsEffect);
   /* -------------------------------------------------------------------------- */
 
   /* ------------------------------- Pagination ------------------------------- */
-
   const pagination = ref<Pagination | null>(null);
 
-  watchImmediate(
-    (): Pagination | null => {
-      if (data.value === null) {
-        return null;
-      } else {
-        return {
-          count: data.value.count,
-          links: data.value.links,
-          page: data.value.page,
-          pageSize: data.value.pageSize,
-          totalCounts: data.value.totalCounts,
-          totalPages: data.value.totalPages,
-        };
-      }
-    },
-    (newValue) => {
-      pagination.value = newValue;
-    },
-    {
-      deep: true,
-    },
-  );
+  const onUpdatePaginationEffect = () => {
+    if (data.value === null) {
+      pagination.value = null;
+    } else {
+      pagination.value = filterPagination(data.value);
+    }
+  };
+
+  watchEffect(onUpdatePaginationEffect);
+  /* -------------------------------------------------------------------------- */
 
   const formattedError = useFetchErrorData(error);
 
@@ -89,7 +66,8 @@ export const useIndexReaction = (payload: {
     if (payload.immediate === true) {
       await execute();
 
-      reactions.value = data.value?.reactions ?? null;
+      onUpdateReactionsEffect();
+      onUpdatePaginationEffect();
     }
   });
 
