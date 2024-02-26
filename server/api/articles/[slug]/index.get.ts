@@ -31,11 +31,11 @@ export default defineEventHandler(
 
     if (
       article === null ||
-      (authUser === null &&
-        (article.deletedAt !== null || article.isVisible === false)) ||
-      (authUser !== null &&
-        article.userId !== authUser.id &&
-        authUser.role === "user")
+      ((article.deletedAt !== null || article.isVisible === false) &&
+        (authUser === null ||
+          (authUser !== null &&
+            article.userId !== authUser.id &&
+            authUser.role === "user")))
     ) {
       return createNotFoundError(event);
     }
