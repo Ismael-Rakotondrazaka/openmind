@@ -32,32 +32,21 @@ export const useDestroyReaction = (payload: {
     },
   });
 
-  const formattedError = computed<DestroyReactionError | null>(() => {
-    if (error.value === null || error.value.data === undefined) {
-      return null;
-    } else {
-      return error.value.data;
-    }
-  });
-
+  /* -------------------------------- Reaction -------------------------------- */
   const reaction = ref<Reaction | null>(null);
 
-  watch(data, (newValue) => {
-    if (newValue === null) {
+  const onUpdateReactionEffect = () => {
+    if (data.value === null) {
       reaction.value = null;
     } else {
-      const formattedReaction: Reaction = {
-        articleId: newValue.articleId,
-        commentId: newValue.commentId,
-        createdAt: newValue.createdAt,
-        id: newValue.id,
-        type: newValue.type,
-        userId: newValue.userId,
-      } as Reaction;
-
-      reaction.value = formattedReaction;
+      reaction.value = filterReaction(data.value);
     }
-  });
+  };
+
+  watchEffect(onUpdateReactionEffect);
+  /* -------------------------------------------------------------------------- */
+
+  const formattedError = useFetchErrorData(error);
 
   return {
     reaction,
