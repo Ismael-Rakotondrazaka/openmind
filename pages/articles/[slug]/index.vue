@@ -27,6 +27,22 @@ const {
   },
 });
 
+/**
+ ! DANGER
+ article can be null
+ so that's why we don't render ShowArticle
+ component if article is null
+*/
+provide(ShowArticleToken, {
+  article,
+} as ShowArticleDI);
+
+const { user: authUser } = useAuthUser();
+
+provide(AuthUserToken, {
+  user: authUser,
+});
+
 const showArticleError: ComputedRef<ShowArticleError | null> = computed(() => {
   let result: ShowArticleError | null = null;
 
