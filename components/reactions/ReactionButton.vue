@@ -27,12 +27,25 @@
 <script lang="ts" setup>
 import type { PrimeOverlayPanel } from "#build/components";
 
-interface ReactionButtonProps {
-  articleId: string;
+/* ---------------------------------- Props --------------------------------- */
+interface ArticleReactionButtonProps {
+  articleId: null;
+  commentId: string;
 }
 
-const props = defineProps<ReactionButtonProps>();
+interface CommentReactionButtonProps {
+  articleId: string;
+  commentId: null;
+}
 
+type ReactionButtonProps =
+  | ArticleReactionButtonProps
+  | CommentReactionButtonProps;
+
+const props = defineProps<ReactionButtonProps>();
+/* -------------------------------------------------------------------------- */
+
+/* ---------------------------------- Model --------------------------------- */
 const count = defineModel<number>("count", {
   required: true,
 });
@@ -40,6 +53,7 @@ const count = defineModel<number>("count", {
 const reaction = defineModel<Reaction | null>("reaction", {
   required: true,
 });
+/* -------------------------------------------------------------------------- */
 
 const isActive = computed(() => reaction.value !== null);
 

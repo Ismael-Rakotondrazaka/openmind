@@ -4,7 +4,8 @@
       <ReactionButton
         v-model:count="reactionsCount"
         v-model:reaction="reaction"
-        :article-id="articleId"
+        :article-id="article.id"
+        :comment-id="null"
         class="mr-3 inline-block"
       />
 
@@ -16,7 +17,7 @@
     <div class="">
       <SaveArticleButton
         v-model:saved-article="savedArticle"
-        :article-id="articleId"
+        :article-id="article.id"
       />
 
       <ShareArticleButton :url="articleUrl" />
@@ -25,31 +26,78 @@
 </template>
 
 <script lang="ts" setup>
-interface ArticleInfoBarProps {
-  articleId: string;
-}
+const { article } = inject(ShowArticleToken) as ShowArticleDI;
 
-defineProps<ArticleInfoBarProps>();
-
-const reaction = defineModel<Reaction | null>("reaction", {
-  required: true,
+const reaction = ref<Reaction | null>(article.value._auth.reaction);
+watchDeep(reaction, (newValue) => {
+  article.value._auth.reaction = newValue;
 });
+watchDeep(
+  () => article.value._auth.reaction,
+  (newValue) => {
+    reaction.value = newValue;
+  },
+);
 
-const savedArticle = defineModel<SavedArticle | null>("savedArticle", {
-  required: true,
+const reactionsCount = ref<number>(article.value._count.reactions);
+watchDeep(reactionsCount, (newValue) => {
+  if (article.value._count.reactions !== newValue) {
+    article.value._count.reactions = newValue;
+  }
 });
+watchDeep(
+  () => article.value._count.reactions,
+  (newValue) => {
+    if (reactionsCount.value !== newValue) {
+      reactionsCount.value = newValue;
+    }
+  },
+);
 
-const reactionsCount = defineModel<number>("reactionsCount", {
-  required: true,
+const savedArticle = ref<SavedArticle | null>(article.value._auth.savedArticle);
+watchDeep(savedArticle, (newValue) => {
+  if (article.value._auth.savedArticle !== newValue) {
+    article.value._auth.savedArticle = newValue;
+  }
 });
+watchDeep(
+  () => article.value._auth.savedArticle,
+  (newValue) => {
+    if (savedArticle.value !== newValue) {
+      savedArticle.value = newValue;
+    }
+  },
+);
 
-const commentsCount = defineModel<number>("commentsCount", {
-  required: true,
+const commentsCount = ref<number>(article.value._count.comments);
+watchDeep(commentsCount, (newValue) => {
+  if (article.value._count.comments !== newValue) {
+    article.value._count.comments = newValue;
+  }
 });
+watchDeep(
+  () => article.value._count.comments,
+  (newValue) => {
+    if (commentsCount.value !== newValue) {
+      commentsCount.value = newValue;
+    }
+  },
+);
 
-const viewsCount = defineModel<number>("viewsCount", {
-  required: true,
+const viewsCount = ref<number>(article.value._count.views);
+watchDeep(viewsCount, (newValue) => {
+  if (article.value._count.views !== newValue) {
+    article.value._count.views = newValue;
+  }
 });
+watchDeep(
+  () => article.value._count.views,
+  (newValue) => {
+    if (viewsCount.value !== newValue) {
+      viewsCount.value = newValue;
+    }
+  },
+);
 
 const runtimeConfig = useRuntimeConfig();
 
