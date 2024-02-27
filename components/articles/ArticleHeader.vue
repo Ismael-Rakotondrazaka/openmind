@@ -52,8 +52,6 @@
       />
     </figure>
 
-    <ArticleReactionListPreview class="mb-3" />
-
     <ArticleInfoBar />
   </header>
 </template>
