@@ -1,26 +1,30 @@
 <template>
-  <div class="flex py-1 border-y fle-row items-center justify-between">
-    <div>
-      <ReactionButton
-        v-model:count="reactionsCount"
-        v-model:reaction="reaction"
-        :article-id="article.id"
-        :comment-id="null"
-        class="mr-3 inline-block"
-      />
+  <div>
+    <ArticleReactionListPreview class="mb-3" />
 
-      <CommentButton v-model:count="commentsCount" class="mr-3" />
+    <div class="flex py-1 border-y fle-row items-center justify-between">
+      <div>
+        <ReactionButton
+          v-model:count="reactionsCount"
+          v-model:reaction="reaction"
+          :article-id="article.id"
+          :comment-id="null"
+          class="mr-3 inline-block"
+        />
 
-      <ViewsCountDisplayer :count="viewsCount" />
-    </div>
+        <CommentButton v-model:count="commentsCount" class="mr-3" />
 
-    <div class="">
-      <SaveArticleButton
-        v-model:saved-article="savedArticle"
-        :article-id="article.id"
-      />
+        <ViewsCountDisplayer :count="viewsCount" />
+      </div>
 
-      <ShareArticleButton :url="articleUrl" />
+      <div class="">
+        <SaveArticleButton
+          v-model:saved-article="savedArticle"
+          :article-id="article.id"
+        />
+
+        <ShareArticleButton :url="articleUrl" />
+      </div>
     </div>
   </div>
 </template>
