@@ -24,9 +24,9 @@ export const useReactionPreviewText = (payload: {
         if (otherReactionsExtract.length === 0) {
           result = "You";
         } else if (otherReactionsExtract.length === 1) {
-          result = `You, and ${getFullName(otherReactionsExtract[0].user)}`;
+          result = `You, ${getFullName(otherReactionsExtract[0].user)}`;
         } else {
-          result = `You, and ${getFullName(otherReactionsExtract[0].user)} and ${toNumericAbbreviation(count - 2)} others`;
+          result = `You, ${getFullName(otherReactionsExtract[0].user)} and ${toNumericAbbreviation(count - 2)} others`;
         }
       }
     }

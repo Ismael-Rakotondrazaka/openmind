@@ -2,6 +2,7 @@
   <button
     v-if="haveReactions"
     class="inline-flex items-center hover:text-[--primary-color] hover:underline hover:underline-[--primary-color] text-sm text-[--text-color-secondary]"
+    @click="onToggleArticleReactionSideBar"
   >
     <ArticleReactionTypeListPreview
       :reactions="reactions"
@@ -16,6 +17,10 @@
 const { article } = inject(ShowArticleToken) as ShowArticleDI;
 
 const { user: authUser } = inject(AuthUserToken) as AuthUserDI;
+
+const { isVisible } = inject(
+  ArticleReactionSidebarToken,
+) as ArticleReactionSidebarDI;
 
 const authReaction = computed<ReactionFull | null>(() => {
   if (article.value._auth.reaction === null || authUser.value === null) {
@@ -126,4 +131,8 @@ watch(
     await refetchReactions();
   },
 );
+
+const onToggleArticleReactionSideBar = () => {
+  isVisible.value = !isVisible.value;
+};
 </script>
