@@ -13,9 +13,21 @@
         </article>
       </div>
     </main>
+
+    <ReactionSideBar
+      v-model:is-visible="isArticleReactionSidebar"
+      :article-id="article.id"
+      :comment-id="null"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 const { article } = inject(ShowArticleToken) as ShowArticleDI;
+
+const isArticleReactionSidebar = ref<boolean>(false);
+
+provide(ArticleReactionSidebarToken, {
+  isVisible: isArticleReactionSidebar,
+});
 </script>
