@@ -44,10 +44,12 @@
       {{ article.summary }}
     </p>
 
+    <TagList :tags="article.tags" class="mb-3" />
+
     <figure v-if="article.coverUrl !== null" class="mb-3">
       <img
         :src="article.coverUrl"
-        class="object-cover w-full aspect-video rounded-md object-center"
+        class="object-cover object-center w-full rounded-md aspect-video"
         alt=""
       />
     </figure>

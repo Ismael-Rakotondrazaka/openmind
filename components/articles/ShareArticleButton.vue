@@ -9,7 +9,7 @@
 
   <PrimeOverlayPanel ref="overlayPanel">
     <div class="flex, flex-row flex-nowrap gap-3 w-[25rem]">
-      <p class="font-medium text-900 block mb-2">Share this article</p>
+      <p class="block mb-2 font-medium text-900">Share this article</p>
 
       <PrimeInputGroup>
         <PrimeInputText :value="url" readonly />

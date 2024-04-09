@@ -20,7 +20,7 @@ export const useIndexReaction = (payload: {
     ) => Promise<void>;
   } = useFetch("/api/reactions", {
     method: "GET",
-    immediate: true,
+    immediate: payload.immediate,
     watch: [formattedQuery],
     query: formattedQuery,
     transform: (data): IndexReactionData | null => {

@@ -1,76 +1,7 @@
 <template>
   <div>
     <div class="w-screen max-w-[680px] mx-auto">
-      <ul class="flex flex-wrap items-stretch justify-evenly, w-full gap-5">
-        <li v-for="article in articles" :key="article.id" class="w-full">
-          <div class="md:flex rounded-xl dark:bg-slate-800">
-            <NuxtLink
-              :to="{
-                name: 'articles-slug',
-                params: { slug: article.slug },
-              }"
-              class="w-60 max-h-[12rem], block shrink-0 bg-[--surface-200]"
-            >
-              <NuxtImg
-                v-if="article.coverUrl !== null"
-                :src="article.coverUrl"
-                class="w-60 h-full object-cover"
-                width="240"
-                height="192"
-              />
-
-              <div
-                v-else
-                class="w-60 h-full object-cover"
-                width="240"
-                height="192"
-              />
-            </NuxtLink>
-            <div class="p-3 text-left flex flex-col w-full justify-between">
-              <div>
-                <div class="flex items-center justify-start mb-2">
-                  <PrimeAvatar
-                    v-if="article.user.profileUrl !== null"
-                    :image="article.user.profileUrl"
-                    class="mr-2"
-                    shape="circle"
-                  />
-                  <PrimeAvatar
-                    v-else
-                    icon="pi pi-user"
-                    class="mr-2"
-                    shape="circle"
-                  />
-                  <div class="text-sm">
-                    {{ article.user.firstName }}&nbsp;{{
-                      article.user.firstName
-                    }}
-                  </div>
-                </div>
-
-                <h2 class="font-bold text-xl text-slate-900 line-clamp-2">
-                  <NuxtLink
-                    :to="{
-                      name: 'articles-slug',
-                      params: { slug: article.slug },
-                    }"
-                    >{{ article.title }}</NuxtLink
-                  >
-                </h2>
-
-                <p class="text-ellipsis text-gray-600 mb-2 line-clamp-2">
-                  {{ article.summary ?? "&nbsp;" }}
-                </p>
-              </div>
-
-              <p class="text-sm text-gray-600">
-                {{ dayjs(article.createdAt).fromNow() }} ·
-                <PrimeChip label="lorem"></PrimeChip>
-              </p>
-            </div>
-          </div>
-        </li>
-      </ul>
+      <ArticleList :articles="articles" />
 
       <PrimePaginator
         :rows="pagination.pageSize"
@@ -120,8 +51,6 @@ const rowsPerPageOptions: ComputedRef<number[]> = computed(() => {
 
   return result;
 });
-
-const dayjs = useDayjs();
 
 const articles: ComputedRef<IndexArticleData["articles"]> = computed(() => {
   let result: IndexArticleData["articles"] = [];

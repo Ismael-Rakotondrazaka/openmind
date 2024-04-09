@@ -5,3 +5,5 @@ export * from "./strings";
 export * from "../schemas/globalSchemas";
 export * from "./reactions";
 export * from "./users";
+export * from "./comments";
+export * from "./types";

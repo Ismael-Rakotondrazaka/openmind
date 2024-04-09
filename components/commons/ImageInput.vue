@@ -12,7 +12,7 @@
         class="w-full border hover:cursor-pointer aspect-video bg-[--surface-100] rounded-md flex flex-row justify-center relative"
         :class="{
           'border-[--surface-300]': errorMessage === undefined,
-          'border-[#e24c4c]': errorMessage !== undefined,
+          'border-danger': errorMessage !== undefined,
         }"
       >
         <input
@@ -29,12 +29,12 @@
           <img
             :src="previewUrl"
             alt=""
-            class="object-cover w-full aspect-video rounded-md object-center"
+            class="object-cover object-center w-full rounded-md aspect-video"
           />
         </figure>
 
         <div
-          class="absolute inline-block bottom-0 pt-5 pb-16 text-center"
+          class="absolute bottom-0 inline-block pt-5 pb-16 text-center"
           :class="{
             hidden: previewUrl !== undefined,
           }"
@@ -49,7 +49,7 @@
       </label>
     </div>
 
-    <div class="flex gap-2 flex-nowrap flex-row items-center justify-between">
+    <div class="flex flex-row items-center justify-between gap-2 flex-nowrap">
       <div>
         <PrimeButton
           severity="danger"
@@ -92,6 +92,10 @@ interface ImageInputProps {
 
 const props = withDefaults(defineProps<ImageInputProps>(), {
   accept: "",
+  errorMessage: undefined,
+  initialUrl: undefined,
+  tooltipText: undefined,
+  description: undefined,
 });
 
 const canShowPreview = ref<boolean>(props.initialUrl !== undefined);

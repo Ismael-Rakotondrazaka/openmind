@@ -18,7 +18,7 @@
         v-model:count="count"
         v-model:reaction="reaction"
         :article-id="articleId"
-        :comment-id="null"
+        :comment-id="commentId"
       />
     </PrimeOverlayPanel>
   </div>
@@ -82,6 +82,7 @@ const selectedReactionType = ref<ReactionType>("like");
 const storeReactionBody = computed(() => {
   return {
     articleId: props.articleId,
+    commentId: props.commentId,
     type: selectedReactionType.value,
   };
 });

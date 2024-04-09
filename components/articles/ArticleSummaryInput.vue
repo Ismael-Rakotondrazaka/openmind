@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-2 flex-col w-full">
+  <div class="flex flex-col w-full gap-2">
     <InputLabel
       label="Summary"
       label-for="summary"
