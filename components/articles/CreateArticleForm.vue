@@ -15,30 +15,30 @@
         <ArticleTitleInput
           v-model:title="title"
           :error-message="validationErrors.title"
-          class="flex gap-2 flex-col w-full"
+          class="flex flex-col w-full gap-2"
         />
 
         <ArticleSummaryInput
           v-model:summary="summary"
           :error-message="validationErrors.summary"
-          class="flex gap-2 flex-col w-full"
+          class="flex flex-col w-full gap-2"
         />
 
         <ArticleTagInput
           v-model:tags="tags"
           :error-message="validationErrors.tagIds"
-          class="flex gap-2 flex-col"
+          class="flex flex-col gap-2"
         />
 
         <ArticleCoverInput
           v-model:cover="cover"
-          class="flex gap-2 flex-col"
+          class="flex flex-col gap-2"
           :error-message="validationErrors.cover"
         />
 
         <ArticleContentInput
           v-model:content="content"
-          class="flex gap-2 flex-col"
+          class="flex flex-col gap-2"
           :error-message="validationErrors.content"
         />
       </div>

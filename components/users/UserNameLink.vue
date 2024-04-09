@@ -1,0 +1,32 @@
+<template>
+  <span>
+    <NuxtLink
+      to="/"
+      class="font-bold text-[--text-color-primary] hover:text-[--primary-color] hover:underline"
+      @mouseenter="showOverlayPanel"
+      >{{ fullName }}</NuxtLink
+    >
+
+    <PrimeOverlayPanel ref="overlayPanel">LOl</PrimeOverlayPanel>
+  </span>
+</template>
+
+<script lang="ts" setup>
+import type { PrimeOverlayPanel } from "#build/components";
+
+interface UserNameLinkProps {
+  user: User;
+}
+
+const props = defineProps<UserNameLinkProps>();
+
+const fullName = computed(() => `${props.user.firstName} ${props.user.name}`);
+
+const overlayPanel = ref<InstanceType<typeof PrimeOverlayPanel>>();
+
+const showOverlayPanel = (event: Event) => {
+  if (overlayPanel.value !== undefined) {
+    overlayPanel.value.show(event);
+  }
+};
+</script>

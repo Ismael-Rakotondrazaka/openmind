@@ -63,6 +63,18 @@ export default defineNuxtConfig({
       path: "~/components/views",
       extensions: ["vue"],
     },
+    {
+      path: "~/components/users",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/contents",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/dialogs",
+      extensions: ["vue"],
+    },
   ],
   imports: {
     dirs: ["composables", "~/utils/strings", "~/utils/requests/**"],

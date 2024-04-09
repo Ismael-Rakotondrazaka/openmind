@@ -3,14 +3,13 @@
     <label
       :for="labelFor"
       class="text-[--text-color] font-bold inline-block mr-2"
-      >{{ label }}
-      <span v-if="isRequired" class="text-[#e24c4c]">*</span></label
+      >{{ label }} <span v-if="isRequired" class="text-danger">*</span></label
     >
 
     <i
       v-if="haveTooltip"
       v-tooltip="tooltipText"
-      class="pi pi-question-circle text-base inline-block"
+      class="inline-block text-base pi pi-question-circle"
     />
   </div>
 </template>

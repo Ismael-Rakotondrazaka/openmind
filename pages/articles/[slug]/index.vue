@@ -1,30 +1,55 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen p-5 bg-white">
+  <div
+    class="flex items-center justify-center min-h-screen p-5 bg-white text-text"
+  >
     <ShowArticle v-if="article !== null" :article="article" />
     <div>{{ showArticleError }}</div>
 
     <PrimeToast position="top-right" />
+
+    <PrimeConfirmDialog group="dialog:danger">
+      <template #container="{ message, acceptCallback, rejectCallback }">
+        <div class="flex flex-col items-center p-5 bg-[--surface-0] rounded-md">
+          <div
+            class="rounded-full text-white bg-danger inline-flex justify-center items-center h-[6rem] w-[6rem] -mt-16"
+          >
+            <i class="text-5xl pi pi-question"></i>
+          </div>
+          <span class="block mt-4 mb-2 text-2xl font-bold">{{
+            message.header
+          }}</span>
+
+          <p class="mb-0 whitespace-pre-wrap">{{ message.message }}</p>
+
+          <div class="flex items-center gap-2 mt-4">
+            <PrimeButton
+              label="Yes, Delete"
+              severity="danger"
+              @click="acceptCallback"
+            ></PrimeButton>
+            <PrimeButton
+              label="Cancel"
+              outlined
+              severity="secondary"
+              @click="rejectCallback"
+            ></PrimeButton>
+          </div>
+        </div>
+      </template>
+    </PrimeConfirmDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { H3Error } from "h3";
 const route = useRoute("articles-slug");
 
 const slug: ComputedRef<string> = computed(() => route.params.slug);
 
-const {
-  data: article,
-  error: showArticleRawError,
-}: {
-  data: Ref<ShowArticleData["article"] | null>;
-  error: Ref<H3Error<ShowArticleError> | null>;
-} = await useFetch(() => `/api/articles/${slug.value}`, {
-  transform: (value) => {
-    return value !== null && value !== undefined
-      ? ShowArticleDataSchema.parse(value).article
-      : null;
-  },
+const { article, error: showArticleError } = useShowArticle({
+  param: () => ({
+    slug: slug.value,
+  }),
+  immediate: true,
 });
 
 /**
@@ -41,19 +66,6 @@ const { user: authUser } = useAuthUser();
 
 provide(AuthUserToken, {
   user: authUser,
-});
-
-const showArticleError: ComputedRef<ShowArticleError | null> = computed(() => {
-  let result: ShowArticleError | null = null;
-
-  if (
-    showArticleRawError.value !== null &&
-    showArticleRawError.value.data !== undefined
-  ) {
-    result = showArticleRawError.value.data;
-  }
-
-  return result;
 });
 
 const onViewCreated = (view: ViewFull) => {

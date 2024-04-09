@@ -5,7 +5,7 @@
     :severity="buttonSeverity"
     @click="onButtonClickHandler"
   >
-    <i class="text-2xl px-3" :class="iconClass"></i><br /><span
+    <i class="px-3 text-2xl" :class="iconClass"></i><br /><span
       class="p-button-label"
       >Like</span
     >

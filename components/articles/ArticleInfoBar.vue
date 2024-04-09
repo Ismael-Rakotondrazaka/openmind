@@ -2,17 +2,21 @@
   <div>
     <ArticleReactionListPreview class="mb-3" />
 
-    <div class="flex py-1 border-y fle-row items-center justify-between">
+    <div class="flex items-center justify-between py-1 border-y fle-row">
       <div>
         <ReactionButton
           v-model:count="reactionsCount"
           v-model:reaction="reaction"
           :article-id="article.id"
           :comment-id="null"
-          class="mr-3 inline-block"
+          class="inline-block mr-3"
         />
 
-        <CommentButton v-model:count="commentsCount" class="mr-3" />
+        <CommentButton
+          v-model:count="commentsCount"
+          class="mr-3"
+          @comments:show="onArticleCommentShowHandler"
+        />
 
         <ViewsCountDisplayer :count="viewsCount" />
       </div>
@@ -110,4 +114,11 @@ const route = useRoute("articles-slug");
 const articleUrl = computed<string>(
   () => `${runtimeConfig.public.appUrl}${route.path}`,
 );
+const { isVisible } = inject(
+  ArticleCommentDialogToken,
+) as ArticleCommentDialogDI;
+
+const onArticleCommentShowHandler = () => {
+  isVisible.value = true;
+};
 </script>

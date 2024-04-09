@@ -25,7 +25,7 @@
 
       <PrimeTabPanel>
         <template #header>
-          <ReactionIcon type="like" class="mr-1 block" size="small" />
+          <ReactionIcon type="like" class="block mr-1" size="small" />
 
           {{ likeCounts }}
         </template>

@@ -20,7 +20,7 @@ export const useIndexArticleView = (payload: {
     ) => Promise<void>;
   } = useFetch("/api/views", {
     method: "GET",
-    immediate: true,
+    immediate: payload.immediate,
     watch: [formattedQuery],
     query: formattedQuery,
     transform: (data): IndexViewData | null => {
