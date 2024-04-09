@@ -69,7 +69,7 @@ const destroyCommentHandler = async () => {
     toast.add({
       severity: "info",
       summary: "Comment successfully deleted!",
-      life: 5000,
+      life: notificationConfig.LIFE,
     });
 
     if (deletedComment.value !== null) {
@@ -82,7 +82,7 @@ const destroyCommentHandler = async () => {
     toast.add({
       severity: "error",
       summary: fatalError.value,
-      life: 5000,
+      life: notificationConfig.LIFE,
     });
   }
 };

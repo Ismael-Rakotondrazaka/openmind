@@ -92,13 +92,13 @@ const removeSavedArticle = async () => {
     savedArticleModel.value = null;
 
     toast.add({
-      life: 5000,
+      life: notificationConfig.LIFE,
       severity: "info",
       summary: "Removed from saved articles.",
     });
   } catch (error) {
     toast.add({
-      life: 5000,
+      life: notificationConfig.LIFE,
       severity: "error",
       summary: "Unable to remove from saved articles.",
     });
@@ -110,13 +110,13 @@ const createSavedArticle = async () => {
     await storeSavedArticle();
 
     toast.add({
-      life: 5000,
+      life: notificationConfig.LIFE,
       severity: "success",
       summary: "Added to saved articles.",
     });
   } catch (error) {
     toast.add({
-      life: 5000,
+      life: notificationConfig.LIFE,
       severity: "error",
       summary: "Unable to save the article.",
     });
