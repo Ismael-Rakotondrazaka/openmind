@@ -215,8 +215,9 @@ const submitHandler = handleSubmit(async () => {
 
     resetForm();
     navigateTo({
-      name: "articles-slug",
+      name: "users-username-articles-slug",
       params: {
+        username: updatedArticle.value?.user?.username ?? "",
         slug: updatedArticle.value?.slug ?? "",
       },
     });

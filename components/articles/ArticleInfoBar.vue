@@ -109,7 +109,7 @@ watchDeep(
 
 const runtimeConfig = useRuntimeConfig();
 
-const route = useRoute("articles-slug");
+const route = useRoute("users-username-articles-slug");
 
 const articleUrl = computed<string>(
   () => `${runtimeConfig.public.appUrl}${route.path}`,

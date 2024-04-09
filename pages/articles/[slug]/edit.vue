@@ -12,7 +12,7 @@ definePageMeta({
   middleware: "auth",
 });
 
-const route = useRoute("articles-slug");
+const route = useRoute("users-username-articles-slug");
 
 const slug: ComputedRef<string> = computed(() => route.params.slug);
 

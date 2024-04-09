@@ -3,8 +3,11 @@
     <div class="md:flex rounded-xl dark:bg-slate-800">
       <NuxtLink
         :to="{
-          name: 'articles-slug',
-          params: { slug: article.slug },
+          name: 'users-username-articles-slug',
+          params: {
+            username: article.user.username,
+            slug: article.slug,
+          },
         }"
         class="w-60 max-h-[12rem], block shrink-0 bg-[--surface-200]"
       >
@@ -29,15 +32,18 @@
           />
           <PrimeAvatar v-else icon="pi pi-user" class="mr-2" shape="circle" />
           <div class="text-sm">
-            {{ article.user.firstName }}&nbsp;{{ article.user.firstName }}
+            {{ article.user.firstName }}&nbsp;{{ article.user.name }}
           </div>
         </div>
 
         <h2 class="text-xl font-bold text-slate-900 line-clamp-2">
           <NuxtLink
             :to="{
-              name: 'articles-slug',
-              params: { slug: article.slug },
+              name: 'users-username-articles-slug',
+              params: {
+                username: article.user.username,
+                slug: article.slug,
+              },
             }"
             >{{ article.title }}</NuxtLink
           >
