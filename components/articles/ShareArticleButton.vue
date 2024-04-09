@@ -52,14 +52,14 @@ const onCopyHandler = async () => {
     toast.add({
       summary: "Link copied.",
       severity: "info",
-      life: 5000,
+      life: notificationConfig.LIFE,
     });
   } catch (error) {
     toast.add({
       summary: "Cannot be copied.",
       detail: "Select and copy manually.",
       severity: "warn",
-      life: 5000,
+      life: notificationConfig.LIFE,
     });
   }
 };

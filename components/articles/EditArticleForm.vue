@@ -210,7 +210,7 @@ const submitHandler = handleSubmit(async () => {
     toast.add({
       severity: "success",
       summary: "Article successfully updated!",
-      life: 5000,
+      life: notificationConfig.LIFE,
     });
 
     resetForm();
@@ -232,7 +232,7 @@ const submitHandler = handleSubmit(async () => {
     toast.add({
       severity: "error",
       summary: fatalError.value,
-      life: 5000,
+      life: notificationConfig.LIFE,
     });
   }
 });

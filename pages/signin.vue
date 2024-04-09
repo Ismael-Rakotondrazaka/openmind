@@ -115,7 +115,7 @@ const onSubmit = handleSubmit(async (values: StoreLoginBody) => {
       severity: "error",
       detail: fatalError.value,
       summary: errorConfig.DEFAULT_BAD_REQUEST_ERROR_MESSAGE,
-      life: 5000,
+      life: notificationConfig.LIFE,
     });
   } else {
     fatalError.value = null;

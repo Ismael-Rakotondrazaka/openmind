@@ -100,7 +100,7 @@ const onSubmitHandler = handleSubmit(async () => {
     toast.add({
       severity: "success",
       summary: "Comment successfully posted!",
-      life: 5000,
+      life: notificationConfig.LIFE,
     });
 
     resetForm();
@@ -119,7 +119,7 @@ const onSubmitHandler = handleSubmit(async () => {
     toast.add({
       severity: "error",
       summary: fatalError.value,
-      life: 5000,
+      life: notificationConfig.LIFE,
     });
   }
 });
