@@ -19,7 +19,6 @@
         <div v-else class="object-cover h-full w-60" width="240" height="192" />
       </NuxtLink>
 
-      <!-- <div class="flex, flex-col, justify-between, w-full p-3 text-left"> -->
       <div class="w-full p-3 text-left">
         <div class="flex items-center justify-start mb-2">
           <PrimeAvatar
@@ -44,18 +43,17 @@
           >
         </h2>
 
-        <p class="mb-2 text-gray-600 text-ellipsis line-clamp-2">
+        <p class="mb-2 text-text text-ellipsis line-clamp-2">
           {{ article.summary ?? "&nbsp;" }}
         </p>
 
-        <p class="inline text-sm text-gray-600">
+        <p class="inline text-sm text-text">
           {{ formattedPublishDate }}
         </p>
-        <span class="inline-block mx-2">*</span>
+        <span class="inline-block mx-2 text-text">•</span>
+
         <TagList class="inline" :tags="article.tags" />
-        <!-- <PrimeChip label="000000" /> -->
       </div>
-      <!-- </div> -->
     </div>
   </li>
 </template>
