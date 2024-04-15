@@ -13,7 +13,11 @@
     </main>
 
     <div class="flex items-center justify-start gap-5">
-      <FollowingButton v-if="user._auth.follower !== null" />
+      <FollowingButton
+        v-if="user._auth.follower !== null"
+        :follow="user._auth.follower"
+        @follows:destroy="onFollowDestroyHandler"
+      />
       <FollowButton v-else-if="authUser !== null && user.id !== authUser.id" />
 
       <ShareUserButton :user="user" />
@@ -31,4 +35,8 @@ import { ShowUserToken } from "~/di";
 const { user } = inject(ShowUserToken) as ShowUserDI;
 
 const { user: authUser } = useAuthUser();
+
+const onFollowDestroyHandler = () => {
+  user.value._auth.follower = null;
+};
 </script>
