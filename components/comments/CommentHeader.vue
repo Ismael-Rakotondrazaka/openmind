@@ -3,7 +3,7 @@
     <div class="flex items-center justify-start gap-3">
       <UserAvatar :user="comment.user" size="normal" />
 
-      <UserNameLink :user="comment.user" class="text-[--text-color]" />
+      <UserNameLink :user="comment.user" class="text-text" />
 
       <span class="text-[--text-color-secondary]">{{
         formattedPublishDate

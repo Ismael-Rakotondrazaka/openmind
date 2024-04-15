@@ -3,24 +3,24 @@ import { useShowUser } from "./useShowUser";
 export const useAuthUser = () => {
   const { data } = useAuth();
 
-  const userId = computed<number>(() => {
+  const userId = computed<string>(() => {
     if (
       data.value === null ||
       data.value === undefined ||
       data.value.user === undefined ||
-      !Object.prototype.hasOwnProperty.call(data.value.user, "id")
+      !Object.prototype.hasOwnProperty.call(data.value.user, "username")
     ) {
-      return -1;
+      return "";
     } else {
-      const id = (data.value.user as Record<string, unknown>).id;
+      const username = (data.value.user as Record<string, unknown>).username;
 
-      return typeof id === "number" ? id : -1;
+      return typeof username === "string" ? username : "";
     }
   });
 
   const { user } = useShowUser({
     params: () => ({
-      id: userId.value,
+      username: userId.value,
     }),
     immediate: true,
   });

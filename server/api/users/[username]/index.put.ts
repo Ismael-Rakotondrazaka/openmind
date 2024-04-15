@@ -28,7 +28,7 @@ export default defineEventHandler(
 
     const user: User | null = await userRepository.findOne({
       where: {
-        id: updateArticleParamSPR.data.id,
+        username: updateArticleParamSPR.data.username,
       },
     });
 

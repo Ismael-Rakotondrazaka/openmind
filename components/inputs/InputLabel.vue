@@ -1,8 +1,6 @@
 <template>
   <div>
-    <label
-      :for="labelFor"
-      class="text-[--text-color] font-bold inline-block mr-2"
+    <label :for="labelFor" class="text-text font-bold inline-block mr-2"
       >{{ label }} <span v-if="isRequired" class="text-danger">*</span></label
     >
 

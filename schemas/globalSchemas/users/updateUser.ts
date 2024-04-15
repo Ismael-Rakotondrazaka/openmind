@@ -9,7 +9,8 @@ import { UserFullSchema } from "~/schemas/globalSchemas/users/userFull";
 /* -------------------------------------------------------------------------- */
 
 export const UpdateUserParamSchema = z.object({
-  id: z.coerce.number().positive().int(),
+  // TODO use username schema
+  username: z.string(),
 });
 
 export type UpdateUserParam = z.infer<typeof UpdateUserParamSchema>;
