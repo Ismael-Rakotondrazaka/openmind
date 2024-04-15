@@ -25,7 +25,7 @@
   </PrimeOverlayPanel>
 
   <ConfirmDialog
-    v-model:visible="isDialogVisible"
+    v-model:is-visible="isDialogVisible"
     :header="dialogHeader"
     :message="dialogMessage"
     :info-list="infoList"

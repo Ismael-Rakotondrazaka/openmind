@@ -26,14 +26,15 @@
       </NuxtLink>
     </div>
 
-    <PrimeButton
+    <FollowButton
       v-if="
         authUser !== null &&
         user._auth.follower === null &&
         user.id !== authUser.id
       "
-      label="Follow"
+      :user="user"
       size="small"
+      @follows:store="onFollowsStoreHandler"
     />
   </li>
 </template>
@@ -45,5 +46,16 @@ type UserListItemProps = {
 
 defineProps<UserListItemProps>();
 
+type UserListItemEmits = {
+  "users:update": [number, UseMutateUserListUpdateData];
+};
+const emit = defineEmits<UserListItemEmits>();
+
 const { user: authUser } = inject(AuthUserToken) as AuthUserDI;
+
+const onFollowsStoreHandler = (newFollow: FollowFull) => {
+  emit("users:update", newFollow.following.id, {
+    "_auth.follower": newFollow,
+  });
+};
 </script>

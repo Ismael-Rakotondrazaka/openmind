@@ -1,6 +1,10 @@
 <template>
   <div>
-    <UserList v-if="users !== null" :users="users" />
+    <UserList
+      v-if="users !== null"
+      :users="users"
+      @users:update="onUsersUpdateHandler"
+    />
 
     <PrimePaginator
       v-if="pagination !== null"
@@ -56,6 +60,14 @@ const { users, pagination } = useIndexUser({
   query,
   immediate: true,
 });
+
+const { update } = useMutateUserList(users);
+const onUsersUpdateHandler = (
+  id: number,
+  data: UseMutateUserListUpdateData,
+) => {
+  update(id, data);
+};
 
 watchImmediate(pagination, (newValue) => {
   if (newValue === null) {
