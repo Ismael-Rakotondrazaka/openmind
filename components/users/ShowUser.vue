@@ -18,7 +18,11 @@
         :follow="user._auth.follower"
         @follows:destroy="onFollowDestroyHandler"
       />
-      <FollowButton v-else-if="authUser !== null && user.id !== authUser.id" />
+      <FollowButton
+        v-else-if="authUser !== null && user.id !== authUser.id"
+        :user="user"
+        @follows:store="onFollowStoreHandler"
+      />
 
       <ShareUserButton :user="user" />
     </div>
@@ -38,5 +42,9 @@ const { user: authUser } = useAuthUser();
 
 const onFollowDestroyHandler = () => {
   user.value._auth.follower = null;
+};
+
+const onFollowStoreHandler = (newFollow: FollowFull) => {
+  user.value._auth.follower = newFollow;
 };
 </script>
