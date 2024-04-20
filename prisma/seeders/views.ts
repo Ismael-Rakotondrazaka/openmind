@@ -1,12 +1,11 @@
 import { faker } from "@faker-js/faker";
-import { type PrismaClient, type Article } from "@prisma/client";
+import { type PrismaClient, type Article, Prisma } from "@prisma/client";
 
-const createView = (payload: {
-  prisma: PrismaClient;
+const createViewData = (payload: {
   article: Article;
   user: User;
-}): Promise<View> => {
-  const { prisma, article, user } = payload;
+}): Prisma.ViewCreateManyInput => {
+  const { article, user } = payload;
 
   const createdAt: Date = faker.date.future({
     refDate: article.createdAt,
@@ -19,34 +18,37 @@ const createView = (payload: {
       });
     }) ?? createdAt;
 
-  return prisma.view.create({
-    data: {
-      articleId: article.id,
-      createdAt,
-      updatedAt,
-      userId: user.id,
-    },
-  });
+  return {
+    createdAt,
+    updatedAt,
+    articleId: article.id,
+    userId: user.id,
+  };
 };
 
-export const createViews = (payload: {
+export const createViews = async (payload: {
   prisma: PrismaClient;
   articles: Article[];
   users: User[];
 }): Promise<View[]> => {
   const { prisma, articles, users } = payload;
 
-  return Promise.all(
-    articles.flatMap((article: Article) => {
+  const data: Prisma.ViewCreateManyInput[] = articles.flatMap(
+    (article: Article) => {
       const viewers: User[] = faker.helpers.arrayElements(users);
 
       return viewers.map((viewer: User) =>
-        createView({
-          prisma,
+        createViewData({
           article,
           user: viewer,
         }),
       );
-    }),
+    },
   );
+
+  await prisma.view.createMany({
+    data,
+  });
+
+  return prisma.view.findMany();
 };
