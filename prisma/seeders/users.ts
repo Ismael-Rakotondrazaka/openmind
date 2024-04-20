@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { type User, type Role, PrismaClient } from "@prisma/client";
+import { type User, type Role, PrismaClient, Prisma } from "@prisma/client";
 import { hashSync } from "bcrypt";
 
 const PASSWORD_DEFAULT_VALUE = "password";
@@ -51,8 +51,8 @@ const createRole = (): Role => {
 const createUser = (payload: {
   prisma: PrismaClient;
   years?: number;
-}): Promise<User> => {
-  const { prisma, years } = payload;
+}): Prisma.UserCreateInput => {
+  const { years } = payload;
 
   const gender: Gender = createGender();
   const firstName: string = createFirstName(gender);
@@ -61,46 +61,48 @@ const createUser = (payload: {
     years,
   });
 
-  return prisma.user.create({
-    data: {
-      email: faker.internet
-        .email({
-          firstName,
-          lastName: name,
-        })
-        .toLowerCase(),
-      firstName,
-      name,
-      username: createUsername(firstName, name),
-      password: hashPassword(),
-      role: createRole(),
-      profileUrl: faker.image.avatarLegacy(),
-      createdAt,
-      updatedAt: createdAt,
-    },
-  });
+  return {
+    email: faker.internet
+      .email({
+        firstName,
+        lastName: name,
+      })
+      .toLowerCase(),
+    firstName,
+    name,
+    username: createUsername(firstName, name),
+    password: hashPassword(),
+    role: createRole(),
+    profileUrl: faker.image.avatarLegacy(),
+    createdAt,
+    updatedAt: createdAt,
+  };
 };
 
-export const createUsers = (payload: {
+export const createUsers = async (payload: {
   prisma: PrismaClient;
   years: number;
 }): Promise<User[]> => {
   const { prisma, years } = payload;
 
-  return Promise.all(
-    faker.helpers.multiple(
-      () => {
-        return createUser({
-          prisma,
-          years,
-        });
+  const data: Prisma.UserCreateInput[] = faker.helpers.multiple(
+    () => {
+      return createUser({
+        prisma,
+        years,
+      });
+    },
+    {
+      count: {
+        min: 40,
+        max: 70,
       },
-      {
-        count: {
-          min: 40,
-          max: 70,
-        },
-      },
-    ),
+    },
   );
+
+  await prisma.user.createMany({
+    data,
+  });
+
+  return prisma.user.findMany();
 };
