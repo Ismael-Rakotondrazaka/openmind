@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { PrismaClient, type User } from "@prisma/client";
+import { Prisma, PrismaClient, type User } from "@prisma/client";
 import slugify from "slugify";
 import { createHTML, createIdentifier, createIllustrationUrl } from "./commons";
 import { articleConfig } from "~/configs";
@@ -54,10 +54,9 @@ const createContent = (): Article["content"] => {
 };
 
 const createArticle = (payload: {
-  prisma: PrismaClient;
   user: User;
-}): Promise<Article> => {
-  const { prisma, user } = payload;
+}): Prisma.ArticleCreateManyInput => {
+  const { user } = payload;
 
   const createdAt: Date = faker.date.future({
     years: 2,
@@ -81,43 +80,44 @@ const createArticle = (payload: {
 
   const slug: string = createSlug(title);
 
-  return prisma.article.create({
-    data: {
-      id: createId(),
-      slug,
-      title,
-      coverUrl: createCoverUrl(),
-      content: createContent(),
-      summary: createSummary(),
-      isVisible: createIsVisible(),
-      userId: user.id,
-      createdAt,
-      updatedAt,
-    },
-  });
+  return {
+    id: createId(),
+    slug,
+    title,
+    coverUrl: createCoverUrl(),
+    content: createContent(),
+    summary: createSummary(),
+    isVisible: createIsVisible(),
+    userId: user.id,
+    createdAt,
+    updatedAt,
+  };
 };
 
-export const createArticles = (payload: {
+export const createArticles = async (payload: {
   prisma: PrismaClient;
   users: User[];
 }): Promise<Article[]> => {
   const { prisma, users } = payload;
 
-  return Promise.all(
-    users.flatMap((user: User) =>
-      faker.helpers.multiple(
-        () =>
-          createArticle({
-            prisma,
-            user,
-          }),
-        {
-          count: {
-            min: 0,
-            max: 10,
-          },
+  const data: Prisma.ArticleCreateManyInput[] = users.flatMap((user: User) =>
+    faker.helpers.multiple(
+      () =>
+        createArticle({
+          user,
+        }),
+      {
+        count: {
+          min: 0,
+          max: 10,
         },
-      ),
+      },
     ),
   );
+
+  await prisma.article.createMany({
+    data,
+  });
+
+  return prisma.article.findMany();
 };
