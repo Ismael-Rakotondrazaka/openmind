@@ -13,7 +13,8 @@
     "typecheck": "nuxt typecheck",
     "start": "NODE_ENV=production node .output/server/index.mjs",
     "db:seed": "npx prisma db push && npx prisma db seed",
-    "db:reset": "npx prisma migrate reset --force --skip-seed && npx prisma db push && npx prisma db seed"
+    "db:reset": "npx prisma migrate reset --force --skip-seed && npx prisma db push && npx prisma db seed",
+    "prepare": "husky"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
