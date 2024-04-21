@@ -12,7 +12,7 @@ const createFollowData = (payload: {
   );
 
   const createdAt: Date = faker.date.future({
-    years: 3,
+    years: 1,
     refDate,
   });
 
