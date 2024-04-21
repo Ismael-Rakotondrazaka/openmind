@@ -53,6 +53,42 @@ const createContent = (): Article["content"] => {
   return createHTML();
 };
 
+const createArticleTagsConnectData = (
+  tags: Tag[],
+): Prisma.TagUpdateManyWithoutArticlesNestedInput => {
+  return {
+    connect: faker.helpers
+      .arrayElements(tags, {
+        min: 3,
+        max: 5,
+      })
+      .map((tag: Tag) => ({
+        id: tag.id,
+      })),
+  };
+};
+
+const connectArticlesToTags = (payload: {
+  prisma: PrismaClient;
+  articles: Article[];
+  tags: Tag[];
+}): Promise<Article[]> => {
+  const { prisma, articles, tags } = payload;
+
+  return Promise.all(
+    articles.map((article: Article) =>
+      prisma.article.update({
+        data: {
+          tags: createArticleTagsConnectData(tags),
+        },
+        where: {
+          id: article.id,
+        },
+      }),
+    ),
+  );
+};
+
 const createArticle = (payload: {
   user: User;
 }): Prisma.ArticleCreateManyInput => {
@@ -97,8 +133,9 @@ const createArticle = (payload: {
 export const createArticles = async (payload: {
   prisma: PrismaClient;
   users: User[];
+  tags: Tag[];
 }): Promise<Article[]> => {
-  const { prisma, users } = payload;
+  const { prisma, users, tags } = payload;
 
   const data: Prisma.ArticleCreateManyInput[] = users.flatMap((user: User) =>
     faker.helpers.multiple(
@@ -119,5 +156,11 @@ export const createArticles = async (payload: {
     data,
   });
 
-  return prisma.article.findMany();
+  const articles: Article[] = await prisma.article.findMany();
+
+  return connectArticlesToTags({
+    prisma,
+    articles,
+    tags,
+  });
 };
