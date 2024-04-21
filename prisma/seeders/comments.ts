@@ -106,9 +106,7 @@ const createCommentsPerArticle = async (payload: {
           parent: comment,
         }),
       ),
-    ).then((nestedArr: Comment[][]): Comment[] =>
-      nestedArr.flatMap((arr: Comment[]): Comment[] => arr),
-    );
+    ).then((nestedArr: Comment[][]): Comment[] => nestedArr.flat());
 
     return comments.concat(replies);
   }
@@ -131,5 +129,5 @@ export const createComments = async (payload: {
     ),
   );
 
-  return nestedArr.flatMap((arr: Comment[]): Comment[] => arr);
+  return nestedArr.flat();
 };
