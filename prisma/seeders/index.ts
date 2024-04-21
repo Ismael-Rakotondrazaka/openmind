@@ -4,5 +4,6 @@ export * from "./commons";
 export * from "./follows";
 export * from "./reactions";
 export * from "./savedArticles";
+export * from "./tags";
 export * from "./users";
 export * from "./views";
