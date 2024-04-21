@@ -59,8 +59,8 @@ const createArticleTagsConnectData = (
   return {
     connect: faker.helpers
       .arrayElements(tags, {
-        min: 3,
-        max: 5,
+        min: 0,
+        max: articleConfig.TAGS_MAX_SIZE,
       })
       .map((tag: Tag) => ({
         id: tag.id,
@@ -95,7 +95,7 @@ const createArticle = (payload: {
   const { user } = payload;
 
   const createdAt: Date = faker.date.future({
-    years: 2,
+    years: 1,
     refDate: user.createdAt,
   });
 

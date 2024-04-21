@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { type User, type Role, PrismaClient, Prisma } from "@prisma/client";
 import { hashSync } from "bcrypt";
+import { userConfig } from "~/configs";
 
 const PASSWORD_DEFAULT_VALUE = "password";
 export const hashPassword = (): string => {
@@ -54,8 +55,8 @@ const createUserTagsConnectData = (
   return {
     connect: faker.helpers
       .arrayElements(tags, {
-        min: 3,
-        max: 5,
+        min: userConfig.TAGS_MIN_SIZE,
+        max: userConfig.TAGS_MAX_SIZE,
       })
       .map((tag: Tag) => ({
         id: tag.id,
