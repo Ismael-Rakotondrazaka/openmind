@@ -89,7 +89,6 @@ const createUser = (payload: {
     password: hashPassword(),
     role: createRole(),
     profileUrl: faker.image.avatarLegacy(),
-    // tags: createUserTagsConnectData(tags),
     createdAt,
     updatedAt: createdAt,
   };
@@ -144,12 +143,9 @@ export const createUsers = async (payload: {
 
   const users: User[] = await prisma.user.findMany();
 
-  // * we don't wait
-  connectUsersToTags({
+  return connectUsersToTags({
     prisma,
     tags,
     users,
   });
-
-  return users;
 };
