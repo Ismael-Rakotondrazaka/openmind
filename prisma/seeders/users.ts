@@ -48,6 +48,21 @@ const createRole = (): Role => {
   return "user";
 };
 
+const createUserTagsConnectData = (
+  tags: Tag[],
+): Prisma.TagUpdateManyWithoutUsersNestedInput => {
+  return {
+    connect: faker.helpers
+      .arrayElements(tags, {
+        min: 3,
+        max: 5,
+      })
+      .map((tag: Tag) => ({
+        id: tag.id,
+      })),
+  };
+};
+
 const createUser = (payload: {
   prisma: PrismaClient;
   years?: number;
@@ -74,16 +89,39 @@ const createUser = (payload: {
     password: hashPassword(),
     role: createRole(),
     profileUrl: faker.image.avatarLegacy(),
+    // tags: createUserTagsConnectData(tags),
     createdAt,
     updatedAt: createdAt,
   };
 };
 
+const connectUsersToTags = (payload: {
+  prisma: PrismaClient;
+  users: User[];
+  tags: Tag[];
+}): Promise<User[]> => {
+  const { prisma, users, tags } = payload;
+
+  return Promise.all(
+    users.map((user: User) =>
+      prisma.user.update({
+        data: {
+          tags: createUserTagsConnectData(tags),
+        },
+        where: {
+          id: user.id,
+        },
+      }),
+    ),
+  );
+};
+
 export const createUsers = async (payload: {
   prisma: PrismaClient;
   years: number;
+  tags: Tag[];
 }): Promise<User[]> => {
-  const { prisma, years } = payload;
+  const { prisma, years, tags } = payload;
 
   const data: Prisma.UserCreateInput[] = faker.helpers.multiple(
     () => {
@@ -104,5 +142,14 @@ export const createUsers = async (payload: {
     data,
   });
 
-  return prisma.user.findMany();
+  const users: User[] = await prisma.user.findMany();
+
+  // * we don't wait
+  connectUsersToTags({
+    prisma,
+    tags,
+    users,
+  });
+
+  return users;
 };
