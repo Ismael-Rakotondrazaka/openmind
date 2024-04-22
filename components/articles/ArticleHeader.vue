@@ -23,7 +23,10 @@
         <div>
           <NuxtLink
             :to="{
-              name: 'articles',
+              name: 'users-username',
+              params: {
+                username: article.user.username,
+              },
             }"
             class="text-xl font-bold text-text dark:text-white hover:text-[--primary-color] hover:underline"
           >

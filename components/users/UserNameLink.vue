@@ -1,12 +1,18 @@
 <template>
   <span>
     <NuxtLink
-      to="/"
+      :to="{
+        name: 'users-username',
+        params: {
+          username: user.username,
+        },
+      }"
       class="font-bold text-[--text-color-primary] hover:text-[--primary-color] hover:underline"
       @mouseenter="showOverlayPanel"
       >{{ fullName }}</NuxtLink
     >
 
+    <!-- TODO Add profile preview -->
     <PrimeOverlayPanel ref="overlayPanel">LOl</PrimeOverlayPanel>
   </span>
 </template>

@@ -23,7 +23,10 @@
 
     <NuxtLink
       :to="{
-        name: 'index',
+        name: 'users-username',
+        params: {
+          username: reaction.user.username,
+        },
       }"
       class="hover:text-[--primary-color] hover:underline"
       >{{ fullName }}</NuxtLink

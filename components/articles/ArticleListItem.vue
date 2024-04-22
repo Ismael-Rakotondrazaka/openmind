@@ -31,8 +31,19 @@
             shape="circle"
           />
           <PrimeAvatar v-else icon="pi pi-user" class="mr-2" shape="circle" />
+
           <div class="text-sm">
-            {{ article.user.firstName }}&nbsp;{{ article.user.name }}
+            <NuxtLink
+              :to="{
+                name: 'users-username',
+                params: {
+                  username: article.user.username,
+                },
+              }"
+              class="inline-block hover:text-primary hover:underline"
+            >
+              {{ article.user.firstName }}&nbsp;{{ article.user.name }}
+            </NuxtLink>
           </div>
         </div>
 
