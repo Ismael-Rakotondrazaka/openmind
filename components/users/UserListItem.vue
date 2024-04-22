@@ -19,10 +19,9 @@
             username: user.username,
           },
         }"
+        class="text-text hover:text-primary hover:underline"
       >
-        <h1 class="font-bold text-text">
-          {{ user.firstName }}&nbsp;{{ user.name }}
-        </h1>
+        <h1 class="font-bold">{{ user.firstName }}&nbsp;{{ user.name }}</h1>
       </NuxtLink>
     </div>
 
