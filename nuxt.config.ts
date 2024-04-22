@@ -9,9 +9,11 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@vueuse/nuxt",
   ],
+
   typescript: {
     shim: false,
   },
+
   runtimeConfig: {
     smtpHost: "",
     smtpPort: "",
@@ -26,6 +28,7 @@ export default defineNuxtConfig({
       appUrl: "http://localhost:3000",
     },
   },
+
   components: [
     {
       path: "~/components",
@@ -76,9 +79,11 @@ export default defineNuxtConfig({
       extensions: ["vue"],
     },
   ],
+
   imports: {
     dirs: ["composables", "~/utils/strings", "~/utils/requests/**"],
   },
+
   primevue: {
     cssLayerOrder: "tailwind-base, primevue, tailwind-utilities",
     options: {
@@ -90,10 +95,12 @@ export default defineNuxtConfig({
       exclude: ["Galleria", "Chart"],
     },
   },
+
   css: [
     "primeicons/primeicons.css",
     "primevue/resources/themes/lara-light-teal/theme.css",
   ],
+
   veeValidate: {
     autoImports: true,
     componentNames: {
@@ -103,7 +110,12 @@ export default defineNuxtConfig({
       ErrorMessage: "VeeErrorMessage",
     },
   },
+
   image: {
     domains: ["storage.googleapis.com"],
+  },
+
+  devtools: {
+    enabled: true,
   },
 });
