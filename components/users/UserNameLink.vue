@@ -12,8 +12,16 @@
       >{{ fullName }}</NuxtLink
     >
 
-    <!-- TODO Add profile preview -->
-    <PrimeOverlayPanel ref="overlayPanel">LOl</PrimeOverlayPanel>
+    <PrimeOverlayPanel
+      ref="overlayPanel"
+      :pt="{
+        content: {
+          class: '!p-0',
+        },
+      }"
+    >
+      <UserProfilePreview :user="user" @preview:hide="onPreviewHideHandler" />
+    </PrimeOverlayPanel>
   </span>
 </template>
 
@@ -33,6 +41,12 @@ const overlayPanel = ref<InstanceType<typeof PrimeOverlayPanel>>();
 const showOverlayPanel = (event: Event) => {
   if (overlayPanel.value !== undefined) {
     overlayPanel.value.show(event);
+  }
+};
+
+const onPreviewHideHandler = () => {
+  if (overlayPanel.value !== undefined) {
+    overlayPanel.value.hide();
   }
 };
 </script>
