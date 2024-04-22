@@ -67,7 +67,7 @@ const createUserTagsConnectData = (
 const createUser = (payload: {
   prisma: PrismaClient;
   years?: number;
-}): Prisma.UserCreateInput => {
+}): Prisma.UserCreateManyInput => {
   const { years } = payload;
 
   const gender: Gender = createGender();
@@ -92,6 +92,7 @@ const createUser = (payload: {
     profileUrl: faker.image.avatarLegacy(),
     createdAt,
     updatedAt: createdAt,
+    emailVerifiedAt: createdAt,
   };
 };
 
@@ -123,7 +124,7 @@ export const createUsers = async (payload: {
 }): Promise<User[]> => {
   const { prisma, years, tags } = payload;
 
-  const data: Prisma.UserCreateInput[] = faker.helpers.multiple(
+  const data: Prisma.UserCreateManyInput[] = faker.helpers.multiple(
     () => {
       return createUser({
         prisma,
