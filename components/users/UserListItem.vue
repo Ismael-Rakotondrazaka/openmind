@@ -12,17 +12,24 @@
         <UserAvatar size="large" :user="user" />
       </NuxtLink>
 
-      <NuxtLink
-        :to="{
-          name: 'users-username',
-          params: {
-            username: user.username,
-          },
-        }"
-        class="text-text hover:text-primary hover:underline"
-      >
-        <h1 class="font-bold">{{ user.firstName }}&nbsp;{{ user.name }}</h1>
-      </NuxtLink>
+      <div>
+        <NuxtLink
+          :to="{
+            name: 'users-username',
+            params: {
+              username: user.username,
+            },
+          }"
+          class="text-text hover:text-primary hover:underline"
+        >
+          <p class="font-bold">{{ user.firstName }}&nbsp;{{ user.name }}</p>
+        </NuxtLink>
+
+        <p class="text-sm text-text-secondary">
+          <span class="font-bold">{{ postsCountFormatted }}</span> articles •
+          <span class="font-bold">{{ followersCountFormatted }}</span> followers
+        </p>
+      </div>
     </div>
 
     <FollowButton
@@ -43,7 +50,7 @@ type UserListItemProps = {
   user: UserFull;
 };
 
-defineProps<UserListItemProps>();
+const props = defineProps<UserListItemProps>();
 
 type UserListItemEmits = {
   "users:update": [number, UseMutateUserListUpdateData];
@@ -57,4 +64,12 @@ const onFollowsStoreHandler = (newFollow: FollowFull) => {
     "_auth.follower": newFollow,
   });
 };
+
+const postsCountFormatted = useNumericAbbreviation(
+  () => props.user._count.articles,
+);
+
+const followersCountFormatted = useNumericAbbreviation(
+  () => props.user._count.followers,
+);
 </script>
