@@ -14,7 +14,7 @@
       <h2 class="mb-4 text-sm text-text-secondary">{{ user.username }}</h2>
 
       <PrimeButton
-        icon="pi pi-arrow-up-right"
+        icon="pi pi-external-link"
         label="Visit Profile"
         size="small"
         @click="onVisitProfileHandler"
