@@ -21,3 +21,14 @@ export type ShowUserDI = {
 export const ShowUserToken = Symbol(
   "ShowUserToken",
 ) as InjectionKey<ShowUserDI>;
+
+/* -------------------------------------------------------------------------- */
+/*                                  Edit User                                 */
+/* -------------------------------------------------------------------------- */
+export type EditUserDI = {
+  user: Ref<UpdateUserData["user"]>;
+};
+
+export const EditUserToken = Symbol(
+  "EditUserToken",
+) as InjectionKey<EditUserDI>;
