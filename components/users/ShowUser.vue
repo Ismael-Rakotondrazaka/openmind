@@ -12,19 +12,23 @@
       <h2 class="mb-4 text-lg text-text-secondary">{{ user.username }}</h2>
     </main>
 
-    <div class="flex items-center justify-start gap-5">
-      <FollowingButton
-        v-if="user._auth.follower !== null"
-        :follow="user._auth.follower"
-        @follows:destroy="onFollowDestroyHandler"
-      />
-      <FollowButton
-        v-else-if="authUser !== null && user.id !== authUser.id"
-        :user="user"
-        @follows:store="onFollowStoreHandler"
-      />
+    <div class="flex items-center justify-between">
+      <div class="flex items-start justify-start gap-5">
+        <FollowingButton
+          v-if="user._auth.follower !== null"
+          :follow="user._auth.follower"
+          @follows:destroy="onFollowDestroyHandler"
+        />
+        <FollowButton
+          v-else-if="authUser !== null && user.id !== authUser.id"
+          :user="user"
+          @follows:store="onFollowStoreHandler"
+        />
 
-      <ShareUserButton :user="user" />
+        <ShareUserButton :user="user" />
+      </div>
+
+      <UserProfileOptionsButton :user="user" />
     </div>
 
     <PrimeDivider />
