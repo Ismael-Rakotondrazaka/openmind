@@ -25,7 +25,7 @@
             class: 'w-full',
           },
         }"
-        label="Edit"
+        label="Edit profile"
         @click="onEditHandler"
       />
     </div>
