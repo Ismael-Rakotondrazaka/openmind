@@ -23,9 +23,12 @@
         <div>
           <NuxtLink
             :to="{
-              name: 'articles',
+              name: 'users-username',
+              params: {
+                username: article.user.username,
+              },
             }"
-            class="text-xl font-bold text-[--text-color] dark:text-white hover:text-[--primary-color] hover:underline"
+            class="text-xl font-bold text-text dark:text-white hover:text-[--primary-color] hover:underline"
           >
             {{ `${article.user.firstName} ${article.user.name}` }}
           </NuxtLink>
@@ -35,12 +38,12 @@
       </div>
     </address>
     <h1
-      class="mb-4 text-3xl font-extrabold leading-tight text-[--text-color] lg:mb-6 lg:text-4xl dark:text-white"
+      class="mb-4 text-3xl font-extrabold leading-tight text-text lg:mb-6 lg:text-4xl dark:text-white"
     >
       {{ article.title }}
     </h1>
 
-    <p v-if="article.summary !== null" class="text-[--text-color] mb-3">
+    <p v-if="article.summary !== null" class="text-text mb-3">
       {{ article.summary }}
     </p>
 

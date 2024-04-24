@@ -23,7 +23,7 @@ export default defineEventHandler(
 
     const user: ShowUserData["user"] | null = await userRepository.findFullOne({
       where: {
-        id: showUserParamSPR.data.id,
+        username: showUserParamSPR.data.username,
         emailVerifiedAt: {
           not: null,
         },

@@ -6,7 +6,7 @@ export const useShowUser = (payload: {
   immediate?: boolean;
 }) => {
   const formattedUrl = computed(
-    () => `/api/users/${toValue(payload.params).id}`,
+    () => `/api/users/${toValue(payload.params).username}`,
   );
 
   const {

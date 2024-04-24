@@ -6,7 +6,8 @@ import { UserFullSchema } from "~/schemas/globalSchemas/users/userFull";
 /* -------------------------------------------------------------------------- */
 
 export const ShowUserParamSchema = z.object({
-  id: z.coerce.number().positive().int(),
+  // TODO use username schema
+  username: z.string(),
 });
 
 export type ShowUserParam = z.infer<typeof ShowUserParamSchema>;

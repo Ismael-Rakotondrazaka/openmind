@@ -1,11 +1,9 @@
 <template>
   <div>
     <form class="w-full max-w-[700px]" @submit.prevent="">
-      <div class="text-[--text-color] text-2xl font-bold mb-3">
-        Create Your Article
-      </div>
+      <div class="text-text text-2xl font-bold mb-3">Create Your Article</div>
 
-      <div class="text-[--text-color] mb-7">
+      <div class="text-text mb-7">
         Get ready to share your thoughts! Creating an article is easy. Just fill
         out the form below, and let your ideas shine. Start now and be part of
         our community!

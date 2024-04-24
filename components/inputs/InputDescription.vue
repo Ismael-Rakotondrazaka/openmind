@@ -1,5 +1,5 @@
 <template>
-  <p v-if="haveDescription" class="text-[--text-color]">
+  <p v-if="haveDescription" class="text-text">
     {{ description }}
   </p>
 </template>

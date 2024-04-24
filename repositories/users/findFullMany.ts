@@ -11,7 +11,9 @@ export const findFullMany = ({
 }: {
   authUser: User | null;
   where?: Prisma.UserWhereInput;
-  orderBy?: Prisma.UserOrderByWithRelationInput;
+  orderBy?:
+    | Prisma.UserOrderByWithRelationInput
+    | Prisma.UserOrderByWithRelationInput[];
   skip?: number;
   take?: number;
 }): Promise<UserFull[]> => {

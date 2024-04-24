@@ -1,11 +1,9 @@
 <template>
   <div>
     <form class="w-full max-w-[700px]" @submit.prevent="">
-      <div class="text-[--text-color] text-2xl font-bold mb-3">
-        Edit Your Article
-      </div>
+      <div class="text-text text-2xl font-bold mb-3">Edit Your Article</div>
 
-      <div class="text-[--text-color] mb-7">
+      <div class="text-text mb-7">
         Ready to enhance your content? Update your article with fresh insights
         or additional information. Simply fill in the form below to make your
         changes. Keep your readers engaged with the latest updates!
