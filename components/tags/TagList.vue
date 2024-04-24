@@ -1,6 +1,10 @@
 <template>
   <ul>
-    <li v-for="tag in tags" :key="tag.id" class="inline mr-3 last:mr-0">
+    <li
+      v-for="tag in tags"
+      :key="tag.id"
+      class="inline-block mr-2 mb-2 last:mr-0"
+    >
       <PrimeChip :label="tag.value" />
     </li>
   </ul>

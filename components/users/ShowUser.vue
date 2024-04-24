@@ -31,6 +31,14 @@
       <UserProfileOptionsButton :user="user" />
     </div>
 
+    <div v-if="authUser !== null && user.id === authUser.id">
+      <PrimeDivider />
+
+      <p class="mb-3 text-text font-bold">Tags preference:</p>
+
+      <TagList :tags="user.tags" class="text-left" />
+    </div>
+
     <PrimeDivider />
 
     <ShowUserTabView />
