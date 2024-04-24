@@ -16,7 +16,10 @@ import { userConfig } from "~/configs";
 export const IndexUserQuerySchema = z
   .object({
     where: UserWhereInputSchema,
-    orderBy: UserOrderByWithRelationInputSchema,
+    orderBy: z.union([
+      UserOrderByWithRelationInputSchema,
+      z.array(UserOrderByWithRelationInputSchema),
+    ]),
   })
   .partial()
   .merge(
