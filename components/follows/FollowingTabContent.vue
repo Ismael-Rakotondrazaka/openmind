@@ -1,5 +1,9 @@
 <template>
-  <UserSearch class="mb-5" @where:update="onWhereUpdateHandler" />
+  <UserSearch
+    class="mb-5"
+    @where:update="onWhereUpdateHandler"
+    @order-by:update="onOrderByUpdateHandler"
+  />
 
   <UserPaginatedList
     :page="page"
@@ -24,7 +28,14 @@ const page = ref<number>(1);
 
 const pageSize = ref<number>(userConfig.PAGE_SIZE_DEFAULT_VALUE);
 
-const orderBy = ref<IndexUserQuery["orderBy"]>({});
+const orderBy = ref<IndexUserQuery["orderBy"]>([
+  {
+    firstName: "asc",
+  },
+  {
+    name: "asc",
+  },
+]);
 
 const where = ref<Exclude<IndexUserQuery["where"], undefined>>({
   followers: {
@@ -65,5 +76,13 @@ const onWhereUpdateHandler = (newValue: Prisma.UserWhereInput) => {
       },
     },
   };
+};
+
+const onOrderByUpdateHandler = (
+  newValue:
+    | Prisma.UserOrderByWithRelationInput
+    | Prisma.UserOrderByWithRelationInput[],
+) => {
+  orderBy.value = newValue;
 };
 </script>
