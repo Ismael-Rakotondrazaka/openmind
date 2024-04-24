@@ -1,4 +1,5 @@
 import type { Tag, User } from "@prisma/client";
+import { userRepository } from "~/repositories";
 import { tagRepository } from "~/repositories/tags";
 import {
   type UpdateUserTagData,
@@ -88,6 +89,19 @@ export default defineEventHandler(
       if (!oldTagIdsSet.has(id)) {
         tagsToConnect.push({ id });
       }
+    });
+
+    await userRepository.updateOne({
+      data: {
+        tags: {
+          set: newTags.map((tag: Tag) => ({
+            id: tag.id,
+          })),
+        },
+      },
+      where: {
+        id: authUser.id,
+      },
     });
 
     return {
