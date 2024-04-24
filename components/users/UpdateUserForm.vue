@@ -70,7 +70,7 @@ const {
   initialValues: {
     firstName: user.value.firstName,
     name: user.value.name,
-    profile: user.value.profileUrl,
+    profile: undefined,
   },
 });
 
