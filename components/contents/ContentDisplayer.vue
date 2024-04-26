@@ -37,7 +37,6 @@ const label = computed<string>(() => {
     notCollapsed: "Show less",
   };
 
-  /* eslint-disable indent */
   switch (isCollapsed.value) {
     case true:
       return isCollapsedLabels.collapsed;
@@ -45,7 +44,6 @@ const label = computed<string>(() => {
     default:
       return isCollapsedLabels.notCollapsed;
   }
-  /* eslint-enable indent */
 });
 
 const onToggleCollapsedHandler = () => {

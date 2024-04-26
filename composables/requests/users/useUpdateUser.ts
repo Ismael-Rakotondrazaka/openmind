@@ -39,10 +39,7 @@ export const useUpdateUser = (payload: {
   }: {
     data: Ref<UpdateUserData | null>;
     error: Ref<FetchError<UpdateUserError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch(formattedUrl, {
     method: "PUT",
     body: formattedBody,

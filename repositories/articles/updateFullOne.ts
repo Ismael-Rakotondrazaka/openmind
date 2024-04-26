@@ -40,7 +40,7 @@ export const updateFullOne = ({
           },
         },
         tags: true,
-        /* eslint-disable indent */
+
         savedArticles:
           authUser === null
             ? undefined
@@ -65,7 +65,7 @@ export const updateFullOne = ({
                   userId: authUser.id,
                 },
               },
-        /* eslint-enable indent */
+
         _count: {
           select: {
             comments: {

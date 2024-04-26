@@ -18,7 +18,6 @@ export const updateFullOne = ({
   return prisma.user
     .update({
       where,
-      /* eslint-disable indent */
 
       include: {
         followers:
@@ -109,7 +108,7 @@ export const updateFullOne = ({
           },
         },
       },
-      /* eslint-enable indent */
+
       data,
     })
     .then((user): UserFull => {

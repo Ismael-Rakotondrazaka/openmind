@@ -32,7 +32,7 @@ export const findFullMany = ({
             deletedAt: true,
           },
         },
-        /* eslint-disable indent */
+
         reactions:
           authUser === null
             ? undefined
@@ -41,7 +41,7 @@ export const findFullMany = ({
                   userId: authUser.id,
                 },
               },
-        /* eslint-enable indent */
+
         _count: {
           select: {
             replies: {

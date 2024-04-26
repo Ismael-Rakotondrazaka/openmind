@@ -33,7 +33,6 @@ const authReaction = computed<ReactionFull | null>(() => {
   }
 });
 
-/* eslint-disable indent */
 const makeIndexReactionQuery =
   (payload: { reactionType: ReactionType }): (() => IndexReactionQuery) =>
   () => {
@@ -54,7 +53,6 @@ const makeIndexReactionQuery =
       pageSize: 1,
     };
   };
-/* eslint-enable indent */
 
 const { reactions: likeReactions, execute: refetchLikeReactions } =
   useIndexReaction({

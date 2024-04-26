@@ -1,9 +1,7 @@
 import { JSDOM } from "jsdom";
 import mime from "mime";
-import {
-  UploadedFile,
-  createUploadedFileFromBase64,
-} from "~/server/utils/files";
+import type { UploadedFile } from "~/server/utils/files";
+import { createUploadedFileFromBase64 } from "~/server/utils/files";
 import { articleImageConfig } from "~/utils";
 import { formatCommentImagePath } from "~/server/utils/comments";
 

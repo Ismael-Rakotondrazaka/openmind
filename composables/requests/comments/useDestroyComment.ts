@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "nuxt/dist/app/composables/asyncData";
+import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { filterComment } from "~/utils";
 import { type Comment } from "~/utils";
@@ -17,10 +17,7 @@ export const useDestroyComment = (payload: {
   }: {
     data: Ref<DestroyCommentData["comment"] | null>;
     error: Ref<FetchError<DestroyCommentError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch(formattedUrl, {
     method: "DELETE",
     immediate: false,

@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "nuxt/dist/app/composables/asyncData";
+import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useStoreReaction = (payload: {
@@ -13,10 +13,7 @@ export const useStoreReaction = (payload: {
   }: {
     data: Ref<StoreReactionData["reaction"] | null>;
     error: Ref<FetchError<StoreReactionError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/reactions", {
     method: "POST",
     body: formattedBody,

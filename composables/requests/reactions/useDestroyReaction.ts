@@ -15,10 +15,7 @@ export const useDestroyReaction = (payload: {
   }: {
     data: Ref<DestroyReactionData["reaction"] | null>;
     error: Ref<FetchError<DestroyReactionError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch(url, {
     method: "DELETE",
     immediate: false,

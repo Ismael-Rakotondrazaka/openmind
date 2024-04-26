@@ -20,7 +20,7 @@ export const findFullMany = ({
   return prisma.user
     .findMany({
       where,
-      /* eslint-disable indent */
+
       include: {
         followers:
           authUser === null
@@ -110,7 +110,7 @@ export const findFullMany = ({
           },
         },
       },
-      /* eslint-enable indent */
+
       orderBy,
       take,
       skip,

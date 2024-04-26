@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type IsTuple<T extends ReadonlyArray<any>> = number extends T["length"]
   ? false
   : true;

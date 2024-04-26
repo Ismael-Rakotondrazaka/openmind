@@ -1,6 +1,5 @@
 import { setProperty } from "dot-prop";
 
-/* eslint-disable no-unused-vars */
 export type UseReflectCommentsUpdateFnData = Partial<Flatten<CommentFull>>;
 
 export type UseReflectCommentsUpdateFnDataKeys = keyof Flatten<CommentFull>;
@@ -9,7 +8,6 @@ export type UseReflectCommentsUpdateFn = (
   id: string,
   data: UseReflectCommentsUpdateFnData,
 ) => void;
-/* eslint-enable no-unused-vars */
 
 export const useReflectCommentsUpdate = (payload: {
   comments: Ref<CommentFull[] | null>;

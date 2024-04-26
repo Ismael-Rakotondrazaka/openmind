@@ -15,13 +15,13 @@ export const isUnauthorizedError = (
   typeof error === "object" &&
   error !== null &&
   "errorMessage" in error &&
-  typeof (error as any).errorMessage !== "undefined" &&
+  typeof error.errorMessage !== "undefined" &&
   "message" in error &&
-  typeof (error as any).message === "string" &&
+  typeof error.message === "string" &&
   "statusCode" in error &&
-  (error as any).statusCode === StatusCodes.UNAUTHORIZED &&
+  error.statusCode === StatusCodes.UNAUTHORIZED &&
   "statusMessage" in error &&
-  typeof (error as any).statusMessage === "string";
+  typeof error.statusMessage === "string";
 
 export const createUnauthorizedError = (
   event: H3Event,

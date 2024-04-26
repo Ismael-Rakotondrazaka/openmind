@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { PrismaClient, type Comment, type User } from "@prisma/client";
 import {
   createArticles,

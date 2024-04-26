@@ -39,7 +39,7 @@ export const updateFullOne = ({
             deletedAt: true,
           },
         },
-        /* eslint-disable indent */
+
         reactions:
           authUser === null
             ? undefined
@@ -48,7 +48,7 @@ export const updateFullOne = ({
                   userId: authUser.id,
                 },
               },
-        /* eslint-enable indent */
+
         _count: {
           select: {
             replies: {

@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "nuxt/dist/app/composables/asyncData";
+import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useUpdateArticleView = (payload: {
@@ -13,10 +13,7 @@ export const useUpdateArticleView = (payload: {
   }: {
     data: Ref<UpdateViewData["view"] | null>;
     error: Ref<FetchError<UpdateViewError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch(url, {
     method: "PUT",
     immediate: false,

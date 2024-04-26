@@ -50,7 +50,6 @@ export const useReactionListPreview = (payload: IUseReactionListPreviewArg) => {
     }
   });
 
-  /* eslint-disable indent */
   const makeIndexReactionQuery =
     (payload: { reactionType: ReactionType }): (() => IndexReactionQuery) =>
     () => {
@@ -72,7 +71,6 @@ export const useReactionListPreview = (payload: IUseReactionListPreviewArg) => {
         pageSize: 1,
       };
     };
-  /* eslint-enable indent */
 
   const { reactions: likeReactions, execute: refetchLikeReactions } =
     useIndexReaction({
