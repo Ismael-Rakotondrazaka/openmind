@@ -75,7 +75,6 @@ const selectOrderOptions: Ref<SelectOrderOption[]> = ref([
 const selectedOrderOption = ref<SelectOrderOption>(orderOptions.FIRST_NAME);
 
 const computeWhereNewValue = (): Prisma.UserWhereInput => {
-  /* eslint-disable indent */
   return nameSearch.value === ""
     ? {}
     : {
@@ -100,10 +99,8 @@ const computeWhereNewValue = (): Prisma.UserWhereInput => {
           },
         ],
       };
-  /* eslint-enable indent */
 };
 
-/* eslint-disable indent */
 const computeOrderNewValue = (
   selectedOptionValue: SelectOrderOption,
 ):
@@ -139,7 +136,6 @@ const computeOrderNewValue = (
 
   return {};
 };
-/* eslint-enable indent */
 
 const onSearchHandler = () => {
   emit("where:update", computeWhereNewValue());

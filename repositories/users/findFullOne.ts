@@ -17,7 +17,7 @@ export const findFullOne = async ({
 }): Promise<UserFull | null> => {
   const user = await prisma.user.findFirst({
     where,
-    /* eslint-disable indent */
+
     include: {
       followers:
         authUser === null
@@ -107,7 +107,7 @@ export const findFullOne = async ({
         },
       },
     },
-    /* eslint-enable indent */
+
     orderBy,
     skip,
     take,

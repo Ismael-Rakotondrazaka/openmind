@@ -11,10 +11,7 @@ export const useIndexUserTag = (payload: { immediate?: boolean }) => {
   }: {
     data: Ref<IndexUserTagData | null>;
     error: Ref<FetchError<IndexUserTagError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/user-tags", {
     method: "GET",
     immediate,

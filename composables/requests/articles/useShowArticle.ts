@@ -16,10 +16,7 @@ export const useShowArticle = (payload: {
   }: {
     data: Ref<ShowArticleData | null>;
     error: Ref<FetchError<ShowArticleError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch(formattedUrl, {
     method: "GET",
     immediate: payload.immediate,

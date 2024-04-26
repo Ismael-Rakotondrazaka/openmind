@@ -24,7 +24,6 @@ export default defineEventHandler(
 
     const authUser: User | null = await getAuthUser(event);
 
-    /* eslint-disable indent */
     const totalCounts: number = await userRepository.count({
       where: {
         ...indexUserQuerySPR.data.where,
@@ -40,7 +39,6 @@ export default defineEventHandler(
               },
       },
     });
-    /* eslint-enable indent */
 
     const pageSize: number = indexUserQuerySPR.data.pageSize;
 
@@ -57,7 +55,6 @@ export default defineEventHandler(
       pageSize,
     );
 
-    /* eslint-disable indent */
     const users: IndexUserData["users"] = await userRepository.findFullMany({
       where: {
         ...indexUserQuerySPR.data.where,

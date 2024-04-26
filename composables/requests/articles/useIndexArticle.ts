@@ -14,10 +14,7 @@ export const useIndexArticle = (payload: {
   }: {
     data: Ref<IndexArticleData | null>;
     error: Ref<FetchError<IndexArticleError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/articles", {
     method: "GET",
     immediate: payload.immediate,

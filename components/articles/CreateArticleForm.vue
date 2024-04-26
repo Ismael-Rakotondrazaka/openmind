@@ -140,10 +140,7 @@ const {
 }: {
   data: Ref<StoreArticleData["article"] | null>;
   error: Ref<FetchError<StoreArticleError> | null>;
-  execute: (
-    // eslint-disable-next-line no-unused-vars
-    opts?: AsyncDataExecuteOptions | undefined,
-  ) => Promise<void>;
+  execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
 } = useFetch("/api/articles", {
   method: "POST",
   body: formData,

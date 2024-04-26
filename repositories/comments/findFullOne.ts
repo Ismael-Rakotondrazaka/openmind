@@ -31,7 +31,7 @@ export const findFullOne = async ({
           deletedAt: true,
         },
       },
-      /* eslint-disable indent */
+
       reactions:
         authUser === null
           ? undefined
@@ -40,7 +40,7 @@ export const findFullOne = async ({
                 userId: authUser.id,
               },
             },
-      /* eslint-enable indent */
+
       _count: {
         select: {
           replies: {

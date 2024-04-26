@@ -1,11 +1,11 @@
-import type { AsyncDataExecuteOptions } from "nuxt/dist/app/composables/asyncData";
+import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export type UseStoreViewReturn = {
   view: Ref<View | null>;
   viewFull: Ref<ViewFull | null>;
   error: ComputedRef<StoreViewError | null>;
-  // eslint-disable-next-line no-unused-vars
+
   execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
 };
 
@@ -21,10 +21,7 @@ export const useStoreArticleView = (payload: {
   }: {
     data: Ref<StoreViewData["view"] | null>;
     error: Ref<FetchError<StoreViewError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/views", {
     method: "POST",
     body: formattedBody,

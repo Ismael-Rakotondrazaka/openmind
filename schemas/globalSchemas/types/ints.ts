@@ -28,7 +28,7 @@ export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
     .optional(),
 });
 
-// @ts-ignore
+// @ts-expect-error Prisma.IntNullableFilter can exist or not
 export const IntNullableFilterSchema: z.ZodType<Prisma.IntNullableFilter> =
   z.object({
     equals: z.number().optional().nullable(),

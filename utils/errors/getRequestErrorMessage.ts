@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 
 export type RequestErrorMessage<T> = Partial<
   Record<keyof T, string | undefined>

@@ -14,10 +14,7 @@ export const useIndexReaction = (payload: {
   }: {
     data: Ref<IndexReactionData | null>;
     error: Ref<FetchError<IndexReactionError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/reactions", {
     method: "GET",
     immediate: payload.immediate,

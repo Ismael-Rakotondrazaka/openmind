@@ -1,4 +1,4 @@
-import { UploadedFile } from "~/server/utils/files";
+import type { UploadedFile } from "~/server/utils/files";
 
 export const uploadArticleCover = ({
   file,

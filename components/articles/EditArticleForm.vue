@@ -150,10 +150,7 @@ const {
 }: {
   data: Ref<UpdateArticleData["article"] | null>;
   error: Ref<FetchError<UpdateArticleError> | null>;
-  execute: (
-    // eslint-disable-next-line no-unused-vars
-    opts?: AsyncDataExecuteOptions | undefined,
-  ) => Promise<void>;
+  execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
 } = useFetch(() => `/api/articles/${article.value.slug}`, {
   method: "PUT",
   body: formData,

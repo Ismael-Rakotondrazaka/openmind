@@ -15,10 +15,7 @@ export const useDestroyFollow = (payload: {
   }: {
     data: Ref<DestroyFollowData["follow"] | null>;
     error: Ref<FetchError<DestroyFollowError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch(url, {
     method: "DELETE",
     immediate: false,
