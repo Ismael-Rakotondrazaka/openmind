@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     "nuxt-typed-router",
     "@nuxt/image",
     "@vueuse/nuxt",
+    "@nuxt/eslint",
   ],
 
   typescript: {
@@ -83,10 +84,6 @@ export default defineNuxtConfig({
       extensions: ["vue"],
     },
   ],
-
-  imports: {
-    dirs: ["composables", "~/utils/strings", "~/utils/requests/**"],
-  },
 
   primevue: {
     cssLayerOrder: "tailwind-base, primevue, tailwind-utilities",
