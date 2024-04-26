@@ -16,10 +16,7 @@ export const useIndexUser = (payload: {
   }: {
     data: Ref<IndexUserData | null>;
     error: Ref<FetchError<IndexUserError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/users", {
     method: "GET",
     immediate: payload.immediate,

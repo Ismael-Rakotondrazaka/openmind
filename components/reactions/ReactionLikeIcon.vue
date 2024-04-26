@@ -17,7 +17,6 @@ const props = withDefaults(defineProps<ReactionLikeIconProps>(), {
 const fontSizeClass = computed<string>(() => {
   let result = "text-md";
 
-  /* eslint-disable indent */
   switch (props.size) {
     case "small":
       result = "text-xs";
@@ -31,7 +30,6 @@ const fontSizeClass = computed<string>(() => {
       result = "text-2xl";
       break;
   }
-  /* eslint-enable indent */
 
   return result;
 });
@@ -39,7 +37,6 @@ const fontSizeClass = computed<string>(() => {
 const paddingClass = computed<string>(() => {
   let result = "p-2";
 
-  /* eslint-disable indent */
   switch (props.size) {
     case "small":
       result = "p-1";
@@ -53,7 +50,6 @@ const paddingClass = computed<string>(() => {
       result = "p-5";
       break;
   }
-  /* eslint-enable indent */
 
   return result;
 });

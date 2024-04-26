@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "nuxt/dist/app/composables/asyncData";
+import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { type Follow, filterFollow } from "~/utils";
 
@@ -14,10 +14,7 @@ export const useStoreFollow = (payload: {
   }: {
     data: Ref<StoreFollowData["follow"] | null>;
     error: Ref<FetchError<StoreFollowError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/follows", {
     method: "POST",
     body: formattedBody,

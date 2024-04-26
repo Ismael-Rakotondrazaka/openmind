@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { H3Error } from "h3";
-import type { AsyncDataExecuteOptions } from "nuxt/dist/app/composables/asyncData";
+import type { H3Error } from "h3";
+import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 
 definePageMeta({
   middleware: "auth",
@@ -21,10 +21,7 @@ const {
 }: {
   data: Ref<ShowArticleData["article"] | null>;
   error: Ref<H3Error<ShowArticleError> | null>;
-  execute: (
-    // eslint-disable-next-line no-unused-vars
-    opts?: AsyncDataExecuteOptions | undefined,
-  ) => Promise<void>;
+  execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
 } = await useFetch(() => `/api/articles/${slug.value}`, {
   transform: (value) => ShowArticleDataSchema.parse(value).article,
 });

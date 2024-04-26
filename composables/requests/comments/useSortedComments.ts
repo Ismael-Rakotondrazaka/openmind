@@ -1,6 +1,5 @@
 import { setProperty } from "dot-prop";
 
-/* eslint-disable no-unused-vars */
 export type UseCommentsUpdateFnData = Partial<Flatten<CommentFull>>;
 
 export type UseCommentsUpdateFnDataKeys = keyof Flatten<CommentFull>;
@@ -9,7 +8,6 @@ export type UseCommentsUpdateFn = (
   id: string,
   data: UseCommentsUpdateFnData,
 ) => void;
-/* eslint-enable no-unused-vars */
 
 export const useSortedComments = (payload: {
   parent: MaybeRefOrGetter<CommentFull | null>;

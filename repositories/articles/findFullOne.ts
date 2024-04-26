@@ -32,7 +32,7 @@ export const findFullOne = async ({
         },
       },
       tags: true,
-      /* eslint-disable indent */
+
       savedArticles:
         authUser === null
           ? undefined
@@ -57,7 +57,7 @@ export const findFullOne = async ({
                 userId: authUser.id,
               },
             },
-      /* eslint-enable indent */
+
       _count: {
         select: {
           comments: {

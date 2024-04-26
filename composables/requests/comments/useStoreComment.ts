@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "nuxt/dist/app/composables/asyncData";
+import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { filterComment } from "~/utils";
 import { type Comment } from "~/utils";
@@ -15,10 +15,7 @@ export const useStoreComment = (payload: {
   }: {
     data: Ref<StoreCommentData["comment"] | null>;
     error: Ref<FetchError<StoreCommentError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/comments", {
     method: "POST",
     body: formattedBody,

@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { type User, type Role, PrismaClient, Prisma } from "@prisma/client";
+import type { PrismaClient, Prisma, User, Role } from "@prisma/client";
+
 import { hashSync } from "bcrypt";
 import { userConfig } from "~/configs";
 

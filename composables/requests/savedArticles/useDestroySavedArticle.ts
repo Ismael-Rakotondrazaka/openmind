@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "nuxt/dist/app/composables/asyncData";
+import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useDestroySavedArticle = (payload: {
@@ -15,10 +15,7 @@ export const useDestroySavedArticle = (payload: {
   }: {
     data: Ref<DestroySavedArticleData["article"] | null>;
     error: Ref<FetchError<DestroySavedArticleError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch(url, {
     method: "DELETE",
     immediate: false,

@@ -66,7 +66,6 @@ const computeWhereNewValue = (
   selectedOptionKey: SelectedOptionKey,
 ): Prisma.ArticleWhereInput => {
   return {
-    /* eslint-disable indent */
     views:
       authUserId !== undefined && selectedOptionKey === "VIEWED"
         ? {
@@ -82,7 +81,6 @@ const computeWhereNewValue = (
             mode: "insensitive",
           }
         : undefined,
-    /* eslint-enable indent */
   };
 };
 

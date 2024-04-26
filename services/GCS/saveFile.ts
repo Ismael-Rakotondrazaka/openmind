@@ -14,7 +14,7 @@ export const saveFile = async ({
   mimeType: string;
   isPublic: boolean;
   onFinish?: () => void;
-  // eslint-disable-next-line no-unused-vars
+
   onError?: (error: Error) => void;
 }) => {
   const blob: GCSFile = bucket.file(destination);

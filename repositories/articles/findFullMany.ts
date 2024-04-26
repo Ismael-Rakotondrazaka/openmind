@@ -33,7 +33,7 @@ export const findFullMany = ({
           },
         },
         tags: true,
-        /* eslint-disable indent */
+
         savedArticles:
           authUser === null
             ? undefined
@@ -58,7 +58,7 @@ export const findFullMany = ({
                   userId: authUser.id,
                 },
               },
-        /* eslint-enable indent */
+
         _count: {
           select: {
             comments: {

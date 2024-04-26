@@ -1,9 +1,9 @@
 export const useWatchArticleView = (payload: {
   articleId: MaybeRefOrGetter<string>;
   view: MaybeRefOrGetter<View | null>;
-  // eslint-disable-next-line no-unused-vars
+
   onViewCreated: (view: ViewFull) => void;
-  // eslint-disable-next-line no-unused-vars
+
   onViewUpdated: (view: ViewFull) => void;
 }) => {
   const { viewFull: createdViewFull, execute: executeStoreView } =

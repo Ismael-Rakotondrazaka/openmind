@@ -14,10 +14,7 @@ export const useIndexComment = (payload: {
   }: {
     data: Ref<IndexCommentData | null>;
     error: Ref<FetchError<IndexCommentError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/comments", {
     method: "GET",
     immediate: payload.immediate,

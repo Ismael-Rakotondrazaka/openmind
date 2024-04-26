@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { H3Error } from "h3";
+import type { H3Error } from "h3";
 import type { PageState } from "primevue/paginator";
 import { parseNestedJSON } from "~/utils";
 

@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "nuxt/dist/app/composables/asyncData";
+import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useStoreSavedArticle = (payload: {
@@ -13,10 +13,7 @@ export const useStoreSavedArticle = (payload: {
   }: {
     data: Ref<StoreSavedArticleData["savedArticle"] | null>;
     error: Ref<FetchError<StoreSavedArticleError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/saved-articles", {
     method: "POST",
     body: formattedBody,

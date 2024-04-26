@@ -14,10 +14,7 @@ export const useIndexArticleView = (payload: {
   }: {
     data: Ref<IndexViewData | null>;
     error: Ref<FetchError<IndexReactionError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/views", {
     method: "GET",
     immediate: payload.immediate,

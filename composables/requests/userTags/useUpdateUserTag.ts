@@ -16,10 +16,7 @@ export const useUpdateUserTag = (payload: {
   }: {
     data: Ref<UpdateUserTagData | null>;
     error: Ref<FetchError<UpdateUserTagError> | null>;
-    execute: (
-      // eslint-disable-next-line no-unused-vars
-      opts?: AsyncDataExecuteOptions | undefined,
-    ) => Promise<void>;
+    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/user-tags", {
     method: "PUT",
     watch: false,
