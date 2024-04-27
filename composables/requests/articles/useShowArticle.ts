@@ -20,6 +20,7 @@ export const useShowArticle = (payload: {
   } = useFetch(formattedUrl, {
     method: "GET",
     immediate: payload.immediate,
+    watch: [formattedUrl],
     transform: (data): ShowArticleData | null => {
       if (data === null || data === undefined) {
         return null;

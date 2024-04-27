@@ -28,11 +28,9 @@ const orderBy = ref<IndexArticleQuery["orderBy"]>({
   createdAt: "desc",
 });
 
-// const where = computed<Exclude<IndexArticleQuery["where"], undefined>>(() => ({
-//   userId: props.userId,
-// }));
 const where = ref<Exclude<IndexArticleQuery["where"], undefined>>({
   userId: props.userId,
+  deletedAt: null,
 });
 
 watch(

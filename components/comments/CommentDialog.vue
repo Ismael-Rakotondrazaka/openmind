@@ -53,6 +53,7 @@ const where = computed<IndexCommentQuery["where"]>(() => {
   return {
     articleId: article.value.id,
     parentId: null,
+    deletedAt: null,
   };
 });
 

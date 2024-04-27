@@ -5,7 +5,7 @@ export const useDestroyArticle = (payload: {
   param: MaybeRefOrGetter<DestroyArticleParam>;
   immediate?: boolean;
 }) => {
-  const { param, immediate } = payload;
+  const { param, immediate = false } = payload;
 
   const formattedUrl = computed(() => `/api/articles/${toValue(param).slug}`);
 

@@ -22,7 +22,9 @@ const orderBy = ref<IndexArticleQuery["orderBy"]>({
   createdAt: "desc",
 });
 
-const where = ref<Exclude<IndexArticleQuery["where"], undefined>>({});
+const where = ref<Exclude<IndexArticleQuery["where"], undefined>>({
+  deletedAt: null,
+});
 
 const onPageSizeUpdatedHandler = (newValue: number) => {
   pageSize.value = newValue;

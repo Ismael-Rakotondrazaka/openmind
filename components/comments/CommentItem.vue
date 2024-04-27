@@ -142,6 +142,7 @@ const where = computed<IndexCommentQuery["where"]>(() => {
   return {
     articleId: props.comment.articleId,
     parentId: props.comment.id,
+    deletedAt: null,
   };
 });
 

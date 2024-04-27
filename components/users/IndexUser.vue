@@ -31,7 +31,9 @@ const orderBy = ref<IndexUserQuery["orderBy"]>([
   },
 ]);
 
-const where = ref<Exclude<IndexUserQuery["where"], undefined>>();
+const where = ref<Exclude<IndexUserQuery["where"], undefined>>({
+  deletedAt: null,
+});
 
 const onPageSizeUpdatedHandler = (newValue: number) => {
   pageSize.value = newValue;
@@ -42,7 +44,10 @@ const onPageUpdatedHandler = (newValue: number) => {
 };
 
 const onWhereUpdateHandler = (newValue: Prisma.UserWhereInput) => {
-  where.value = newValue;
+  where.value = {
+    ...newValue,
+    deletedAt: null,
+  };
 };
 
 const onOrderByUpdateHandler = (
