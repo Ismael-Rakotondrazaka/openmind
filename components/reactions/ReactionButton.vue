@@ -65,8 +65,10 @@ const isButtonText = computed(() => !isActive.value);
 
 const overlayPanel = ref<InstanceType<typeof PrimeOverlayPanel>>();
 
+const { user: authUser } = useAuthUser();
+
 const showOverlayPanel = (event: Event) => {
-  if (overlayPanel.value !== undefined) {
+  if (overlayPanel.value !== undefined && authUser.value !== null) {
     overlayPanel.value.show(event);
   }
 };
@@ -108,10 +110,12 @@ const createReaction = async (reactionType: ReactionType) => {
 };
 
 const onButtonClickHandler = () => {
-  if (isActive.value) {
-    deleteReaction();
-  } else {
-    createReaction("like");
+  if (authUser.value !== null) {
+    if (isActive.value) {
+      deleteReaction();
+    } else {
+      createReaction("like");
+    }
   }
 };
 </script>
