@@ -1,6 +1,6 @@
 <template>
-  <header class="mb-5 lg:mb-6 not-format">
-    <address class="flex items-center mb-6 not-italic">
+  <header class="mb-5 lg:mb-6">
+    <address class="flex items-center justify-between mb-6">
       <div
         class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white"
       >
@@ -20,6 +20,7 @@
           shape="circle"
           :alt="`${article.user.firstName} ${article.user.firstName}`"
         />
+
         <div>
           <NuxtLink
             :to="{
@@ -36,6 +37,8 @@
           <ArticlePublishDateDisplayer :date="article.createdAt" />
         </div>
       </div>
+
+      <ArticleOptionsButton :article="article" />
     </address>
     <h1
       class="mb-4 text-3xl font-extrabold leading-tight text-text lg:mb-6 lg:text-4xl dark:text-white"
