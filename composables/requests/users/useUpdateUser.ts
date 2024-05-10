@@ -6,7 +6,7 @@ export const useUpdateUser = (payload: {
   body: MaybeRefOrGetter<UpdateUserBody>;
   immediate?: boolean;
 }) => {
-  const { params, body, immediate } = payload;
+  const { params, body, immediate = false } = payload;
 
   const formattedUrl = computed(() => `/api/users/${toValue(params).username}`);
 

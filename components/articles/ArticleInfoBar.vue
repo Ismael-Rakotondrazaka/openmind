@@ -23,6 +23,7 @@
 
       <div class="">
         <SaveArticleButton
+          v-if="authUser !== null"
           v-model:saved-article="savedArticle"
           :article-id="article.id"
         />
@@ -35,6 +36,8 @@
 
 <script lang="ts" setup>
 const { article } = inject(ShowArticleToken) as ShowArticleDI;
+
+const { user: authUser } = useAuthUser();
 
 const reaction = ref<Reaction | null>(article.value._auth.reaction);
 watchDeep(reaction, (newValue) => {

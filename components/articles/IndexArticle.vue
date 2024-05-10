@@ -11,14 +11,8 @@
   />
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { Prisma } from "@prisma/client";
-
-type ArticleTabContentProps = {
-  userId: number;
-};
-
-const props = defineProps<ArticleTabContentProps>();
 
 const page = ref<number>(1);
 
@@ -29,19 +23,8 @@ const orderBy = ref<IndexArticleQuery["orderBy"]>({
 });
 
 const where = ref<Exclude<IndexArticleQuery["where"], undefined>>({
-  userId: props.userId,
   deletedAt: null,
 });
-
-watch(
-  () => props.userId,
-  (newValue) => {
-    where.value = {
-      ...where.value,
-      userId: newValue,
-    };
-  },
-);
 
 const onPageSizeUpdatedHandler = (newValue: number) => {
   pageSize.value = newValue;
@@ -59,4 +42,4 @@ const onWhereUpdateHandler = (newValue: Prisma.ArticleWhereInput) => {
 };
 </script>
 
-<style scoped></style>
+<style></style>

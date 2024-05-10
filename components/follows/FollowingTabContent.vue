@@ -43,6 +43,7 @@ const where = ref<Exclude<IndexUserQuery["where"], undefined>>({
       followerId: props.userId,
     },
   },
+  deletedAt: null,
 });
 
 watch(
@@ -55,6 +56,7 @@ watch(
           followerId: newValue,
         },
       },
+      deletedAt: null,
     };
   },
 );

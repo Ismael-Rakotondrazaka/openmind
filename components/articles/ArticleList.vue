@@ -1,10 +1,10 @@
 <template>
-  <ul class="flex flex-wrap items-stretch justify-evenly, w-full gap-5">
+  <ul class="flex flex-wrap items-stretch w-full">
     <ArticleListItem
       v-for="article in articles"
       :key="article.id"
       :article="article"
-      class="w-full"
+      class="w-full mb-11"
     />
   </ul>
 </template>

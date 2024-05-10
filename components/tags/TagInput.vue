@@ -3,7 +3,7 @@
     <InputLabel
       label-for="tags"
       label="Tags"
-      :is-required="true"
+      :is-required="isRequired"
       :tooltip-text="tooltipText"
     />
 
@@ -42,9 +42,17 @@ interface TagInputProps {
   errorMessage?: string;
   description?: string;
   tooltipText?: string;
+  considerNewTag?: boolean;
+  isRequired?: boolean;
 }
 
-const props = defineProps<TagInputProps>();
+const props = withDefaults(defineProps<TagInputProps>(), {
+  considerNewTag: true,
+  errorMessage: undefined,
+  tooltipText: undefined,
+  description: undefined,
+  isRequired: true,
+});
 
 const searchTag = ref<string>("");
 
@@ -110,12 +118,16 @@ const suggestedTags = computed<Tag[]>(() => {
       (isRawSuggestedTagsEmpty ||
         (isRawSuggestedTagsNotEmpty && isFirstRawSuggestedTagsNotEqualToSearch))
     ) {
-      result = [
-        {
-          id: -1,
-          value: searchTag.value,
-        },
-      ].concat(rawSuggestedTags.value);
+      if (props.considerNewTag) {
+        result = [
+          {
+            id: -1,
+            value: searchTag.value,
+          },
+        ].concat(rawSuggestedTags.value);
+      } else {
+        result = [...rawSuggestedTags.value];
+      }
     } else {
       result = [...rawSuggestedTags.value];
     }

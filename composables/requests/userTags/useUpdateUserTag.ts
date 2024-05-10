@@ -5,7 +5,7 @@ export const useUpdateUserTag = (payload: {
   body: MaybeRefOrGetter<UpdateUserTagBody>;
   immediate?: boolean;
 }) => {
-  const { immediate, body } = payload;
+  const { immediate = false, body } = payload;
 
   const formattedBody = computed<UpdateUserTagBody>(() => toValue(body));
 

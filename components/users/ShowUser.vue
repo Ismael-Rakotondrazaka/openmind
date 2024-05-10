@@ -24,6 +24,12 @@
           :user="user"
           @follows:store="onFollowStoreHandler"
         />
+        <PrimeButton
+          v-if="authUser !== null && user.id === authUser.id"
+          label="New article"
+          icon="pi pi-plus"
+          @click="onNewArticleHandler"
+        />
 
         <ShareUserButton :user="user" />
       </div>
@@ -58,5 +64,11 @@ const onFollowDestroyHandler = () => {
 
 const onFollowStoreHandler = (newFollow: FollowFull) => {
   user.value._auth.follower = newFollow;
+};
+
+const onNewArticleHandler = () => {
+  navigateTo({
+    name: "articles-create",
+  });
 };
 </script>

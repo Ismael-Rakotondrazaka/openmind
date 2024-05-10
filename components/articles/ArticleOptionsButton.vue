@@ -16,7 +16,7 @@
   <PrimeOverlayPanel ref="overlayPanel">
     <div class="flex flex-col gap-3 flex-nowrap">
       <PrimeButton
-        v-if="isCommentEditable"
+        v-if="isArticleEditable"
         icon="pi pi-pencil"
         outlined
         severity="info"
@@ -29,11 +29,7 @@
         @click="onEditHandler"
       />
 
-      <DeleteCommentForm
-        v-if="isCommentDeletable"
-        :comment="comment"
-        @comment:delete="onDeleteHandler"
-      />
+      <DeleteArticleForm v-if="isArticleDeletable" :article="article" />
     </div>
   </PrimeOverlayPanel>
 </template>
@@ -41,26 +37,32 @@
 <script lang="ts" setup>
 import type { PrimeOverlayPanel } from "#build/components";
 
-interface ICommentOptionsButtonProps {
-  comment: CommentFull;
+interface IUserArticleOptionsButtonProps {
+  article: ArticleFull;
 }
 
-const props = defineProps<ICommentOptionsButtonProps>();
+const props = defineProps<IUserArticleOptionsButtonProps>();
 
 const { user: authUser } = inject(AuthUserToken) as AuthUserDI;
 
 const overlayPanel = ref<InstanceType<typeof PrimeOverlayPanel>>();
 
-const isCommentEditable = computed<boolean>(
-  () => authUser.value !== null && props.comment.user.id === authUser.value.id,
+const isArticleEditable = computed<boolean>(
+  () =>
+    authUser.value !== null &&
+    props.article.user.id === authUser.value.id &&
+    props.article.deletedAt === null,
 );
 
-const isCommentDeletable = computed<boolean>(
-  () => authUser.value !== null && props.comment.user.id === authUser.value.id,
+const isArticleDeletable = computed<boolean>(
+  () =>
+    authUser.value !== null &&
+    props.article.user.id === authUser.value.id &&
+    props.article.deletedAt === null,
 );
 
-const haveOptions = computed<boolean>(
-  () => isCommentEditable.value || isCommentDeletable.value,
+const haveOptions = computed<boolean>(() =>
+  [isArticleEditable.value, isArticleDeletable.value].includes(true),
 );
 
 const toggleOverLayPanel = (event: Event) => {
@@ -69,26 +71,12 @@ const toggleOverLayPanel = (event: Event) => {
   }
 };
 
-const closeOverLayPanel = () => {
-  if (overlayPanel.value !== undefined) {
-    overlayPanel.value.hide();
-  }
-};
-
-type ICommentOptionsButtonEmits = {
-  "comment:edit": [];
-  "comment:delete": [];
-};
-
-const emit = defineEmits<ICommentOptionsButtonEmits>();
-
-const onDeleteHandler = () => {
-  emit("comment:delete");
-  closeOverLayPanel();
-};
-
 const onEditHandler = () => {
-  emit("comment:edit");
-  closeOverLayPanel();
+  navigateTo({
+    name: "articles-slug-edit",
+    params: {
+      slug: props.article.slug,
+    },
+  });
 };
 </script>

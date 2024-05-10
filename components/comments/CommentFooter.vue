@@ -18,6 +18,7 @@
     </div>
 
     <PrimeButton
+      v-if="authUser !== null"
       text
       label="Reply"
       icon="pi pi-comment"
@@ -44,6 +45,8 @@ type CommentFooterEmits = {
 };
 
 const emit = defineEmits<CommentFooterEmits>();
+
+const { user: authUser } = useAuthUser();
 
 const reactionsCount = ref<number>(props.comment._count.reactions);
 watch(reactionsCount, (newValue) => {

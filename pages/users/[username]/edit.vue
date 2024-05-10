@@ -15,5 +15,6 @@ const { user } = useShowUser({
   params: () => ({
     username: route.params.username,
   }),
+  immediate: true,
 });
 </script>

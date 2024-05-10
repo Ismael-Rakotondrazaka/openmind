@@ -34,6 +34,7 @@
 
     <template #footer>
       <PrimeButton
+        v-if="authUser !== null"
         label="New comment"
         icon="pi pi-plus"
         @click="onShowCreateCommentHandler"
@@ -49,10 +50,13 @@ const isVisible = defineModel<boolean>("isVisible", {
   required: true,
 });
 
+const { user: authUser } = useAuthUser();
+
 const where = computed<IndexCommentQuery["where"]>(() => {
   return {
     articleId: article.value.id,
     parentId: null,
+    deletedAt: null,
   };
 });
 

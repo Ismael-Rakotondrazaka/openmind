@@ -43,6 +43,7 @@ const where = ref<Exclude<IndexUserQuery["where"], undefined>>({
       followingId: props.userId,
     },
   },
+  deletedAt: null,
 });
 
 watch(
@@ -75,6 +76,7 @@ const onWhereUpdateHandler = (newValue: Prisma.UserWhereInput) => {
         followingId: props.userId,
       },
     },
+    deletedAt: null,
   };
 };
 
