@@ -1,6 +1,6 @@
 <template>
   <header class="mb-5 lg:mb-6">
-    <address class="flex items-center justify-between mb-6">
+    <address class="flex items-center justify-between mb-6 not-italic">
       <div
         class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white"
       >
