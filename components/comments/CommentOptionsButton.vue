@@ -1,5 +1,6 @@
 <template>
   <PrimeButton
+    v-if="haveOptions"
     icon="pi pi-ellipsis-h"
     text
     size="small"
@@ -15,6 +16,7 @@
   <PrimeOverlayPanel ref="overlayPanel">
     <div class="flex flex-col gap-3 flex-nowrap">
       <PrimeButton
+        v-if="isCommentEditable"
         icon="pi pi-pencil"
         outlined
         severity="info"
@@ -24,25 +26,14 @@
           },
         }"
         label="Edit"
-        :disabled="!isCommentEditable"
         @click="onEditHandler"
       />
 
-      <DeleteCommentForm :comment="comment" @comment:delete="onDeleteHandler" />
-
-      <!-- <PrimeButton
-        icon="pi pi-trash"
-        outlined
-        severity="danger"
-        :pt="{
-          root: {
-            class: 'w-full',
-          },
-        }"
-        label="Delete"
-        :disabled="!isCommentEditable"
-        @click="onDeleteHandler"
-      /> -->
+      <DeleteCommentForm
+        v-if="isCommentDeletable"
+        :comment="comment"
+        @comment:delete="onDeleteHandler"
+      />
     </div>
   </PrimeOverlayPanel>
 </template>
@@ -62,6 +53,14 @@ const overlayPanel = ref<InstanceType<typeof PrimeOverlayPanel>>();
 
 const isCommentEditable = computed<boolean>(
   () => authUser.value !== null && props.comment.user.id === authUser.value.id,
+);
+
+const isCommentDeletable = computed<boolean>(
+  () => authUser.value !== null && props.comment.user.id === authUser.value.id,
+);
+
+const haveOptions = computed<boolean>(
+  () => isCommentEditable.value || isCommentDeletable.value,
 );
 
 const toggleOverLayPanel = (event: Event) => {
@@ -84,16 +83,12 @@ type ICommentOptionsButtonEmits = {
 const emit = defineEmits<ICommentOptionsButtonEmits>();
 
 const onDeleteHandler = () => {
-  if (isCommentEditable.value) {
-    emit("comment:delete");
-    closeOverLayPanel();
-  }
+  emit("comment:delete");
+  closeOverLayPanel();
 };
 
 const onEditHandler = () => {
-  if (isCommentEditable.value) {
-    emit("comment:edit");
-    closeOverLayPanel();
-  }
+  emit("comment:edit");
+  closeOverLayPanel();
 };
 </script>
