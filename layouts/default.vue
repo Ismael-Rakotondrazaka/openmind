@@ -2,7 +2,7 @@
   <div class="pt-16">
     <AppHeader />
 
-    <div class="min-h-screen">
+    <div class="min-h-screen py-32 px-6">
       <slot />
     </div>
     <AppFooter />

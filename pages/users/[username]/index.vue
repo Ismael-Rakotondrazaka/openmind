@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <ShowUser v-if="user !== null" :user="user" />
-  </div>
+  <ShowUser v-if="user !== null" class="mx-auto w-full max-w-[700px]" />
 </template>
 
 <script lang="ts" setup>

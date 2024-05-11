@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="w-full max-w-[700px]" @submit.prevent="">
+    <form class="w-full" @submit.prevent="">
       <div class="text-text text-2xl font-bold mb-3">Edit Your Article</div>
 
       <div class="text-text mb-7">

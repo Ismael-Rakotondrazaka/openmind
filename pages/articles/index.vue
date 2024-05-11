@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen max-w-[680px] mx-auto">
+  <div class="mx-auto w-full max-w-[700px]">
     <IndexArticle />
 
     <Teleport to="body">

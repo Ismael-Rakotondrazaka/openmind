@@ -1,8 +1,6 @@
 <template>
-  <div class="w-full max-w-screen-xl,">
-    <main
-      class="max-w-2xl pt-8 pb-16 mx-auto antialiased lg:pt-16 lg:pb-24 dark:bg-gray-900"
-    >
+  <div class="w-full">
+    <main class="antialiased w-full">
       <article class="w-full">
         <ArticleHeader />
 

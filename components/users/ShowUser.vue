@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-w-2xl mx-auto my-7">
+  <div class="w-full">
     <main class="mb-5 text-center">
       <UserAvatar size="2xlarge" :user="user" preview class="mb-3" />
 
@@ -47,7 +47,7 @@
 
     <PrimeDivider />
 
-    <ShowUserTabView />
+    <ShowUserTabView class="w-full" />
   </div>
 </template>
 

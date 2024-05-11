@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mx-auto w-full max-w-[700px]">
     <div>I'm protected! Session data: {{ data }}</div>
     <button class="rounded-xl shadow-xl p-2 m-2" @click="signOut()">
       sign out
