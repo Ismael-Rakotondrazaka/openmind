@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul v-auto-animate>
     <li
       v-for="reaction in reactions"
       :key="reaction.id"

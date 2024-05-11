@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex flex-wrap items-stretch w-full">
+  <ul v-auto-animate class="">
     <ArticleListItem
       v-for="article in articles"
       :key="article.id"

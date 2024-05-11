@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@vueuse/nuxt",
     "@nuxt/eslint",
+    "@formkit/auto-animate/nuxt",
   ],
 
   typescript: {
