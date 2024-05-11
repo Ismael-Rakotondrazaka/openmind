@@ -3,8 +3,6 @@
     <div class="w-screen max-w-[680px] mx-auto">
       <IndexArticle />
     </div>
-
-    <PrimeScrollTop />
   </div>
 </template>
 
