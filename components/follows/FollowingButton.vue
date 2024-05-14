@@ -32,6 +32,7 @@
     resolve-button-label="Yes, Unfollow"
     reject-button-label="Cancel"
     severity="danger"
+    :is-loading="isStatusPending"
     @dialog:resolved="onDeleteFollowingHandler"
     @dialog:rejected="onDialogRejectedHandler"
   />
@@ -90,6 +91,7 @@ const {
   follow,
   execute: destroyFollow,
   error,
+  isStatusPending,
 } = useDestroyFollow({
   followId: () => props.follow.id,
 });

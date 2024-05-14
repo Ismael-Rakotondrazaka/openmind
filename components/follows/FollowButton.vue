@@ -1,5 +1,9 @@
 <template>
-  <PrimeButton label="Follow" @click="onStoreFollowHandler" />
+  <PrimeButton
+    label="Follow"
+    :loading="isStatusPending"
+    @click="onStoreFollowHandler"
+  />
 </template>
 
 <script setup lang="ts">
@@ -21,6 +25,7 @@ const {
   followFull: newFollow,
   execute: storeFollow,
   error,
+  isStatusPending,
 } = useStoreFollow({
   body: () => ({
     userId: props.user.id,

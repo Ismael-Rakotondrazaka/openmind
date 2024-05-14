@@ -7,6 +7,7 @@
     resolve-button-label="Yes, Delete"
     reject-button-label="Cancel"
     :info-list="infoList"
+    :is-loading="isStatusPending"
     @dialog:resolved="destroyCommentHandler"
   />
 
@@ -56,6 +57,7 @@ const {
   commentFull: deletedComment,
   execute: destroyComment,
   error: fetchError,
+  isStatusPending,
 } = useDestroyComment({
   params,
 });

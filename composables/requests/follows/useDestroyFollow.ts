@@ -1,5 +1,8 @@
 import { type FetchError } from "ofetch";
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type {
+  AsyncDataExecuteOptions,
+  AsyncDataRequestStatus,
+} from "#app/composables/asyncData";
 
 export const useDestroyFollow = (payload: {
   followId: MaybeRefOrGetter<number>;
@@ -12,10 +15,14 @@ export const useDestroyFollow = (payload: {
     data,
     execute,
     error,
+    pending,
+    status,
   }: {
     data: Ref<DestroyFollowData["follow"] | null>;
     error: Ref<FetchError<DestroyFollowError> | null>;
     execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
+    pending: Ref<boolean>;
+    status: Ref<AsyncDataRequestStatus>;
   } = useFetch(url, {
     method: "DELETE",
     immediate: false,
@@ -45,10 +52,14 @@ export const useDestroyFollow = (payload: {
 
   const formattedError = useFetchErrorData(error);
 
+  const isStatusPending = computed<boolean>(() => status.value === "pending");
+
   return {
     follow,
     followFull: data,
-    execute,
     error: formattedError,
+    pending,
+    isStatusPending,
+    execute,
   };
 };

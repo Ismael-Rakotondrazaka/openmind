@@ -1,4 +1,7 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type {
+  AsyncDataExecuteOptions,
+  AsyncDataRequestStatus,
+} from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { type Follow, filterFollow } from "~/utils";
 
@@ -11,10 +14,14 @@ export const useStoreFollow = (payload: {
     data,
     execute,
     error,
+    pending,
+    status,
   }: {
     data: Ref<StoreFollowData["follow"] | null>;
     error: Ref<FetchError<StoreFollowError> | null>;
     execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
+    pending: Ref<boolean>;
+    status: Ref<AsyncDataRequestStatus>;
   } = useFetch("/api/follows", {
     method: "POST",
     body: formattedBody,
@@ -47,10 +54,14 @@ export const useStoreFollow = (payload: {
 
   const formattedError = useFetchErrorData(error);
 
+  const isStatusPending = computed<boolean>(() => status.value === "pending");
+
   return {
     follow,
     followFull: data,
     error: formattedError,
     execute,
+    pending,
+    isStatusPending,
   };
 };

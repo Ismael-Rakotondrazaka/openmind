@@ -3,6 +3,7 @@
     :text="isButtonText"
     class="inline-block"
     :severity="buttonSeverity"
+    :loading="isLoading"
     @click="onButtonClickHandler"
   >
     <i class="px-3 text-2xl" :class="iconClass"></i><br /><span
@@ -23,9 +24,12 @@ const emit = defineEmits<ReactionLikeButtonEmits>();
 
 interface ReactionLikeButtonProps {
   reaction: Reaction | null;
+  isLoading?: boolean;
 }
 
-const props = defineProps<ReactionLikeButtonProps>();
+const props = withDefaults(defineProps<ReactionLikeButtonProps>(), {
+  isLoading: false,
+});
 
 const isActive = computed(
   () => props.reaction !== null && props.reaction.type === "like",

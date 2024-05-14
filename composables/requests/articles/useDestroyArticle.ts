@@ -1,4 +1,7 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type {
+  AsyncDataExecuteOptions,
+  AsyncDataRequestStatus,
+} from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useDestroyArticle = (payload: {
@@ -13,10 +16,14 @@ export const useDestroyArticle = (payload: {
     data,
     execute,
     error,
+    pending,
+    status,
   }: {
     data: Ref<DestroyArticleData | null>;
     error: Ref<FetchError<DestroyArticleError> | null>;
     execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
+    pending: Ref<boolean>;
+    status: Ref<AsyncDataRequestStatus>;
   } = useFetch(formattedUrl, {
     method: "DELETE",
     immediate,
@@ -54,9 +61,13 @@ export const useDestroyArticle = (payload: {
     }
   });
 
+  const isStatusPending = computed<boolean>(() => status.value === "pending");
+
   return {
     article,
     error: formattedError,
+    pending,
+    isStatusPending: isStatusPending,
     execute,
   };
 };

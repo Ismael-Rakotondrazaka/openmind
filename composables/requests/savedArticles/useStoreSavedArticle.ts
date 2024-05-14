@@ -1,4 +1,7 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type {
+  AsyncDataExecuteOptions,
+  AsyncDataRequestStatus,
+} from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useStoreSavedArticle = (payload: {
@@ -10,9 +13,13 @@ export const useStoreSavedArticle = (payload: {
     data,
     execute,
     error,
+    status,
+    pending,
   }: {
     data: Ref<StoreSavedArticleData["savedArticle"] | null>;
     error: Ref<FetchError<StoreSavedArticleError> | null>;
+    pending: Ref<boolean>;
+    status: Ref<AsyncDataRequestStatus>;
     execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
   } = useFetch("/api/saved-articles", {
     method: "POST",
@@ -55,10 +62,14 @@ export const useStoreSavedArticle = (payload: {
     }
   });
 
+  const isStatusPending = computed<boolean>(() => status.value === "pending");
+
   return {
     savedArticle,
     savedArticleFull: data,
     error: formattedError,
+    pending,
+    isStatusPending,
     execute,
   };
 };

@@ -6,6 +6,7 @@
       <li>
         <ReactionLikeButton
           :reaction="reaction"
+          :is-loading="isStatusPending"
           @reaction:create="() => createReaction('like')"
           @reaction:edit="() => editReaction('like')"
           @reaction:delete="() => deleteReaction()"
@@ -14,6 +15,7 @@
       <li>
         <ReactionLoveButton
           :reaction="reaction"
+          :is-loading="isStatusPending"
           @reaction:create="() => createReaction('love')"
           @reaction:edit="() => editReaction('love')"
           @reaction:delete="() => deleteReaction()"
@@ -22,6 +24,7 @@
       <li>
         <ReactionCelebrateButton
           :reaction="reaction"
+          :is-loading="isStatusPending"
           @reaction:create="() => createReaction('celebrate')"
           @reaction:edit="() => editReaction('celebrate')"
           @reaction:delete="() => deleteReaction()"
@@ -74,7 +77,11 @@ const storeReactionBody = computed(() => {
   }
 });
 
-const { reaction: createdReaction, execute: storeReaction } = useStoreReaction({
+const {
+  reaction: createdReaction,
+  execute: storeReaction,
+  isStatusPending,
+} = useStoreReaction({
   body: storeReactionBody,
 });
 

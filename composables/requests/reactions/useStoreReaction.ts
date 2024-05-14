@@ -1,4 +1,7 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type {
+  AsyncDataExecuteOptions,
+  AsyncDataRequestStatus,
+} from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useStoreReaction = (payload: {
@@ -10,10 +13,14 @@ export const useStoreReaction = (payload: {
     data,
     execute,
     error,
+    pending,
+    status,
   }: {
     data: Ref<StoreReactionData["reaction"] | null>;
     error: Ref<FetchError<StoreReactionError> | null>;
     execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
+    pending: Ref<boolean>;
+    status: Ref<AsyncDataRequestStatus>;
   } = useFetch("/api/reactions", {
     method: "POST",
     body: formattedBody,
@@ -47,10 +54,17 @@ export const useStoreReaction = (payload: {
 
   const formattedError = useFetchErrorData(error);
 
+  const isStatusPending = computed<boolean>(() => status.value === "pending");
+
   return {
     reaction,
     reactionFull: data,
     error: formattedError,
+    status,
+    /** It just mean that the data is not there */
+    pending,
+    /** Used to say that the data is being fetched */
+    isStatusPending,
     execute,
   };
 };

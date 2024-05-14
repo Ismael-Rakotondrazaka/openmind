@@ -28,6 +28,7 @@
           <PrimeButton
             :label="resolveButtonLabel"
             :severity="severity"
+            :loading="isLoading"
             @click="onResolveHandler"
           ></PrimeButton>
 
@@ -51,10 +52,12 @@ interface IConfirmDialogProps {
   resolveButtonLabel: string;
   rejectButtonLabel: string;
   severity?: Severity;
+  isLoading?: boolean;
 }
 
 withDefaults(defineProps<IConfirmDialogProps>(), {
   infoList: () => [],
+  isLoading: false,
   severity: "primary",
 });
 

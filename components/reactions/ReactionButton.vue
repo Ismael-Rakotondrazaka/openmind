@@ -5,6 +5,7 @@
       :label="formattedCount"
       :text="isButtonText"
       class="reaction-button"
+      :loading="isStatusPending"
       @click="onButtonClickHandler"
       @mouseenter="showOverlayPanel"
     >
@@ -89,7 +90,11 @@ const storeReactionBody = computed(() => {
   };
 });
 
-const { reaction: createdReaction, execute: storeReaction } = useStoreReaction({
+const {
+  reaction: createdReaction,
+  execute: storeReaction,
+  isStatusPending,
+} = useStoreReaction({
   body: storeReactionBody,
 });
 

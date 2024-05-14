@@ -7,6 +7,7 @@
     resolve-button-label="Yes, Delete"
     reject-button-label="Cancel"
     :info-list="infoList"
+    :is-loading="isStatusPending"
     @dialog:resolved="destroyArticleHandler"
   />
 
@@ -56,6 +57,7 @@ const {
   article: deletedArticle,
   execute: destroyArticle,
   error: fetchError,
+  isStatusPending,
 } = useDestroyArticle({
   param,
   immediate: false,

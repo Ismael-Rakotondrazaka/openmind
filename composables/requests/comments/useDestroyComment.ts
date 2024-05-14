@@ -1,4 +1,7 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type {
+  AsyncDataExecuteOptions,
+  AsyncDataRequestStatus,
+} from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { filterComment } from "~/utils";
 import { type Comment } from "~/utils";
@@ -14,10 +17,14 @@ export const useDestroyComment = (payload: {
     data,
     execute,
     error,
+    pending,
+    status,
   }: {
     data: Ref<DestroyCommentData["comment"] | null>;
     error: Ref<FetchError<DestroyCommentError> | null>;
     execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
+    pending: Ref<boolean>;
+    status: Ref<AsyncDataRequestStatus>;
   } = useFetch(formattedUrl, {
     method: "DELETE",
     immediate: false,
@@ -49,10 +56,14 @@ export const useDestroyComment = (payload: {
 
   const formattedError = useFetchErrorData(error);
 
+  const isStatusPending = computed<boolean>(() => status.value === "pending");
+
   return {
     comment,
     commentFull: data,
     error: formattedError,
+    pending,
+    isStatusPending,
     execute,
   };
 };
