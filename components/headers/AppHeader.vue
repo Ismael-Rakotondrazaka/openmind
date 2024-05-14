@@ -4,7 +4,8 @@
       :model="items"
       :pt="{
         root: {
-          class: 'fixed top-0 w-full z-50',
+          class:
+            'fixed top-0 left-0 right-0 w-full mx-auto max-w-[1200px] z-50 !border-t-0 !rounded-t-none',
         },
       }"
     >
