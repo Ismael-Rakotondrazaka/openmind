@@ -1,6 +1,7 @@
 <template>
   <div>
-    <ReactionList v-if="reactions !== null" :reactions="reactions" />
+    <NoResult v-if="reactions == null || reactions.length === 0" />
+    <ReactionList v-else :reactions="reactions" />
 
     <PrimePaginator
       v-if="pagination !== null"
