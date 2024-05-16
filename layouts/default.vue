@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-16">
+  <div class="min-h-screen -pt-16">
     <AppHeader />
 
     <div class="min-h-screen py-32 px-6">
