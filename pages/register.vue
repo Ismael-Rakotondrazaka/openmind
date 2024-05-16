@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center h-screen p-5 bg-sky-50">
+  <div class="mx-auto w-full max-w-[700px]">
     <form class="w-full max-w-xl" @submit.prevent="onSubmit">
       <PrimeCard>
         <template #title> Create Your Account </template>

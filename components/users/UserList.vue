@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex flex-wrap items-stretch justify-evenly, w-full gap-5">
+  <ul v-auto-animate class="">
     <UserListItem
       v-for="user in users"
       :key="user.id"

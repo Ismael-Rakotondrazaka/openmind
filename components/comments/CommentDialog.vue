@@ -13,8 +13,14 @@
         @click="onLoadPreviousHandler"
       />
 
+      <p
+        v-if="comments === null || comments.length === 0"
+        class="text-center font-bold text-text text-lg"
+      >
+        No comments yet.
+      </p>
       <CommentList
-        v-if="comments !== null"
+        v-else
         :comments="comments"
         :reflect-comments-update="reflectCommentsUpdate"
         :level="0"

@@ -1,28 +1,15 @@
 <template>
   <ConfirmDialog
-    v-model:is-visible="isConfirmationVisible"
+    v-model:is-visible="isVisible"
     header="Delete Comment"
     message="Are you sure you want to delete this comment ?"
     severity="danger"
     resolve-button-label="Yes, Delete"
     reject-button-label="Cancel"
     :info-list="infoList"
+    :is-loading="isStatusPending"
     @dialog:resolved="destroyCommentHandler"
   />
-
-  <PrimeButton
-    icon="pi pi-trash"
-    outlined
-    severity="danger"
-    :pt="{
-      root: {
-        class: 'w-full',
-      },
-    }"
-    label="Delete"
-    :disabled="!isCommentEditable"
-    @click="onShowConfirmation"
-  ></PrimeButton>
 </template>
 
 <script setup lang="ts">
@@ -36,13 +23,16 @@ interface IDeleteCommentFormProps {
 const props = defineProps<IDeleteCommentFormProps>();
 /* -------------------------------------------------------------------------- */
 
+const isVisible = defineModel<boolean>("isVisible", {
+  required: false,
+  default: false,
+});
+
 type IDeleteCommentFormEmits = {
   "comment:delete": [string];
 };
 
 const emit = defineEmits<IDeleteCommentFormEmits>();
-
-const { user: authUser } = inject(AuthUserToken) as AuthUserDI;
 
 const toast = useToast();
 
@@ -56,6 +46,7 @@ const {
   commentFull: deletedComment,
   execute: destroyComment,
   error: fetchError,
+  isStatusPending,
 } = useDestroyComment({
   params,
 });
@@ -87,15 +78,5 @@ const destroyCommentHandler = async () => {
   }
 };
 
-const isCommentEditable = computed<boolean>(
-  () => authUser.value !== null && props.comment.user.id === authUser.value.id,
-);
-
 const infoList: string[] = ["Once deleted, it cannot be undone."];
-
-const isConfirmationVisible = ref<boolean>(false);
-
-const onShowConfirmation = () => {
-  isConfirmationVisible.value = true;
-};
 </script>

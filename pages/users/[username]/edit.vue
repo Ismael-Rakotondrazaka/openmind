@@ -1,7 +1,9 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen p-5">
-    <UpdateUserForm v-if="user !== null" :user="user" />
-  </div>
+  <UpdateUserForm
+    v-if="user !== null"
+    :user="user"
+    class="mx-auto w-full max-w-[700px]"
+  />
 </template>
 
 <script lang="ts" setup>

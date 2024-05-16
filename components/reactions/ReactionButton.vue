@@ -5,6 +5,7 @@
       :label="formattedCount"
       :text="isButtonText"
       class="reaction-button"
+      :loading="isStatusPending"
       @click="onButtonClickHandler"
       @mouseenter="showOverlayPanel"
     >
@@ -19,6 +20,7 @@
         v-model:reaction="reaction"
         :article-id="articleId"
         :comment-id="commentId"
+        @form:hide="onFormHideHandler"
       />
     </PrimeOverlayPanel>
   </div>
@@ -73,6 +75,12 @@ const showOverlayPanel = (event: Event) => {
   }
 };
 
+const onFormHideHandler = () => {
+  if (overlayPanel.value !== undefined) {
+    overlayPanel.value.hide();
+  }
+};
+
 const formattedCount = useNumericAbbreviation(count);
 
 const { execute: destroyReaction } = useDestroyReaction({
@@ -89,7 +97,11 @@ const storeReactionBody = computed(() => {
   };
 });
 
-const { reaction: createdReaction, execute: storeReaction } = useStoreReaction({
+const {
+  reaction: createdReaction,
+  execute: storeReaction,
+  isStatusPending,
+} = useStoreReaction({
   body: storeReactionBody,
 });
 

@@ -1,7 +1,9 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen p-5">
-    <EditArticleForm v-if="article !== null" :article="article" />
-  </div>
+  <EditArticleForm
+    v-if="article !== null"
+    :article="article"
+    class="mx-auto w-full max-w-[700px]"
+  />
 </template>
 
 <script setup lang="ts">

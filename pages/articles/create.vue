@@ -1,7 +1,5 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen p-5 bg-white">
-    <CreateArticleForm />
-  </div>
+  <CreateArticleForm class="mx-auto w-full max-w-[700px]" />
 </template>
 
 <script setup lang="ts">

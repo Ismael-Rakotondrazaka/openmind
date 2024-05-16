@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div class="mx-auto w-full max-w-[700px]">
     <div class="heading">
       <h1 class="heading__title">
         Welcome to your new <span class="gradient__text">sidebase</span> app!

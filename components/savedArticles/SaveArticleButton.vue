@@ -5,6 +5,7 @@
     :text="isText"
     class="mr-3"
     :severity="severity"
+    :loading="isLoading"
     @click="onSaveButtonClickHandler"
   />
 </template>
@@ -64,16 +65,26 @@ const label = computed(() => {
 
 const isText = computed(() => !isArticleSaved.value);
 
-const { savedArticle: newSavedArticle, execute: storeSavedArticle } =
-  useStoreSavedArticle({
-    body: () => ({
-      articleId: props.articleId,
-    }),
-  });
+const {
+  savedArticle: newSavedArticle,
+  execute: storeSavedArticle,
+  isStatusPending: isStoreSavedArticlePending,
+} = useStoreSavedArticle({
+  body: () => ({
+    articleId: props.articleId,
+  }),
+});
 
-const { execute: destroySavedArticle } = useDestroySavedArticle({
+const {
+  execute: destroySavedArticle,
+  isStatusPending: isDestroySavedArticlePending,
+} = useDestroySavedArticle({
   articleId: props.articleId,
 });
+
+const isLoading = computed<boolean>(
+  () => isStoreSavedArticlePending.value || isDestroySavedArticlePending.value,
+);
 
 watch(newSavedArticle, (newValue) => {
   if (newValue !== null) {

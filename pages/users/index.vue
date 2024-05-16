@@ -1,7 +1,5 @@
 <template>
-  <div class="w-full max-w-2xl mx-auto my-7">
-    <IndexUser />
-  </div>
+  <IndexUser class="mx-auto w-full max-w-[700px]" />
 </template>
 
 <script lang="ts" setup>

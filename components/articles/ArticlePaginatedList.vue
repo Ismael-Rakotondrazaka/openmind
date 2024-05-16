@@ -1,6 +1,7 @@
 <template>
   <div>
-    <ArticleList v-if="articles !== null" :articles="articles" />
+    <NoResult v-if="articles == null || articles.length === 0" />
+    <ArticleList v-else :articles="articles" />
 
     <PrimePaginator
       v-if="pagination !== null"

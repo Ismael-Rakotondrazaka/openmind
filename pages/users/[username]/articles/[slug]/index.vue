@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex items-center justify-center min-h-screen p-5 bg-white text-text"
-  >
+  <div class="mx-auto w-full max-w-[700px]">
     <ShowArticle v-if="article !== null" :article="article" />
     <div>{{ showArticleError }}</div>
 

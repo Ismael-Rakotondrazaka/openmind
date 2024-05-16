@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul v-auto-animate>
     <li
       v-for="tag in tags"
       :key="tag.id"

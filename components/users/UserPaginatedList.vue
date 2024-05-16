@@ -1,10 +1,7 @@
 <template>
   <div>
-    <UserList
-      v-if="users !== null"
-      :users="users"
-      @users:update="onUsersUpdateHandler"
-    />
+    <NoResult v-if="users == null || users.length === 0" />
+    <UserList v-else :users="users" @users:update="onUsersUpdateHandler" />
 
     <PrimePaginator
       v-if="pagination !== null"

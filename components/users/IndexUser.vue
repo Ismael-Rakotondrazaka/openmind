@@ -1,18 +1,20 @@
 <template>
-  <UserSearch
-    class="mb-5"
-    @where:update="onWhereUpdateHandler"
-    @order-by:update="onOrderByUpdateHandler"
-  />
+  <div class="w-full">
+    <UserSearch
+      class="mb-5"
+      @where:update="onWhereUpdateHandler"
+      @order-by:update="onOrderByUpdateHandler"
+    />
 
-  <UserPaginatedList
-    :page="page"
-    :page-size="pageSize"
-    :order-by="orderBy"
-    :where="where"
-    @page-size:update="onPageSizeUpdatedHandler"
-    @page:update="onPageUpdatedHandler"
-  />
+    <UserPaginatedList
+      :page="page"
+      :page-size="pageSize"
+      :order-by="orderBy"
+      :where="where"
+      @page-size:update="onPageSizeUpdatedHandler"
+      @page:update="onPageUpdatedHandler"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
