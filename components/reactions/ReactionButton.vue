@@ -20,6 +20,7 @@
         v-model:reaction="reaction"
         :article-id="articleId"
         :comment-id="commentId"
+        @form:hide="onFormHideHandler"
       />
     </PrimeOverlayPanel>
   </div>
@@ -71,6 +72,12 @@ const { user: authUser } = useAuthUser();
 const showOverlayPanel = (event: Event) => {
   if (overlayPanel.value !== undefined && authUser.value !== null) {
     overlayPanel.value.show(event);
+  }
+};
+
+const onFormHideHandler = () => {
+  if (overlayPanel.value !== undefined) {
+    overlayPanel.value.hide();
   }
 };
 

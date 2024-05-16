@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div
+    @pointerenter="onMouseEnterEventHandler"
+    @pointerleave="onMouseLeaveEventHandler"
+  >
     <ul
       class="flex flex-row flex-nowrap justify-evenly gap-3 w-[25rem], text-center"
     >
@@ -122,5 +125,31 @@ const deleteReaction = () => {
 
   destroyReaction();
   reaction.value = null;
+};
+
+type ReactionFormEmits = {
+  "form:hide": [];
+};
+
+const emit = defineEmits<ReactionFormEmits>();
+
+const { isPending, start, stop } = useTimeoutFn(
+  () => {
+    emit("form:hide");
+  },
+  2000,
+  {
+    immediate: false,
+  },
+);
+
+const onMouseEnterEventHandler = () => {
+  if (isPending.value) {
+    stop();
+  }
+};
+
+const onMouseLeaveEventHandler = () => {
+  start();
 };
 </script>
