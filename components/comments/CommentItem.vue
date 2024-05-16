@@ -61,14 +61,8 @@
       @click="onLoadPreviousHandler"
     />
 
-    <p
-      v-if="canHaveReplies && (replies === null || replies.length === 0)"
-      class="text-center font-bold text-text text-lg"
-    >
-      No comments yet.
-    </p>
     <CommentList
-      v-else-if="canHaveReplies"
+      v-if="canHaveReplies"
       :comments="replies"
       :reflect-comments-update="reflectRepliesUpdate"
       :level="nextLevel"
