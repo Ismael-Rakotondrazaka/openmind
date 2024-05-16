@@ -4,42 +4,46 @@
     icon="pi pi-chevron-down"
     severity="secondary"
     outlined
-    @click="onOpenOverlayHandler"
+    @click="onOpenMenuHandler"
   />
 
-  <PrimeOverlayPanel ref="overlayPanel">
-    <div class="flex flex-col gap-5">
-      <p class="text-text">
-        Followed since
-        <span class="font-bold">{{ formattedFollowingDate }}</span>
-      </p>
+  <PrimeMenu
+    id="overlay_menu"
+    ref="overlayMenu"
+    :model="menuItems"
+    :popup="true"
+  >
+    <template #item="{ item, props: menuRouterBindProps }">
+      <a
+        v-ripple
+        class="flex align-items-center"
+        v-bind="menuRouterBindProps.action"
+        :class="item.class"
+      >
+        <span :class="item.icon" />
+        <span class="ml-2">{{ item.label }}</span>
+        <PrimeBadge v-if="item.badge" class="ml-auto" :value="item.badge" />
+        <span
+          v-if="item.shortcut"
+          class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+          >{{ item.shortcut }}</span
+        >
+      </a>
+    </template>
+  </PrimeMenu>
 
-      <PrimeButton
-        outlined
-        label="Unfollow"
-        severity="danger"
-        icon="pi pi-user-minus"
-        @click="onOpenDialogHandler"
-      />
-    </div>
-  </PrimeOverlayPanel>
-
-  <ConfirmDialog
-    v-model:is-visible="isDialogVisible"
-    :header="dialogHeader"
-    :message="dialogMessage"
-    :info-list="infoList"
-    resolve-button-label="Yes, Unfollow"
-    reject-button-label="Cancel"
-    severity="danger"
-    :is-loading="isStatusPending"
-    @dialog:resolved="onDeleteFollowingHandler"
-    @dialog:rejected="onDialogRejectedHandler"
+  <DestroyFollowForm
+    v-model:is-visible="isUnfollowDialogVisible"
+    :follow="follow"
+    @follows:destroy="onFollowDestroyHandler"
   />
 </template>
 
 <script setup lang="ts">
-import type { PrimeOverlayPanel } from "#build/components";
+import type PrimeMenu from "primevue/menu";
+import { type MenuProps } from "primevue/menu";
+
+type MenuItem = Exclude<MenuProps["model"], undefined>[0];
 
 interface FollowingButtonProps {
   follow: FollowFull;
@@ -53,67 +57,40 @@ type FollowingButtonEmits = {
 
 const emit = defineEmits<FollowingButtonEmits>();
 
-const toast = useToast();
-
-const overlayPanel = ref<InstanceType<typeof PrimeOverlayPanel>>();
-
-const isDialogVisible = ref<boolean>(false);
-const onOpenDialogHandler = () => {
-  isDialogVisible.value = true;
-};
-const onDialogRejectedHandler = () => {
-  isDialogVisible.value = false;
+const onFollowDestroyHandler = (follow: Follow) => {
+  emit("follows:destroy", follow);
 };
 
-const onOpenOverlayHandler = (event: Event) => {
-  if (overlayPanel.value !== undefined) {
-    overlayPanel.value.toggle(event);
+const overlayMenu = ref<InstanceType<typeof PrimeMenu>>();
+
+const onOpenMenuHandler = (event: Event) => {
+  if (overlayMenu.value !== undefined) {
+    overlayMenu.value.toggle(event);
   }
 };
-
-const dialogHeader = computed<string>(
-  () => `Unfollow ${props.follow.following.username}`,
-);
-const dialogMessage = computed<string>(
-  () => `Are you sure you want to unfollow ${props.follow.following.username}`,
-);
-const infoList = computed<string[]>(() => [
-  `You will see less of ${props.follow.following.username}'s articles.`,
-  "You still can visit this profile.",
-]);
 
 const formattedFollowingDate = useDateFormat(
   () => props.follow.createdAt,
   "MMMM, D YYYY",
 );
 
-const {
-  follow,
-  execute: destroyFollow,
-  error,
-  isStatusPending,
-} = useDestroyFollow({
-  followId: () => props.follow.id,
+const isUnfollowDialogVisible = ref<boolean>(false);
+
+const menuItems = computed<MenuItem[]>(() => {
+  return [
+    {
+      label: `Followed since ${formattedFollowingDate.value}`,
+      items: [
+        {
+          label: "Unfollow",
+          icon: "pi pi-user-minus",
+          command: () => {
+            isUnfollowDialogVisible.value = true;
+          },
+          class: "!text-danger",
+        },
+      ],
+    },
+  ];
 });
-
-const onDeleteFollowingHandler = async () => {
-  await destroyFollow();
-
-  if (error.value === null) {
-    emit("follows:destroy", follow.value!);
-
-    toast.add({
-      life: notificationConfig.LIFE,
-      summary: "Unfollowed User",
-      detail: `You have unfollowed ${props.follow.following.firstName}`,
-      severity: "info",
-    });
-  } else {
-    toast.add({
-      life: notificationConfig.LIFE,
-      summary: error.value.message,
-      severity: "error",
-    });
-  }
-};
 </script>
