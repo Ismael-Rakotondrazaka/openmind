@@ -64,8 +64,6 @@
         />
       </div>
     </form>
-
-    <PrimeToast position="top-right" />
   </div>
 </template>
 

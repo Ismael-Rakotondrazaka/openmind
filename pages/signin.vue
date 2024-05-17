@@ -40,8 +40,6 @@
         </template>
       </PrimeCard>
     </form>
-
-    <PrimeToast position="top-right" />
   </div>
 </template>
 

@@ -3,8 +3,6 @@
     <ShowArticle v-if="article !== null" :article="article" />
     <div>{{ showArticleError }}</div>
 
-    <PrimeToast position="top-right" />
-
     <PrimeConfirmDialog group="dialog:danger">
       <template #container="{ message, acceptCallback, rejectCallback }">
         <div class="flex flex-col items-center p-5 bg-[--surface-0] rounded-md">

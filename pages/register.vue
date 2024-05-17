@@ -77,7 +77,6 @@
         look forward to having you as part of our community!
       </p>
     </PrimeDialog>
-    <PrimeToast position="top-right" />
   </div>
 </template>
 

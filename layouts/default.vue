@@ -7,6 +7,7 @@
     </div>
     <AppFooter />
     <PrimeScrollTop />
+    <PrimeToast position="top-right" />
   </div>
 </template>
 
