@@ -1,8 +1,14 @@
 <template>
-  <div class="mx-auto w-full max-w-[700px]">
-    <form class="w-full max-w-lg" @submit.prevent="onSubmit">
-      <PrimeCard>
-        <template #title> Sign In to Your Account </template>
+  <div class="mx-auto w-full max-w-[1200px]">
+    <form class="w-full max-w-[700px] mx-auto" @submit.prevent="onSubmit">
+      <PrimeCard
+        :pt="{
+          root: {
+            class: 'border-none shadow-none',
+          },
+        }"
+      >
+        <template #title>Sign In to Your Account</template>
 
         <template #subtitle>
           Sign in to access your account and enjoy personalized features. Enter
@@ -11,36 +17,26 @@
         </template>
 
         <template #content>
-          <div class="flex gap-2 flex-col">
-            <label for="emailOrUsername">Username or email</label>
-            <PrimeInputText
-              id="emailOrUsername"
-              v-model="emailOrUsername"
-              :class="{ 'p-invalid': errors.usernameOrEmail }"
-            />
-            <small id="email-or-username-text-error" class="text-red-600">{{
-              errors.usernameOrEmail || "&nbsp;"
-            }}</small>
-          </div>
+          <EmailOrUsernameInput
+            v-model:email-or-username="emailOrUsername"
+            :is-required="true"
+            :error-message="errors.usernameOrEmail"
+          />
 
-          <div class="flex flex-col gap-2">
-            <label for="password">Password</label>
-            <PrimePassword
-              id="password"
-              v-model="password"
-              :input-class="{ '!p-invalid': errors.password, 'w-full': true }"
-              toggle-mask
-              :feedback="false"
-              :class="{ 'p-invalid': errors.password }"
-            />
-            <small id="password-text-error" class="text-red-600">{{
-              errors.password || "&nbsp;"
-            }}</small>
-          </div>
+          <PasswordInput
+            v-model:password="password"
+            :is-required="true"
+            :error-message="errors.password"
+          />
         </template>
 
         <template #footer>
-          <PrimeButton type="submit" label="Submit" :loading="isSubmitting" />
+          <PrimeButton
+            type="submit"
+            icon="pi pi-sign-in"
+            label="Submit"
+            :loading="isSubmitting"
+          />
         </template>
       </PrimeCard>
     </form>
