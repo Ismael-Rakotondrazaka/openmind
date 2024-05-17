@@ -1,29 +1,29 @@
 <template>
   <div class="flex flex-col gap-2">
     <InputLabel
-      label-for="emailOrUsername"
-      label="Email or Username"
+      label-for="email"
+      label="Email"
       :is-required="isRequired"
       :tooltip-text="tooltipText"
     />
 
     <PrimeInputText
-      id="emailOrUsername"
-      v-model="emailOrUsername"
+      id="email"
+      v-model="email"
       :class="{
         'p-invalid': haveError,
         'w-full': true,
       }"
     />
 
-    <small id="email-or-isVisible-text-error" class="text-red-600">{{
+    <small id="email-text-error" class="text-red-600">{{
       errorMessage || "&nbsp;"
     }}</small>
   </div>
 </template>
 
 <script lang="ts" setup>
-const emailOrUsername = defineModel<string, string>("emailOrUsername");
+const email = defineModel<string, string>("email");
 
 interface UserFirstNameProps {
   errorMessage?: string;
@@ -38,11 +38,6 @@ const props = withDefaults(defineProps<UserFirstNameProps>(), {
 const haveError = computed<boolean>(() => props.errorMessage !== undefined);
 
 const tooltipText = computed<string>(() =>
-  [
-    `• ${Math.max(
-      userConfig.EMAIL_MAX_LENGTH,
-      userConfig.USERNAME_MAX_LENGTH,
-    )} characters max`,
-  ].join("\n"),
+  [`• ${userConfig.EMAIL_MAX_LENGTH} characters max`].join("\n"),
 );
 </script>

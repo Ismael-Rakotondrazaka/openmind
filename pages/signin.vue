@@ -34,7 +34,7 @@
           <PrimeButton
             type="submit"
             icon="pi pi-sign-in"
-            label="Submit"
+            label="Sign in"
             :loading="isSubmitting"
           />
         </template>
