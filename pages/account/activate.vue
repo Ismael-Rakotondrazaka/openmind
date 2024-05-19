@@ -71,8 +71,6 @@ const {
 });
 
 const onActivateAccountHandler = async () => {
-  console.log(route.query);
-
   await activateAccount();
 
   if (error.value !== null) {

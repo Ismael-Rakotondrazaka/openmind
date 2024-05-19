@@ -1,6 +1,7 @@
 export * from "./account";
 export * from "./articles";
 export * from "./comments";
+export * from "./password";
 export * from "./follows";
 export * from "./reactions";
 export * from "./register";

@@ -3,6 +3,8 @@ export * from "./articles";
 export * from "./roles";
 export * from "./users";
 export * from "./paginations";
+export * from "./passwordResetTokens";
+export * from "./passwords";
 export * from "./files";
 export * from "./tags";
 export * from "./savedArticles";
