@@ -61,28 +61,19 @@
       </PrimeCard>
     </form>
 
-    <PrimeDialog
+    <ConfirmDialog
       v-model:visible="isRegisterSuccess"
       modal
-      header="Registration Success! Please Confirm Your Account"
-      :style="{ width: '50rem' }"
-      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
-    >
-      <p>
-        Congratulations! Your registration was successful. To activate your
-        account and complete the registration process, we have sent a
-        confirmation link to the email address you provided. Please check your
-        inbox and click on the link to verify your account. If you don't see the
-        email, please check your spam folder. Thank you for choosing us, and we
-        look forward to having you as part of our community!
-      </p>
-    </PrimeDialog>
+      :header="'Registration Success!\nPlease Confirm Your Account'"
+      :message="message"
+      severity="success"
+      icon-type="check"
+      :is-closable="true"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { FetchError } from "ofetch";
-
 definePageMeta({
   auth: {
     unauthenticatedOnly: true,
@@ -91,6 +82,14 @@ definePageMeta({
 });
 
 const toast = useToast();
+
+const message: string = [
+  "Congratulations! Your registration was successful.",
+  "To activate your account and complete the registration process, we have sent a confirmation link to the email address you provided!",
+  "Please check your inbox and click on the link to verify your account.",
+  "If you don't see the email, please check your spam folder.",
+  "Thank you for choosing us, and we look forward to having you as part of our community!",
+].join("\n");
 
 const fatalError = ref<null | string>(null);
 
@@ -112,20 +111,14 @@ const [password] = defineField("password");
 
 const isRegisterSuccess = ref<boolean>(false);
 
-const { error: fetchError, execute: storeRegister } = useFetch<
-  StoreRegisterData,
-  FetchError<StoreRegisterError>
->("/api/register", {
-  method: "POST",
-  body: {
-    name,
-    firstName,
-    email,
-    username,
-    password,
-  },
-  immediate: false,
-  watch: false,
+const { error: fetchError, execute: storeRegister } = useStoreRegister({
+  body: () => ({
+    name: name.value!,
+    firstName: firstName.value!,
+    email: email.value!,
+    username: username.value!,
+    password: password.value!,
+  }),
 });
 
 const onSubmit = handleSubmit(async () => {
@@ -137,12 +130,10 @@ const onSubmit = handleSubmit(async () => {
     isRegisterSuccess.value = true;
     resetForm();
   } else {
-    fatalError.value =
-      fetchError.value.data?.message ??
-      errorConfig.DEFAULT_GENERAL_ERROR_MESSAGE;
+    fatalError.value = fetchError.value.message;
 
-    if (fetchError.value.data?.errorMessage) {
-      setErrors(fetchError.value.data.errorMessage);
+    if (fetchError.value.errorMessage) {
+      setErrors(fetchError.value.errorMessage);
     }
 
     toast.add({

@@ -3,62 +3,76 @@
     v-model:visible="isVisible"
     modal
     :draggable="false"
-    :closable="false"
+    :closable="isClosable"
     :pt="{
       root: {
         class: 'max-w-[700px]',
       },
     }"
   >
-    <template #container>
-      <div class="bg-[--surface-0] rounded-lg" @click.stop="">
-        <ConfirmDialogHeader :content="header" :severity="severity" />
+    <template #header>
+      <ConfirmDialogHeader
+        :icon-type="iconType"
+        :content="header"
+        :severity="severity"
+      />
+    </template>
 
-        <div class="px-5 pb-5">
-          <p class="mb-0 whitespace-pre-wrap text-text">{{ message }}</p>
+    <template #default>
+      <p class="mb-0 whitespace-pre-wrap text-text">{{ message }}</p>
 
-          <DialogInfoList
-            :informations="infoList"
-            :severity="severity"
-            class="mt-3"
-          />
-        </div>
+      <DialogInfoList
+        :informations="infoList"
+        :severity="severity"
+        class="mt-3"
+      />
+    </template>
 
-        <div class="flex items-center gap-3 px-5 pb-5 mt-4">
-          <PrimeButton
-            :label="resolveButtonLabel"
-            :severity="severity"
-            :loading="isLoading"
-            @click="onResolveHandler"
-          ></PrimeButton>
+    <template v-if="haveButtons" #footer>
+      <div class="flex items-center gap-3">
+        <PrimeButton
+          v-if="haveResolveButton"
+          :label="resolveButtonLabel"
+          :severity="severity"
+          :loading="isLoading"
+          @click="onResolveHandler"
+        ></PrimeButton>
 
-          <PrimeButton
-            :label="rejectButtonLabel"
-            outlined
-            severity="secondary"
-            @click="onRejectHandler"
-          ></PrimeButton>
-        </div>
+        <PrimeButton
+          v-if="haveRejectButton"
+          :label="rejectButtonLabel"
+          outlined
+          severity="secondary"
+          @click="onRejectHandler"
+        ></PrimeButton>
       </div>
     </template>
   </PrimeDialog>
 </template>
 
 <script setup lang="ts">
+type IconType = "question" | "check" | "info";
+
 interface IConfirmDialogProps {
   header: string;
   message: string;
   infoList?: string[];
-  resolveButtonLabel: string;
-  rejectButtonLabel: string;
+  resolveButtonLabel?: string;
+  rejectButtonLabel?: string;
   severity?: Severity;
   isLoading?: boolean;
+  iconType?: IconType;
+  isClosable?: boolean;
 }
 
-withDefaults(defineProps<IConfirmDialogProps>(), {
+const props = withDefaults(defineProps<IConfirmDialogProps>(), {
   infoList: () => [],
   isLoading: false,
   severity: "primary",
+  resolveButtonLabel: undefined,
+  rejectButtonLabel: undefined,
+  iconType: undefined,
+  isClosable: false,
 });
 
 const isVisible = defineModel<boolean>("isVisible", {
@@ -81,4 +95,14 @@ const onRejectHandler = () => {
   isVisible.value = false;
   emit("dialog:rejected");
 };
+
+const haveResolveButton = computed<boolean>(
+  () => props.resolveButtonLabel !== undefined,
+);
+const haveRejectButton = computed<boolean>(
+  () => props.rejectButtonLabel !== undefined,
+);
+const haveButtons = computed<boolean>(
+  () => haveResolveButton.value || haveRejectButton.value,
+);
 </script>
