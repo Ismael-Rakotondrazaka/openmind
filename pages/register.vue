@@ -51,18 +51,31 @@
         </template>
 
         <template #footer>
-          <PrimeButton
-            type="submit"
-            label="Register"
-            icon="pi pi-user-plus"
-            :loading="isSubmitting"
-          />
+          <div
+            class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center"
+          >
+            <PrimeButton
+              type="submit"
+              label="Register"
+              icon="pi pi-user-plus"
+              :loading="isSubmitting"
+            />
+
+            <NuxtLink
+              :to="{
+                name: 'signin',
+              }"
+              class="text-primary hover:underline"
+            >
+              Already have an account? Sign in
+            </NuxtLink>
+          </div>
         </template>
       </PrimeCard>
     </form>
 
     <ConfirmDialog
-      v-model:visible="isRegisterSuccess"
+      v-model:is-visible="isRegisterSuccess"
       modal
       :header="'Registration Success!\nPlease Confirm Your Account'"
       :message="message"

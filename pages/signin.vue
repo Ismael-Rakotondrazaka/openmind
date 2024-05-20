@@ -31,12 +31,38 @@
         </template>
 
         <template #footer>
-          <PrimeButton
-            type="submit"
-            icon="pi pi-sign-in"
-            label="Sign in"
-            :loading="isSubmitting"
-          />
+          <div
+            class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center"
+          >
+            <PrimeButton
+              type="submit"
+              icon="pi pi-sign-in"
+              label="Sign in"
+              :loading="isSubmitting"
+            />
+
+            <div
+              class="flex space-y-4 md:space-y-0 md:space-x-4 md:flex-row md:items-center md:justify-end"
+            >
+              <NuxtLink
+                :to="{
+                  name: 'password-reset',
+                }"
+                class="text-primary hover:underline"
+              >
+                Forgot your password?
+              </NuxtLink>
+
+              <NuxtLink
+                :to="{
+                  name: 'register',
+                }"
+                class="text-primary hover:underline"
+              >
+                Create an account
+              </NuxtLink>
+            </div>
+          </div>
         </template>
       </PrimeCard>
     </form>
