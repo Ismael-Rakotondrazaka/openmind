@@ -1,29 +1,27 @@
-import { useShowUser } from "./useShowUser";
-
 export const useAuthUser = () => {
   const { data } = useAuth();
 
-  const userId = computed<string>(() => {
-    if (
-      data.value === null ||
-      data.value === undefined ||
-      data.value.user === undefined ||
-      !Object.prototype.hasOwnProperty.call(data.value.user, "username")
-    ) {
-      return "";
-    } else {
-      const username = (data.value.user as Record<string, unknown>).username;
+  const user = ref<UserFull | null>(null);
 
-      return typeof username === "string" ? username : "";
-    }
-  });
-
-  const { user } = useShowUser({
-    params: () => ({
-      username: userId.value,
-    }),
-    immediate: true,
-  });
+  watch(
+    () => data.value?.user,
+    (newValue) => {
+      if (newValue !== undefined) {
+        const spr = UserFullSchema.safeParse(newValue);
+        if (spr.success) {
+          user.value = spr.data;
+        } else {
+          user.value = null;
+        }
+      } else {
+        user.value = null;
+      }
+    },
+    {
+      immediate: true,
+      deep: true,
+    },
+  );
 
   return {
     user,

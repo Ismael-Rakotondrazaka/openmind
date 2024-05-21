@@ -1,5 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { Role, User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { NuxtAuthHandler } from "#auth";
 import { StoreLoginBodySchema } from "~/utils";
 import { userRepository } from "~/repositories";
@@ -56,13 +56,27 @@ export default NuxtAuthHandler({
             typeof credentials?.password === "string" &&
             comparePassword(credentials.password, user.password)
           ) {
-            return {
-              id: user.id,
-              username: user.username,
-              name: user.name,
-              firstName: user.firstName,
-              role: user.role,
-            };
+            const userFull: UserFull | null = await userRepository.findFullOne({
+              authUser: user,
+              where: {
+                AND: {
+                  deletedAt: null,
+                  emailVerifiedAt: {
+                    not: null,
+                  },
+                  OR: [
+                    {
+                      email: storeLoginSPR.data.usernameOrEmail,
+                    },
+                    {
+                      username: storeLoginSPR.data.usernameOrEmail,
+                    },
+                  ],
+                },
+              },
+            });
+
+            return userFull;
           }
         }
 
@@ -75,15 +89,7 @@ export default NuxtAuthHandler({
   },
   callbacks: {
     session: ({ session, token }) => {
-      // TODO make type accessible to front end
-      type SessionUserData = {
-        id: number;
-        name: string;
-        firstName: string;
-        role: Role;
-      };
-
-      (session.user as SessionUserData) = token.user as SessionUserData;
+      (session.user as UserFull) = token.user as UserFull;
 
       return session;
     },
