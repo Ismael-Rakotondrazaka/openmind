@@ -93,14 +93,6 @@ const toggle = (event: Event) => {
 
 const { signOut } = useAuth();
 
-const dashboardItem: Exclude<MenuProps["model"], undefined>[0] = {
-  label: "Dashboard",
-  icon: "pi pi-chart-bar",
-  route: {
-    name: "dashboard",
-  },
-};
-
 const articlesItem: MenuItem = {
   label: "Articles",
   icon: "pi pi-align-left",
@@ -117,14 +109,9 @@ const usersItem: MenuItem = {
   },
 };
 
-const unauthenticatedItems: MenuItem[] = [articlesItem, usersItem];
-const authenticatedItems: MenuItem[] = [dashboardItem, articlesItem, usersItem];
+const items: MenuItem[] = [articlesItem, usersItem];
 
 const { user: authUser } = useAuthUser();
-
-const items = computed<MenuItem[]>(() =>
-  authUser.value == null ? unauthenticatedItems : authenticatedItems,
-);
 
 const endMenuItems: MenuItem[] = [
   {
