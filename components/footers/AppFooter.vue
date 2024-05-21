@@ -2,35 +2,41 @@
   <div
     class="w-full max-w-[1200px] border border-b-0 mx-auto bg-emerald-400 bg-opacity-10 rounded-t"
   >
-    <div class="p-16">
-      <ul class="text-center">
-        <li class="inline-block mr-5">
-          <a href="mailto:ismaelrakotondrazaka@gmail.com" target="_blank"
-            ><PrimeButton icon="pi pi-google" rounded
-          /></a>
-        </li>
-        <li class="inline-block">
-          <a
-            href="https://github.com/Ismael-Rakotondrazaka/openmind"
-            target="_blank"
-            ><PrimeButton icon="pi pi-github" rounded
-          /></a>
-        </li>
-      </ul>
-    </div>
+    <div class="flex items-center justify-around p-7">
+      <img
+        src="/images/logo-300x300.png"
+        alt="Openmind logo"
+        class="w-1/6 rounded-full"
+      />
 
-    <div
-      class="flex flex-wrap items-center justify-center gap-x-5 p-7 gap-y-3 mb-16"
-    >
-      <!-- @vue-skip :to expect a NuxtRoute but error is thrown when importing from "@typed-router/__router" -->
-      <NuxtLink
-        v-for="link in links"
-        :key="link.route"
-        :to="link.route"
-        rel="noopener"
-      >
-        <PrimeButton :label="link.label" link />
-      </NuxtLink>
+      <div class="flex flex-col items-center gap-5">
+        <ul class="text-center">
+          <li class="inline-block mr-5">
+            <a href="mailto:ismaelrakotondrazaka@gmail.com" target="_blank"
+              ><PrimeButton icon="pi pi-google" rounded
+            /></a>
+          </li>
+          <li class="inline-block">
+            <a
+              href="https://github.com/Ismael-Rakotondrazaka/openmind"
+              target="_blank"
+              ><PrimeButton icon="pi pi-github" rounded
+            /></a>
+          </li>
+        </ul>
+
+        <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
+          <!-- @vue-skip :to expect a NuxtRoute but error is thrown when importing from "@typed-router/__router" -->
+          <NuxtLink
+            v-for="link in links"
+            :key="link.route"
+            :to="link.route"
+            rel="noopener"
+          >
+            <PrimeButton :label="link.label" link />
+          </NuxtLink>
+        </div>
+      </div>
     </div>
 
     <div class="text-center p-7 bg-emerald-700 text-white">
