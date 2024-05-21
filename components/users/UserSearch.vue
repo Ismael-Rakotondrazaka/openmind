@@ -2,7 +2,7 @@
   <form
     action=""
     method="post"
-    class="flex items-end gap-3"
+    class="flex flex-col items-start gap-3"
     @submit.prevent="onSearchHandler"
   >
     <PrimeInputGroup>
@@ -14,19 +14,21 @@
       <PrimeButton icon="pi pi-search" type="submit" />
     </PrimeInputGroup>
 
-    <div class="w-full md:w-1/3">
-      <p class="text-text-secondary mb-1">Order by:</p>
+    <div class="flex w-full items-start gap-3">
+      <div class="w-1/3">
+        <p class="font-bold text-text mb-1">Order by:</p>
 
-      <PrimeDropdown
-        v-model="selectedOrderOption"
-        :options="selectOrderOptions"
-        option-label="text"
-        class=""
-      >
-        <template #dropdownicon>
-          <i class="pi pi-sort"></i>
-        </template>
-      </PrimeDropdown>
+        <PrimeDropdown
+          v-model="selectedOrderOption"
+          :options="selectOrderOptions"
+          option-label="text"
+          class="w-full"
+        >
+          <template #dropdownicon>
+            <i class="pi pi-sort"></i>
+          </template>
+        </PrimeDropdown>
+      </div>
     </div>
   </form>
 </template>

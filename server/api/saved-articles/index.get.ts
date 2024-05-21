@@ -8,6 +8,7 @@ import {
   createBadRequestError,
   getRequestErrorMessage,
   IndexSavedArticleDataSchema,
+  createUnauthorizedError,
 } from "~/utils";
 import { safeParseRequestQueryAs } from "~/server/utils";
 import { savedArticleRepository } from "~/repositories";

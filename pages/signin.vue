@@ -1,8 +1,14 @@
 <template>
-  <div class="mx-auto w-full max-w-[700px]">
-    <form class="w-full max-w-lg" @submit.prevent="onSubmit">
-      <PrimeCard>
-        <template #title> Sign In to Your Account </template>
+  <div class="mx-auto w-full max-w-[1200px]">
+    <form class="w-full max-w-[700px] mx-auto" @submit.prevent="onSubmit">
+      <PrimeCard
+        :pt="{
+          root: {
+            class: 'border-none shadow-none',
+          },
+        }"
+      >
+        <template #title>Sign In to Your Account</template>
 
         <template #subtitle>
           Sign in to access your account and enjoy personalized features. Enter
@@ -11,46 +17,61 @@
         </template>
 
         <template #content>
-          <div class="flex gap-2 flex-col">
-            <label for="emailOrUsername">Username or email</label>
-            <PrimeInputText
-              id="emailOrUsername"
-              v-model="emailOrUsername"
-              :class="{ 'p-invalid': errors.usernameOrEmail }"
-            />
-            <small id="email-or-username-text-error" class="text-red-600">{{
-              errors.usernameOrEmail || "&nbsp;"
-            }}</small>
-          </div>
+          <EmailOrUsernameInput
+            v-model:email-or-username="emailOrUsername"
+            :is-required="true"
+            :error-message="errors.usernameOrEmail"
+          />
 
-          <div class="flex flex-col gap-2">
-            <label for="password">Password</label>
-            <PrimePassword
-              id="password"
-              v-model="password"
-              :input-class="{ '!p-invalid': errors.password, 'w-full': true }"
-              toggle-mask
-              :feedback="false"
-              :class="{ 'p-invalid': errors.password }"
-            />
-            <small id="password-text-error" class="text-red-600">{{
-              errors.password || "&nbsp;"
-            }}</small>
-          </div>
+          <PasswordInput
+            v-model:password="password"
+            :is-required="true"
+            :error-message="errors.password"
+          />
         </template>
 
         <template #footer>
-          <PrimeButton type="submit" label="Submit" :loading="isSubmitting" />
+          <div
+            class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center"
+          >
+            <PrimeButton
+              type="submit"
+              icon="pi pi-sign-in"
+              label="Sign in"
+              :loading="isSubmitting"
+            />
+
+            <div
+              class="flex space-y-4 md:space-y-0 md:space-x-4 md:flex-row md:items-center md:justify-end"
+            >
+              <NuxtLink
+                :to="{
+                  name: 'password-reset',
+                }"
+                class="text-primary hover:underline"
+              >
+                Forgot your password?
+              </NuxtLink>
+
+              <NuxtLink
+                :to="{
+                  name: 'register',
+                }"
+                class="text-primary hover:underline"
+              >
+                Create an account
+              </NuxtLink>
+            </div>
+          </div>
         </template>
       </PrimeCard>
     </form>
-
-    <PrimeToast position="top-right" />
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
+  middleware: "auth",
   auth: {
     unauthenticatedOnly: true,
     navigateAuthenticatedTo: authConfig.AUTHENTICATED_PATH,

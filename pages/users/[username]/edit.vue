@@ -4,6 +4,7 @@
     :user="user"
     class="mx-auto w-full max-w-[700px]"
   />
+  <NotFoundPage v-else />
 </template>
 
 <script lang="ts" setup>

@@ -1,5 +1,7 @@
 <template>
   <div class="mx-auto w-full max-w-[700px]">
+    <PageTitle>Articles</PageTitle>
+
     <IndexArticle />
 
     <Teleport to="body">

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-2">
     <InputLabel
       label-for="name"
       label="Name"

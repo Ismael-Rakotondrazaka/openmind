@@ -4,7 +4,10 @@ import {
   StringFilterSchema,
   DateTimeFilterSchema,
 } from "~/schemas/globalSchemas/types";
-import { ArticleRelationFilterSchema } from "~/schemas/globalSchemas/articles";
+import {
+  ArticleRelationFilterSchema,
+  ArticleWhereInputSchema,
+} from "~/schemas/globalSchemas/articles";
 
 export const SavedArticleWhereInputSchema: z.ZodType<Prisma.SavedArticleWhereInput> =
   z.object({

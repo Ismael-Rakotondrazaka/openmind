@@ -1,11 +1,9 @@
 <template>
   <div class="mx-auto w-full max-w-[700px]">
     <ShowArticle v-if="article !== null" :article="article" />
-    <div>{{ showArticleError }}</div>
+    <NotFoundPage v-else />
 
-    <PrimeToast position="top-right" />
-
-    <PrimeConfirmDialog group="dialog:danger">
+    <PrimeConfirmDialog v-if="article !== null" group="dialog:danger">
       <template #container="{ message, acceptCallback, rejectCallback }">
         <div class="flex flex-col items-center p-5 bg-[--surface-0] rounded-md">
           <div
@@ -43,7 +41,7 @@ const route = useRoute("users-username-articles-slug");
 
 const slug: ComputedRef<string> = computed(() => route.params.slug);
 
-const { article, error: showArticleError } = useShowArticle({
+const { article } = useShowArticle({
   param: () => ({
     slug: slug.value,
   }),

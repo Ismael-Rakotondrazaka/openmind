@@ -26,7 +26,7 @@ html {
   transition: all 1s;
   position: absolute;
   inset: 0;
-  top: 12rem;
+  top: 8rem;
 }
 .page-enter-active {
   transition: all 1s;
