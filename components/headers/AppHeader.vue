@@ -140,6 +140,15 @@ const endMenuItems: MenuItem[] = [
     },
   },
   {
+    label: "Saved articles",
+    icon: "pi pi-align-left",
+    command: () => {
+      router.push({
+        name: "saved-articles",
+      });
+    },
+  },
+  {
     label: "Logout",
     icon: "pi pi-sign-out",
     command: async () => {

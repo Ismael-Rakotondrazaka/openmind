@@ -1,5 +1,8 @@
 <template>
-  <IndexUser class="mx-auto w-full max-w-[700px]" />
+  <div class="mx-auto w-full max-w-[700px]">
+    <PageTitle>Users</PageTitle>
+    <IndexUser />
+  </div>
 </template>
 
 <script lang="ts" setup>
