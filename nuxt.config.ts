@@ -43,6 +43,7 @@ export default defineNuxtConfig({
     authSecret: "",
     public: {
       appUrl: "http://localhost:3000",
+      appVersion: "1.0.0",
     },
   },
 
@@ -97,6 +98,10 @@ export default defineNuxtConfig({
     },
     {
       path: "~/components/OgImage",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/home",
       extensions: ["vue"],
     },
   ],
