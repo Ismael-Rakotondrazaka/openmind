@@ -77,6 +77,10 @@
   </div>
 </template>
 
+<script lang="ts" setup>
+defineOgImageComponent("DefaultOgImage");
+</script>
+
 <style scoped>
 * {
   margin: 0;

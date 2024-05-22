@@ -6,6 +6,8 @@
 </template>
 
 <script lang="ts" setup>
+defineOgImageComponent("DefaultOgImage");
+
 const { user: authUser } = useAuthUser();
 
 provide(AuthUserToken, {

@@ -1,5 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <NotFoundPage />
+  <NuxtLayout>
+    <NotFoundPage class="mx-auto w-full max-w-[1200px]" />
+  </NuxtLayout>
 </template>

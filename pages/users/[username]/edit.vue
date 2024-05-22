@@ -12,6 +12,8 @@ definePageMeta({
   middleware: "auth",
 });
 
+defineOgImageComponent("DefaultOgImage");
+
 const route = useRoute("users-username-edit");
 
 const { user } = useShowUser({

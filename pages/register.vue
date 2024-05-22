@@ -95,6 +95,8 @@ definePageMeta({
   },
 });
 
+defineOgImageComponent("DefaultOgImage");
+
 const toast = useToast();
 
 const message: string = [

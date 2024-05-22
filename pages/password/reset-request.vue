@@ -59,6 +59,8 @@ definePageMeta({
   },
 });
 
+defineOgImageComponent("DefaultOgImage");
+
 const toast = useToast();
 
 const fatalError = ref<null | string>(null);
