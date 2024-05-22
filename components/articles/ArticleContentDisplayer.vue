@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable-next-line vue/no-v-html -->
-  <div v-html="content"></div>
+  <div class="ql-editor" v-html="content"></div>
 </template>
 
 <script lang="ts" setup>
