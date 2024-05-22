@@ -17,7 +17,15 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxt/eslint",
     "@formkit/auto-animate/nuxt",
+    "@nuxtjs/seo",
   ],
+
+  site: {
+    indexable: true,
+    name: "OpenMind",
+    description: "Unleash Your Thoughts, Explore Every Topic.",
+    defaultLocale: "en",
+  },
 
   typescript: {
     shim: false,
@@ -89,6 +97,10 @@ export default defineNuxtConfig({
     },
     {
       path: "~/components/follows",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/OgImage",
       extensions: ["vue"],
     },
   ],

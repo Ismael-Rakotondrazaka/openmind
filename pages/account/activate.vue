@@ -35,6 +35,8 @@
 </template>
 
 <script setup lang="ts">
+defineOgImageComponent("DefaultOgImage");
+
 definePageMeta({
   auth: {
     unauthenticatedOnly: true,

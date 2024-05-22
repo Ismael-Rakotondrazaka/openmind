@@ -15,6 +15,10 @@ const { user } = useShowUser({
 
 const { user: authUser } = useAuthUser();
 
+defineOgImageComponent("UserOgImage", {
+  user: () => user.value,
+});
+
 provide(AuthUserToken, {
   user: authUser,
 });

@@ -2,6 +2,8 @@
   <div>About</div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+defineOgImageComponent("DefaultOgImage");
+</script>
 
 <style></style>

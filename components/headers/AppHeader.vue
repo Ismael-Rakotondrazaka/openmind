@@ -9,14 +9,12 @@
         },
       }"
     >
-      <template #start>
-        <!-- TODO add logo -->
-        <div>LOGO</div>
-      </template>
-
       <template #item="{ item, props, hasSubmenu }">
         <NuxtLink v-if="item.route" :to="item.route">
-          <span v-ripple v-bind="props.action">
+          <span v-if="item.image" v-ripple v-bind="props.action">
+            <img :src="item.image" :alt="item.alt" class="h-6 w-6" />
+          </span>
+          <span v-else v-ripple v-bind="props.action">
             <span :class="item.icon" />
             <span class="ml-2">{{ item.label }}</span>
           </span>
@@ -93,6 +91,14 @@ const toggle = (event: Event) => {
 
 const { signOut } = useAuth();
 
+const homeItem: MenuItem = {
+  image: "/images/logo-150x150.png",
+  alt: "logo",
+  route: {
+    name: "index",
+  },
+};
+
 const articlesItem: MenuItem = {
   label: "Articles",
   icon: "pi pi-align-left",
@@ -109,7 +115,7 @@ const usersItem: MenuItem = {
   },
 };
 
-const items: MenuItem[] = [articlesItem, usersItem];
+const items: MenuItem[] = [homeItem, articlesItem, usersItem];
 
 const { user: authUser } = useAuthUser();
 

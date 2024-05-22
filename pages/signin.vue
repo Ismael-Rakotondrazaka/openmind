@@ -78,6 +78,8 @@ definePageMeta({
   },
 });
 
+defineOgImageComponent("DefaultOgImage");
+
 const { signIn } = useAuth();
 const toast = useToast();
 

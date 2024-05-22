@@ -48,6 +48,10 @@ const { article } = useShowArticle({
   immediate: true,
 });
 
+defineOgImageComponent("ArticleOgImage", {
+  article: () => article.value,
+});
+
 /**
  ! DANGER
  article can be null

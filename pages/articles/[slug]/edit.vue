@@ -11,6 +11,8 @@
 import type { H3Error } from "h3";
 import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 
+defineOgImageComponent("DefaultOgImage");
+
 definePageMeta({
   middleware: "auth",
 });
