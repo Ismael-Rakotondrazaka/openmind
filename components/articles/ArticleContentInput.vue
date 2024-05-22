@@ -11,7 +11,7 @@
       description="Pour your ideas, insights, and expertise into engaging and informative prose to captivate your audience."
     />
 
-    <PrimeEditor id="content" v-model="content" editor-style="height: 320px" />
+    <PrimeEditor id="content" v-model="content" editor-style="height: 400px" />
 
     <small id="email-text-error" class="text-red-600">{{
       errorMessage || "&nbsp;"
