@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <div class="line-clamp-3," :style="contentStyle" v-html="content"></div>
+    <div :style="contentStyle" :class="editorClass" v-html="content"></div>
     <PrimeButton
       :label="label"
       text
@@ -17,12 +17,12 @@
 </template>
 
 <script lang="ts" setup>
-interface ContentFormatterProps {
+interface CommentContentDisplayerProps {
   content: string;
   lineClamp?: number;
 }
 
-const props = withDefaults(defineProps<ContentFormatterProps>(), {
+const props = withDefaults(defineProps<CommentContentDisplayerProps>(), {
   lineClamp: -1,
   isCollapsed: false,
 });
@@ -62,4 +62,6 @@ const contentStyle = computed(() => {
 
   return result;
 });
+
+const editorClass = "ql-editor text-text";
 </script>

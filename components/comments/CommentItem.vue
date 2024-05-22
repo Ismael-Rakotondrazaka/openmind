@@ -15,7 +15,7 @@
       @comments:update="onUpdateCommentHandler"
       @update:cancel="hideEditCommentInputForm"
     />
-    <ContentDisplayer
+    <CommentContentDisplayer
       v-if="!isEditCommentInputFormShown"
       :content="comment.content"
       class="mb-3"

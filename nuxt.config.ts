@@ -88,10 +88,6 @@ export default defineNuxtConfig({
       extensions: ["vue"],
     },
     {
-      path: "~/components/contents",
-      extensions: ["vue"],
-    },
-    {
       path: "~/components/dialogs",
       extensions: ["vue"],
     },
