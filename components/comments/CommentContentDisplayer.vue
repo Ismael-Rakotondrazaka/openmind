@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <div class="ql-editor" :style="contentStyle" v-html="content"></div>
+    <div :style="contentStyle" :class="editorClass" v-html="content"></div>
     <PrimeButton
       :label="label"
       text
@@ -62,4 +62,6 @@ const contentStyle = computed(() => {
 
   return result;
 });
+
+const editorClass = "ql-editor text-text";
 </script>
