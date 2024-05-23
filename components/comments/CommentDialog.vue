@@ -1,5 +1,15 @@
 <template>
-  <PrimeDialog v-model:visible="isVisible" modal maximizable header="Comments">
+  <PrimeDialog
+    v-model:visible="isVisible"
+    modal
+    maximizable
+    header="Comments"
+    :pt="{
+      footer: {
+        class: '!justify-center md:!justify-end',
+      },
+    }"
+  >
     <div class="w-full max-w-2xl mx-auto">
       <PrimeButton
         text
@@ -41,8 +51,9 @@
     <template #footer>
       <PrimeButton
         v-if="authUser !== null"
-        label="New comment"
+        :label="label"
         icon="pi pi-plus"
+        :rounded="isRounded"
         @click="onShowCreateCommentHandler"
       />
     </template>
@@ -65,6 +76,10 @@ const where = computed<IndexCommentQuery["where"]>(() => {
     deletedAt: null,
   };
 });
+
+const { width } = useWindowSize();
+const label = computed(() => (width.value > 767 ? "New comment" : undefined));
+const isRounded = computed(() => (width.value > 767 ? false : true));
 
 const formInputElement = ref<HTMLElement | null>(null);
 

@@ -29,7 +29,7 @@
                 username: article.user.username,
               },
             }"
-            class="text-xl font-bold text-text dark:text-white hover:text-[--primary-color] hover:underline"
+            class="text-lg md:text-xl font-bold text-text dark:text-white hover:text-[--primary-color] hover:underline"
           >
             {{ `${article.user.firstName} ${article.user.name}` }}
           </NuxtLink>
@@ -41,7 +41,7 @@
       <ArticleOptionsButton :article="article" />
     </address>
     <h1
-      class="mb-4 text-3xl font-extrabold leading-tight text-text lg:mb-6 lg:text-4xl dark:text-white"
+      class="mb-4 text-xl md:text-2xl lg:text-3xl font-extrabold leading-tight text-text lg:mb-6 dark:text-white"
     >
       {{ article.title }}
     </h1>

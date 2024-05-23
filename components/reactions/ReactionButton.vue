@@ -6,6 +6,7 @@
       :text="isButtonText"
       class="reaction-button"
       :loading="isStatusPending"
+      size="small"
       @click="onButtonClickHandler"
       @mouseenter="showOverlayPanel"
     >

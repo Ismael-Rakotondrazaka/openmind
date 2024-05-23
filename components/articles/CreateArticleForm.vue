@@ -41,7 +41,7 @@
         />
       </div>
 
-      <div>
+      <div class="flex items-center flex-wrap gap-3 justify-start">
         <PrimeButton
           type="submit"
           label="Publish"

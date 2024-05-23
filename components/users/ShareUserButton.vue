@@ -8,7 +8,7 @@
   />
 
   <PrimeOverlayPanel ref="overlayPanel">
-    <div class="flex, flex-row flex-nowrap gap-3 w-[25rem]">
+    <div class="flex, flex-row flex-nowrap gap-3 w-[20rem]">
       <p class="block mb-2 font-medium text-900">
         {{ title }}
       </p>

@@ -42,14 +42,14 @@
         />
       </div>
 
-      <div>
+      <div class="flex items-center flex-wrap gap-3 justify-start">
         <PrimeButton
           type="submit"
           :label="saveButtonLabel"
           icon="pi pi-globe"
           :disabled="isSaveButtonDisabled"
           :loading="isSubmitting && isVisible === true"
-          class="mr-3"
+          class=""
           @click.prevent="onSaveArticleHandler"
         />
 

@@ -2,26 +2,26 @@
   <div>
     <ArticleReactionListPreview class="mb-3" />
 
-    <div class="flex items-center justify-between py-1 border-y fle-row">
-      <div>
+    <div class="flex items-center justify-between py-1 border-y flex-row gap-3">
+      <div class="flex items-center justify-start gap-0 md:gap-3">
         <ReactionButton
           v-model:count="reactionsCount"
           v-model:reaction="reaction"
           :article-id="article.id"
           :comment-id="null"
-          class="inline-block mr-3"
+          class="inline-block"
         />
 
         <CommentButton
           v-model:count="commentsCount"
-          class="mr-3"
+          class=""
           @comments:show="onArticleCommentShowHandler"
         />
 
         <ViewsCountDisplayer :count="viewsCount" />
       </div>
 
-      <div class="">
+      <div class="flex gap-0 md:gap-3 items-start justify-end">
         <SaveArticleButton
           v-if="authUser !== null"
           v-model:saved-article="savedArticle"

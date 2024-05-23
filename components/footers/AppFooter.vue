@@ -6,10 +6,10 @@
       <img
         src="/images/logo-300x300.png"
         alt="Openmind logo"
-        class="w-1/6 rounded-full"
+        class="w-1/6 rounded-full hidden md:block"
       />
 
-      <div class="flex flex-col items-center gap-5">
+      <div class="flex text-center flex-col items-center gap-5">
         <ul class="text-center">
           <li class="inline-block mr-5">
             <a href="mailto:ismaelrakotondrazaka@gmail.com" target="_blank"

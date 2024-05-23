@@ -42,7 +42,7 @@
             />
 
             <div
-              class="flex space-y-4 md:space-y-0 md:space-x-4 md:flex-row md:items-center md:justify-end"
+              class="flex space-y-4 md:space-y-0 flex-col md:space-x-4 md:flex-row md:items-center md:justify-end"
             >
               <NuxtLink
                 :to="{
