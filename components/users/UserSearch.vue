@@ -15,7 +15,7 @@
     </PrimeInputGroup>
 
     <div class="flex w-full items-start gap-3">
-      <div class="w-1/3">
+      <div class="w-1/2 md:w-1/3">
         <p class="font-bold text-text mb-1">Order by:</p>
 
         <PrimeDropdown

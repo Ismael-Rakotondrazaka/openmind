@@ -17,7 +17,7 @@
         </template>
 
         <template #content>
-          <div class="flex flex-row w-full flex-nowrap gap-x-2">
+          <div class="flex flex-row w-full flex-wrap md:flex-nowrap md:gap-x-2">
             <UserFirstNameInput
               v-model:first-name="firstName"
               :error-message="validationErrors.firstName"

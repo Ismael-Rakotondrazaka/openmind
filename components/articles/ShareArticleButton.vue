@@ -2,13 +2,14 @@
   <PrimeButton
     icon="pi pi-share-alt"
     severity="secondary"
-    label="Share"
+    :label="label"
     text
+    size="small"
     @click="toggleOverLayPanel"
   />
 
   <PrimeOverlayPanel ref="overlayPanel">
-    <div class="flex, flex-row flex-nowrap gap-3 w-[25rem]">
+    <div class="flex, flex-row flex-nowrap gap-3 w-[20rem]">
       <p class="block mb-2 font-medium text-900">Share this article</p>
 
       <PrimeInputGroup>
@@ -36,6 +37,10 @@ interface ShareArticleButtonProps {
 const props = defineProps<ShareArticleButtonProps>();
 const clipboard = useClipboard();
 const toast = useToast();
+
+const { width } = useWindowSize();
+
+const label = computed(() => (width.value > 767 ? "Share" : undefined));
 
 const overlayPanel = ref<InstanceType<typeof PrimeOverlayPanel>>();
 

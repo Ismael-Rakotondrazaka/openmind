@@ -5,21 +5,35 @@
     <IndexArticle />
 
     <Teleport to="body">
-      <NuxtLink
-        :to="{
-          name: 'articles-create',
-        }"
+      <div
+        class="fixed bottom-5 z-[10] flex flex-row w-full items-center justify-center md:justify-end"
       >
-        <PrimeButton
-          label="New article"
-          icon="pi pi-plus"
-          :pt="{
-            root: {
-              class: 'fixed bottom-5 right-24',
-            },
+        <NuxtLink
+          :to="{
+            name: 'articles-create',
           }"
-        />
-      </NuxtLink>
+        >
+          <PrimeButton
+            icon="pi pi-plus"
+            :pt="{
+              root: {
+                class: 'md:hidden',
+              },
+            }"
+            rounded
+          />
+
+          <PrimeButton
+            label="New article"
+            icon="pi pi-plus"
+            :pt="{
+              root: {
+                class: 'mr-24 hidden md:block',
+              },
+            }"
+          />
+        </NuxtLink>
+      </div>
     </Teleport>
   </div>
 </template>

@@ -38,6 +38,7 @@
         user._auth.follower === null &&
         user.id !== authUser.id
       "
+      :is-min="isFollowButtonMin"
       :user="user"
       size="small"
       @follows:store="onFollowsStoreHandler"
@@ -72,4 +73,7 @@ const postsCountFormatted = useNumericAbbreviation(
 const followersCountFormatted = useNumericAbbreviation(
   () => props.user._count.followers,
 );
+
+const { width } = useWindowSize();
+const isFollowButtonMin = computed(() => (width.value > 767 ? false : true));
 </script>

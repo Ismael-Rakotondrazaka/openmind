@@ -40,7 +40,7 @@
         </div>
       </div>
     </address>
-    <h1 class="text-xl mb-3 font-bold text-slate-900 line-clamp-2">
+    <h1 class="text-lg md:text-xl mb-3 font-bold text-slate-900 line-clamp-2">
       <NuxtLink
         :to="{
           name: 'users-username-articles-slug',

@@ -1,6 +1,7 @@
 <template>
   <PrimeButton
-    label="Follow"
+    icon="pi pi-user-plus"
+    :label="label"
     :loading="isStatusPending"
     @click="onStoreFollowHandler"
   />
@@ -9,9 +10,12 @@
 <script setup lang="ts">
 interface FollowButtonProps {
   user: UserFull;
+  isMin?: boolean;
 }
 
-const props = defineProps<FollowButtonProps>();
+const props = withDefaults(defineProps<FollowButtonProps>(), {
+  isMin: false,
+});
 
 type FollowButtonEmits = {
   "follows:store": [FollowFull];
@@ -20,6 +24,8 @@ type FollowButtonEmits = {
 const emit = defineEmits<FollowButtonEmits>();
 
 const toast = useToast();
+
+const label = computed(() => (props.isMin ? undefined : "Follow"));
 
 const {
   followFull: newFollow,

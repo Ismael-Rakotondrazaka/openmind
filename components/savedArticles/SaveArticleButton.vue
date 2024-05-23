@@ -6,6 +6,7 @@
     class="mr-3"
     :severity="severity"
     :loading="isLoading"
+    size="small"
     @click="onSaveButtonClickHandler"
   />
 </template>
@@ -50,17 +51,23 @@ const severity = computed(() => {
   }
 });
 
-const label = computed(() => {
-  const savedArticleLabel = {
-    SAVED: "Saved",
-    NOT_SAVED: "Save for later",
-  };
+const { width } = useWindowSize();
 
-  if (isArticleSaved.value) {
-    return savedArticleLabel.SAVED;
-  } else {
-    return savedArticleLabel.NOT_SAVED;
+const savedArticleLabel = {
+  SAVED: "Saved",
+  NOT_SAVED: "Save for later",
+};
+
+const label = computed(() => {
+  if (width.value > 767) {
+    if (isArticleSaved.value) {
+      return savedArticleLabel.SAVED;
+    } else {
+      return savedArticleLabel.NOT_SAVED;
+    }
   }
+
+  return undefined;
 });
 
 const isText = computed(() => !isArticleSaved.value);

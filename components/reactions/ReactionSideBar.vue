@@ -2,7 +2,7 @@
   <PrimeSidebar
     v-model:visible="isVisible"
     position="right"
-    class="w-full md:w-[20rem] lg:w-[30rem] overflow-y-auto"
+    class="w-full md:w-[25rem] lg:w-[30rem] overflow-y-auto"
   >
     <template #header>
       <div class="flex items-center gap-2">

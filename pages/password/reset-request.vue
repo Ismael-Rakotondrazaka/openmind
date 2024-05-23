@@ -39,7 +39,7 @@
     </form>
 
     <ConfirmDialog
-      v-model:visible="isPasswordResetRequestSuccess"
+      v-model:is-visible="isPasswordResetRequestSuccess"
       modal
       header="Password Reset Link Sent"
       message="Congratulations! Your password reset link was sent successfully. Please check your email inbox and follow the instructions to reset your password."

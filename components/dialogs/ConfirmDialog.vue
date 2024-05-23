@@ -9,6 +9,7 @@
         class: 'max-w-[700px]',
       },
     }"
+    :position="position"
   >
     <template #header>
       <ConfirmDialogHeader
@@ -90,6 +91,9 @@ const onResolveHandler = () => {
   isVisible.value = false;
   emit("dialog:resolved");
 };
+
+const { width } = useWindowSize();
+const position = computed(() => (width.value > 767 ? "center" : "bottom"));
 
 const onRejectHandler = () => {
   isVisible.value = false;

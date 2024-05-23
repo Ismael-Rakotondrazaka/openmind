@@ -4,6 +4,7 @@
     severity="secondary"
     :label="formattedCount"
     text
+    size="small"
     @click="onButtonClickHandler"
   />
 </template>

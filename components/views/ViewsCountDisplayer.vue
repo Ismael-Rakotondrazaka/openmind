@@ -4,6 +4,7 @@
     icon="pi pi-eye"
     text
     :label="formattedCount"
+    size="small"
   />
 </template>
 
