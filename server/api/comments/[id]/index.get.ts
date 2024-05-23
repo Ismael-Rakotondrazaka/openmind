@@ -1,11 +1,11 @@
 import type { User } from "@prisma/client";
 import { commentRepository } from "~/repositories";
 import {
-  type ShowCommentData,
-  type ShowCommentError,
+  ShowCommentDataSchema,
   ShowCommentParamSchema,
   createNotFoundError,
-  ShowCommentDataSchema,
+  type ShowCommentData,
+  type ShowCommentError,
 } from "~/utils";
 
 export default defineEventHandler(

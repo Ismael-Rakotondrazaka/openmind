@@ -1,6 +1,6 @@
 import { type Prisma } from "@prisma/client";
 import { prisma } from "~/server/middleware/0.prisma";
-import { type ActivationTokenFull, ActivationTokenFullSchema } from "~/utils";
+import { ActivationTokenFullSchema, type ActivationTokenFull } from "~/utils";
 
 export const findFullOne = async ({
   where,

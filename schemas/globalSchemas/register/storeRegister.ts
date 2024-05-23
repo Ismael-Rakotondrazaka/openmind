@@ -1,6 +1,6 @@
 import type { User } from "@prisma/client";
 import { z } from "zod";
-import { userConfig, passwordConfig } from "~/configs";
+import { passwordConfig, userConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                             Store register body                            */

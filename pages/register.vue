@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto w-full max-w-[1200px]">
-    <form class="w-full max-w-[700px] mx-auto" @submit.prevent="onSubmit">
+    <form class="mx-auto w-full max-w-[700px]" @submit.prevent="onSubmit">
       <PrimeCard
         :pt="{
           root: {
@@ -17,7 +17,7 @@
         </template>
 
         <template #content>
-          <div class="flex flex-row w-full flex-wrap md:flex-nowrap md:gap-x-2">
+          <div class="flex w-full flex-row flex-wrap md:flex-nowrap md:gap-x-2">
             <UserFirstNameInput
               v-model:first-name="firstName"
               :error-message="validationErrors.firstName"
@@ -52,7 +52,7 @@
 
         <template #footer>
           <div
-            class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center"
+            class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0"
           >
             <PrimeButton
               type="submit"

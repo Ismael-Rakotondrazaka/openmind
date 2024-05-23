@@ -1,4 +1,4 @@
-import { type Prisma, type ActivationToken } from "@prisma/client";
+import { type ActivationToken, type Prisma } from "@prisma/client";
 import { prisma } from "~/server/middleware/0.prisma";
 
 export const findOne = async ({

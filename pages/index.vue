@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mx-auto w-full h-full flex items-center justify-center max-w-[1200px]"
+    class="mx-auto flex h-full w-full max-w-[1200px] items-center justify-center"
   >
     <HeroSection />
   </div>

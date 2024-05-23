@@ -1,13 +1,13 @@
 import type { Article, User } from "@prisma/client";
 import { articleRepository, savedArticleRepository } from "~/repositories";
 import {
-  type StoreSavedArticleData,
-  type StoreSavedArticleError,
+  StoreSavedArticleBodySchema,
+  StoreSavedArticleDataSchema,
   createBadRequestError,
   createUnauthorizedError,
   getRequestErrorMessage,
-  StoreSavedArticleBodySchema,
-  StoreSavedArticleDataSchema,
+  type StoreSavedArticleData,
+  type StoreSavedArticleError,
 } from "~/utils";
 
 export default defineEventHandler(

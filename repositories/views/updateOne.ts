@@ -1,6 +1,6 @@
 import { type Prisma, type View } from "@prisma/client";
-import { prisma } from "~/server/middleware/0.prisma";
 import { ViewSchema } from "~/prisma/generated/zod";
+import { prisma } from "~/server/middleware/0.prisma";
 
 export const updateOne = async ({
   data,

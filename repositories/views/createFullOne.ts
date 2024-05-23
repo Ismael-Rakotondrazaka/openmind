@@ -1,7 +1,7 @@
 import { type Prisma, type View } from "@prisma/client";
+import { type ViewFull } from "~/utils";
 import { createOne } from "./createOne";
 import { findFullOneOrThrow } from "./findFullOneOrThrow";
-import { type ViewFull } from "~/utils";
 
 export const createFullOne = ({
   data,

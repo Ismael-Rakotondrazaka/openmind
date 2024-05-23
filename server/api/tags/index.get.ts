@@ -1,14 +1,14 @@
 import type { SafeParseReturnType } from "zod";
+import { tagRepository } from "~/repositories/tags";
+import { safeParseRequestQueryAs } from "~/server/utils";
 import {
-  type IndexTagData,
-  type IndexTagError,
-  type IndexTagQuery,
   IndexTagQuerySchema,
   createBadRequestError,
   getRequestErrorMessage,
+  type IndexTagData,
+  type IndexTagError,
+  type IndexTagQuery,
 } from "~/utils";
-import { safeParseRequestQueryAs } from "~/server/utils";
-import { tagRepository } from "~/repositories/tags";
 
 export default defineEventHandler(
   async (event): Promise<IndexTagData | IndexTagError> => {

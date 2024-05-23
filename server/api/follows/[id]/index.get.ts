@@ -1,10 +1,10 @@
 import { followRepository } from "~/repositories";
 import {
-  type ShowFollowData,
-  type ShowFollowError,
+  ShowFollowDataSchema,
   ShowFollowParamSchema,
   createNotFoundError,
-  ShowFollowDataSchema,
+  type ShowFollowData,
+  type ShowFollowError,
 } from "~/utils";
 
 export default defineEventHandler(

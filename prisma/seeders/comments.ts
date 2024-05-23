@@ -1,5 +1,5 @@
-import type { Comment, User, PrismaClient, Article } from "@prisma/client";
 import { faker } from "@faker-js/faker";
+import type { Article, Comment, PrismaClient, User } from "@prisma/client";
 import { createHTML, createIdentifier } from "./commons";
 
 const createContent = (): Comment["content"] => {

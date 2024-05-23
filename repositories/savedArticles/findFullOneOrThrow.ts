@@ -1,6 +1,6 @@
 import { type Prisma, type User } from "@prisma/client";
-import { findFullOne } from "./findFullOne";
 import { type SavedArticleFull } from "~/utils";
+import { findFullOne } from "./findFullOne";
 
 export const findFullOneOrThrow = async ({
   authUser,

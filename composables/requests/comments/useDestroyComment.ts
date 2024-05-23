@@ -3,8 +3,8 @@ import type {
   AsyncDataRequestStatus,
 } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
-import { filterComment } from "~/utils";
 import { type Comment } from "~/prisma/generated/zod";
+import { filterComment } from "~/utils";
 
 export const useDestroyComment = (payload: {
   params: MaybeRefOrGetter<DestroyCommentParam>;

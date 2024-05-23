@@ -4,7 +4,7 @@
       v-for="article in articles"
       :key="article.id"
       :article="article"
-      class="w-full mb-11"
+      class="mb-11 w-full"
     />
   </ul>
 </template>

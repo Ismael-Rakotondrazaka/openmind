@@ -5,19 +5,19 @@
 
     <PrimeConfirmDialog v-if="article !== null" group="dialog:danger">
       <template #container="{ message, acceptCallback, rejectCallback }">
-        <div class="flex flex-col items-center p-5 bg-[--surface-0] rounded-md">
+        <div class="flex flex-col items-center rounded-md bg-[--surface-0] p-5">
           <div
-            class="rounded-full text-white bg-danger inline-flex justify-center items-center h-[6rem] w-[6rem] -mt-16"
+            class="-mt-16 inline-flex h-[6rem] w-[6rem] items-center justify-center rounded-full bg-danger text-white"
           >
-            <i class="text-5xl pi pi-question"></i>
+            <i class="pi pi-question text-5xl"></i>
           </div>
-          <span class="block mt-4 mb-2 text-2xl font-bold">{{
+          <span class="mb-2 mt-4 block text-2xl font-bold">{{
             message.header
           }}</span>
 
           <p class="mb-0 whitespace-pre-wrap">{{ message.message }}</p>
 
-          <div class="flex items-center gap-2 mt-4">
+          <div class="mt-4 flex items-center gap-2">
             <PrimeButton
               label="Yes, Delete"
               severity="danger"

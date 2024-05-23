@@ -1,7 +1,7 @@
 import { type Article, type Prisma, type User } from "@prisma/client";
+import { type ArticleFull } from "~/utils";
 import { createOne } from "./createOne";
 import { findFullOneOrThrow } from "./findFullOneOrThrow";
-import { type ArticleFull } from "~/utils";
 
 export const createFullOne = ({
   authUser,

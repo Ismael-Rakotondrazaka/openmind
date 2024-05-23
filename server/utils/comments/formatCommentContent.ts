@@ -1,9 +1,9 @@
 import { JSDOM } from "jsdom";
 import mime from "mime";
+import { formatCommentImagePath } from "~/server/utils/comments";
 import type { UploadedFile } from "~/server/utils/files";
 import { createUploadedFileFromBase64 } from "~/server/utils/files";
 import { articleImageConfig } from "~/utils";
-import { formatCommentImagePath } from "~/server/utils/comments";
 
 export const formatCommentContent = (
   content: string,

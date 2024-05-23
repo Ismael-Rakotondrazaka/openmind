@@ -1,13 +1,13 @@
+import { followRepository } from "~/repositories";
+import { safeParseRequestQueryAs } from "~/server/utils";
 import {
-  type IndexFollowData,
-  type IndexFollowError,
+  IndexFollowDataSchema,
   IndexFollowQuerySchema,
   createBadRequestError,
   getRequestErrorMessage,
-  IndexFollowDataSchema,
+  type IndexFollowData,
+  type IndexFollowError,
 } from "~/utils";
-import { safeParseRequestQueryAs } from "~/server/utils";
-import { followRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<IndexFollowData | IndexFollowError> => {

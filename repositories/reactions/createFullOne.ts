@@ -1,7 +1,7 @@
 import { type Prisma } from "@prisma/client";
+import { type Reaction, type ReactionFull } from "~/utils";
 import { createOne } from "./createOne";
 import { findFullOneOrThrow } from "./findFullOneOrThrow";
-import { type ReactionFull, type Reaction } from "~/utils";
 
 export const createFullOne = ({
   data,

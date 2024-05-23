@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { CommentSchema } from "~/prisma/generated/zod";
-import { CommentCountSchema } from "~/schemas/globalSchemas/comments/commentCount";
 import { CommentAuthSchema } from "~/schemas/globalSchemas/comments/commentAuth";
+import { CommentCountSchema } from "~/schemas/globalSchemas/comments/commentCount";
 import { UserFilteredSchema } from "~/schemas/globalSchemas/users/user";
 
 export const CommentFullSchema = CommentSchema.merge(

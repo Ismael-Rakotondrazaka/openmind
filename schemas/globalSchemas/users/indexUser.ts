@@ -1,15 +1,15 @@
 import { z } from "zod";
+import { userConfig } from "~/configs";
 import {
-  makePageSizeSchema,
+  UserOrderByWithRelationInputSchema,
+  UserWhereInputSchema,
+} from "~/prisma/generated/zod";
+import {
   PageSchema,
   PaginationSchema,
+  makePageSizeSchema,
 } from "~/schemas/globalSchemas/paginations";
-import {
-  UserWhereInputSchema,
-  UserOrderByWithRelationInputSchema,
-} from "~/prisma/generated/zod";
 import { UserFullSchema } from "~/schemas/globalSchemas/users/userFull";
-import { userConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                              Index user query                              */

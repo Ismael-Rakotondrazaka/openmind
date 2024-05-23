@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { ArticleCountSchema } from "~/schemas/globalSchemas/articles/articleCount";
-import { ArticleAuthSchema } from "~/schemas/globalSchemas/articles/articleAuth";
 import { ArticleSchema, TagSchema } from "~/prisma/generated/zod";
+import { ArticleAuthSchema } from "~/schemas/globalSchemas/articles/articleAuth";
+import { ArticleCountSchema } from "~/schemas/globalSchemas/articles/articleCount";
 import { UserFilteredSchema } from "~/schemas/globalSchemas/users";
 
 export const ArticleFullSchema = ArticleSchema.and(

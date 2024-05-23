@@ -2,12 +2,12 @@ import type { Tag, User } from "@prisma/client";
 import { userRepository } from "~/repositories";
 import { tagRepository } from "~/repositories/tags";
 import {
-  type UpdateUserTagData,
-  type UpdateUserTagError,
+  UpdateUserTagBodySchema,
   createBadRequestError,
   createUnauthorizedError,
   getRequestErrorMessage,
-  UpdateUserTagBodySchema,
+  type UpdateUserTagData,
+  type UpdateUserTagError,
 } from "~/utils";
 
 export default defineEventHandler(

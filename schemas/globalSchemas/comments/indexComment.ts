@@ -1,14 +1,14 @@
 import { z } from "zod";
 import { commentConfig } from "~/configs";
-import { CommentFullSchema } from "~/schemas/globalSchemas/comments/comment";
 import {
   CommentOrderByWithRelationInputSchema,
   CommentWhereInputSchema,
 } from "~/prisma/generated/zod";
+import { CommentFullSchema } from "~/schemas/globalSchemas/comments/comment";
 import {
-  makePageSizeSchema,
   PageSchema,
   PaginationSchema,
+  makePageSizeSchema,
 } from "~/schemas/globalSchemas/paginations";
 
 /* -------------------------------------------------------------------------- */

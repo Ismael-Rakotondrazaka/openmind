@@ -1,5 +1,5 @@
-import { bucket } from "./bucket";
 import type { UploadedFile } from "~/server/utils/files";
+import { bucket } from "./bucket";
 
 export const saveUploadedFile = ({
   path,

@@ -1,10 +1,10 @@
 <template>
   <button
     v-if="haveReactions"
-    class="inline-flex items-center hover:text-[--primary-color] hover:underline hover:underline-[--primary-color] text-sm text-[--text-color-secondary]"
+    class="hover:underline-[--primary-color] inline-flex items-center text-sm text-[--text-color-secondary] hover:text-[--primary-color] hover:underline"
     @click="onToggleReactionListSideBar"
   >
-    <ReactionTypeListPreview :reactions="reactions" class="inline-flex mr-1" />
+    <ReactionTypeListPreview :reactions="reactions" class="mr-1 inline-flex" />
 
     {{ buttonLabel }}
   </button>

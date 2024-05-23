@@ -1,4 +1,4 @@
-import { computed, type MaybeRefOrGetter, toValue } from "vue";
+import { computed, toValue, type MaybeRefOrGetter } from "vue";
 
 type FormatOptions = {
   minimumFractionDigits?: number;

@@ -1,7 +1,7 @@
 // @ts-check
-import withNuxt from "./.nuxt/eslint.config.mjs";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import withNuxt from "./.nuxt/eslint.config.mjs";
 // import tseslint from "typescript-eslint";
 
 // Your custom configs here

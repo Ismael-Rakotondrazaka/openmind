@@ -1,10 +1,10 @@
 import { viewRepository } from "~/repositories";
 import {
-  type IndexViewData,
-  type IndexViewError,
   IndexViewQuerySchema,
   createBadRequestError,
   getRequestErrorMessage,
+  type IndexViewData,
+  type IndexViewError,
 } from "~/utils";
 
 export default defineEventHandler(

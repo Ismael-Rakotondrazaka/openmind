@@ -1,8 +1,8 @@
 <template>
   <header class="mb-5 lg:mb-6">
-    <address class="flex items-center justify-between mb-6 not-italic">
+    <address class="mb-6 flex items-center justify-between not-italic">
       <div
-        class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white"
+        class="mr-3 inline-flex items-center text-sm text-gray-900 dark:text-white"
       >
         <PrimeAvatar
           v-if="article.user.profileUrl !== null"
@@ -29,7 +29,7 @@
                 username: article.user.username,
               },
             }"
-            class="text-lg md:text-xl font-bold text-text dark:text-white hover:text-[--primary-color] hover:underline"
+            class="text-lg font-bold text-text hover:text-[--primary-color] hover:underline md:text-xl dark:text-white"
           >
             {{ `${article.user.firstName} ${article.user.name}` }}
           </NuxtLink>
@@ -41,12 +41,12 @@
       <ArticleOptionsButton :article="article" />
     </address>
     <h1
-      class="mb-4 text-xl md:text-2xl lg:text-3xl font-extrabold leading-tight text-text lg:mb-6 dark:text-white"
+      class="mb-4 text-xl font-extrabold leading-tight text-text md:text-2xl lg:mb-6 lg:text-3xl dark:text-white"
     >
       {{ article.title }}
     </h1>
 
-    <p v-if="article.summary !== null" class="text-text mb-3">
+    <p v-if="article.summary !== null" class="mb-3 text-text">
       {{ article.summary }}
     </p>
 
@@ -55,7 +55,7 @@
     <figure v-if="article.coverUrl !== null" class="mb-3">
       <img
         :src="article.coverUrl"
-        class="object-cover object-center w-full rounded-md aspect-video"
+        class="aspect-video w-full rounded-md object-cover object-center"
         alt=""
       />
     </figure>

@@ -4,7 +4,7 @@
     @pointerleave="onMouseLeaveEventHandler"
   >
     <ul
-      class="flex flex-row flex-nowrap justify-evenly gap-3 w-[25rem], text-center"
+      class="w-[25rem], flex flex-row flex-nowrap justify-evenly gap-3 text-center"
     >
       <li>
         <ReactionLikeButton

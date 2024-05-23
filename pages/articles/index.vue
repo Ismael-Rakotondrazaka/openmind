@@ -6,7 +6,7 @@
 
     <Teleport to="body">
       <div
-        class="fixed bottom-5 z-[10] flex flex-row w-full items-center justify-center md:justify-end"
+        class="fixed bottom-5 z-[10] flex w-full flex-row items-center justify-center md:justify-end"
       >
         <NuxtLink
           :to="{

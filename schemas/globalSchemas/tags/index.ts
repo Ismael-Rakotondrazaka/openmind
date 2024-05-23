@@ -1,2 +1,2 @@
-export * from "./storeTag";
 export * from "./indexTag";
+export * from "./storeTag";

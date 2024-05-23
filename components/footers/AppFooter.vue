@@ -1,17 +1,17 @@
 <template>
   <div
-    class="w-full max-w-[1200px] border border-b-0 mx-auto bg-emerald-400 bg-opacity-10 rounded-t"
+    class="mx-auto w-full max-w-[1200px] rounded-t border border-b-0 bg-emerald-400 bg-opacity-10"
   >
     <div class="flex items-center justify-around p-7">
       <img
         src="/images/logo-300x300.png"
         alt="Openmind logo"
-        class="w-1/6 rounded-full hidden md:block"
+        class="hidden w-1/6 rounded-full md:block"
       />
 
-      <div class="flex text-center flex-col items-center gap-5">
+      <div class="flex flex-col items-center gap-5 text-center">
         <ul class="text-center">
-          <li class="inline-block mr-5">
+          <li class="mr-5 inline-block">
             <a href="mailto:ismaelrakotondrazaka@gmail.com" target="_blank"
               ><PrimeButton icon="pi pi-google" rounded
             /></a>
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="text-center p-7 bg-emerald-700 text-white">
+    <div class="bg-emerald-700 p-7 text-center text-white">
       © Copyright {{ year }}
       <a href="http://github.com/Ismael-Rakotondrazaka">Ismael</a>
     </div>

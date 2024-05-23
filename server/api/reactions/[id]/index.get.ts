@@ -1,10 +1,10 @@
 import type { User } from "@prisma/client";
 import {
-  type ShowReactionData,
-  type ShowReactionError,
+  ReactionSchema,
   ShowReactionParamSchema,
   createNotFoundError,
-  ReactionSchema,
+  type ShowReactionData,
+  type ShowReactionError,
 } from "~/utils";
 
 export default defineEventHandler(

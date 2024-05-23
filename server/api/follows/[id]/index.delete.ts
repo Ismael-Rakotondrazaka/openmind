@@ -1,13 +1,13 @@
 import type { User } from "@prisma/client";
 import { followRepository } from "~/repositories";
 import {
-  type DestroyFollowData,
-  type DestroyFollowError,
+  DestroyFollowDataSchema,
   DestroyFollowParamSchema,
+  createForbiddenError,
   createNotFoundError,
   createUnauthorizedError,
-  createForbiddenError,
-  DestroyFollowDataSchema,
+  type DestroyFollowData,
+  type DestroyFollowError,
 } from "~/utils";
 
 export default defineEventHandler(

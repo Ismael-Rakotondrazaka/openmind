@@ -1,6 +1,6 @@
 <template>
   <i
-    class="inline-block text-white -translate-y-1 bg-purple-600 border-2 border-white rounded-full pi"
+    class="pi inline-block -translate-y-1 rounded-full border-2 border-white bg-purple-600 text-white"
     :class="[paddingClass, fontSizeClass]"
   >
     <svg

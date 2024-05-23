@@ -1,13 +1,13 @@
 import type { User } from "@prisma/client";
 import { followRepository, userRepository } from "~/repositories";
 import {
-  type StoreFollowData,
-  type StoreFollowError,
+  StoreFollowBodySchema,
+  StoreFollowDataSchema,
   createBadRequestError,
   createUnauthorizedError,
   getRequestErrorMessage,
-  StoreFollowDataSchema,
-  StoreFollowBodySchema,
+  type StoreFollowData,
+  type StoreFollowError,
 } from "~/utils";
 
 export default defineEventHandler(

@@ -1,6 +1,6 @@
 import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
-import { type FetchError } from "ofetch";
 import { type Tag } from "@prisma/client";
+import { type FetchError } from "ofetch";
 
 export const useUpdateUserTag = (payload: {
   body: MaybeRefOrGetter<UpdateUserTagBody>;

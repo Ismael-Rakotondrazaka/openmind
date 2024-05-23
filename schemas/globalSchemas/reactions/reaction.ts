@@ -1,11 +1,11 @@
 import { z } from "zod";
 import {
-  type ReactionArticle,
   ReactionArticleSchema,
+  type ReactionArticle,
 } from "~/schemas/globalSchemas/reactions/reactionArticle";
 import {
-  type ReactionComment,
   ReactionCommentSchema,
+  type ReactionComment,
 } from "~/schemas/globalSchemas/reactions/reactionComment";
 import { UserFilteredSchema } from "~/schemas/globalSchemas/users/user";
 

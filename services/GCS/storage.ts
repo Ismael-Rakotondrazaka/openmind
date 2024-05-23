@@ -1,6 +1,6 @@
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
 import { Storage } from "@google-cloud/storage";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
 
 export const storage: Storage = new Storage(
   (() => {

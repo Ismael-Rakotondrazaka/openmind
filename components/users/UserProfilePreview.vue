@@ -4,7 +4,7 @@
     @pointerenter="onMouseEnterEventHandler"
     @pointerleave="onMouseLeaveEventHandler"
   >
-    <div class="text-center min-w-40">
+    <div class="min-w-40 text-center">
       <UserAvatar size="xlarge" :user="user" preview class="mb-3" />
 
       <h1 class="mb-2 font-extrabold leading-tight text-text dark:text-white">

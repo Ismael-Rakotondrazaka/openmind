@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto w-full max-w-[1200px]">
-    <form class="w-full max-w-[700px] mx-auto" @submit.prevent="onSubmit">
+    <form class="mx-auto w-full max-w-[700px]" @submit.prevent="onSubmit">
       <PrimeCard
         :pt="{
           root: {

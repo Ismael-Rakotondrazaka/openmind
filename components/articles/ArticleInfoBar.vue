@@ -2,7 +2,7 @@
   <div>
     <ArticleReactionListPreview class="mb-3" />
 
-    <div class="flex items-center justify-between py-1 border-y flex-row gap-3">
+    <div class="flex flex-row items-center justify-between gap-3 border-y py-1">
       <div class="flex items-center justify-start gap-0 md:gap-3">
         <ReactionButton
           v-model:count="reactionsCount"
@@ -21,7 +21,7 @@
         <ViewsCountDisplayer :count="viewsCount" />
       </div>
 
-      <div class="flex gap-0 md:gap-3 items-start justify-end">
+      <div class="flex items-start justify-end gap-0 md:gap-3">
         <SaveArticleButton
           v-if="authUser !== null"
           v-model:saved-article="savedArticle"

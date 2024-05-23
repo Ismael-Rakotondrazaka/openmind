@@ -1,8 +1,8 @@
 <template>
   <li>
-    <address class="flex items-center mb-3 not-italic">
+    <address class="mb-3 flex items-center not-italic">
       <div
-        class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white"
+        class="mr-3 inline-flex items-center text-sm text-gray-900 dark:text-white"
       >
         <PrimeAvatar
           v-if="article.user.profileUrl !== null"
@@ -28,7 +28,7 @@
                 username: article.user.username,
               },
             }"
-            class="inline-block text-text font-bold hover:text-primary hover:underline"
+            class="inline-block font-bold text-text hover:text-primary hover:underline"
           >
             {{ `${article.user.firstName} ${article.user.name}` }}
           </NuxtLink>
@@ -40,7 +40,7 @@
         </div>
       </div>
     </address>
-    <h1 class="text-lg md:text-xl mb-3 font-bold text-slate-900 line-clamp-2">
+    <h1 class="mb-3 line-clamp-2 text-lg font-bold text-slate-900 md:text-xl">
       <NuxtLink
         :to="{
           name: 'users-username-articles-slug',
@@ -55,7 +55,7 @@
 
     <p
       v-if="article.summary !== null"
-      class="mb-2 text-text text-ellipsis line-clamp-2"
+      class="mb-2 line-clamp-2 text-ellipsis text-text"
     >
       {{ article.summary }}
     </p>
@@ -74,13 +74,13 @@
       >
         <img
           :src="article.coverUrl"
-          class="object-cover object-center w-full rounded-md aspect-video"
+          class="aspect-video w-full rounded-md object-cover object-center"
           alt=""
         />
       </NuxtLink>
     </figure>
 
-    <div class="flex items-center gap-3 justify-start py-1 border-y fle-row">
+    <div class="fle-row flex items-center justify-start gap-3 border-y py-1">
       <PrimeButton
         icon="pi pi-thumbs-up"
         severity="secondary"

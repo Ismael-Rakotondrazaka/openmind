@@ -1,6 +1,6 @@
 import { type Prisma, type Tag } from "@prisma/client";
-import { prisma } from "~/server/middleware/0.prisma";
 import { TagSchema } from "~/prisma/generated/zod";
+import { prisma } from "~/server/middleware/0.prisma";
 
 export const findOne = async ({
   where,

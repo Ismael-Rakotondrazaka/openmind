@@ -2,7 +2,7 @@
   <PrimeSidebar
     v-model:visible="isVisible"
     position="right"
-    class="w-full md:w-[25rem] lg:w-[30rem] overflow-y-auto"
+    class="w-full overflow-y-auto md:w-[25rem] lg:w-[30rem]"
   >
     <template #header>
       <div class="flex items-center gap-2">
@@ -25,7 +25,7 @@
 
       <PrimeTabPanel>
         <template #header>
-          <ReactionIcon type="like" class="block mr-1" size="small" />
+          <ReactionIcon type="like" class="mr-1 block" size="small" />
 
           {{ likeCounts }}
         </template>

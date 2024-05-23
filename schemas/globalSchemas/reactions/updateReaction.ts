@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
 import { ReactionTypeSchema } from "~/prisma/generated/zod";
+import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
 
 /* -------------------------------------------------------------------------- */
 /*                            Update reaction param                           */

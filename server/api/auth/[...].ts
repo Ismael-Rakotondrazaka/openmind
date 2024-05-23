@@ -1,8 +1,8 @@
-import CredentialsProvider from "next-auth/providers/credentials";
-import type { User } from "@prisma/client";
 import { NuxtAuthHandler } from "#auth";
-import { StoreLoginBodySchema } from "~/utils";
+import type { User } from "@prisma/client";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { userRepository } from "~/repositories";
+import { StoreLoginBodySchema } from "~/utils";
 
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().authSecret,

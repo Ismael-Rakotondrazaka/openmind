@@ -1,9 +1,9 @@
 import { viewRepository } from "~/repositories";
 import {
-  type ShowViewData,
-  type ShowViewError,
   ShowViewParamSchema,
   createNotFoundError,
+  type ShowViewData,
+  type ShowViewError,
 } from "~/utils";
 
 export default defineEventHandler(

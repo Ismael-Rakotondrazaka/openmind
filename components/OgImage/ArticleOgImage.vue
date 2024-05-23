@@ -1,26 +1,26 @@
 <template>
   <div
     v-if="article !== undefined"
-    class="w-full h-full flex justify-between relative bg-white text-gray-900"
+    class="relative flex h-full w-full justify-between bg-white text-gray-900"
   >
-    <div class="h-full w-full justify-between relative">
-      <div class="flex flex-row h-full justify-between items-start">
+    <div class="relative h-full w-full justify-between">
+      <div class="flex h-full flex-row items-start justify-between">
         <div
-          class="flex flex-col justify-between w-full h-full p-10"
+          class="flex h-full w-full flex-col justify-between p-10"
           :class="{
             'max-w-[65%]': article.coverUrl !== null,
           }"
         >
           <address
-            class="flex items-center mr-3 text-sm text-gray-900 dark:text-white mb-6 not-italic"
+            class="mb-6 mr-3 flex items-center text-sm not-italic text-gray-900 dark:text-white"
           >
             <img
               v-if="article.user.profileUrl !== null"
-              class="mr-3 rounded-full w-24 h-24 object-cover"
+              class="mr-3 h-24 w-24 rounded-full object-cover"
               :src="article.user.profileUrl"
               :alt="`${article.user.firstName} ${article.user.name}`"
             />
-            <p v-else class="rounded-full w-32 h-32 object-cover">
+            <p v-else class="h-32 w-32 rounded-full object-cover">
               {{ article.user.firstName[0] }}
             </p>
 
@@ -40,7 +40,7 @@
           </address>
 
           <div class="">
-            <h1 class="m-0 font-bold mb-[30px] text-5xl">
+            <h1 class="m-0 mb-[30px] text-5xl font-bold">
               {{ article.title }}
             </h1>
             <p v-if="article.summary" class="text-3xl text-text">
@@ -49,9 +49,9 @@
           </div>
 
           <div
-            class="flex self-end flex-row justify-center items-center text-left w-full"
+            class="flex w-full flex-row items-center justify-center self-end text-left"
           >
-            <img src="/images/logo.svg" alt="Logo" class="w-16 h-16 mr-5" />
+            <img src="/images/logo.svg" alt="Logo" class="mr-5 h-16 w-16" />
 
             <p style="font-size: 25px" class="font-bold">OpenMind</p>
           </div>
@@ -60,10 +60,10 @@
         <div
           v-if="article.coverUrl !== null"
           style="width: 30%"
-          class="flex justify-end h-full"
+          class="flex h-full justify-end"
         >
           <img
-            class="w-full h-full object-cover"
+            class="h-full w-full object-cover"
             :src="article.coverUrl"
             :alt="article.title"
           />

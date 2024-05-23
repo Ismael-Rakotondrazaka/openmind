@@ -9,7 +9,7 @@
     <div>
       <label
         :for="id"
-        class="w-full border hover:cursor-pointer aspect-video bg-[--surface-100] rounded-md flex flex-row justify-center relative"
+        class="relative flex aspect-video w-full flex-row justify-center rounded-md border bg-[--surface-100] hover:cursor-pointer"
         :class="{
           'border-[--surface-300]': errorMessage === undefined,
           'border-danger': errorMessage !== undefined,
@@ -19,22 +19,22 @@
           :id="id"
           ref="imageRef"
           type="file"
-          class="hidden w-full file:mr-4 file:py-4 file:px-5 file:rounded-md file:border-0 file:font-bold file:bg-[#14b8a6] file:text-white hover:file:bg-[#0d9488] hover:cursor-pointer"
+          class="hidden w-full file:mr-4 file:rounded-md file:border-0 file:bg-[#14b8a6] file:px-5 file:py-4 file:font-bold file:text-white hover:cursor-pointer hover:file:bg-[#0d9488]"
           :name="name"
           :accept="accept"
           @change="onImageChangeHandler"
         />
 
-        <figure v-if="previewUrl !== undefined" class="w-full h-full">
+        <figure v-if="previewUrl !== undefined" class="h-full w-full">
           <img
             :src="previewUrl"
             alt=""
-            class="object-cover object-center w-full rounded-md aspect-video"
+            class="aspect-video w-full rounded-md object-cover object-center"
           />
         </figure>
 
         <div
-          class="absolute bottom-0 inline-block pt-5 pb-16 text-center"
+          class="absolute bottom-0 inline-block pb-16 pt-5 text-center"
           :class="{
             hidden: previewUrl !== undefined,
           }"
@@ -42,14 +42,14 @@
           <p class="mb-5">Drag or click to upload.</p>
 
           <span
-            class="p-button hover:cursor-pointer p-component p-button-primary p-button-sm p-button-label"
+            class="p-button p-component p-button-primary p-button-sm p-button-label hover:cursor-pointer"
             >Upload</span
           >
         </div>
       </label>
     </div>
 
-    <div class="flex flex-row items-center justify-between gap-2 flex-nowrap">
+    <div class="flex flex-row flex-nowrap items-center justify-between gap-2">
       <div>
         <PrimeButton
           severity="danger"

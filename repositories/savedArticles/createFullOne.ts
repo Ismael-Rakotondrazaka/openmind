@@ -1,7 +1,7 @@
-import { type Prisma, type User, type SavedArticle } from "@prisma/client";
+import { type Prisma, type SavedArticle, type User } from "@prisma/client";
+import { type SavedArticleFull } from "~/utils";
 import { createOne } from "./createOne";
 import { findFullOneOrThrow } from "./findFullOneOrThrow";
-import { type SavedArticleFull } from "~/utils";
 
 export const createFullOne = ({
   authUser,

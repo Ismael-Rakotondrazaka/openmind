@@ -1,14 +1,14 @@
 import type { User } from "@prisma/client";
+import { articleRepository } from "~/repositories";
+import { safeParseRequestQueryAs } from "~/server/utils";
 import {
-  type IndexArticleData,
-  type IndexArticleError,
+  IndexArticleDataSchema,
   IndexArticleQuerySchema,
   createBadRequestError,
   getRequestErrorMessage,
-  IndexArticleDataSchema,
+  type IndexArticleData,
+  type IndexArticleError,
 } from "~/utils";
-import { articleRepository } from "~/repositories";
-import { safeParseRequestQueryAs } from "~/server/utils";
 
 export default defineEventHandler(
   async (event): Promise<IndexArticleData | IndexArticleError> => {

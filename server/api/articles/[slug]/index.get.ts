@@ -1,12 +1,12 @@
 import type { User } from "@prisma/client";
+import { articleRepository } from "~/repositories";
 import {
-  type ShowArticleData,
-  type ShowArticleError,
+  ShowArticleDataSchema,
   ShowArticleParamSchema,
   createNotFoundError,
-  ShowArticleDataSchema,
+  type ShowArticleData,
+  type ShowArticleError,
 } from "~/utils";
-import { articleRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<ShowArticleData | ShowArticleError> => {

@@ -1,16 +1,16 @@
-import type { SafeParseReturnType } from "zod";
 import type { Article, SavedArticle, User } from "@prisma/client";
+import type { SafeParseReturnType } from "zod";
+import { articleRepository, savedArticleRepository } from "~/repositories";
 import {
+  DestroySavedArticleDataSchema,
+  DestroySavedArticleParamSchema,
+  createForbiddenError,
+  createNotFoundError,
+  createUnauthorizedError,
   type DestroySavedArticleData,
   type DestroySavedArticleError,
   type DestroySavedArticleParam,
-  DestroySavedArticleParamSchema,
-  createNotFoundError,
-  createUnauthorizedError,
-  createForbiddenError,
-  DestroySavedArticleDataSchema,
 } from "~/utils";
-import { articleRepository, savedArticleRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (

@@ -2,8 +2,8 @@ import { type Prisma, type User } from "@prisma/client";
 import { prisma } from "~/server/middleware/0.prisma";
 import {
   SavedArticleFullSchema,
-  type SavedArticleFull,
   type Reaction,
+  type SavedArticleFull,
 } from "~/utils";
 
 export const findFullMany = ({

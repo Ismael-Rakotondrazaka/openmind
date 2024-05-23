@@ -1,13 +1,13 @@
 import type { Comment, User } from "@prisma/client";
 import { commentRepository } from "~/repositories";
 import {
-  type DestroyCommentData,
-  type DestroyCommentError,
+  DestroyCommentDataSchema,
   DestroyCommentParamSchema,
+  createForbiddenError,
   createNotFoundError,
   createUnauthorizedError,
-  createForbiddenError,
-  DestroyCommentDataSchema,
+  type DestroyCommentData,
+  type DestroyCommentError,
 } from "~/utils";
 
 export default defineEventHandler(

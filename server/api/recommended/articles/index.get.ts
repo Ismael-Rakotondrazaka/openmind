@@ -1,19 +1,19 @@
-import type { SafeParseReturnType } from "zod";
 import type { Tag, User } from "@prisma/client";
+import type { SafeParseReturnType } from "zod";
+import { articleRepository } from "~/repositories";
+import { tagRepository } from "~/repositories/tags";
+import { safeParseRequestQueryAs } from "~/server/utils";
 import {
+  IndexRecommendedArticleDataSchema,
+  IndexRecommendedArticleQuerySchema,
+  createBadRequestError,
+  createUnauthorizedError,
+  getRequestErrorMessage,
+  type ArticleFull,
   type IndexRecommendedArticleData,
   type IndexRecommendedArticleError,
   type IndexRecommendedArticleQuery,
-  IndexRecommendedArticleQuerySchema,
-  createBadRequestError,
-  getRequestErrorMessage,
-  IndexRecommendedArticleDataSchema,
-  createUnauthorizedError,
-  type ArticleFull,
 } from "~/utils";
-import { safeParseRequestQueryAs } from "~/server/utils";
-import { articleRepository } from "~/repositories";
-import { tagRepository } from "~/repositories/tags";
 
 export default defineEventHandler(
   async (

@@ -1,9 +1,9 @@
 import { z } from "zod";
-import {
-  UpdateUserBodyBaseSchema,
-  CustomNullSchema,
-} from "~/schemas/globalSchemas";
 import { userProfileConfig } from "~/configs";
+import {
+  CustomNullSchema,
+  UpdateUserBodyBaseSchema,
+} from "~/schemas/globalSchemas";
 
 /* -------------------------------------------------------------------------- */
 /*                              Update user body                              */

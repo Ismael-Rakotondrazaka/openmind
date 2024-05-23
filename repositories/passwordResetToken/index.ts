@@ -1,7 +1,7 @@
 import { createOne } from "./createOne";
-import { findOne } from "./findOne";
-import { findFullOne } from "./findFullOne";
 import { deleteOne } from "./deleteOne";
+import { findFullOne } from "./findFullOne";
+import { findOne } from "./findOne";
 
 export const passwordResetTokenRepository = Object.freeze({
   findFullOne,

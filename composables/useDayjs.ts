@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
-import UtcPlugin from "dayjs/plugin/utc.js";
-import UpdateLocalPlugin from "dayjs/plugin/updateLocale.js";
 import DurationPlugin from "dayjs/plugin/duration.js";
 import RelativeTimePlugin from "dayjs/plugin/relativeTime.js";
+import UpdateLocalPlugin from "dayjs/plugin/updateLocale.js";
+import UtcPlugin from "dayjs/plugin/utc.js";
 
 dayjs.locale("en");
 dayjs.extend(RelativeTimePlugin);

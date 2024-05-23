@@ -1,6 +1,6 @@
 import { type Prisma } from "@prisma/client";
 import { prisma } from "~/server/middleware/0.prisma";
-import { type Reaction, ReactionSchema } from "~/utils";
+import { ReactionSchema, type Reaction } from "~/utils";
 
 export const findOne = async ({
   where,

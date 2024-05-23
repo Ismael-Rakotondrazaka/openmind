@@ -1,7 +1,7 @@
-import { type Prisma, type Follow } from "@prisma/client";
+import { type Follow, type Prisma } from "@prisma/client";
+import { type FollowFull } from "~/utils";
 import { createOne } from "./createOne";
 import { findFullOneOrThrow } from "./findFullOneOrThrow";
-import { type FollowFull } from "~/utils";
 
 export const createFullOne = ({
   data,

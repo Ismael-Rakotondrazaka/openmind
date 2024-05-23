@@ -2,9 +2,9 @@ import type {
   AsyncDataExecuteOptions,
   AsyncDataRequestStatus,
 } from "#app/composables/asyncData";
+import { type Follow } from "@prisma/client";
 import { type FetchError } from "ofetch";
 import { filterFollow } from "~/utils";
-import { type Follow } from "@prisma/client";
 
 export const useStoreFollow = (payload: {
   body: MaybeRefOrGetter<StoreFollowBody>;

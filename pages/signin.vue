@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto w-full max-w-[1200px]">
-    <form class="w-full max-w-[700px] mx-auto" @submit.prevent="onSubmit">
+    <form class="mx-auto w-full max-w-[700px]" @submit.prevent="onSubmit">
       <PrimeCard
         :pt="{
           root: {
@@ -32,7 +32,7 @@
 
         <template #footer>
           <div
-            class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center"
+            class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0"
           >
             <PrimeButton
               type="submit"
@@ -42,7 +42,7 @@
             />
 
             <div
-              class="flex space-y-4 md:space-y-0 flex-col md:space-x-4 md:flex-row md:items-center md:justify-end"
+              class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-end md:space-x-4 md:space-y-0"
             >
               <NuxtLink
                 :to="{

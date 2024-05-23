@@ -17,7 +17,7 @@
       }"
       :class="{
         '!p-invalid': haveError,
-        'w-full block': true,
+        'block w-full': true,
       }"
     />
 
