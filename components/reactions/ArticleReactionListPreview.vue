@@ -14,6 +14,8 @@
 </template>
 
 <script setup lang="ts">
+import { type ReactionType } from "@prisma/client";
+
 const { article } = inject(ShowArticleToken) as ShowArticleDI;
 
 const { user: authUser } = inject(AuthUserToken) as AuthUserDI;
@@ -27,9 +29,14 @@ const authReaction = computed<ReactionFull | null>(() => {
     return null;
   } else {
     return {
-      ...article.value._auth.reaction,
+      articleId: article.value._auth.reaction.articleId,
+      commentId: article.value._auth.reaction.commentId,
+      createdAt: article.value._auth.reaction.createdAt,
+      id: article.value._auth.reaction.id,
+      type: article.value._auth.reaction.type,
+      userId: article.value._auth.reaction.userId,
       user: filterUser(authUser.value),
-    };
+    } as ReactionFull;
   }
 });
 

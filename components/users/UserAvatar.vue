@@ -29,8 +29,10 @@
 </template>
 
 <script lang="ts" setup>
+import type { UserFiltered } from "~/utils";
+
 interface UserAvatarProps {
-  user: User;
+  user: UserFiltered;
   size?: "normal" | "large" | "xlarge" | "2xlarge";
   preview?: boolean;
 }

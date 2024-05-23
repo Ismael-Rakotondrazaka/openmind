@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts" setup>
+import { type ReactionType } from "@prisma/client";
 import type { PrimeOverlayPanel } from "#build/components";
 
 /* ---------------------------------- Props --------------------------------- */

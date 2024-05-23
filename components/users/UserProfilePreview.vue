@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 interface UserProfilePreviewProps {
-  user: User;
+  user: UserFiltered;
 }
 
 const props = defineProps<UserProfilePreviewProps>();

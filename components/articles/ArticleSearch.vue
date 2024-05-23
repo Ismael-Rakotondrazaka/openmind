@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Prisma } from "@prisma/client";
+import type { Prisma, Tag } from "@prisma/client";
 
 const titleSearch = ref<string | null>();
 

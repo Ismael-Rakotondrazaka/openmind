@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { SavedArticleSchema } from "~/schemas/globalSchemas/savedArticles/savedArticle";
-import { ViewSchema } from "~/schemas/globalSchemas/views/view";
+import { ViewSchema, SavedArticleSchema } from "~/prisma/generated/zod";
 import { ReactionSchema } from "~/schemas/globalSchemas/reactions/reaction";
 
 export const ArticleAuthSchema = z.object({

@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { RoleSchema } from "~/schemas/globalSchemas/roles";
+import { RoleSchema } from "~/prisma/generated/zod";
 
-export const UserSchema = z.object({
+export const UserFilteredSchema = z.object({
   role: RoleSchema,
   id: z.coerce.number().int(),
   username: z.string(),
@@ -13,4 +13,4 @@ export const UserSchema = z.object({
   deletedAt: z.coerce.date().nullable(),
 });
 
-export type User = z.infer<typeof UserSchema>;
+export type UserFiltered = z.infer<typeof UserFilteredSchema>;

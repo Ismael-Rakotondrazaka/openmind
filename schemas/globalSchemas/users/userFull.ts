@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { UserSchema } from "~/schemas/globalSchemas/users/user";
-import { TagSchema } from "~/schemas/globalSchemas/tags/tag";
+import { TagSchema } from "~/prisma/generated/zod";
 import { UserCountSchema } from "~/schemas/globalSchemas/users/userCount";
 import { UserAuthSchema } from "~/schemas/globalSchemas/users/userAuth";
+import { UserFilteredSchema } from "~/schemas/globalSchemas/users/user";
 
-export const UserFullSchema = UserSchema.merge(
+export const UserFullSchema = UserFilteredSchema.merge(
   z.object({
     tags: z.array(TagSchema),
   }),

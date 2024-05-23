@@ -38,6 +38,8 @@
 </template>
 
 <script lang="ts" setup>
+import { type ReactionType } from "@prisma/client";
+
 interface ArticleReactionFormProps {
   articleId: null;
   commentId: string;

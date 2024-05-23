@@ -3,6 +3,7 @@ import type {
   AsyncDataExecuteOptions,
   AsyncDataRequestStatus,
 } from "#app/composables/asyncData";
+import type { Follow } from "@prisma/client";
 
 export const useDestroyFollow = (payload: {
   followId: MaybeRefOrGetter<number>;

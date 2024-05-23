@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { FollowFullSchema } from "~/schemas/globalSchemas/follows/follow";
-import { FollowOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/follows/followOrder";
-import { FollowWhereInputSchema } from "~/schemas/globalSchemas/follows/followWhere";
+import {
+  FollowOrderByWithRelationInputSchema,
+  FollowWhereInputSchema,
+} from "~/prisma/generated/zod";
 import {
   makePageSizeSchema,
   PageSchema,

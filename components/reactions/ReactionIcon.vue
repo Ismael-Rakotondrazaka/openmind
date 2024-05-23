@@ -5,6 +5,8 @@
 </template>
 
 <script lang="ts" setup>
+import { type ReactionType } from "@prisma/client";
+
 interface ReactionIconProps {
   size?: "small" | "normal" | "large" | "xlarge";
   type: ReactionType;

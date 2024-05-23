@@ -1,3 +1,5 @@
+import type { View } from "@prisma/client";
+
 export const useWatchArticleView = (payload: {
   articleId: MaybeRefOrGetter<string>;
   view: MaybeRefOrGetter<View | null>;

@@ -4,9 +4,11 @@ import {
   PageSchema,
   PaginationSchema,
 } from "~/schemas/globalSchemas/paginations";
-import { TagOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/tags/tagOrder";
-import { TagWhereInputSchema } from "~/schemas/globalSchemas/tags/tagWhere";
-import { TagSchema } from "~/schemas/globalSchemas/tags/tag";
+import {
+  TagSchema,
+  TagOrderByWithRelationInputSchema,
+  TagWhereInputSchema,
+} from "~/prisma/generated/zod";
 import { tagConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */

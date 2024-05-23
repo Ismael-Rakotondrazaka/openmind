@@ -1,6 +1,6 @@
-import { type Prisma } from "@prisma/client";
+import { type Prisma, type View } from "@prisma/client";
 import { prisma } from "~/server/middleware/0.prisma";
-import { type View, ViewSchema } from "~/utils";
+import { ViewSchema } from "~/prisma/generated/zod";
 
 export const createOne = async ({
   data,

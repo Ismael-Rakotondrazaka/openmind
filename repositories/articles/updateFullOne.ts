@@ -1,4 +1,4 @@
-import { type Prisma } from "@prisma/client";
+import { type Prisma, type User } from "@prisma/client";
 import { prisma } from "~/server/middleware/0.prisma";
 import { ArticleFullSchema, type ArticleFull } from "~/utils";
 

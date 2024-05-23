@@ -35,6 +35,7 @@
 </template>
 
 <script lang="ts" setup>
+import { type SavedArticle } from "@prisma/client";
 const { article } = inject(ShowArticleToken) as ShowArticleDI;
 
 const { user: authUser } = useAuthUser();

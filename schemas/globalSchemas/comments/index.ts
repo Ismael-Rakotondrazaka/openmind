@@ -6,6 +6,3 @@ export * from "./updateComment";
 export * from "./comment";
 export * from "./commentAuth";
 export * from "./commentCount";
-export * from "./commentOrder";
-export * from "./commentRelation";
-export * from "./commentWhere";

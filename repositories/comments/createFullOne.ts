@@ -1,7 +1,7 @@
-import { type Prisma, type User } from "@prisma/client";
+import { type Prisma, type User, type Comment } from "@prisma/client";
 import { createOne } from "./createOne";
 import { findFullOneOrThrow } from "./findFullOneOrThrow";
-import { type CommentFull, type Comment } from "~/utils";
+import { type CommentFull } from "~/utils";
 
 export const createFullOne = ({
   authUser,

@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
-import { ReactionOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/reactions/reactionOrder";
-import { ReactionWhereInputSchema } from "~/schemas/globalSchemas/reactions/reactionWhere";
+import {
+  ReactionOrderByWithRelationInputSchema,
+  ReactionWhereInputSchema,
+} from "~/prisma/generated/zod";
 import {
   makePageSizeSchema,
   PageSchema,

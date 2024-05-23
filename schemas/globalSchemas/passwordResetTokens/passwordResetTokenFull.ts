@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { PasswordResetTokenSchema } from "~/schemas/globalSchemas/passwordResetTokens/passwordResetToken";
-import { UserSchema } from "~/schemas/globalSchemas/users";
+import { UserFilteredSchema } from "~/schemas/globalSchemas/users/user";
+import { PasswordResetTokenSchema } from "~/prisma/generated/zod";
 
 export const PasswordResetTokenFullSchema = PasswordResetTokenSchema.merge(
   z.object({
-    user: UserSchema,
+    user: UserFilteredSchema,
   }),
 );
 

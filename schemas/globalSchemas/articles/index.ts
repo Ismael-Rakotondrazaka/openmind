@@ -6,6 +6,3 @@ export * from "./destroyArticle";
 export * from "./articleCount";
 export * from "./articleAuth";
 export * from "./article";
-export * from "./articleWhere";
-export * from "./articleOrderBy";
-export * from "./articleRelation";

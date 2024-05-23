@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import type { Article } from "@prisma/client";
 import { customAlphabet } from "nanoid";
 
 export const createIdentifier = customAlphabet(

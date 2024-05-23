@@ -4,10 +4,8 @@ import {
   PageSchema,
   PaginationSchema,
 } from "~/schemas/globalSchemas/paginations";
-import {
-  ArticleFullSchema,
-  ArticleOrderByWithRelationInputSchema,
-} from "~/schemas/globalSchemas/articles";
+import { ArticleFullSchema } from "~/schemas/globalSchemas/articles";
+import { ArticleOrderByWithRelationInputSchema } from "~/prisma/generated/zod";
 import { articleConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */

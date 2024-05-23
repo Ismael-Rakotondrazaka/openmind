@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { Prisma, PrismaClient, Article } from "@prisma/client";
+import type { Prisma, PrismaClient, Article, View, User } from "@prisma/client";
 
 const createViewData = (payload: {
   article: Article;

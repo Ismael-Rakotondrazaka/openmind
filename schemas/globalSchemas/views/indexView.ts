@@ -5,8 +5,10 @@ import {
   PageSchema,
   PaginationSchema,
 } from "~/schemas/globalSchemas/paginations";
-import { ViewOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/views/viewOrder";
-import { ViewWhereInputSchema } from "~/schemas/globalSchemas/views/viewWhere";
+import {
+  ViewWhereInputSchema,
+  ViewOrderByWithRelationInputSchema,
+} from "~/prisma/generated/zod";
 import { viewConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { Prisma, PrismaClient, User } from "@prisma/client";
+import type { Article, Prisma, PrismaClient, Tag, User } from "@prisma/client";
 
 import slugify from "slugify";
 import { createHTML, createIdentifier, createIllustrationUrl } from "./commons";

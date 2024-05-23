@@ -13,6 +13,7 @@
         <NuxtLink v-if="item.route" :to="item.route">
           <span v-if="item.image" v-ripple v-bind="props.action">
             <img :src="item.image" :alt="item.alt" class="h-6 w-6" />
+            <span v-if="item.label" class="ml-2">{{ item.label }}</span>
           </span>
           <span v-else v-ripple v-bind="props.action">
             <span :class="item.icon" />
@@ -93,6 +94,7 @@ const { signOut } = useAuth();
 
 const homeItem: MenuItem = {
   image: "/images/logo-150x150.png",
+  label: "OpenMind",
   alt: "logo",
   route: {
     name: "index",

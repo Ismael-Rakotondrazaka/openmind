@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import { type Tag } from "@prisma/client";
 import { type AutoCompleteCompleteEvent } from "primevue/autocomplete";
 
 const tags = defineModel<Tag[]>("tags");

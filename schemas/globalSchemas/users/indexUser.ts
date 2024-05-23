@@ -4,8 +4,10 @@ import {
   PageSchema,
   PaginationSchema,
 } from "~/schemas/globalSchemas/paginations";
-import { UserOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/users/userOrder";
-import { UserWhereInputSchema } from "~/schemas/globalSchemas/users/userWhere";
+import {
+  UserWhereInputSchema,
+  UserOrderByWithRelationInputSchema,
+} from "~/prisma/generated/zod";
 import { UserFullSchema } from "~/schemas/globalSchemas/users/userFull";
 import { userConfig } from "~/configs";
 

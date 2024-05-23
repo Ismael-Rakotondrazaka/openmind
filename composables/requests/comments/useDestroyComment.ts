@@ -4,7 +4,7 @@ import type {
 } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { filterComment } from "~/utils";
-import { type Comment } from "~/utils";
+import { type Comment } from "~/prisma/generated/zod";
 
 export const useDestroyComment = (payload: {
   params: MaybeRefOrGetter<DestroyCommentParam>;

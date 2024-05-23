@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { Prisma, PrismaClient } from "@prisma/client";
+import type { Prisma, PrismaClient, User } from "@prisma/client";
 
 const createFollowData = (payload: {
   follower: User;

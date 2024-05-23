@@ -1,4 +1,4 @@
-import type { Comment, User, PrismaClient } from "@prisma/client";
+import type { Comment, User, PrismaClient, Article } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { createHTML, createIdentifier } from "./commons";
 

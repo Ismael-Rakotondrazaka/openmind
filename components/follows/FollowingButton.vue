@@ -40,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+import { type Follow } from "@prisma/client";
 import type PrimeMenu from "primevue/menu";
 import { type MenuProps } from "primevue/menu";
 

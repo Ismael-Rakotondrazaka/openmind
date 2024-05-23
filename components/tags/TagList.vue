@@ -11,6 +11,8 @@
 </template>
 
 <script lang="ts" setup>
+import { type Tag } from "@prisma/client";
+
 type TagListProps = {
   tags: Tag[];
 };

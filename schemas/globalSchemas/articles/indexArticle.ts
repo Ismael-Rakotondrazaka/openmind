@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { ArticleFullSchema } from "~/schemas/globalSchemas/articles/article";
-import { ArticleOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/articles/articleOrderBy";
-import { ArticleWhereInputSchema } from "~/schemas/globalSchemas/articles/articleWhere";
+import {
+  ArticleOrderByWithRelationInputSchema,
+  ArticleWhereInputSchema,
+} from "~/prisma/generated/zod";
 import {
   makePageSizeSchema,
   PageSchema,

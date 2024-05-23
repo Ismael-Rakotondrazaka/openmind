@@ -14,6 +14,8 @@
 </template>
 
 <script lang="ts" setup>
+import { type Follow } from "@prisma/client";
+
 interface DestroyFollowFormProps {
   follow: FollowFull;
 }

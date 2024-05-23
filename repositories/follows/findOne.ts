@@ -1,6 +1,6 @@
-import { type Prisma } from "@prisma/client";
+import { type Prisma, type Follow } from "@prisma/client";
 import { prisma } from "~/server/middleware/0.prisma";
-import { type Follow, FollowSchema } from "~/utils";
+import { FollowSchema } from "~/prisma/generated/zod";
 
 export const findOne = async ({
   where,

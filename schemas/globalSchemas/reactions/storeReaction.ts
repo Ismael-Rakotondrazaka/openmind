@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { CustomNullSchema } from "~/schemas/globalSchemas/types";
-import { ReactionTypeSchema } from "~/schemas/globalSchemas/reactions/reactionType";
+
+import { ReactionTypeSchema } from "~/prisma/generated/zod";
 import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
 
 /* -------------------------------------------------------------------------- */

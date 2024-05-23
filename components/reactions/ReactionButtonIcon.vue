@@ -46,6 +46,8 @@
 </template>
 
 <script lang="ts" setup>
+import { type ReactionType } from "@prisma/client";
+
 interface ReactionIconProps {
   reaction: Reaction | null;
 }

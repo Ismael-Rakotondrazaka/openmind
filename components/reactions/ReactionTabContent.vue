@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts" setup>
+import { type ReactionType } from "@prisma/client";
 import type { PageState } from "primevue/paginator";
 
 /* ---------------------------------- Props --------------------------------- */

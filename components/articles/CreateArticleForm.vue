@@ -65,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+import { type Tag } from "@prisma/client";
 import { type FetchError } from "ofetch";
 import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 

@@ -1,4 +1,10 @@
-import { PrismaClient, type Comment, type User } from "@prisma/client";
+import {
+  PrismaClient,
+  type Article,
+  type Comment,
+  type Tag,
+  type User,
+} from "@prisma/client";
 import {
   createArticles,
   createComments,

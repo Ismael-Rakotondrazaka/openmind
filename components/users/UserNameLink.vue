@@ -27,9 +27,10 @@
 
 <script lang="ts" setup>
 import type { PrimeOverlayPanel } from "#build/components";
+import type { UserFiltered } from "~/utils";
 
 interface UserNameLinkProps {
-  user: User;
+  user: UserFiltered;
 }
 
 const props = defineProps<UserNameLinkProps>();

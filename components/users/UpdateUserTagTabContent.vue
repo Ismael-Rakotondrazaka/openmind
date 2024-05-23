@@ -19,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+import { type Tag } from "@prisma/client";
 import { useIndexUserTag, useUpdateUserTag } from "~/composables";
 
 const toast = useToast();

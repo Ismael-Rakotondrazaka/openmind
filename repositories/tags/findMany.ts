@@ -1,6 +1,6 @@
-import { type Prisma } from "@prisma/client";
+import { type Prisma, type Tag } from "@prisma/client";
 import { prisma } from "~/server/middleware/0.prisma";
-import { TagSchema, type Tag } from "~/utils";
+import { TagSchema } from "~/prisma/generated/zod";
 
 export const findMany = ({
   where,

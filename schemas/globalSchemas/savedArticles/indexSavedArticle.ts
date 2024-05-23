@@ -1,6 +1,8 @@
 import { z } from "zod";
-import { SavedArticleOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/savedArticles/savedArticleOrder";
-import { SavedArticleWhereInputSchema } from "~/schemas/globalSchemas/savedArticles/savedArticleWhere";
+import {
+  SavedArticleOrderByWithRelationInputSchema,
+  SavedArticleWhereInputSchema,
+} from "~/prisma/generated/zod";
 import { SavedArticleFullSchema } from "~/schemas/globalSchemas/savedArticles/savedArticleFull";
 import {
   PaginationSchema,

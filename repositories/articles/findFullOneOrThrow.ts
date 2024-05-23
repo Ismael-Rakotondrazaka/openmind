@@ -1,4 +1,4 @@
-import { type Prisma } from "@prisma/client";
+import { type Prisma, type User } from "@prisma/client";
 import { findFullOne } from "./findFullOne";
 import { type ArticleFull } from "~/utils";
 

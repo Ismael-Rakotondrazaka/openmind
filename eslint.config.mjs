@@ -31,6 +31,7 @@ export default withNuxt([
       "dist",
       "public",
       "presets",
+      // prisma generated
       "prisma/generated",
     ],
     rules: {

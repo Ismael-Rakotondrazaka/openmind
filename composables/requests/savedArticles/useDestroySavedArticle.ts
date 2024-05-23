@@ -2,6 +2,7 @@ import type {
   AsyncDataExecuteOptions,
   AsyncDataRequestStatus,
 } from "#app/composables/asyncData";
+import type { Article } from "@prisma/client";
 import { type FetchError } from "ofetch";
 
 export const useDestroySavedArticle = (payload: {

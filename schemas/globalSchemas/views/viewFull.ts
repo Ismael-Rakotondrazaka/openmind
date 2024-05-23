@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { ViewSchema } from "~/schemas/globalSchemas/views/view";
-import { UserSchema } from "~/schemas/globalSchemas/users/user";
+import { ViewSchema } from "~/prisma/generated/zod";
+import { UserFilteredSchema } from "~/schemas/globalSchemas/users/user";
 
 export const ViewFullSchema = ViewSchema.and(
   z.object({
-    user: UserSchema,
+    user: UserFilteredSchema,
   }),
 );
 
