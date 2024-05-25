@@ -1,7 +1,4 @@
-import type {
-  AsyncDataExecuteOptions,
-  AsyncDataRequestStatus,
-} from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { type StorePasswordResetBody } from "~/utils";
 
@@ -15,13 +12,10 @@ export const useStorePasswordReset = (payload: {
     error,
     pending,
     status,
-  }: {
-    data: Ref<StorePasswordResetData["message"] | null>;
-    error: Ref<FetchError<StorePasswordResetError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-    pending: Ref<boolean>;
-    status: Ref<AsyncDataRequestStatus>;
-  } = useFetch("/api/password/reset", {
+  }: AsyncData<
+    StorePasswordResetData["message"] | null,
+    FetchError<StorePasswordResetError> | null
+  > = useFetch("/api/password/reset", {
     method: "POST",
     body: formattedBody,
     immediate: false,

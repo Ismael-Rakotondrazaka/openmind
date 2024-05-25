@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useIndexComment = (payload: {
@@ -11,23 +11,20 @@ export const useIndexComment = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<IndexCommentData | null>;
-    error: Ref<FetchError<IndexCommentError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch("/api/comments", {
-    method: "GET",
-    immediate: payload.immediate,
-    watch: [formattedQuery],
-    query: formattedQuery,
-    transform: (data): IndexCommentData | null => {
-      if (data === null || data === undefined) {
-        return null;
-      } else {
-        return IndexCommentDataSchema.parse(data);
-      }
-    },
-  });
+  }: AsyncData<IndexCommentData | null, FetchError<IndexCommentError> | null> =
+    useFetch("/api/comments", {
+      method: "GET",
+      immediate: payload.immediate,
+      watch: [formattedQuery],
+      query: formattedQuery,
+      transform: (data): IndexCommentData | null => {
+        if (data === null || data === undefined) {
+          return null;
+        } else {
+          return IndexCommentDataSchema.parse(data);
+        }
+      },
+    });
 
   /* -------------------------------- Comments ------------------------------- */
   const comments = ref<CommentFull[] | null>(data.value?.comments ?? null);

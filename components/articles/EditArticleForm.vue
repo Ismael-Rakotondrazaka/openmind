@@ -70,7 +70,7 @@
 <script setup lang="ts">
 import { type Tag } from "@prisma/client";
 import { type FetchError } from "ofetch";
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 
 const toast = useToast();
 
@@ -146,11 +146,10 @@ const {
   data: updatedArticle,
   error: fetchError,
   execute: updateArticle,
-}: {
-  data: Ref<UpdateArticleData["article"] | null>;
-  error: Ref<FetchError<UpdateArticleError> | null>;
-  execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-} = useFetch(() => `/api/articles/${article.value.slug}`, {
+}: AsyncData<
+  UpdateArticleData["article"] | null,
+  FetchError<UpdateArticleError> | null
+> = useFetch(() => `/api/articles/${article.value.slug}`, {
   method: "PUT",
   body: formData,
   immediate: false,

@@ -1,7 +1,4 @@
-import type {
-  AsyncDataExecuteOptions,
-  AsyncDataRequestStatus,
-} from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import type { Follow } from "@prisma/client";
 import { type FetchError } from "ofetch";
 
@@ -18,13 +15,10 @@ export const useDestroyFollow = (payload: {
     error,
     pending,
     status,
-  }: {
-    data: Ref<DestroyFollowData["follow"] | null>;
-    error: Ref<FetchError<DestroyFollowError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-    pending: Ref<boolean>;
-    status: Ref<AsyncDataRequestStatus>;
-  } = useFetch(url, {
+  }: AsyncData<
+    DestroyFollowData["follow"] | null,
+    FetchError<DestroyFollowError> | null
+  > = useFetch(url, {
     method: "DELETE",
     immediate: false,
     watch: false,

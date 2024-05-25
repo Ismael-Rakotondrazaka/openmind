@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useIndexArticleView = (payload: {
@@ -11,23 +11,20 @@ export const useIndexArticleView = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<IndexViewData | null>;
-    error: Ref<FetchError<IndexReactionError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch("/api/views", {
-    method: "GET",
-    immediate: payload.immediate,
-    watch: [formattedQuery],
-    query: formattedQuery,
-    transform: (data): IndexViewData | null => {
-      if (data === null || data === undefined) {
-        return null;
-      } else {
-        return IndexViewDataSchema.parse(data);
-      }
-    },
-  });
+  }: AsyncData<IndexViewData | null, FetchError<IndexReactionError> | null> =
+    useFetch("/api/views", {
+      method: "GET",
+      immediate: payload.immediate,
+      watch: [formattedQuery],
+      query: formattedQuery,
+      transform: (data): IndexViewData | null => {
+        if (data === null || data === undefined) {
+          return null;
+        } else {
+          return IndexViewDataSchema.parse(data);
+        }
+      },
+    });
 
   /* ---------------------------------- Views --------------------------------- */
   const views = ref<ViewFull[] | null>(data.value?.views ?? null);

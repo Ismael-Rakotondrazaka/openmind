@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import type { H3Error } from "h3";
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { FetchError } from "ofetch";
+import type { AsyncData } from "#app/composables/asyncData";
 
 defineOgImageComponent("DefaultOgImage");
 
@@ -23,11 +23,14 @@ const slug: ComputedRef<string> = computed(() => route.params.slug);
 
 const {
   data: article,
-}: {
-  data: Ref<ShowArticleData["article"] | null>;
-  error: Ref<H3Error<ShowArticleError> | null>;
-  execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-} = await useFetch(() => `/api/articles/${slug.value}`, {
-  transform: (value) => ShowArticleDataSchema.parse(value).article,
+}: AsyncData<
+  ShowArticleData["article"] | null,
+  FetchError<ShowArticleError> | null
+> = useFetch(() => `/api/articles/${slug.value}`, {
+  method: "GET",
+  transform: (
+    value: ShowArticleData | null,
+  ): ShowArticleData["article"] | null =>
+    value === null ? null : ShowArticleDataSchema.parse(value).article,
 });
 </script>

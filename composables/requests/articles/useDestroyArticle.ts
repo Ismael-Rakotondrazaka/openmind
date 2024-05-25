@@ -1,7 +1,4 @@
-import type {
-  AsyncDataExecuteOptions,
-  AsyncDataRequestStatus,
-} from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useDestroyArticle = (payload: {
@@ -18,13 +15,10 @@ export const useDestroyArticle = (payload: {
     error,
     pending,
     status,
-  }: {
-    data: Ref<DestroyArticleData | null>;
-    error: Ref<FetchError<DestroyArticleError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-    pending: Ref<boolean>;
-    status: Ref<AsyncDataRequestStatus>;
-  } = useFetch(formattedUrl, {
+  }: AsyncData<
+    DestroyArticleData | null,
+    FetchError<DestroyArticleError> | null
+  > = useFetch(formattedUrl, {
     method: "DELETE",
     immediate,
     watch: false,

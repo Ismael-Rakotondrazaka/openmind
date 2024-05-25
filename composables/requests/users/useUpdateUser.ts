@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useUpdateUser = (payload: {
@@ -36,23 +36,20 @@ export const useUpdateUser = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<UpdateUserData | null>;
-    error: Ref<FetchError<UpdateUserError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch(formattedUrl, {
-    method: "PUT",
-    body: formattedBody,
-    immediate,
-    watch: false,
-    transform: (data): UpdateUserData | null => {
-      if (data === null || data === undefined) {
-        return null;
-      } else {
-        return UpdateUserDataSchema.parse(data);
-      }
-    },
-  });
+  }: AsyncData<UpdateUserData | null, FetchError<UpdateUserError> | null> =
+    useFetch(formattedUrl, {
+      method: "PUT",
+      body: formattedBody,
+      immediate,
+      watch: false,
+      transform: (data): UpdateUserData | null => {
+        if (data === null || data === undefined) {
+          return null;
+        } else {
+          return UpdateUserDataSchema.parse(data);
+        }
+      },
+    });
 
   /* ---------------------------------- User ---------------------------------- */
 

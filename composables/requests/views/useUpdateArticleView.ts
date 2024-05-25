@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import type { View } from "@prisma/client";
 import { type FetchError } from "ofetch";
 
@@ -11,11 +11,10 @@ export const useUpdateArticleView = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<UpdateViewData["view"] | null>;
-    error: Ref<FetchError<UpdateViewError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch(url, {
+  }: AsyncData<
+    UpdateViewData["view"] | null,
+    FetchError<UpdateViewError> | null
+  > = useFetch(url, {
     method: "PUT",
     immediate: false,
     watch: false,

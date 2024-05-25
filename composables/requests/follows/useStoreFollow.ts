@@ -1,7 +1,4 @@
-import type {
-  AsyncDataExecuteOptions,
-  AsyncDataRequestStatus,
-} from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type Follow } from "@prisma/client";
 import { type FetchError } from "ofetch";
 import { filterFollow } from "~/utils";
@@ -17,13 +14,10 @@ export const useStoreFollow = (payload: {
     error,
     pending,
     status,
-  }: {
-    data: Ref<StoreFollowData["follow"] | null>;
-    error: Ref<FetchError<StoreFollowError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-    pending: Ref<boolean>;
-    status: Ref<AsyncDataRequestStatus>;
-  } = useFetch("/api/follows", {
+  }: AsyncData<
+    StoreFollowData["follow"] | null,
+    FetchError<StoreFollowError> | null
+  > = useFetch("/api/follows", {
     method: "POST",
     body: formattedBody,
     immediate: false,

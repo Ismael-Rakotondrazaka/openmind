@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useShowUser = (payload: {
@@ -13,22 +13,19 @@ export const useShowUser = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<ShowUserData | null>;
-    error: Ref<FetchError<ShowUserError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch(formattedUrl, {
-    method: "GET",
-    immediate: payload.immediate,
-    watch: [formattedUrl],
-    transform: (data): ShowUserData | null => {
-      if (data === null || data === undefined) {
-        return null;
-      } else {
-        return ShowUserDataSchema.parse(data);
-      }
-    },
-  });
+  }: AsyncData<ShowUserData | null, FetchError<ShowUserError> | null> =
+    useFetch(formattedUrl, {
+      method: "GET",
+      immediate: payload.immediate,
+      watch: [formattedUrl],
+      transform: (data): ShowUserData | null => {
+        if (data === null || data === undefined) {
+          return null;
+        } else {
+          return ShowUserDataSchema.parse(data);
+        }
+      },
+    });
 
   /* ---------------------------------- User ---------------------------------- */
 

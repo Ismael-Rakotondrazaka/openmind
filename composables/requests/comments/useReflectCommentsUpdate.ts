@@ -5,7 +5,9 @@ export type UseReflectCommentsUpdateFnData = Partial<Flatten<CommentFull>>;
 export type UseReflectCommentsUpdateFnDataKeys = keyof Flatten<CommentFull>;
 
 export type UseReflectCommentsUpdateFn = (
+  // eslint-disable-next-line no-unused-vars
   id: string,
+  // eslint-disable-next-line no-unused-vars
   data: UseReflectCommentsUpdateFnData,
 ) => void;
 

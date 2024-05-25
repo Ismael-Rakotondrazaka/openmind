@@ -1,7 +1,4 @@
-import type {
-  AsyncDataExecuteOptions,
-  AsyncDataRequestStatus,
-} from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import type { SavedArticle } from "@prisma/client";
 import { type FetchError } from "ofetch";
 
@@ -16,13 +13,10 @@ export const useStoreSavedArticle = (payload: {
     error,
     status,
     pending,
-  }: {
-    data: Ref<StoreSavedArticleData["savedArticle"] | null>;
-    error: Ref<FetchError<StoreSavedArticleError> | null>;
-    pending: Ref<boolean>;
-    status: Ref<AsyncDataRequestStatus>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch("/api/saved-articles", {
+  }: AsyncData<
+    StoreSavedArticleData["savedArticle"] | null,
+    FetchError<StoreSavedArticleError> | null
+  > = useFetch("/api/saved-articles", {
     method: "POST",
     body: formattedBody,
     immediate: false,

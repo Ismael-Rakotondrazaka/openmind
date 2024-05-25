@@ -1,7 +1,4 @@
-import type {
-  AsyncDataExecuteOptions,
-  AsyncDataRequestStatus,
-} from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { type Comment } from "~/prisma/generated/zod";
 import { filterComment } from "~/utils";
@@ -19,13 +16,10 @@ export const useDestroyComment = (payload: {
     error,
     pending,
     status,
-  }: {
-    data: Ref<DestroyCommentData["comment"] | null>;
-    error: Ref<FetchError<DestroyCommentError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-    pending: Ref<boolean>;
-    status: Ref<AsyncDataRequestStatus>;
-  } = useFetch(formattedUrl, {
+  }: AsyncData<
+    DestroyCommentData["comment"] | null,
+    FetchError<DestroyCommentError> | null
+  > = useFetch(formattedUrl, {
     method: "DELETE",
     immediate: false,
     watch: false,

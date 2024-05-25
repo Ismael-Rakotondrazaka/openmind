@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { type Comment } from "~/prisma/generated/zod";
 import { filterComment } from "~/utils";
@@ -12,11 +12,10 @@ export const useStoreComment = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<StoreCommentData["comment"] | null>;
-    error: Ref<FetchError<StoreCommentError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch("/api/comments", {
+  }: AsyncData<
+    StoreCommentData["comment"] | null,
+    FetchError<StoreCommentError> | null
+  > = useFetch("/api/comments", {
     method: "POST",
     body: formattedBody,
     immediate: false,

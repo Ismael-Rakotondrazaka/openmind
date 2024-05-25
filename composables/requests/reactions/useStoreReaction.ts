@@ -1,7 +1,4 @@
-import type {
-  AsyncDataExecuteOptions,
-  AsyncDataRequestStatus,
-} from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useStoreReaction = (payload: {
@@ -15,13 +12,10 @@ export const useStoreReaction = (payload: {
     error,
     pending,
     status,
-  }: {
-    data: Ref<StoreReactionData["reaction"] | null>;
-    error: Ref<FetchError<StoreReactionError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-    pending: Ref<boolean>;
-    status: Ref<AsyncDataRequestStatus>;
-  } = useFetch("/api/reactions", {
+  }: AsyncData<
+    StoreReactionData["reaction"] | null,
+    FetchError<StoreReactionError> | null
+  > = useFetch("/api/reactions", {
     method: "POST",
     body: formattedBody,
     immediate: false,

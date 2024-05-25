@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type Tag } from "@prisma/client";
 import { type FetchError } from "ofetch";
 
@@ -14,11 +14,10 @@ export const useUpdateUserTag = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<UpdateUserTagData | null>;
-    error: Ref<FetchError<UpdateUserTagError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch("/api/user-tags", {
+  }: AsyncData<
+    UpdateUserTagData | null,
+    FetchError<UpdateUserTagError> | null
+  > = useFetch("/api/user-tags", {
     method: "PUT",
     watch: false,
     body: formattedBody,

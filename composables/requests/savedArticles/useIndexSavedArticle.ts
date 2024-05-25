@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useIndexSavedArticle = (payload: {
@@ -11,11 +11,10 @@ export const useIndexSavedArticle = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<IndexSavedArticleData | null>;
-    error: Ref<FetchError<IndexSavedArticleError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch("/api/saved-articles", {
+  }: AsyncData<
+    IndexSavedArticleData | null,
+    FetchError<IndexSavedArticleError> | null
+  > = useFetch("/api/saved-articles", {
     method: "GET",
     immediate: payload.immediate,
     watch: [formattedQuery],

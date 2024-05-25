@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useDestroyReaction = (payload: {
@@ -12,11 +12,10 @@ export const useDestroyReaction = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<DestroyReactionData["reaction"] | null>;
-    error: Ref<FetchError<DestroyReactionError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch(url, {
+  }: AsyncData<
+    DestroyReactionData["reaction"] | null,
+    FetchError<DestroyReactionError> | null
+  > = useFetch(url, {
     method: "DELETE",
     immediate: false,
     watch: false,
