@@ -1,8 +1,9 @@
-import { type FetchError } from "ofetch";
 import type {
   AsyncDataExecuteOptions,
   AsyncDataRequestStatus,
 } from "#app/composables/asyncData";
+import type { Follow } from "@prisma/client";
+import { type FetchError } from "ofetch";
 
 export const useDestroyFollow = (payload: {
   followId: MaybeRefOrGetter<number>;

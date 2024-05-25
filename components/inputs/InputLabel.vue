@@ -1,13 +1,13 @@
 <template>
   <div>
-    <label :for="labelFor" class="text-text font-bold inline-block mr-2"
+    <label :for="labelFor" class="mr-2 inline-block font-bold text-text"
       >{{ label }} <span v-if="isRequired" class="text-danger">*</span></label
     >
 
     <i
       v-if="haveTooltip"
       v-tooltip="tooltipText"
-      class="inline-block text-base pi pi-question-circle"
+      class="pi pi-question-circle inline-block text-base"
     />
   </div>
 </template>

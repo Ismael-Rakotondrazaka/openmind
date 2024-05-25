@@ -1,5 +1,5 @@
-import { formatCommentImagePath } from "./formatCommentImagePath";
 import type { UploadedFile } from "~/server/utils/files";
+import { formatCommentImagePath } from "./formatCommentImagePath";
 
 export const saveCommentImage = ({
   file,

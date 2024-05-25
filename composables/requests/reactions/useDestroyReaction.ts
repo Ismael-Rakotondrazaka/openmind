@@ -1,5 +1,5 @@
-import { type FetchError } from "ofetch";
 import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import { type FetchError } from "ofetch";
 
 export const useDestroyReaction = (payload: {
   reactionId: MaybeRefOrGetter<number>;

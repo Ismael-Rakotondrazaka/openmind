@@ -1,11 +1,11 @@
-import { z } from "zod";
 import { JSDOM } from "jsdom";
-import {
-  UpdateArticleBodyBaseSchema,
-  CustomNullSchema,
-  CustomBooleanSchema,
-} from "~/schemas/globalSchemas";
+import { z } from "zod";
 import { articleConfig, articleImageConfig } from "~/configs";
+import {
+  CustomBooleanSchema,
+  CustomNullSchema,
+  UpdateArticleBodyBaseSchema,
+} from "~/schemas/globalSchemas";
 import { countHtmlAsTextLength } from "~/utils/strings";
 
 /* -------------------------------------------------------------------------- */

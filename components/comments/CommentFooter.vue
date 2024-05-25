@@ -1,12 +1,12 @@
 <template>
-  <div class="flex items-center justify-between py-1 border-y fle-row">
+  <div class="fle-row flex items-center justify-between border-y py-1">
     <div>
       <ReactionButton
         v-model:count="reactionsCount"
         v-model:reaction="reaction"
         :article-id="null"
         :comment-id="comment.id"
-        class="inline-block mr-3"
+        class="mr-3 inline-block"
       />
 
       <CommentButton

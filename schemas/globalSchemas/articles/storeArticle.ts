@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { articleConfig } from "~/configs";
-import { countHtmlAsTextLength } from "~/utils/strings";
 import { ArticleFullSchema } from "~/schemas/globalSchemas/articles/article";
+import { makeContentClientSchema } from "~/schemas/globalSchemas/contents/makeContentClientSchema";
 import { FileSchema } from "~/schemas/globalSchemas/files";
 
 /* -------------------------------------------------------------------------- */
@@ -52,40 +52,10 @@ export const StoreArticleBodyClientSchema = StoreArticleBodyBaseSchema.merge(
       })
       .nullable()
       .optional(),
-    content: z
-      .string()
-      .trim()
-      .superRefine((value: string, ctx) => {
-        const parser = new DOMParser();
-        const document = parser.parseFromString(value, "text/html");
-        const body = document.body;
-
-        const length: number = countHtmlAsTextLength(body);
-
-        if (length < articleConfig.CONTENT_MIN_LENGTH) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.too_small,
-            minimum: articleConfig.CONTENT_MIN_LENGTH,
-            inclusive: true,
-            fatal: true,
-            type: "string",
-          });
-
-          return z.NEVER;
-        }
-
-        if (length > articleConfig.CONTENT_MAX_LENGTH) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.too_big,
-            fatal: true,
-            maximum: articleConfig.CONTENT_MAX_LENGTH,
-            inclusive: true,
-            type: "string",
-          });
-
-          return z.NEVER;
-        }
-      }),
+    content: makeContentClientSchema(
+      articleConfig.CONTENT_MIN_LENGTH,
+      articleConfig.CONTENT_MAX_LENGTH,
+    ),
     cover: FileSchema.nullable().optional(),
     tagIds: z
       .array(z.number().int())

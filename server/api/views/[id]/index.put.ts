@@ -1,12 +1,12 @@
 import type { User, View } from "@prisma/client";
 import { viewRepository } from "~/repositories";
 import {
+  UpdateViewParamSchema,
+  createForbiddenError,
+  createNotFoundError,
+  createUnauthorizedError,
   type UpdateViewData,
   type UpdateViewError,
-  createUnauthorizedError,
-  createNotFoundError,
-  createForbiddenError,
-  UpdateViewParamSchema,
 } from "~/utils";
 
 export default defineEventHandler(

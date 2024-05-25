@@ -1,5 +1,5 @@
 <template>
-  <li class="flex items-center justify-between w-full">
+  <li class="flex w-full items-center justify-between">
     <div class="flex items-center justify-start gap-5">
       <NuxtLink
         :to="{

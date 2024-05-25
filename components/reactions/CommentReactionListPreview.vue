@@ -1,12 +1,12 @@
 <template>
   <button
     v-if="haveReactions"
-    class="inline-flex items-center hover:text-[--primary-color] hover:underline hover:underline-[--primary-color] text-sm text-[--text-color-secondary]"
+    class="hover:underline-[--primary-color] inline-flex items-center text-sm text-[--text-color-secondary] hover:text-[--primary-color] hover:underline"
     @click="onToggleArticleReactionSideBar"
   >
     <ArticleReactionTypeListPreview
       :reactions="reactions"
-      class="inline-flex mr-1"
+      class="mr-1 inline-flex"
     />
 
     {{ buttonLabel }}
@@ -14,6 +14,8 @@
 </template>
 
 <script setup lang="ts">
+import { type ReactionType } from "@prisma/client";
+
 const { article } = inject(ShowArticleToken) as ShowArticleDI;
 
 const { user: authUser } = inject(AuthUserToken) as AuthUserDI;
@@ -27,9 +29,14 @@ const authReaction = computed<ReactionFull | null>(() => {
     return null;
   } else {
     return {
-      ...article.value._auth.reaction,
+      articleId: article.value._auth.reaction.articleId,
+      commentId: article.value._auth.reaction.commentId,
+      createdAt: article.value._auth.reaction.createdAt,
+      id: article.value._auth.reaction.id,
+      type: article.value._auth.reaction.type,
+      userId: article.value._auth.reaction.userId,
       user: filterUser(authUser.value),
-    };
+    } as ReactionFull;
   }
 });
 

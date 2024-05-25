@@ -1,17 +1,17 @@
-import type { SafeParseReturnType } from "zod";
 import type { User } from "@prisma/client";
+import type { SafeParseReturnType } from "zod";
+import { savedArticleRepository } from "~/repositories";
+import { safeParseRequestQueryAs } from "~/server/utils";
 import {
+  IndexSavedArticleDataSchema,
+  IndexSavedArticleQuerySchema,
+  createBadRequestError,
+  createUnauthorizedError,
+  getRequestErrorMessage,
   type IndexSavedArticleData,
   type IndexSavedArticleError,
   type IndexSavedArticleQuery,
-  IndexSavedArticleQuerySchema,
-  createBadRequestError,
-  getRequestErrorMessage,
-  IndexSavedArticleDataSchema,
-  createUnauthorizedError,
 } from "~/utils";
-import { safeParseRequestQueryAs } from "~/server/utils";
-import { savedArticleRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<IndexSavedArticleData | IndexSavedArticleError> => {

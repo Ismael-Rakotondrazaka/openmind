@@ -1,5 +1,5 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
-  "exclude": ["prisma/generated"]
+  "exclude": ["prisma/generated", "node_modules"]
 }

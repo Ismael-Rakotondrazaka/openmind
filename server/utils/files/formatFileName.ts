@@ -1,7 +1,7 @@
 import mime from "mime";
-import { extractNamePart } from "./extractNamePart";
-import { fileConfig } from "~/utils";
 import { slugify } from "~/server/utils/strings";
+import { fileConfig } from "~/utils";
+import { extractNamePart } from "./extractNamePart";
 
 export const formatFilename = ({
   filename,

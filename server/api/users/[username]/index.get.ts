@@ -1,11 +1,11 @@
 import type { User } from "@prisma/client";
 import { userRepository } from "~/repositories";
 import {
-  type ShowUserData,
-  type ShowUserError,
+  ShowUserDataSchema,
   ShowUserParamSchema,
   createNotFoundError,
-  ShowUserDataSchema,
+  type ShowUserData,
+  type ShowUserError,
 } from "~/utils";
 
 export default defineEventHandler(

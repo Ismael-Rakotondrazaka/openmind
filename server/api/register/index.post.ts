@@ -1,17 +1,17 @@
-import type { z } from "zod";
 import type { User } from "@prisma/client";
-import {
-  type StoreRegisterData,
-  type StoreRegisterError,
-  type StoreRegisterBodyPEM,
-  StoreRegisterBodySchema,
-  createBadRequestError,
-  userConfig,
-  authConfig,
-  getRequestErrorMessage,
-} from "~/utils";
+import type { z } from "zod";
 import { useDayjs } from "~/composables";
 import { activationTokenRepository, userRepository } from "~/repositories";
+import {
+  StoreRegisterBodySchema,
+  authConfig,
+  createBadRequestError,
+  getRequestErrorMessage,
+  userConfig,
+  type StoreRegisterBodyPEM,
+  type StoreRegisterData,
+  type StoreRegisterError,
+} from "~/utils";
 
 export default defineEventHandler(
   async (event): Promise<StoreRegisterData | StoreRegisterError> => {

@@ -1,7 +1,7 @@
-import type { Session } from "next-auth";
-import type { H3Event, EventHandlerRequest } from "h3";
-import type { User } from "@prisma/client";
 import { getServerSession } from "#auth";
+import type { User } from "@prisma/client";
+import type { EventHandlerRequest, H3Event } from "h3";
+import type { Session } from "next-auth";
 import { userRepository } from "~/repositories";
 
 export const getAuthUser = async (

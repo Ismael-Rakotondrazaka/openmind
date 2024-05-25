@@ -1,5 +1,5 @@
-import { StatusCodes, getReasonPhrase } from "http-status-codes";
 import type { H3Event } from "h3";
+import { StatusCodes, getReasonPhrase } from "http-status-codes";
 import { errorConfig } from "~/configs/errorConfig";
 
 export type NotFoundError = {

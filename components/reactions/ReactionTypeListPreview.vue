@@ -13,6 +13,8 @@
 </template>
 
 <script lang="ts" setup>
+import { type ReactionType } from "@prisma/client";
+
 interface IReactionTypeListPreviewProps {
   reactions: ReactionFull[];
 }

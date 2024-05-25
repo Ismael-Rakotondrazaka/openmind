@@ -1,24 +1,14 @@
-import { type Prisma, type User } from "@prisma/client";
+import { type Prisma, type SavedArticle, type User } from "@prisma/client";
+import { type SavedArticleFull } from "~/utils";
 import { createOne } from "./createOne";
 import { findFullOneOrThrow } from "./findFullOneOrThrow";
-import { type SavedArticleFull, type SavedArticle } from "~/utils";
 
 export const createFullOne = ({
   authUser,
   data,
 }: {
   authUser: User;
-  data:
-    | (Prisma.Without<
-        Prisma.SavedArticleCreateInput,
-        Prisma.SavedArticleUncheckedCreateInput
-      > &
-        Prisma.SavedArticleUncheckedCreateInput)
-    | (Prisma.Without<
-        Prisma.SavedArticleUncheckedCreateInput,
-        Prisma.SavedArticleCreateInput
-      > &
-        Prisma.SavedArticleCreateInput);
+  data: Prisma.SavedArticleCreateArgs["data"];
 }): Promise<SavedArticleFull> => {
   return createOne({
     data,

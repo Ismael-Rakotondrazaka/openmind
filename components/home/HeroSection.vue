@@ -1,16 +1,16 @@
 <template>
   <div
-    class="w-full h-full flex-wrap lg:flex-nowrap gap-7 lg:gap-[unset] flex justify-center lg:justify-between relative p-10 bg-white text-gray-900"
+    class="relative flex h-full w-full flex-wrap justify-center gap-7 bg-white p-10 text-gray-900 lg:flex-nowrap lg:justify-between lg:gap-[unset]"
   >
     <div class="flex w-full items-center justify-center">
       <div class="w-full">
         <p
-          class="uppercase text-xl md:text-2xl text-primary mb-4 font-semibold"
+          class="mb-4 text-xl font-semibold uppercase text-primary md:text-2xl"
         >
           Unleash Your Thoughts, Explore Every Topic.
         </p>
         <h1
-          class="w-[600px] m-0 text-4xl md:text-6xl font-semibold mb-4 flex items-center"
+          class="m-0 mb-4 flex w-[600px] items-center text-4xl font-semibold md:text-6xl"
         >
           <span>OpenMind</span>
         </h1>
@@ -24,8 +24,8 @@
       </div>
     </div>
 
-    <div class="h-full w-full min-w-40, md:w-1/3">
-      <img src="/images/logo.svg" class="w-full h-full object-contain" />
+    <div class="min-w-40, h-full w-full md:w-1/3">
+      <img src="/images/logo.svg" class="h-full w-full object-contain" />
     </div>
   </div>
 </template>

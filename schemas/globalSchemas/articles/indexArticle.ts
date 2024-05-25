@@ -1,13 +1,15 @@
 import { z } from "zod";
-import { ArticleFullSchema } from "~/schemas/globalSchemas/articles/article";
-import { ArticleOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/articles/articleOrderBy";
-import { ArticleWhereInputSchema } from "~/schemas/globalSchemas/articles/articleWhere";
+import { articleConfig } from "~/configs";
 import {
-  makePageSizeSchema,
+  ArticleOrderByWithRelationInputSchema,
+  ArticleWhereInputSchema,
+} from "~/prisma/generated/zod";
+import { ArticleFullSchema } from "~/schemas/globalSchemas/articles/article";
+import {
   PageSchema,
   PaginationSchema,
+  makePageSizeSchema,
 } from "~/schemas/globalSchemas/paginations";
-import { articleConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                             Index article query                            */

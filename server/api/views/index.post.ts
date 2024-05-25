@@ -1,12 +1,12 @@
 import type { Article, User } from "@prisma/client";
 import { articleRepository, viewRepository } from "~/repositories";
 import {
-  type StoreViewData,
-  type StoreViewError,
+  StoreViewBodySchema,
   createBadRequestError,
   createUnauthorizedError,
   getRequestErrorMessage,
-  StoreViewBodySchema,
+  type StoreViewData,
+  type StoreViewError,
 } from "~/utils";
 
 export default defineEventHandler(

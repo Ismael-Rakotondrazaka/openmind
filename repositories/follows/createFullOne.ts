@@ -1,22 +1,12 @@
-import { type Prisma } from "@prisma/client";
+import { type Follow, type Prisma } from "@prisma/client";
+import { type FollowFull } from "~/utils";
 import { createOne } from "./createOne";
 import { findFullOneOrThrow } from "./findFullOneOrThrow";
-import { type FollowFull, type Follow } from "~/utils";
 
 export const createFullOne = ({
   data,
 }: {
-  data:
-    | (Prisma.Without<
-        Prisma.FollowCreateInput,
-        Prisma.FollowUncheckedCreateInput
-      > &
-        Prisma.FollowUncheckedCreateInput)
-    | (Prisma.Without<
-        Prisma.FollowUncheckedCreateInput,
-        Prisma.FollowCreateInput
-      > &
-        Prisma.FollowCreateInput);
+  data: Prisma.FollowCreateArgs["data"];
 }): Promise<FollowFull> => {
   return createOne({
     data,

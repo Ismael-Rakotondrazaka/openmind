@@ -1,12 +1,11 @@
 import { z } from "zod";
-import { JSDOM } from "jsdom";
-import {
-  StoreArticleBodyBaseSchema,
-  CustomNullSchema,
-  CustomBooleanSchema,
-} from "~/schemas/globalSchemas";
 import { articleConfig, articleImageConfig } from "~/configs";
-import { countHtmlAsTextLength } from "~/utils/strings";
+import {
+  CustomBooleanSchema,
+  CustomNullSchema,
+  StoreArticleBodyBaseSchema,
+} from "~/schemas/globalSchemas";
+import { makeContentServerSchema } from "~/schemas/serverSchemas/contents/makeContentServerSchema";
 
 /* -------------------------------------------------------------------------- */
 /*                             Store article body                             */
@@ -49,34 +48,10 @@ export const StoreArticleBodySchema = StoreArticleBodyBaseSchema.merge(
         .optional(),
       CustomNullSchema,
     ]),
-    content: z
-      .string()
-      .trim()
-      .superRefine((value: string, ctx) => {
-        const dom = new JSDOM(value);
-
-        const length: number = countHtmlAsTextLength(dom.window.document.body);
-
-        if (length < articleConfig.CONTENT_MIN_LENGTH) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Content is too short",
-            fatal: true,
-          });
-
-          return z.NEVER;
-        }
-
-        if (length > articleConfig.CONTENT_MAX_LENGTH) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Content is too long",
-            fatal: true,
-          });
-
-          return z.NEVER;
-        }
-      }),
+    content: makeContentServerSchema(
+      articleConfig.CONTENT_MIN_LENGTH,
+      articleConfig.CONTENT_MAX_LENGTH,
+    ),
     cover: z
       .union([
         makeSafeFileSchema(

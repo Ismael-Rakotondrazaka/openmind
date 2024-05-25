@@ -1,12 +1,12 @@
 import type { User } from "@prisma/client";
 import { userRepository } from "~/repositories";
 import {
-  type IndexUserData,
-  type IndexUserError,
+  IndexUserDataSchema,
   IndexUserQuerySchema,
   createBadRequestError,
   getRequestErrorMessage,
-  IndexUserDataSchema,
+  type IndexUserData,
+  type IndexUserError,
 } from "~/utils";
 
 export default defineEventHandler(

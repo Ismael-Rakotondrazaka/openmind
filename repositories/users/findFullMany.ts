@@ -1,4 +1,4 @@
-import { type Prisma, type User } from "@prisma/client";
+import { type Follow, type Prisma, type User } from "@prisma/client";
 import { prisma } from "~/server/middleware/0.prisma";
 import { UserFullSchema, type UserFull } from "~/utils";
 
@@ -125,15 +125,15 @@ export const findFullMany = ({
         if (authUser !== null) {
           if (user.followers.length > 0) {
             _auth.follower = user.followers[0] as Follow & {
-              following: Omit<User, "password" | "email" | "emailVerifiedAt">;
-              follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
+              following: User;
+              follower: User;
             };
           }
 
           if (user.following.length > 0) {
             _auth.following = user.following[0] as Follow & {
-              following: Omit<User, "password" | "email" | "emailVerifiedAt">;
-              follower: Omit<User, "password" | "email" | "emailVerifiedAt">;
+              following: User;
+              follower: User;
             };
           }
         }

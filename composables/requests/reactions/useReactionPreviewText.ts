@@ -4,7 +4,7 @@ export const useReactionPreviewText = (payload: {
   count: MaybeRefOrGetter<number>;
 }) => {
   const text = computed<string>(() => {
-    const getFullName = (user: User): string =>
+    const getFullName = (user: UserFiltered): string =>
       `${user.firstName} ${user.name}`;
 
     let result = "";

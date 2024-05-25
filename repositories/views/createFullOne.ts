@@ -1,16 +1,12 @@
-import { type Prisma } from "@prisma/client";
+import { type Prisma, type View } from "@prisma/client";
+import { type ViewFull } from "~/utils";
 import { createOne } from "./createOne";
 import { findFullOneOrThrow } from "./findFullOneOrThrow";
-import { type ViewFull, type View } from "~/utils";
 
 export const createFullOne = ({
   data,
 }: {
-  data:
-    | (Prisma.Without<Prisma.ViewCreateInput, Prisma.ViewUncheckedCreateInput> &
-        Prisma.ViewUncheckedCreateInput)
-    | (Prisma.Without<Prisma.ViewUncheckedCreateInput, Prisma.ViewCreateInput> &
-        Prisma.ViewCreateInput);
+  data: Prisma.ViewCreateArgs["data"];
 }): Promise<ViewFull> => {
   return createOne({
     data,

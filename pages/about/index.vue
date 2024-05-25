@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto h-full flex items-center justify-center w-full max-w-lg">
+  <div class="mx-auto flex h-full w-full max-w-lg items-center justify-center">
     <PrimeCard>
       <template #title>
         <h1>OpenMind</h1>
@@ -10,7 +10,7 @@
       </template>
 
       <template #content>
-        <picture class="block w-full max-w-xs mb-5">
+        <picture class="mb-5 block w-full max-w-xs">
           <img src="/images/logo.svg" alt="Logo" class="w-full object-cover" />
         </picture>
 

@@ -1,12 +1,12 @@
-import type { Article, User, Comment } from "@prisma/client";
+import type { Article, Comment, User } from "@prisma/client";
 import { articleRepository, commentRepository } from "~/repositories";
 import {
-  type StoreCommentData,
-  type StoreCommentError,
+  StoreCommentDataSchema,
   createBadRequestError,
   createUnauthorizedError,
   getRequestErrorMessage,
-  StoreCommentDataSchema,
+  type StoreCommentData,
+  type StoreCommentError,
 } from "~/utils";
 
 export default defineEventHandler(

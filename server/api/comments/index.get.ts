@@ -1,14 +1,14 @@
 import type { User } from "@prisma/client";
+import { commentRepository } from "~/repositories";
+import { safeParseRequestQueryAs } from "~/server/utils";
 import {
-  type IndexCommentData,
-  type IndexCommentError,
+  IndexCommentDataSchema,
   IndexCommentQuerySchema,
   createBadRequestError,
   getRequestErrorMessage,
-  IndexCommentDataSchema,
+  type IndexCommentData,
+  type IndexCommentError,
 } from "~/utils";
-import { safeParseRequestQueryAs } from "~/server/utils";
-import { commentRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<IndexCommentData | IndexCommentError> => {

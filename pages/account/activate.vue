@@ -1,7 +1,7 @@
 <template>
   <div class="mx-auto w-full max-w-[1200px]">
     <form
-      class="w-full max-w-[700px] mx-auto"
+      class="mx-auto w-full max-w-[700px]"
       @submit.prevent="onActivateAccountHandler"
     >
       <PrimeCard

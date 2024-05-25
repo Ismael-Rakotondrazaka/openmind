@@ -8,6 +8,8 @@
 </template>
 
 <script lang="ts" setup>
+import { type Tag } from "@prisma/client";
+
 interface ArticleTagInputProps {
   errorMessage?: string;
 }

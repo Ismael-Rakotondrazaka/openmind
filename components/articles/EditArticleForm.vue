@@ -1,9 +1,9 @@
 <template>
   <div>
     <form class="w-full" @submit.prevent="">
-      <div class="text-text text-2xl font-bold mb-3">Edit Your Article</div>
+      <div class="mb-3 text-2xl font-bold text-text">Edit Your Article</div>
 
-      <div class="text-text mb-7">
+      <div class="mb-7 text-text">
         Ready to enhance your content? Update your article with fresh insights
         or additional information. Simply fill in the form below to make your
         changes. Keep your readers engaged with the latest updates!
@@ -13,13 +13,13 @@
         <ArticleTitleInput
           v-model:title="title"
           :error-message="validationErrors.title"
-          class="flex flex-col w-full gap-2"
+          class="flex w-full flex-col gap-2"
         />
 
         <ArticleSummaryInput
           v-model:summary="summary"
           :error-message="validationErrors.summary"
-          class="flex flex-col w-full gap-2"
+          class="flex w-full flex-col gap-2"
         />
 
         <ArticleTagInput
@@ -42,7 +42,7 @@
         />
       </div>
 
-      <div class="flex items-center flex-wrap gap-3 justify-start">
+      <div class="flex flex-wrap items-center justify-start gap-3">
         <PrimeButton
           type="submit"
           :label="saveButtonLabel"
@@ -68,6 +68,7 @@
 </template>
 
 <script setup lang="ts">
+import { type Tag } from "@prisma/client";
 import { type FetchError } from "ofetch";
 import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 

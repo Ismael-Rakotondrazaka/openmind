@@ -19,6 +19,7 @@ export const makeContentClientSchema = (minLength: number, maxLength: number) =>
           inclusive: true,
           fatal: true,
           type: "string",
+          message: `Must contain at least ${minLength} character(s), given ${length} character(s)`,
         });
 
         return z.NEVER;
@@ -31,6 +32,7 @@ export const makeContentClientSchema = (minLength: number, maxLength: number) =>
           maximum: maxLength,
           inclusive: true,
           type: "string",
+          message: `Must contain at least ${maxLength} character(s), given ${length} character(s)`,
         });
 
         return z.NEVER;

@@ -1,13 +1,15 @@
 import { z } from "zod";
-import { ViewFullSchema } from "~/schemas/globalSchemas/views/viewFull";
+import { viewConfig } from "~/configs";
 import {
-  makePageSizeSchema,
+  ViewOrderByWithRelationInputSchema,
+  ViewWhereInputSchema,
+} from "~/prisma/generated/zod";
+import {
   PageSchema,
   PaginationSchema,
+  makePageSizeSchema,
 } from "~/schemas/globalSchemas/paginations";
-import { ViewOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/views/viewOrder";
-import { ViewWhereInputSchema } from "~/schemas/globalSchemas/views/viewWhere";
-import { viewConfig } from "~/configs";
+import { ViewFullSchema } from "~/schemas/globalSchemas/views/viewFull";
 
 /* -------------------------------------------------------------------------- */
 /*                              Index view query                              */

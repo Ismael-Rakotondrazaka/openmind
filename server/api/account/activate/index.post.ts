@@ -1,11 +1,11 @@
 import type { ActivationToken, User } from "@prisma/client";
 import { activationTokenRepository, userRepository } from "~/repositories";
 import {
+  StoreAccountActivateBodySchema,
   createBadRequestError,
   getRequestErrorMessage,
   type StoreAccountActivateData,
   type StoreAccountActivateError,
-  StoreAccountActivateBodySchema,
 } from "~/utils";
 
 export default defineEventHandler(

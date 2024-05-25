@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <main class="antialiased w-full">
+    <main class="w-full antialiased">
       <article class="w-full">
         <ArticleHeader />
 

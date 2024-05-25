@@ -1,5 +1,5 @@
 import type { H3Event } from "h3";
-import type { SafeParseReturnType, output, input, ZodTypeAny } from "zod";
+import type { SafeParseReturnType, ZodTypeAny, input, output } from "zod";
 import { zfd } from "zod-form-data";
 import { getRequestQuery } from "~/server/utils/requests/getRequestQuery";
 

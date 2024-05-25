@@ -1,12 +1,12 @@
 import { faker } from "@faker-js/faker";
 import type {
-  PrismaClient,
-  ReactionType,
-  Comment,
   Article,
-  User,
-  Reaction,
+  Comment,
   Prisma,
+  PrismaClient,
+  Reaction,
+  ReactionType,
+  User,
 } from "@prisma/client";
 
 const createType = (): ReactionType => {

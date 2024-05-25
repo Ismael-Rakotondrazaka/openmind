@@ -7,7 +7,7 @@
   >
     <svg
       v-if="isActive"
-      class="pi !text-3xl mx-3"
+      class="pi mx-3 !text-3xl"
       xmlns="http://www.w3.org/2000/svg"
       width="1em"
       height="1em"
@@ -25,7 +25,7 @@
     </svg>
     <svg
       v-else
-      class="pi !text-3xl mx-3"
+      class="pi mx-3 !text-3xl"
       xmlns="http://www.w3.org/2000/svg"
       width="1em"
       height="1em"

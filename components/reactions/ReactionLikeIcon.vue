@@ -1,6 +1,6 @@
 <template>
   <i
-    class="text-white bg-blue-600 border-2 border-white rounded-full pi pi-thumbs-up-fill"
+    class="pi pi-thumbs-up-fill rounded-full border-2 border-white bg-blue-600 text-white"
     :class="[paddingClass, fontSizeClass]"
   ></i>
 </template>

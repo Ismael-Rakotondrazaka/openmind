@@ -1,13 +1,15 @@
 import { z } from "zod";
+import { tagConfig } from "~/configs";
 import {
-  makePageSizeSchema,
+  TagOrderByWithRelationInputSchema,
+  TagSchema,
+  TagWhereInputSchema,
+} from "~/prisma/generated/zod";
+import {
   PageSchema,
   PaginationSchema,
+  makePageSizeSchema,
 } from "~/schemas/globalSchemas/paginations";
-import { TagOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/tags/tagOrder";
-import { TagWhereInputSchema } from "~/schemas/globalSchemas/tags/tagWhere";
-import { TagSchema } from "~/schemas/globalSchemas/tags/tag";
-import { tagConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                               Index tag query                              */

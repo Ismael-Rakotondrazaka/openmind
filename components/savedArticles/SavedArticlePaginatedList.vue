@@ -60,7 +60,9 @@ const { savedArticles, pagination } = useIndexSavedArticle({
 const articles = computed<ArticleFull[]>(() =>
   savedArticles.value === null
     ? []
-    : savedArticles.value.map((savedArticle) => savedArticle.article),
+    : savedArticles.value.map(
+        (savedArticle: SavedArticleFull) => savedArticle.article,
+      ),
 );
 
 watchImmediate(pagination, (newValue) => {

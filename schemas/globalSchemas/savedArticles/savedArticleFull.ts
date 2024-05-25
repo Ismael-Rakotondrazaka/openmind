@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { SavedArticleSchema } from "~/schemas/globalSchemas/savedArticles/savedArticle";
+import { SavedArticleSchema } from "~/prisma/generated/zod";
 import { ArticleFullSchema } from "~/schemas/globalSchemas/articles/article";
 
 export const SavedArticleFullSchema = SavedArticleSchema.and(

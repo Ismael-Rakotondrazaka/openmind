@@ -1,19 +1,11 @@
 import { z } from "zod";
-import { UserSchema } from "~/schemas/globalSchemas/users/user";
-
-export const FollowSchema = z.object({
-  id: z.number().int(),
-  createdAt: z.coerce.date(),
-  followerId: z.number().int(),
-  followingId: z.number().int(),
-});
-
-export type Follow = z.infer<typeof FollowSchema>;
+import { FollowSchema } from "~/prisma/generated/zod";
+import { UserFilteredSchema } from "~/schemas/globalSchemas/users/user";
 
 export const FollowFullSchema = FollowSchema.merge(
   z.object({
-    following: UserSchema,
-    follower: UserSchema,
+    following: UserFilteredSchema,
+    follower: UserFilteredSchema,
   }),
 );
 

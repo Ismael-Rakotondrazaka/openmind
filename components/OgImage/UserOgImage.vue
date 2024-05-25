@@ -1,16 +1,16 @@
 <template>
   <div
     v-if="user !== undefined"
-    class="w-full h-full flex flex-col justify-between items-center relative bg-white text-gray-900 p-10"
+    class="relative flex h-full w-full flex-col items-center justify-between bg-white p-10 text-gray-900"
   >
-    <div class="w-full flex flex-col justify-center items-center">
+    <div class="flex w-full flex-col items-center justify-center">
       <img
         v-if="user.profileUrl !== null"
-        class="mr-3 rounded-full w-64 h-64 object-cover"
+        class="mr-3 h-64 w-64 rounded-full object-cover"
         :src="user.profileUrl"
         :alt="`${user.firstName} ${user.name}`"
       />
-      <p v-else class="rounded-full w-64 h-64 object-cover">
+      <p v-else class="h-64 w-64 rounded-full object-cover">
         {{ user.firstName[0] }}
       </p>
 
@@ -29,8 +29,8 @@
       </div>
     </div>
 
-    <div class="flex flex-row justify-center items-center text-left w-full">
-      <img src="/images/logo.svg" alt="Logo" class="w-16 h-16 mr-5" />
+    <div class="flex w-full flex-row items-center justify-center text-left">
+      <img src="/images/logo.svg" alt="Logo" class="mr-5 h-16 w-16" />
 
       <p style="font-size: 25px" class="font-bold">OpenMind</p>
     </div>

@@ -1,5 +1,5 @@
-import { authConfig } from "~/utils";
 import { useDayjs } from "~/composables";
+import { authConfig } from "~/utils";
 
 export const sendActivationLink = ({
   email,

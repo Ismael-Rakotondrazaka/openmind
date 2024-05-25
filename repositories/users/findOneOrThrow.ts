@@ -1,6 +1,6 @@
 import { type Prisma, type User } from "@prisma/client";
-import { findOne } from "./findOne";
 import {} from "~/utils";
+import { findOne } from "./findOne";
 
 export const findOneOrThrow = async ({
   where,

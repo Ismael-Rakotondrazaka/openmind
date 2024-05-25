@@ -1,6 +1,6 @@
 import { type Prisma } from "@prisma/client";
-import { findFullOne } from "./findFullOne";
 import { type ViewFull } from "~/utils";
+import { findFullOne } from "./findFullOne";
 
 export const findFullOneOrThrow = async ({
   where,

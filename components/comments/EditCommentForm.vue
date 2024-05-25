@@ -11,7 +11,7 @@
         :current="comment"
         :parent="null"
         :error-message="validationErrors.content"
-        class="w-full mb-3"
+        class="mb-3 w-full"
       />
 
       <PrimeButton

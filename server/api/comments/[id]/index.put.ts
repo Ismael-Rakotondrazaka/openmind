@@ -1,17 +1,17 @@
 import type { Comment, User } from "@prisma/client";
+import { commentRepository } from "~/repositories";
+import { UpdateCommentBodySchema } from "~/server/utils";
 import {
+  UpdateCommentDataSchema,
+  UpdateCommentParamSchema,
+  createBadRequestError,
+  createForbiddenError,
+  createNotFoundError,
+  createUnauthorizedError,
+  getRequestErrorMessage,
   type UpdateCommentData,
   type UpdateCommentError,
-  createBadRequestError,
-  createUnauthorizedError,
-  createNotFoundError,
-  createForbiddenError,
-  getRequestErrorMessage,
-  UpdateCommentParamSchema,
-  UpdateCommentDataSchema,
 } from "~/utils";
-import { UpdateCommentBodySchema } from "~/server/utils";
-import { commentRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<UpdateCommentData | UpdateCommentError> => {

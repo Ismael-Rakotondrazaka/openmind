@@ -24,7 +24,7 @@
     <template #item="{ item, props: menuRouterBindProps }">
       <a
         v-ripple
-        class="flex align-items-center"
+        class="align-items-center flex"
         v-bind="menuRouterBindProps.action"
         :class="item.class"
       >
@@ -33,7 +33,7 @@
         <PrimeBadge v-if="item.badge" class="ml-auto" :value="item.badge" />
         <span
           v-if="item.shortcut"
-          class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+          class="border-1 surface-border border-round surface-100 ml-auto p-1 text-xs"
           >{{ item.shortcut }}</span
         >
       </a>

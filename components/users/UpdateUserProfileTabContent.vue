@@ -5,13 +5,13 @@
         <UserFirstNameInput
           v-model:firstName="firstName"
           :error-message="validationErrors.firstName"
-          class="flex flex-col w-full gap-2"
+          class="flex w-full flex-col gap-2"
         />
 
         <UserNameInput
           v-model:name="name"
           :error-message="validationErrors.name"
-          class="flex flex-col w-full gap-2"
+          class="flex w-full flex-col gap-2"
         />
       </div>
 

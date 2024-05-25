@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ReactionTypeSchema } from "~/schemas/globalSchemas/reactions/reactionType";
+import { ReactionTypeSchema } from "~/prisma/generated/zod";
 
 export const ReactionBaseSchema = z.object({
   type: ReactionTypeSchema,

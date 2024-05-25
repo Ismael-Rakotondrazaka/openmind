@@ -1,7 +1,7 @@
 import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
+import { type Comment } from "~/prisma/generated/zod";
 import { filterComment } from "~/utils";
-import { type Comment } from "~/utils";
 
 export const useStoreComment = (payload: {
   body: MaybeRefOrGetter<StoreCommentBody>;

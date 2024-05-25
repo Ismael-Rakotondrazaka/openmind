@@ -10,7 +10,7 @@
       },
     }"
   >
-    <div class="w-full max-w-2xl mx-auto">
+    <div class="mx-auto w-full max-w-2xl">
       <PrimeButton
         text
         :label="loadCommentsButtonLabel"
@@ -25,7 +25,7 @@
 
       <p
         v-if="comments === null || comments.length === 0"
-        class="text-center font-bold text-text text-lg"
+        class="text-center text-lg font-bold text-text"
       >
         No comments yet.
       </p>

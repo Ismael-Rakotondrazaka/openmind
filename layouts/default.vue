@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen -pt-16">
+  <div class="-pt-16 min-h-screen">
     <AppHeader />
 
-    <div class="min-h-screen py-32 px-6">
+    <div class="min-h-screen px-6 py-32">
       <slot />
     </div>
     <AppFooter />

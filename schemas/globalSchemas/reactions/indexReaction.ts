@@ -1,13 +1,15 @@
 import { z } from "zod";
-import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
-import { ReactionOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/reactions/reactionOrder";
-import { ReactionWhereInputSchema } from "~/schemas/globalSchemas/reactions/reactionWhere";
+import { reactionConfig } from "~/configs";
 import {
-  makePageSizeSchema,
+  ReactionOrderByWithRelationInputSchema,
+  ReactionWhereInputSchema,
+} from "~/prisma/generated/zod";
+import {
   PageSchema,
   PaginationSchema,
+  makePageSizeSchema,
 } from "~/schemas/globalSchemas/paginations";
-import { reactionConfig } from "~/configs";
+import { ReactionFullSchema } from "~/schemas/globalSchemas/reactions/reaction";
 
 /* -------------------------------------------------------------------------- */
 /*                            Index reaction query                            */

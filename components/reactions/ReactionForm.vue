@@ -4,7 +4,7 @@
     @pointerleave="onMouseLeaveEventHandler"
   >
     <ul
-      class="flex flex-row flex-nowrap justify-evenly gap-3 w-[25rem], text-center"
+      class="w-[25rem], flex flex-row flex-nowrap justify-evenly gap-3 text-center"
     >
       <li>
         <ReactionLikeButton
@@ -38,6 +38,8 @@
 </template>
 
 <script lang="ts" setup>
+import { type ReactionType } from "@prisma/client";
+
 interface ArticleReactionFormProps {
   articleId: null;
   commentId: string;

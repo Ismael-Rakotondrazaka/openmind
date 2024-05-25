@@ -12,6 +12,8 @@
 </template>
 
 <script lang="ts" setup>
+import { type SavedArticle } from "@prisma/client";
+
 interface SaveArticleButton {
   articleId: string;
 }

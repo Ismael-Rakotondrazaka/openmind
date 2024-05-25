@@ -1,19 +1,19 @@
 import { z } from "zod";
-import { UserSchema } from "~/schemas/globalSchemas/users/user";
-import { FollowSchema } from "~/schemas/globalSchemas/follows/follow";
+import { FollowSchema } from "~/prisma/generated/zod";
+import { UserFilteredSchema } from "~/schemas/globalSchemas/users/user";
 
 export const UserAuthSchema = z.object({
   _auth: z.object({
     following: FollowSchema.and(
       z.object({
-        follower: UserSchema,
-        following: UserSchema,
+        follower: UserFilteredSchema,
+        following: UserFilteredSchema,
       }),
     ).nullable(),
     follower: FollowSchema.and(
       z.object({
-        follower: UserSchema,
-        following: UserSchema,
+        follower: UserFilteredSchema,
+        following: UserFilteredSchema,
       }),
     ).nullable(),
   }),

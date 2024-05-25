@@ -1,3 +1,5 @@
+import type { ReactionType } from "@prisma/client";
+
 export interface IUseReactionListPreviewBaseArg {
   authUserId: MaybeRefOrGetter<number | null>;
   immediate?: boolean;

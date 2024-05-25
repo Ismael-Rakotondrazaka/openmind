@@ -1,4 +1,5 @@
 import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { View } from "@prisma/client";
 import { type FetchError } from "ofetch";
 
 export type UseStoreViewReturn = {

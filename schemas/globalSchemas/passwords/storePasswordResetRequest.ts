@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { userConfig } from "@/configs";
+import { z } from "zod";
 
 /* -------------------------------------------------------------------------- */
 /*                          Store Password Reset Request Body                         */

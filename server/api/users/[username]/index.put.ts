@@ -1,19 +1,19 @@
-import type { SafeParseReturnType } from "zod";
 import type { User } from "@prisma/client";
+import type { SafeParseReturnType } from "zod";
+import { userRepository } from "~/repositories";
+import { UpdateUserBodySchema } from "~/server/utils";
 import {
+  UpdateUserDataSchema,
+  UpdateUserParamSchema,
+  createBadRequestError,
+  createForbiddenError,
+  createNotFoundError,
+  createUnauthorizedError,
+  getRequestErrorMessage,
   type UpdateUserData,
   type UpdateUserError,
   type UpdateUserParam,
-  createBadRequestError,
-  createUnauthorizedError,
-  createNotFoundError,
-  createForbiddenError,
-  getRequestErrorMessage,
-  UpdateUserParamSchema,
-  UpdateUserDataSchema,
 } from "~/utils";
-import { UpdateUserBodySchema } from "~/server/utils";
-import { userRepository } from "~/repositories";
 
 export default defineEventHandler(
   async (event): Promise<UpdateUserData | UpdateUserError> => {

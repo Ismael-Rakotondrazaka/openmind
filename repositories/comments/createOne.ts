@@ -1,4 +1,4 @@
-import { type Prisma, type Comment } from "@prisma/client";
+import { type Comment, type Prisma } from "@prisma/client";
 import { prisma } from "~/server/middleware/0.prisma";
 
 export const createOne = ({

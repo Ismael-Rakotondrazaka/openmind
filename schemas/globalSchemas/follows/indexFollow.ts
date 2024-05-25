@@ -1,13 +1,15 @@
 import { z } from "zod";
-import { FollowFullSchema } from "~/schemas/globalSchemas/follows/follow";
-import { FollowOrderByWithRelationInputSchema } from "~/schemas/globalSchemas/follows/followOrder";
-import { FollowWhereInputSchema } from "~/schemas/globalSchemas/follows/followWhere";
+import { followConfig } from "~/configs";
 import {
-  makePageSizeSchema,
+  FollowOrderByWithRelationInputSchema,
+  FollowWhereInputSchema,
+} from "~/prisma/generated/zod";
+import { FollowFullSchema } from "~/schemas/globalSchemas/follows/follow";
+import {
   PageSchema,
   PaginationSchema,
+  makePageSizeSchema,
 } from "~/schemas/globalSchemas/paginations";
-import { followConfig } from "~/configs";
 
 /* -------------------------------------------------------------------------- */
 /*                             Index follow query                             */

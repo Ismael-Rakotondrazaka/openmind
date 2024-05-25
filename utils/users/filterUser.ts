@@ -1,4 +1,6 @@
-export const filterUser = <T>(data: T & User): User => {
+import type { UserFiltered } from "..";
+
+export const filterUser = <T>(data: T & UserFiltered): UserFiltered => {
   return {
     id: data.id,
     role: data.role,

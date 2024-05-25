@@ -1,21 +1,11 @@
-import { type Prisma } from "@prisma/client";
+import { type Prisma, type SavedArticle } from "@prisma/client";
+import { SavedArticleSchema } from "~/prisma/generated/zod";
 import { prisma } from "~/server/middleware/0.prisma";
-import { type SavedArticle, SavedArticleSchema } from "~/utils";
 
 export const createOne = async ({
   data,
 }: {
-  data:
-    | (Prisma.Without<
-        Prisma.SavedArticleCreateInput,
-        Prisma.SavedArticleUncheckedCreateInput
-      > &
-        Prisma.SavedArticleUncheckedCreateInput)
-    | (Prisma.Without<
-        Prisma.SavedArticleUncheckedCreateInput,
-        Prisma.SavedArticleCreateInput
-      > &
-        Prisma.SavedArticleCreateInput);
+  data: Prisma.SavedArticleCreateArgs["data"];
 }): Promise<SavedArticle> => {
   const rawSavedArticle = await prisma.savedArticle.create({
     data,

@@ -1,13 +1,13 @@
 <template>
-  <div class="flex flex-col items-start bg-[--surface-0] rounded-md w-full">
+  <div class="flex w-full flex-col items-start rounded-md bg-[--surface-0]">
     <div
       :class="[bgClass]"
-      class="self-center rounded-full text-white shadow-md inline-flex justify-center items-center h-[6rem] w-[6rem] -mt-16"
+      class="-mt-16 inline-flex h-[6rem] w-[6rem] items-center justify-center self-center rounded-full text-white shadow-md"
     >
       <i class="text-5xl" :class="[iconClass]"></i>
     </div>
     <span
-      class="self-center text-center block whitespace-pre-wrap mt-4 mb-2 text-2xl font-bold text-text"
+      class="mb-2 mt-4 block self-center whitespace-pre-wrap text-center text-2xl font-bold text-text"
       >{{ content }}</span
     >
   </div>
