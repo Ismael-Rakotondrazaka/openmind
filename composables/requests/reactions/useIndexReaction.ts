@@ -5,7 +5,9 @@ export const useIndexReaction = (payload: {
   query: MaybeRefOrGetter<IndexReactionQuery>;
   immediate?: boolean;
 }) => {
-  const formattedQuery = computed(() => toValue(payload.query));
+  const formattedQuery = computed(() =>
+    JSONStringifyNested(toValue(payload.query)),
+  );
 
   const {
     data,

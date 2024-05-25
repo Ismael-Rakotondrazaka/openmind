@@ -10,15 +10,15 @@ export const useIndexSortedComment = (payload: {
 }) => {
   const page = ref(0);
 
-  const formattedQuery = computed<IndexCommentQuery>(() => {
-    return {
+  const formattedQuery = computed(() => {
+    return JSONStringifyNested({
       where: toValue(payload.where),
       orderBy: {
         createdAt: "desc",
       },
       page: page.value,
       pageSize: payload.pageSize,
-    };
+    });
   });
 
   const {

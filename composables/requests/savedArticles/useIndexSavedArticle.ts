@@ -5,7 +5,9 @@ export const useIndexSavedArticle = (payload: {
   query: MaybeRefOrGetter<IndexSavedArticleQuery>;
   immediate?: boolean;
 }) => {
-  const formattedQuery = computed(() => toValue(payload.query));
+  const formattedQuery = computed(() =>
+    JSONStringifyNested(toValue(payload.query)),
+  );
 
   const {
     data,
