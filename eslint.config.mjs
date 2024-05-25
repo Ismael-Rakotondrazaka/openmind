@@ -1,5 +1,4 @@
 // @ts-check
-import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import withNuxt from "./.nuxt/eslint.config.mjs";
 // import tseslint from "typescript-eslint";
@@ -7,18 +6,6 @@ import withNuxt from "./.nuxt/eslint.config.mjs";
 // Your custom configs here
 export default withNuxt([
   {
-    // plugins: {
-    //   typescriptEslint,
-    // },
-    files: [
-      "./",
-      "./configs/**/*.ts",
-      "./di/**/*.ts",
-      "./repositories/**/*.ts",
-      "./schemas/**/*.ts",
-      "./services/**/*.ts",
-      "./utils/**/*.ts",
-    ],
     ignores: [
       // # ignore generate imports
       "auto-imports.d.ts",
@@ -76,8 +63,5 @@ export default withNuxt([
       "import/no-named-as-default-member": "off",
     },
   },
-  eslintConfigPrettier,
   eslintPluginPrettierRecommended,
-  // @ts-ignore
-  // ...tseslint.configs.recommended,
 ]);
