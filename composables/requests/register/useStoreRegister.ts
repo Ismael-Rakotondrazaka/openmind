@@ -1,7 +1,4 @@
-import type {
-  AsyncDataExecuteOptions,
-  AsyncDataRequestStatus,
-} from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { type StoreRegisterBody } from "~/utils";
 
@@ -15,13 +12,10 @@ export const useStoreRegister = (payload: {
     error,
     pending,
     status,
-  }: {
-    data: Ref<StoreRegisterData["user"] | null>;
-    error: Ref<FetchError<StoreRegisterError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-    pending: Ref<boolean>;
-    status: Ref<AsyncDataRequestStatus>;
-  } = useFetch("/api/register", {
+  }: AsyncData<
+    StoreRegisterData["user"] | null,
+    FetchError<StoreRegisterError> | null
+  > = useFetch("/api/register", {
     method: "POST",
     body: formattedBody,
     immediate: false,

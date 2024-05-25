@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useUpdateReaction = (payload: {
@@ -13,11 +13,10 @@ export const useUpdateReaction = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<UpdateReactionData["reaction"] | null>;
-    error: Ref<FetchError<UpdateReactionError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch(url, {
+  }: AsyncData<
+    UpdateReactionData["reaction"] | null,
+    FetchError<UpdateReactionError> | null
+  > = useFetch(url, {
     method: "PUT",
     body: formattedBody,
     immediate: false,

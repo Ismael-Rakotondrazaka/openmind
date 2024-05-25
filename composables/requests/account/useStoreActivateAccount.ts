@@ -1,7 +1,4 @@
-import type {
-  AsyncDataExecuteOptions,
-  AsyncDataRequestStatus,
-} from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 import { type StoreAccountActivateBody } from "~/utils";
 
@@ -16,13 +13,10 @@ export const useStoreActivateAccount = (payload: {
     error,
     pending,
     status,
-  }: {
-    data: Ref<StoreAccountActivateData | null>;
-    error: Ref<FetchError<StoreAccountActivateError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-    pending: Ref<boolean>;
-    status: Ref<AsyncDataRequestStatus>;
-  } = useFetch("/api/account/activate", {
+  }: AsyncData<
+    StoreAccountActivateData | null,
+    FetchError<StoreAccountActivateError> | null
+  > = useFetch("/api/account/activate", {
     method: "POST",
     body: formattedBody,
     immediate: false,

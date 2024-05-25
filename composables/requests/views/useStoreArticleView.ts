@@ -1,29 +1,20 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import type { View } from "@prisma/client";
 import { type FetchError } from "ofetch";
 
-export type UseStoreViewReturn = {
-  view: Ref<View | null>;
-  viewFull: Ref<ViewFull | null>;
-  error: ComputedRef<StoreViewError | null>;
-
-  execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-};
-
 export const useStoreArticleView = (payload: {
   body: MaybeRefOrGetter<StoreViewBody>;
-}): UseStoreViewReturn => {
+}) => {
   const formattedBody = computed(() => toValue(payload.body));
 
   const {
     data,
     execute,
     error,
-  }: {
-    data: Ref<StoreViewData["view"] | null>;
-    error: Ref<FetchError<StoreViewError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch("/api/views", {
+  }: AsyncData<
+    StoreViewData["view"] | null,
+    FetchError<StoreViewError> | null
+  > = useFetch("/api/views", {
     method: "POST",
     body: formattedBody,
     immediate: false,

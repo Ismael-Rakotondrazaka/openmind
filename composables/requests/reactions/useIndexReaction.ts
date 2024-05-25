@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useIndexReaction = (payload: {
@@ -11,11 +11,10 @@ export const useIndexReaction = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<IndexReactionData | null>;
-    error: Ref<FetchError<IndexReactionError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch("/api/reactions", {
+  }: AsyncData<
+    IndexReactionData | null,
+    FetchError<IndexReactionError> | null
+  > = useFetch("/api/reactions", {
     method: "GET",
     immediate: payload.immediate,
     watch: [formattedQuery],

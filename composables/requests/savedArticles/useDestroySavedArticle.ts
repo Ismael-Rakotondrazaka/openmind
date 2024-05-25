@@ -1,7 +1,4 @@
-import type {
-  AsyncDataExecuteOptions,
-  AsyncDataRequestStatus,
-} from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import type { Article } from "@prisma/client";
 import { type FetchError } from "ofetch";
 
@@ -18,13 +15,10 @@ export const useDestroySavedArticle = (payload: {
     error,
     pending,
     status,
-  }: {
-    data: Ref<DestroySavedArticleData["article"] | null>;
-    error: Ref<FetchError<DestroySavedArticleError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-    pending: Ref<boolean>;
-    status: Ref<AsyncDataRequestStatus>;
-  } = useFetch(url, {
+  }: AsyncData<
+    DestroySavedArticleData["article"] | null,
+    FetchError<DestroySavedArticleError> | null
+  > = useFetch(url, {
     method: "DELETE",
     immediate: false,
     watch: false,

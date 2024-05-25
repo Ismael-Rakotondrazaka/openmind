@@ -1,4 +1,4 @@
-import type { AsyncDataExecuteOptions } from "#app/composables/asyncData";
+import type { AsyncData } from "#app/composables/asyncData";
 import { type FetchError } from "ofetch";
 
 export const useIndexArticle = (payload: {
@@ -11,23 +11,20 @@ export const useIndexArticle = (payload: {
     data,
     execute,
     error,
-  }: {
-    data: Ref<IndexArticleData | null>;
-    error: Ref<FetchError<IndexArticleError> | null>;
-    execute: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>;
-  } = useFetch("/api/articles", {
-    method: "GET",
-    immediate: payload.immediate,
-    watch: [formattedQuery],
-    query: formattedQuery,
-    transform: (data): IndexArticleData | null => {
-      if (data === null || data === undefined) {
-        return null;
-      } else {
-        return IndexArticleDataSchema.parse(data);
-      }
-    },
-  });
+  }: AsyncData<IndexArticleData | null, FetchError<IndexArticleError> | null> =
+    useFetch("/api/articles", {
+      method: "GET",
+      immediate: payload.immediate,
+      watch: [formattedQuery],
+      query: formattedQuery,
+      transform: (data): IndexArticleData | null => {
+        if (data === null || data === undefined) {
+          return null;
+        } else {
+          return IndexArticleDataSchema.parse(data);
+        }
+      },
+    });
 
   /* -------------------------------- Articles ------------------------------- */
   const articles = ref<ArticleFull[] | null>(data.value?.articles ?? null);
