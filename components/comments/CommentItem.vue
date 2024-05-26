@@ -149,7 +149,7 @@ const where = computed<IndexCommentQuery["where"]>(() => {
 const {
   comments: replies,
   reset,
-  update: reflectRepliesUpdate,
+  update,
   add,
   remove,
   loadPrevious: onLoadPreviousHandler,
@@ -159,6 +159,63 @@ const {
   where,
   parent: () => props.comment,
 });
+
+const onWSCommentStore: OnWSCommentStore = (ws, comment) => {
+  if (
+    comment.parentId === props.comment.id &&
+    comment.articleId === props.comment.articleId
+  ) {
+    add(comment);
+
+    emit("comment:update", props.comment.id, {
+      "_count.replies": props.comment._count.replies + 1,
+    });
+
+    emit("comment:store", comment);
+  }
+};
+
+const onWSCommentUpdate: OnWSCommentUpdate = (ws, comment) => {
+  if (
+    comment.parentId === props.comment.id &&
+    comment.articleId === props.comment.articleId
+  ) {
+    emit("comment:update", comment.id, {
+      ...comment,
+      _auth: undefined,
+    });
+  }
+};
+
+const onWSCommentDestroy: OnWSCommentDestroy = (ws, commentId) => {
+  if (props.level === 0) {
+    remove(commentId);
+  }
+
+  // notify the parent, so it can decrement replies count
+  emit("comment:delete", commentId);
+};
+
+const useWSReturn = inject(WSCommentToken) as WSCommentDI;
+
+useWSComment({
+  onCommentStore: onWSCommentStore,
+  onCommentUpdate: onWSCommentUpdate,
+  onCommentDestroy: onWSCommentDestroy,
+  useWSReturn,
+});
+
+const reflectRepliesUpdate: UseReflectCommentsUpdateFn = (id, data) => {
+  const body: WSCommentBody = {
+    commentId: id,
+    eventType: "update",
+    userId: authUser.value!.id,
+  };
+
+  useWSReturn.send(JSON.stringify(body));
+
+  update(id, data);
+};
 
 watch(where, async () => {
   await reset();

@@ -61,7 +61,7 @@ const {
   errors: validationErrors,
   defineField,
   handleSubmit,
-  resetForm,
+  setValues,
   isSubmitting,
   setErrors,
 } = useForm({
@@ -95,6 +95,15 @@ const {
   params,
 });
 
+watch(
+  () => props.comment.content,
+  (newValue) => {
+    setValues({
+      content: newValue,
+    });
+  },
+);
+
 const onSubmitHandler = handleSubmit(async () => {
   await updateComment();
 
@@ -107,7 +116,9 @@ const onSubmitHandler = handleSubmit(async () => {
       life: notificationConfig.LIFE,
     });
 
-    resetForm();
+    setValues({
+      content: props.comment.content,
+    });
 
     if (createdComment.value !== null) {
       emit("comments:update", createdComment.value);

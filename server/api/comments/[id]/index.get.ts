@@ -32,7 +32,8 @@ export default defineEventHandler(
     if (
       comment === null ||
       (authUser === null && comment.deletedAt !== null) ||
-      (authUser !== null &&
+      (comment.deletedAt !== null &&
+        authUser !== null &&
         comment.userId !== authUser.id &&
         authUser.role === "user")
     ) {
