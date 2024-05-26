@@ -7,6 +7,12 @@ export default defineNuxtConfig({
     },
   },
 
+  nitro: {
+    experimental: {
+      websocket: true,
+    },
+  },
+
   modules: [
     "@nuxtjs/tailwindcss",
     "nuxt-primevue",
@@ -44,6 +50,7 @@ export default defineNuxtConfig({
     public: {
       appUrl: "http://localhost:3000",
       appVersion: "1.0.0",
+      WSEntryPoint: "ws://localhost:3000/api/_ws",
     },
   },
 

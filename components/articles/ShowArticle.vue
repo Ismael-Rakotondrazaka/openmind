@@ -21,6 +21,8 @@
 </template>
 
 <script lang="ts" setup>
+import { WSCommentToken } from "~/di";
+
 const { article } = inject(ShowArticleToken) as ShowArticleDI;
 
 const isArticleReactionSidebar = ref<boolean>(false);
@@ -34,4 +36,21 @@ const isCommentDialogVisible = ref<boolean>(false);
 provide(ArticleCommentDialogToken, {
   isVisible: isCommentDialogVisible,
 });
+
+const runtimeConfig = useRuntimeConfig();
+
+const useWSReturn = useWebSocket(
+  () =>
+    `${runtimeConfig.public.WSEntryPoint}/comments?articleId=${article.value.id}`,
+  {
+    heartbeat: {
+      interval: WSConfig.BEAT_INTERVAL,
+      pongTimeout: WSConfig.BEAT_TIMEOUT,
+      message: WSConfig.PING_DEFAULT_VALUE,
+    },
+    autoReconnect: true,
+  },
+);
+
+provide(WSCommentToken, useWSReturn);
 </script>

@@ -1,3 +1,4 @@
+export * from "./WSConfig";
 export * from "./articleConfig";
 export * from "./articleImageConfig";
 export * from "./authConfig";

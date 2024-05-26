@@ -97,7 +97,7 @@ const {
   comments,
   reset,
   remove,
-  update: reflectCommentsUpdate,
+  update,
   loadPrevious: onLoadPreviousHandler,
   add: addComment,
 } = useIndexSortedComment({
@@ -115,7 +115,58 @@ const loadCommentsButtonLabel = computed(() =>
   comments.value.length > 0 ? "Load previous comments" : "Load comments",
 );
 
+const onWSCommentStore: OnWSCommentStore = (ws, comment) => {
+  if (comment.parentId === null && comment.articleId === article.value.id) {
+    addComment(comment);
+
+    article.value._count.comments += 1;
+  }
+};
+
+const onWSCommentUpdate: OnWSCommentUpdate = (ws, comment) => {
+  if (comment.parentId === null && comment.articleId === article.value.id) {
+    update(comment.id, {
+      ...comment,
+      // _auth is not sent with the broadcast data
+      _auth: undefined,
+    });
+
+    article.value._count.comments += 1;
+  }
+};
+
+const onWSCommentDestroy: OnWSCommentDestroy = (ws, commentId) => {
+  remove(commentId);
+};
+
+const useWSReturn = inject(WSCommentToken) as WSCommentDI;
+
+useWSComment({
+  onCommentStore: onWSCommentStore,
+  onCommentUpdate: onWSCommentUpdate,
+  onCommentDestroy: onWSCommentDestroy,
+  useWSReturn,
+});
+
+const reflectCommentsUpdate: UseReflectCommentsUpdateFn = (id, data) => {
+  const body: WSCommentBody = {
+    commentId: id,
+    eventType: "update",
+    userId: authUser.value!.id,
+  };
+
+  useWSReturn.send(JSON.stringify(body));
+
+  update(id, data);
+};
+
 const onCommentDeleteHandler = (id: string) => {
+  const body: WSCommentBody = {
+    commentId: id,
+    eventType: "destroy",
+    userId: authUser.value!.id,
+  };
+  useWSReturn.send(JSON.stringify(body));
   remove(id);
   article.value._count.comments -= 1;
 };
@@ -134,6 +185,12 @@ const scrollToCreatedComment = (id: string) => {
 };
 
 const onStoreCommentHandler = (newComment: CommentFull) => {
+  const body: WSCommentBody = {
+    commentId: newComment.id,
+    eventType: "store",
+    userId: authUser.value!.id,
+  };
+  useWSReturn.send(JSON.stringify(body));
   addComment(newComment);
 
   article.value._count.comments += 1;
