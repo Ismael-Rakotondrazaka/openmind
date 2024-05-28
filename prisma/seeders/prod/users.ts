@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import type { Prisma, PrismaClient, Role, Tag, User } from "@prisma/client";
 
 import { hashSync } from "bcrypt";
+import { articleConfig } from "~/configs";
 
 export const hashPassword = (): string => {
   const passwordSaltRounds: number = 10;
