@@ -6,6 +6,7 @@ import { createUsers } from "./users";
 
 import { type Tag, type User } from "@prisma/client";
 import { createArticles } from "./articles";
+import { createFollows } from "./follows";
 
 const prismaClient = new PrismaClient();
 
@@ -25,6 +26,7 @@ const main = async () => {
   console.timeEnd("Tag seed duration");
   /* -------------------------------------------------------------------------- */
 
+  /* ---------------------------------- User ---------------------------------- */
   console.time("User seed duration");
 
   const users: User[] = await createUsers({
@@ -34,6 +36,17 @@ const main = async () => {
   });
 
   console.timeEnd("User seed duration");
+  /* -------------------------------------------------------------------------- */
+
+  /* --------------------------------- Follow --------------------------------- */
+  console.time("Follow seed duration");
+
+  await createFollows({
+    prisma: prismaClient,
+    users,
+  });
+
+  console.timeEnd("Follow seed duration");
   /* -------------------------------------------------------------------------- */
 
   /* --------------------------------- Article -------------------------------- */
