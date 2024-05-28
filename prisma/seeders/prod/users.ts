@@ -79,9 +79,14 @@ const createUsersData = (payload: {
     updatedAt: createdAt,
     emailVerifiedAt: createdAt,
     tags: {
-      connect: faker.helpers.arrayElements(tags).map((tag) => ({
-        id: tag.id,
-      })),
+      connect: faker.helpers
+        .arrayElements(tags, {
+          max: articleConfig.TAGS_MAX_SIZE,
+          min: 1,
+        })
+        .map((tag) => ({
+          id: tag.id,
+        })),
     },
   };
 };

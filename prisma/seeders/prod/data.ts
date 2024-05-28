@@ -35,7 +35,7 @@ export const articlesData: ArticleData[] = [
       "Explore the latest trends, frameworks, and tools in web development for 2024.",
     coverUrl:
       "https://pixabay.com/get/gd6b615b1d8dba72f5b396b7d667d73355ffd032669934bd43f82916b5a3186377af701d604afb84465843016fec590e6d09f8012c49b22fc2050a8f7260cb1020868d68e0c43d829223dccb63bf17ac9_640.jpg",
-    tags: ["web development", "programming", "2024", "trends"],
+    tags: ["web development", "programming", "trends"],
   },
   {
     content: `
@@ -66,7 +66,7 @@ export const articlesData: ArticleData[] = [
       "Discover the most beautiful travel destinations around the world for 2024.",
     coverUrl:
       "https://pixabay.com/get/g7b1f5b833eef9dd6092f885117fc1ff43d289f45d5a908b8fd34266353ad9beff573aa5ac21d2570f6566eae7a4cd2b923266d669baeb452e4910d5dedea437b79582c854979e4e395fb6eec9fdd252a_640.jpg",
-    tags: ["travel", "destinations", "2024", "adventure"],
+    tags: ["travel", "destinations", "adventure"],
   },
   {
     content: `
@@ -97,7 +97,7 @@ export const articlesData: ArticleData[] = [
       "Learn how to cook delicious vegan meals that are easy to make and full of flavor.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2023/09/25/07/55/salad-8274421_1280.jpg",
-    tags: ["vegan", "recipes", "cooking", "food"],
+    tags: ["vegan", "recipes", "food"],
   },
   {
     content: `
@@ -128,7 +128,7 @@ export const articlesData: ArticleData[] = [
       "Explore the best practices for maintaining a healthy work-life balance in a remote work environment.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2021/03/02/13/04/laptop-6062423_640.jpg",
-    tags: ["work-life balance", "remote work", "health", "productivity"],
+    tags: ["work-life balance", "remote work", "health"],
   },
   {
     content: `
@@ -159,7 +159,7 @@ export const articlesData: ArticleData[] = [
       "Discover the latest advancements in artificial intelligence and their impact on various industries.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2023/03/15/20/48/robots-7855433_640.jpg",
-    tags: ["artificial intelligence", "technology", "innovation", "future"],
+    tags: ["artificial intelligence", "technology", "innovation"],
   },
   {
     content: `
@@ -190,7 +190,7 @@ export const articlesData: ArticleData[] = [
       "Explore the fundamentals of personal finance to secure your financial future.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2017/09/07/08/54/money-2724241_640.jpg",
-    tags: ["personal finance", "budgeting", "saving", "investing"],
+    tags: ["personal finance", "budgeting", "investing"],
   },
   {
     content: `
@@ -221,7 +221,7 @@ export const articlesData: ArticleData[] = [
       "Discover how to simplify your life, reduce stress, and increase happiness with minimalism.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2017/08/07/20/25/flowers-2607466_640.jpg",
-    tags: ["minimalism", "lifestyle", "happiness", "simplicity"],
+    tags: ["minimalism", "lifestyle", "happiness"],
   },
   {
     content: `
@@ -252,7 +252,7 @@ export const articlesData: ArticleData[] = [
       "Learn about the benefits of meditation and mindfulness practices and how to incorporate them into your daily routine.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2016/11/22/23/29/meditate-1851165_640.jpg",
-    tags: ["meditation", "mindfulness", "well-being", "mental health"],
+    tags: ["meditation", "well-being", "mental health"],
   },
   {
     content: `
@@ -283,7 +283,7 @@ export const articlesData: ArticleData[] = [
       "Discover the numerous physical and mental health benefits of regular exercise.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2020/01/21/11/39/running-4782722_640.jpg",
-    tags: ["exercise", "health", "fitness", "well-being"],
+    tags: ["exercise", "health", "fitness"],
   },
   {
     content: `
@@ -314,7 +314,7 @@ export const articlesData: ArticleData[] = [
       "Learn the basics of cryptocurrency and its potential impact on the future of finance.",
     coverUrl:
       "hhttps://cdn.pixabay.com/photo/2018/05/17/21/26/cryptocurrency-3409725_640.jpg",
-    tags: ["cryptocurrency", "finance", "blockchain", "investment"],
+    tags: ["cryptocurrency", "finance", "investment"],
   },
   {
     content: `
@@ -345,7 +345,7 @@ export const articlesData: ArticleData[] = [
       "Discover practical tips to reduce your environmental footprint and live a more sustainable lifestyle.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2015/05/25/14/27/summer-783347_1280.jpg",
-    tags: ["sustainability", "environment", "green living", "tips"],
+    tags: ["sustainability", "environment", "green living"],
   },
   {
     content: `
@@ -376,7 +376,7 @@ export const articlesData: ArticleData[] = [
       "Learn how to organize your home and maintain a clutter-free space with these practical tips.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2015/10/20/18/57/furniture-998265_640.jpg",
-    tags: ["home organization", "decluttering", "cleaning", "tips"],
+    tags: ["home organization", "decluttering", "cleaning"],
   },
   {
     content: `
@@ -407,7 +407,7 @@ export const articlesData: ArticleData[] = [
       "Understand the benefits of a healthy diet and how it can improve your overall well-being.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2015/12/09/17/11/vegetables-1085063_1280.jpg",
-    tags: ["healthy diet", "nutrition", "well-being", "health"],
+    tags: ["healthy diet", "nutrition", "health"],
   },
   {
     content: `
@@ -437,7 +437,7 @@ export const articlesData: ArticleData[] = [
     summary: "Master time management skills with this comprehensive guide.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2017/08/30/07/56/clock-2696234_1280.jpg",
-    tags: ["time management", "productivity", "goals", "efficiency"],
+    tags: ["time management", "productivity", "efficiency"],
   },
   {
     content: `
@@ -467,7 +467,7 @@ export const articlesData: ArticleData[] = [
     summary: "Discover the numerous physical and mental benefits of yoga.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2021/10/19/11/35/yoga-6723315_640.jpg",
-    tags: ["yoga", "health", "well-being", "fitness"],
+    tags: ["yoga", "health", "fitness"],
   },
   {
     content: `
@@ -498,7 +498,7 @@ export const articlesData: ArticleData[] = [
       "Learn how to create and maintain a thriving garden with these practical tips.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2016/11/21/16/05/cacti-1846147_640.jpg",
-    tags: ["gardening", "plants", "outdoors", "hobby"],
+    tags: ["gardening", "plants", "outdoors"],
   },
   {
     content: `
@@ -529,7 +529,7 @@ export const articlesData: ArticleData[] = [
       "Discover how to travel the world on a budget with these practical tips and tricks.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2018/02/21/10/16/train-station-3169964_1280.jpg",
-    tags: ["travel", "budget", "tips", "adventure"],
+    tags: ["travel", "budget", "adventure"],
   },
   {
     content: `
@@ -560,7 +560,7 @@ export const articlesData: ArticleData[] = [
       "Learn why staying hydrated is crucial for your health and how to ensure you're getting enough fluids.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2015/09/28/22/25/water-bottle-962934_640.jpg",
-    tags: ["hydration", "health", "well-being", "water"],
+    tags: ["hydration", "health", "water"],
   },
   {
     content: `
@@ -591,7 +591,7 @@ export const articlesData: ArticleData[] = [
       "Discover the basics of mindfulness meditation and how to start your practice.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2016/11/22/23/29/meditate-1851165_640.jpg",
-    tags: ["mindfulness", "meditation", "mental health", "well-being"],
+    tags: ["mindfulness", "meditation", "mental health"],
   },
   {
     content: `
@@ -622,7 +622,7 @@ export const articlesData: ArticleData[] = [
       "Learn how to cook delicious and nutritious meals at home with these healthy cooking tips.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2017/09/16/19/21/salad-2756467_640.jpg",
-    tags: ["healthy cooking", "nutrition", "recipes", "tips"],
+    tags: ["healthy cooking", "nutrition", "recipes"],
   },
   {
     content: `
@@ -653,7 +653,7 @@ export const articlesData: ArticleData[] = [
       "A beginner’s guide to effective financial planning for achieving financial stability and goals.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2014/07/06/13/55/calculator-385506_1280.jpg",
-    tags: ["financial planning", "budgeting", "investing", "tips"],
+    tags: ["financial planning", "budgeting", "investing"],
   },
   {
     content: `
@@ -684,7 +684,7 @@ export const articlesData: ArticleData[] = [
       "Learn about the importance of mental health and how to take care of your emotional well-being.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2017/01/30/02/20/mental-health-2019924_1280.jpg",
-    tags: ["mental health", "well-being", "self-care", "support"],
+    tags: ["mental health", "self-care", "support"],
   },
   {
     content: `
@@ -715,7 +715,7 @@ export const articlesData: ArticleData[] = [
       "Learn how to embrace minimalist living and create a more fulfilling lifestyle.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2020/06/07/01/50/window-5268702_640.jpg",
-    tags: ["minimalism", "lifestyle", "simplicity", "well-being"],
+    tags: ["minimalism", "lifestyle", "simplicity"],
   },
   {
     content: `
@@ -746,7 +746,7 @@ export const articlesData: ArticleData[] = [
       "Discover the numerous benefits of reading books for your mind and body.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2016/08/24/16/20/books-1617327_640.jpg",
-    tags: ["reading", "books", "knowledge", "mental health"],
+    tags: ["reading", "books", "mental health"],
   },
   {
     content: `
@@ -777,7 +777,7 @@ export const articlesData: ArticleData[] = [
       "Effective home workout routines for beginners, intermediates, and advanced fitness enthusiasts.",
     coverUrl:
       "https://cdn.pixabay.com/photo/2020/04/25/00/19/home-workout-5089047_640.jpg",
-    tags: ["workout", "fitness", "home exercise", "routines"],
+    tags: ["workout", "fitness", "home exercise"],
   },
 ];
 
