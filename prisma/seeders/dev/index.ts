@@ -6,16 +6,14 @@ import {
   type Tag,
   type User,
 } from "@prisma/client";
-import {
-  createArticles,
-  createComments,
-  createFollows,
-  createReactions,
-  createSavedArticles,
-  createTags,
-  createUsers,
-  createViews,
-} from "./seeders";
+import { createArticles } from "./articles";
+import { createComments } from "./comments";
+import { createFollows } from "./follows";
+import { createReactions } from "./reactions";
+import { createSavedArticles } from "./savedArticles";
+import { createTags } from "./tags";
+import { createUsers } from "./users";
+import { createViews } from "./views";
 
 const prismaClient = new PrismaClient();
 
