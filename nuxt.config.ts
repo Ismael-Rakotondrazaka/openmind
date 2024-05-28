@@ -1,5 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app: {
+    pageTransition: {
+      name: "page",
+      mode: "in-out",
+    },
+  },
+
+  nitro: {
+    experimental: {
+      websocket: true,
+    },
+  },
+
   modules: [
     "@nuxtjs/tailwindcss",
     "nuxt-primevue",
@@ -7,10 +20,23 @@ export default defineNuxtConfig({
     "@vee-validate/nuxt",
     "nuxt-typed-router",
     "@nuxt/image",
+    "@vueuse/nuxt",
+    "@nuxt/eslint",
+    "@formkit/auto-animate/nuxt",
+    "@nuxtjs/seo",
   ],
+
+  site: {
+    indexable: true,
+    name: "OpenMind",
+    description: "Unleash Your Thoughts, Explore Every Topic.",
+    defaultLocale: "en",
+  },
+
   typescript: {
     shim: false,
   },
+
   runtimeConfig: {
     smtpHost: "",
     smtpPort: "",
@@ -23,17 +49,70 @@ export default defineNuxtConfig({
     authSecret: "",
     public: {
       appUrl: "http://localhost:3000",
+      appVersion: "1.0.0",
+      WSEntryPoint: "ws://localhost:3000/api/_ws",
     },
   },
+
   components: [
     {
       path: "~/components",
       extensions: ["vue"],
     },
+    {
+      path: "~/components/tags",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/articles",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/commons",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/inputs",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/reactions",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/comments",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/savedArticles",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/views",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/users",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/dialogs",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/follows",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/OgImage",
+      extensions: ["vue"],
+    },
+    {
+      path: "~/components/home",
+      extensions: ["vue"],
+    },
   ],
-  imports: {
-    dirs: ["composables", "~/utils/strings", "~/utils/requests/**"],
-  },
+
   primevue: {
     cssLayerOrder: "tailwind-base, primevue, tailwind-utilities",
     options: {
@@ -41,14 +120,43 @@ export default defineNuxtConfig({
     },
     components: {
       prefix: "Prime",
-      include: "*",
+      include: [
+        "AutoComplete",
+        "Avatar",
+        "AvatarGroup",
+        "Button",
+        "Badge",
+        "Card",
+        "Chip",
+        "ConfirmDialog",
+        "Dialog",
+        "Divider",
+        "DropDown",
+        "Editor",
+        "Image",
+        "InputGroup",
+        "InputText",
+        "Menu",
+        "MenuBar",
+        "OverlayPanel",
+        "Paginator",
+        "Password",
+        "ScrollTop",
+        "SideBar",
+        "TimeLine",
+        "TabView",
+        "TabPanel",
+        "Toast",
+      ],
       exclude: ["Galleria", "Chart"],
     },
   },
+
   css: [
     "primeicons/primeicons.css",
     "primevue/resources/themes/lara-light-teal/theme.css",
   ],
+
   veeValidate: {
     autoImports: true,
     componentNames: {
@@ -61,5 +169,9 @@ export default defineNuxtConfig({
 
   image: {
     domains: ["storage.googleapis.com"],
+  },
+
+  devtools: {
+    enabled: true,
   },
 });

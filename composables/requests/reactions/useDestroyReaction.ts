@@ -1,0 +1,53 @@
+import type { AsyncData } from "#app/composables/asyncData";
+import { type FetchError } from "ofetch";
+
+export const useDestroyReaction = (payload: {
+  reactionId: MaybeRefOrGetter<number>;
+}) => {
+  const url = computed<string>(
+    () => `/api/reactions/${toValue(payload.reactionId)}`,
+  );
+
+  const {
+    data,
+    execute,
+    error,
+  }: AsyncData<
+    DestroyReactionData["reaction"] | null,
+    FetchError<DestroyReactionError> | null
+  > = useFetch(url, {
+    method: "DELETE",
+    immediate: false,
+    watch: false,
+    transform: (data) => {
+      if (data === undefined || data === null) {
+        return null;
+      } else {
+        return DestroyReactionDataSchema.parse(data).reaction;
+      }
+    },
+  });
+
+  /* -------------------------------- Reaction -------------------------------- */
+  const reaction = ref<Reaction | null>(null);
+
+  const onUpdateReactionEffect = () => {
+    if (data.value === null) {
+      reaction.value = null;
+    } else {
+      reaction.value = filterReaction(data.value);
+    }
+  };
+
+  watchEffect(onUpdateReactionEffect);
+  /* -------------------------------------------------------------------------- */
+
+  const formattedError = useFetchErrorData(error);
+
+  return {
+    reaction,
+    reactionFull: data,
+    execute,
+    error: formattedError,
+  };
+};

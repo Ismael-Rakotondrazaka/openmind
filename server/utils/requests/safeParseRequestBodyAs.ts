@@ -1,6 +1,6 @@
-import type { SafeParseReturnType, output, input, ZodTypeAny } from "zod";
+import type { H3Event } from "h3";
+import type { SafeParseReturnType, ZodTypeAny, input, output } from "zod";
 import { zfd } from "zod-form-data";
-import { H3Event } from "h3";
 
 export const safeParseRequestBodyAs = async <T extends ZodTypeAny>(
   event: H3Event,

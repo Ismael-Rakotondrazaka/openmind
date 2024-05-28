@@ -1,21 +1,21 @@
-import type { SafeParseReturnType } from "zod";
 import type { User } from "@prisma/client";
+import { articleRepository } from "~/repositories";
+import { safeParseRequestQueryAs } from "~/server/utils";
 import {
-  type IndexArticleData,
-  type IndexArticleError,
-  type IndexArticleQuery,
+  IndexArticleDataSchema,
   IndexArticleQuerySchema,
   createBadRequestError,
   getRequestErrorMessage,
+  type IndexArticleData,
+  type IndexArticleError,
 } from "~/utils";
-import { safeParseRequestQueryAs } from "~/server/utils";
 
 export default defineEventHandler(
   async (event): Promise<IndexArticleData | IndexArticleError> => {
-    const indexArticleQuerySPR: SafeParseReturnType<
-      IndexArticleQuery,
-      IndexArticleQuery
-    > = await safeParseRequestQueryAs(event, IndexArticleQuerySchema);
+    const indexArticleQuerySPR = await safeParseRequestQueryAs(
+      event,
+      IndexArticleQuerySchema,
+    );
 
     if (!indexArticleQuerySPR.success) {
       return createBadRequestError(event, {
@@ -25,7 +25,7 @@ export default defineEventHandler(
 
     const authUser: User | null = await getAuthUser(event);
 
-    const totalCounts: number = await event.context.prisma.article.count({
+    const totalCounts: number = await articleRepository.count({
       where: {
         ...indexArticleQuerySPR.data.where,
         deletedAt:
@@ -60,7 +60,7 @@ export default defineEventHandler(
     );
 
     const articles: IndexArticleData["articles"] =
-      await event.context.prisma.article.findMany({
+      await articleRepository.findFullMany({
         where: {
           ...indexArticleQuerySPR.data.where,
           deletedAt:
@@ -76,27 +76,13 @@ export default defineEventHandler(
               ? indexArticleQuerySPR.data.where?.isVisible
               : true,
         },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-        },
         orderBy: indexArticleQuerySPR.data.orderBy,
         take: pageSize,
         skip: calculatePaginationSkip(currentPage, pageSize),
+        authUser,
       });
 
-    return {
+    return IndexArticleDataSchema.parse({
       articles,
       count: articles.length,
       totalCounts,
@@ -104,6 +90,6 @@ export default defineEventHandler(
       pageSize,
       totalPages,
       links,
-    };
+    });
   },
 );

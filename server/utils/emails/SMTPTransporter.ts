@@ -1,9 +1,9 @@
 import { createTransport, type Transporter } from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
 const SMTPTransporter: Transporter<SMTPTransport.SentMessageInfo> =
   createTransport({
-    // @ts-ignore
+    // @ts-expect-error @types/nodemailer is out of date
     host: useRuntimeConfig().smtpHost,
     port: useRuntimeConfig().smtpPort,
     secure: true,

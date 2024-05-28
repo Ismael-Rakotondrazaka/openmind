@@ -1,13 +1,15 @@
-import type { SafeParseReturnType } from "zod";
 import type { Article, User } from "@prisma/client";
+import type { SafeParseReturnType } from "zod";
+import { articleRepository } from "~/repositories";
 import {
+  DestroyArticleDataSchema,
+  DestroyArticleParamSchema,
+  createForbiddenError,
+  createNotFoundError,
+  createUnauthorizedError,
   type DestroyArticleData,
   type DestroyArticleError,
   type DestroyArticleParam,
-  DestroyArticleParamSchema,
-  createNotFoundError,
-  createUnauthorizedError,
-  createForbiddenError,
 } from "~/utils";
 
 export default defineEventHandler(
@@ -21,12 +23,11 @@ export default defineEventHandler(
       return createNotFoundError(event);
     }
 
-    const article: Article | null =
-      await event.context.prisma.article.findFirst({
-        where: {
-          slug: destroyArticleParamSPR.data.slug,
-        },
-      });
+    const article: Article | null = await articleRepository.findOne({
+      where: {
+        slug: destroyArticleParamSPR.data.slug,
+      },
+    });
 
     if (article === null || article.deletedAt !== null) {
       return createNotFoundError(event);
@@ -44,7 +45,7 @@ export default defineEventHandler(
     const now = new Date();
 
     const deletedArticle: DestroyArticleData["article"] =
-      await event.context.prisma.article.update({
+      await articleRepository.updateFullOne({
         where: {
           id: article.id,
         },
@@ -52,25 +53,11 @@ export default defineEventHandler(
           deletedAt: now,
           updatedAt: now,
         },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              firstName: true,
-              profileUrl: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-              deletedAt: true,
-            },
-          },
-        },
+        authUser,
       });
 
-    return {
+    return DestroyArticleDataSchema.parse({
       article: deletedArticle,
-    };
+    });
   },
 );
