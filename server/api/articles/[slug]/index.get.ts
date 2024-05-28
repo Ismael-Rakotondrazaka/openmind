@@ -1,19 +1,19 @@
-import type { SafeParseReturnType } from "zod";
-import type { Article, User } from "@prisma/client";
+import type { User } from "@prisma/client";
+import { articleRepository } from "~/repositories";
 import {
+  ShowArticleDataSchema,
+  ShowArticleParamSchema,
+  createNotFoundError,
   type ShowArticleData,
   type ShowArticleError,
-  type ShowArticleParam,
-  showArticleParamSchema,
-  createNotFoundError,
 } from "~/utils";
 
 export default defineEventHandler(
   async (event): Promise<ShowArticleData | ShowArticleError> => {
-    const showArticleParamSPR: SafeParseReturnType<
-      ShowArticleParam,
-      ShowArticleParam
-    > = await safeParseRequestParamAs(event, showArticleParamSchema);
+    const showArticleParamSPR = await safeParseRequestParamAs(
+      event,
+      ShowArticleParamSchema,
+    );
 
     if (!showArticleParamSPR.success) {
       return createNotFoundError(event);
@@ -21,46 +21,27 @@ export default defineEventHandler(
 
     const authUser: User | null = await getAuthUser(event);
 
-    let article:
-      | (Article & {
-          user: Omit<User, "password" | "email" | "emailVerifiedAt">;
-        })
-      | null = null;
-
-    article = await event.context.prisma.article.findFirst({
-      where: {
-        slug: showArticleParamSPR.data.slug,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            firstName: true,
-            profileUrl: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true,
-            deletedAt: true,
-          },
+    const article: ShowArticleData["article"] | null =
+      await articleRepository.findFullOne({
+        where: {
+          slug: showArticleParamSPR.data.slug,
         },
-      },
-    });
+        authUser,
+      });
 
     if (
       article === null ||
-      (authUser === null &&
-        (article.deletedAt !== null || article.isVisible === false)) ||
-      (authUser !== null &&
-        article.userId !== authUser.id &&
-        authUser.role === "user")
+      ((article.deletedAt !== null || article.isVisible === false) &&
+        (authUser === null ||
+          (authUser !== null &&
+            article.userId !== authUser.id &&
+            authUser.role === "user")))
     ) {
       return createNotFoundError(event);
     }
 
-    return {
+    return ShowArticleDataSchema.parse({
       article,
-    };
+    });
   },
 );

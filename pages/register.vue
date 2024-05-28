@@ -1,7 +1,13 @@
 <template>
-  <div class="flex items-center justify-center h-screen p-5 bg-sky-50">
-    <form class="w-full max-w-xl" @submit.prevent="onSubmit">
-      <PrimeCard>
+  <div class="mx-auto w-full max-w-[1200px]">
+    <form class="mx-auto w-full max-w-[700px]" @submit.prevent="onSubmit">
+      <PrimeCard
+        :pt="{
+          root: {
+            class: 'border-none shadow-none',
+          },
+        }"
+      >
         <template #title> Create Your Account </template>
 
         <template #subtitle>
@@ -11,113 +17,95 @@
         </template>
 
         <template #content>
-          <div class="flex flex-row flex-nowrap gap-x-2">
-            <div class="flex gap-2 flex-col w-full">
-              <label for="name">Name</label>
-              <PrimeInputText
-                id="name"
-                v-model="name"
-                :class="{ 'p-invalid': validationErrors.name }"
-              />
-              <small id="email-or-username-text-error" class="text-red-600">{{
-                validationErrors.name || "&nbsp;"
-              }}</small>
-            </div>
-
-            <div class="flex gap-2 flex-col w-full">
-              <label for="firstName">First name</label>
-              <PrimeInputText
-                id="firstName"
-                v-model="firstName"
-                :class="{ 'p-invalid': validationErrors.firstName }"
-              />
-              <small id="email-or-username-text-error" class="text-red-600">{{
-                validationErrors.firstName || "&nbsp;"
-              }}</small>
-            </div>
-          </div>
-
-          <div class="flex gap-2 flex-col">
-            <label for="username">Username</label>
-            <PrimeInputText
-              id="username"
-              v-model="username"
-              :class="{ 'p-invalid': validationErrors.username }"
+          <div class="flex w-full flex-row flex-wrap md:flex-nowrap md:gap-x-2">
+            <UserFirstNameInput
+              v-model:first-name="firstName"
+              :error-message="validationErrors.firstName"
+              class="w-full"
             />
-            <small id="username-text-error" class="text-red-600">{{
-              validationErrors.username || "&nbsp;"
-            }}</small>
+
+            <UserNameInput
+              v-model:name="name"
+              :error-message="validationErrors.name"
+              class="w-full"
+            />
           </div>
 
-          <div class="flex gap-2 flex-col">
-            <label for="email">Email</label>
-            <PrimeInputText
-              id="email"
-              v-model="email"
-              type="email"
-              :class="{ 'p-invalid': validationErrors.email }"
-            />
-            <small id="email-text-error" class="text-red-600">{{
-              validationErrors.email || "&nbsp;"
-            }}</small>
-          </div>
+          <UserUsernameInput
+            v-model:username="username"
+            :error-message="validationErrors.username"
+            class="w-full"
+          />
 
-          <div class="flex gap-2 flex-col">
-            <label for="email">Password</label>
-            <PrimePassword
-              id="password"
-              v-model="password"
-              :input-class="{
-                '!p-invalid': validationErrors.password,
-                'w-full': true,
-              }"
-              toggle-mask
-              :feedback="false"
-              :class="{ 'p-invalid': validationErrors.password }"
-            />
-            <small id="password-text-error" class="text-red-600">{{
-              validationErrors.password || "&nbsp;"
-            }}</small>
-          </div>
+          <EmailInput
+            v-model:email="email"
+            :error-message="validationErrors.email"
+            class="w-full"
+          />
+
+          <PasswordInput
+            v-model:password="password"
+            :error-message="validationErrors.password"
+            class="w-full"
+          />
         </template>
 
         <template #footer>
-          <PrimeButton type="submit" label="Submit" :loading="isSubmitting" />
+          <div
+            class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0"
+          >
+            <PrimeButton
+              type="submit"
+              label="Register"
+              icon="pi pi-user-plus"
+              :loading="isSubmitting"
+            />
+
+            <NuxtLink
+              :to="{
+                name: 'signin',
+              }"
+              class="text-primary hover:underline"
+            >
+              Already have an account? Sign in
+            </NuxtLink>
+          </div>
         </template>
       </PrimeCard>
     </form>
 
-    <PrimeDialog
-      v-model:visible="isRegisterSuccess"
+    <ConfirmDialog
+      v-model:is-visible="isRegisterSuccess"
       modal
-      header="Registration Success! Please Confirm Your Account"
-      :style="{ width: '50rem' }"
-      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
-    >
-      <p>
-        Congratulations! Your registration was successful. To activate your
-        account and complete the registration process, we have sent a
-        confirmation link to the email address you provided. Please check your
-        inbox and click on the link to verify your account. If you don't see the
-        email, please check your spam folder. Thank you for choosing us, and we
-        look forward to having you as part of our community!
-      </p>
-    </PrimeDialog>
-    <PrimeToast position="top-right" />
+      :header="'Registration Success!\nPlease Confirm Your Account'"
+      :message="message"
+      severity="success"
+      icon-type="check"
+      :is-closable="true"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { FetchError } from "ofetch";
-
 definePageMeta({
+  middleware: "auth",
   auth: {
     unauthenticatedOnly: true,
     navigateAuthenticatedTo: authConfig.AUTHENTICATED_PATH,
   },
 });
 
+defineOgImageComponent("DefaultOgImage");
+
 const toast = useToast();
+
+const message: string = [
+  "Congratulations! Your registration was successful.",
+  "To activate your account and complete the registration process, we have sent a confirmation link to the email address you provided!",
+  "Please check your inbox and click on the link to verify your account.",
+  "If you don't see the email, please check your spam folder.",
+  "Thank you for choosing us, and we look forward to having you as part of our community!",
+].join("\n");
 
 const fatalError = ref<null | string>(null);
 
@@ -139,20 +127,14 @@ const [password] = defineField("password");
 
 const isRegisterSuccess = ref<boolean>(false);
 
-const { error: fetchError, execute: storeRegister } = useFetch<
-  StoreRegisterData,
-  FetchError<StoreRegisterError>
->("/api/register", {
-  method: "POST",
-  body: {
-    name,
-    firstName,
-    email,
-    username,
-    password,
-  },
-  immediate: false,
-  watch: false,
+const { error: fetchError, execute: storeRegister } = useStoreRegister({
+  body: () => ({
+    name: name.value!,
+    firstName: firstName.value!,
+    email: email.value!,
+    username: username.value!,
+    password: password.value!,
+  }),
 });
 
 const onSubmit = handleSubmit(async () => {
@@ -164,18 +146,16 @@ const onSubmit = handleSubmit(async () => {
     isRegisterSuccess.value = true;
     resetForm();
   } else {
-    fatalError.value =
-      fetchError.value.data?.message ??
-      errorConfig.DEFAULT_GENERAL_ERROR_MESSAGE;
+    fatalError.value = fetchError.value.message;
 
-    if (fetchError.value.data?.errorMessage) {
-      setErrors(fetchError.value.data.errorMessage);
+    if (fetchError.value.errorMessage) {
+      setErrors(fetchError.value.errorMessage);
     }
 
     toast.add({
       severity: "error",
       summary: fatalError.value,
-      life: 5000,
+      life: notificationConfig.LIFE,
     });
   }
 });

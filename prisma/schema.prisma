@@ -30,12 +30,25 @@ model User {
   activationToken    ActivationToken?
   passwordResetToken PasswordResetToken?
   articles           Article[]
+  savedArticles      SavedArticle[]
+  tags               Tag[]
+  comments           Comment[]
+  reactions          Reaction[]
+  views              View[]
+  following          Follow[]            @relation("UserFollowing")
+  followers          Follow[]            @relation("UserFollowers")
 }
 
 enum Role {
   admin
   modo
   user
+}
+
+enum ReactionType {
+  like
+  love
+  celebrate
 }
 
 model PasswordResetToken {
@@ -53,16 +66,91 @@ model ActivationToken {
 }
 
 model Article {
-  id        String    @id
-  title     String
-  slug      String
+  id            String         @id
+  title         String
+  slug          String
+  userId        Int
+  summary       String?        @db.Text
+  coverUrl      String?        @db.Text
+  content       String         @db.Text
+  isVisible     Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  deletedAt     DateTime?
+  user          User           @relation(fields: [userId], references: [id])
+  tags          Tag[]
+  savedArticles SavedArticle[]
+  comments      Comment[]
+  reactions     Reaction[]
+  views         View[]
+}
+
+model SavedArticle {
+  articleId String
   userId    Int
-  summary   String?   @db.Text
-  coverUrl  String?   @db.Text
-  content   String    @db.Text
-  isVisible Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  article   Article  @relation(fields: [articleId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@id([userId, articleId])
+}
+
+model Tag {
+  id       Int       @id @default(autoincrement())
+  value    String    @unique
+  articles Article[]
+  users    User[]
+}
+
+model Comment {
+  id        String     @id
+  content   String     @db.Text
+  parentId  String?
+  parent    Comment?   @relation("ParentComment", fields: [parentId], references: [id])
+  replies   Comment[]  @relation("ParentComment")
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id])
+  articleId String
+  article   Article    @relation(fields: [articleId], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
   deletedAt DateTime?
-  user      User      @relation(fields: [userId], references: [id])
+  reactions Reaction[]
+}
+
+model Reaction {
+  id        Int          @id @default(autoincrement())
+  type      ReactionType
+  createdAt DateTime     @default(now())
+  userId    Int
+  user      User         @relation(fields: [userId], references: [id])
+  articleId String?
+  article   Article?     @relation(fields: [articleId], references: [id])
+  commentId String?
+  comment   Comment?     @relation(fields: [commentId], references: [id])
+
+  // Unique constraint to ensure one reaction per user for an article or comment
+  @@unique([userId, articleId])
+  @@unique([userId, commentId])
+}
+
+model View {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id])
+}
+
+model Follow {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  follower    User     @relation("UserFollowing", fields: [followerId], references: [id])
+  followerId  Int
+  following   User     @relation("UserFollowers", fields: [followingId], references: [id])
+  followingId Int
+
+  @@unique([followerId, followingId])
 }

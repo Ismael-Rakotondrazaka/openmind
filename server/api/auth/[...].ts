@@ -1,7 +1,7 @@
-import CredentialsProvider from "next-auth/providers/credentials";
-import type { Role, User } from "@prisma/client";
 import { NuxtAuthHandler } from "#auth";
-import { prisma } from "~/server/middleware/0.prisma";
+import type { User } from "@prisma/client";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { userRepository } from "~/repositories";
 import { StoreLoginBodySchema } from "~/utils";
 
 export default NuxtAuthHandler({
@@ -10,7 +10,7 @@ export default NuxtAuthHandler({
     signIn: "/signin",
   },
   providers: [
-    // @ts-expect-error
+    // @ts-expect-error compatibility problem with next-auth
     CredentialsProvider.default({
       name: "Credentials",
       credentials: {
@@ -25,11 +25,11 @@ export default NuxtAuthHandler({
           placeholder: "(hint: hunter2)",
         },
       },
-      authorize: async (credentials: any) => {
+      authorize: async (credentials: unknown) => {
         const storeLoginSPR = StoreLoginBodySchema.safeParse(credentials);
 
         if (storeLoginSPR.success) {
-          const user: User | null = await prisma.user.findFirst({
+          const user: User | null = await userRepository.findOne({
             where: {
               AND: {
                 deletedAt: null,
@@ -50,16 +50,33 @@ export default NuxtAuthHandler({
 
           if (
             user !== null &&
+            typeof credentials === "object" &&
+            credentials !== null &&
+            "password" in credentials &&
             typeof credentials?.password === "string" &&
             comparePassword(credentials.password, user.password)
           ) {
-            return {
-              id: user.id,
-              username: user.username,
-              name: user.name,
-              firstName: user.firstName,
-              role: user.role,
-            };
+            const userFull: UserFull | null = await userRepository.findFullOne({
+              authUser: user,
+              where: {
+                AND: {
+                  deletedAt: null,
+                  emailVerifiedAt: {
+                    not: null,
+                  },
+                  OR: [
+                    {
+                      email: storeLoginSPR.data.usernameOrEmail,
+                    },
+                    {
+                      username: storeLoginSPR.data.usernameOrEmail,
+                    },
+                  ],
+                },
+              },
+            });
+
+            return userFull;
           }
         }
 
@@ -72,15 +89,7 @@ export default NuxtAuthHandler({
   },
   callbacks: {
     session: ({ session, token }) => {
-      // TODO make type accessible to front end
-      type SessionUserData = {
-        id: number;
-        name: string;
-        firstName: string;
-        role: Role;
-      };
-
-      (session.user as any) = token.user as SessionUserData;
+      (session.user as UserFull) = token.user as UserFull;
 
       return session;
     },

@@ -1,0 +1,54 @@
+import { z } from "zod";
+import { articleConfig } from "~/configs";
+import { ArticleOrderByWithRelationInputSchema } from "~/prisma/generated/zod";
+import { ArticleFullSchema } from "~/schemas/globalSchemas/articles";
+import {
+  makePageSizeSchema,
+  PageSchema,
+  PaginationSchema,
+} from "~/schemas/globalSchemas/paginations";
+
+/* -------------------------------------------------------------------------- */
+/*                       Index recommended article query                      */
+/* -------------------------------------------------------------------------- */
+
+export const IndexRecommendedArticleQuerySchema = z
+  .object({
+    orderBy: ArticleOrderByWithRelationInputSchema,
+  })
+  .partial()
+  .merge(
+    z.object({
+      page: PageSchema,
+      pageSize: makePageSizeSchema(articleConfig.PAGE_SIZE_DEFAULT_VALUE),
+    }),
+  );
+
+export type IndexRecommendedArticleQuery = z.infer<
+  typeof IndexRecommendedArticleQuerySchema
+>;
+
+export type IndexRecommendedArticleQueryPEM =
+  RequestErrorMessage<IndexRecommendedArticleQuery>;
+
+/* -------------------------------------------------------------------------- */
+/*                       Index recommended article data                       */
+/* -------------------------------------------------------------------------- */
+
+export const IndexRecommendedArticleDataSchema = z
+  .object({
+    articles: z.array(ArticleFullSchema),
+  })
+  .merge(PaginationSchema);
+
+export type IndexRecommendedArticleData = z.infer<
+  typeof IndexRecommendedArticleDataSchema
+>;
+
+/* -------------------------------------------------------------------------- */
+/*                       Index recommended article error                      */
+/* -------------------------------------------------------------------------- */
+
+export type IndexRecommendedArticleError =
+  | BadRequestError<IndexRecommendedArticleQueryPEM>
+  | UnauthorizedError;

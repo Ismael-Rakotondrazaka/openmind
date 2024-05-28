@@ -7,7 +7,7 @@ export const getRequestBody = async (e: H3Event): Promise<unknown> => {
 
   if (requestContentType !== undefined) {
     if (requestContentType.startsWith("application/json")) {
-      const JSONBody: any = await readBody(e);
+      const JSONBody: unknown = await readBody(e);
 
       if (JSONBody !== undefined && JSONBody !== null) {
         result = JSONBody;

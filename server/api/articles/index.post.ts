@@ -1,22 +1,22 @@
-import { zfd } from "zod-form-data";
-import type { SafeParseError } from "zod";
-import type { Article, User } from "@prisma/client";
+import type { User } from "@prisma/client";
+import { articleRepository } from "~/repositories";
+import { tagRepository } from "~/repositories/tags";
 import {
-  type StoreArticleData,
-  type StoreArticleError,
-  type StoreArticleBody,
-  createBadRequestError,
-  createUnauthorizedError,
-  getRequestErrorMessage,
-  articleConfig,
-} from "~/utils";
-import {
+  StoreArticleBodySchema,
   createArticleId,
   formatArticleContent,
   getAuthUser,
   slugify,
-  StoreArticleBodySchema,
 } from "~/server/utils";
+import {
+  StoreArticleDataSchema,
+  articleConfig,
+  createBadRequestError,
+  createUnauthorizedError,
+  getRequestErrorMessage,
+  type StoreArticleData,
+  type StoreArticleError,
+} from "~/utils";
 
 export default defineEventHandler(
   async (event): Promise<StoreArticleData | StoreArticleError> => {
@@ -25,17 +25,29 @@ export default defineEventHandler(
       return createUnauthorizedError(event);
     }
 
-    const requestBody: unknown = await getRequestBody(event);
-
-    const storeArticleBodySPR = await zfd
-      .formData(StoreArticleBodySchema)
-      .safeParseAsync(requestBody);
+    const storeArticleBodySPR = await safeParseRequestBodyAs(
+      event,
+      StoreArticleBodySchema,
+    );
 
     if (!storeArticleBodySPR.success) {
       return createBadRequestError(event, {
-        errorMessage: getRequestErrorMessage(
-          storeArticleBodySPR as SafeParseError<StoreArticleBody>,
-        ),
+        errorMessage: getRequestErrorMessage(storeArticleBodySPR),
+      });
+    }
+
+    const tagsCount: number = await tagRepository.count({
+      where: {
+        id: {
+          in: storeArticleBodySPR.data.tagIds,
+        },
+      },
+    });
+    if (tagsCount !== storeArticleBodySPR.data.tagIds.length) {
+      return createBadRequestError(event, {
+        errorMessage: {
+          tagIds: "One or more tags do not exist.",
+        },
       });
     }
 
@@ -43,13 +55,11 @@ export default defineEventHandler(
 
     let slug: string = slugify(title);
 
-    const isDuplicate: boolean = await event.context.prisma.article
-      .count({
-        where: {
-          slug,
-        },
-      })
-      .then((count: number) => count > 0);
+    const isDuplicate: boolean = await articleRepository.exist({
+      where: {
+        slug,
+      },
+    });
 
     if (isDuplicate) {
       slug += `-${createRandomString(articleConfig.SLUG_SUFFIX_LENGTH)}`;
@@ -80,40 +90,30 @@ export default defineEventHandler(
       });
     }
 
-    const article: Article & {
-      user: Omit<User, "password" | "email" | "emailVerifiedAt">;
-    } = await event.context.prisma.article.create({
-      data: {
-        id: articleId,
-        content,
-        title,
-        slug,
-        createdAt: now,
-        updatedAt: now,
-        isVisible: storeArticleBodySPR.data.isVisible,
-        summary,
-        userId: authUser.id,
-        coverUrl,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            firstName: true,
-            profileUrl: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true,
-            deletedAt: true,
+    const article: StoreArticleData["article"] =
+      await articleRepository.createFullOne({
+        data: {
+          id: articleId,
+          content,
+          title,
+          slug,
+          createdAt: now,
+          updatedAt: now,
+          isVisible: storeArticleBodySPR.data.isVisible,
+          summary,
+          userId: authUser.id,
+          coverUrl,
+          tags: {
+            connect: storeArticleBodySPR.data.tagIds.map((tagId: number) => ({
+              id: tagId,
+            })),
           },
         },
-      },
-    });
+        authUser,
+      });
 
-    return {
+    return StoreArticleDataSchema.parse({
       article,
-    };
+    });
   },
 );
