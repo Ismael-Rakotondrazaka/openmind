@@ -10,12 +10,10 @@
     "lint:fix": "npx eslint . --fix",
     "typecheck": "nuxt typecheck",
     "start": "NODE_ENV=production node .output/server/index.mjs",
-    "db:seed": "npx prisma db push && npx prisma db seed",
-    "db:reset": "npx prisma migrate reset --force",
+    "db:seed:dev": "npx prisma db push && tsx prisma/seeders/dev/index.ts",
+    "db:seed:prod": "npx prisma db push && tsx prisma/seeders/prod/index.ts",
+    "db:reset": "npx prisma migrate reset --force --skip-seed",
     "prepare": "husky"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
