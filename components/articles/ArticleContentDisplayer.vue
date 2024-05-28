@@ -1,6 +1,8 @@
 <template>
-  <!-- eslint-disable-next-line vue/no-v-html -->
-  <div class="ql-editor text-text" v-html="content"></div>
+  <div class="ql-snow">
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <div class="ql-editor w-full text-text" v-html="content"></div>
+  </div>
 </template>
 
 <script lang="ts" setup>

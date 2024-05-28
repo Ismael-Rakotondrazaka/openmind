@@ -1,7 +1,9 @@
 <template>
   <div>
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <div :style="contentStyle" :class="editorClass" v-html="content"></div>
+    <div class="ql-snow">
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <div :style="contentStyle" :class="editorClass" v-html="content"></div>
+    </div>
     <PrimeButton
       :label="label"
       text
