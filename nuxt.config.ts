@@ -98,6 +98,13 @@ export default defineNuxtConfig({
     prefix: '',
   },
   supabase: {
+    redirectOptions: {
+      callback: '/confirm',
+      exclude: ['/', '/register'],
+      include: undefined,
+      login: '/login',
+      saveRedirectToCookie: false,
+    },
     types: '#shared/types/database.ts',
   },
   typescript: {
