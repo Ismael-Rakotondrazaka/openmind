@@ -97,7 +97,7 @@ export function Pagination({
             </SelectContent>
           </Select>
         </div>
-        <p className='text-sm text-muted-foreground'>{pageInfo}</p>
+        <p className='text-muted-foreground text-sm'>{pageInfo}</p>
       </div>
 
       <PaginationRoot className='mx-0 w-auto'>

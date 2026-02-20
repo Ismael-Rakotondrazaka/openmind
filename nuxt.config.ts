@@ -11,6 +11,10 @@ export default defineNuxtConfig({
         global: true,
         path: '~/components/global',
       },
+      {
+        path: '~/components/common',
+        pathPrefix: false,
+      },
       '~/components',
       {
         ignore: ['**/*.vue', '**/*.ts'],
@@ -82,7 +86,15 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
     'shadcn-nuxt',
     '@nuxtjs/supabase',
+    '@vueuse/nuxt',
   ],
+  runtimeConfig: {
+    public: {
+      appUrl: 'http://localhost:3000',
+      appVersion: 'latest',
+      siteUrl: 'http://localhost:3000',
+    },
+  },
   shadcn: {
     /**
      * Directory that the component lives in.
@@ -100,16 +112,33 @@ export default defineNuxtConfig({
   supabase: {
     redirectOptions: {
       callback: '/confirm',
-      exclude: ['/', '/register'],
+      exclude: [
+        '/',
+        '/register',
+        '/password/reset',
+        '/password/update',
+        '/raw/**',
+      ],
       include: undefined,
       login: '/login',
-      saveRedirectToCookie: false,
+      saveRedirectToCookie: true,
     },
     types: '#shared/types/database.ts',
   },
   typescript: {
     tsConfig: {
       exclude: ['shared/types/database.ts'],
+    },
+  },
+  veeValidate: {
+    // disable or enable auto imports
+    autoImports: true,
+    // Use different names for components
+    componentNames: {
+      ErrorMessage: 'VeeErrorMessage',
+      Field: 'VeeField',
+      FieldArray: 'VeeFieldArray',
+      Form: 'VeeForm',
     },
   },
   vite: {

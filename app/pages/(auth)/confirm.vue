@@ -1,9 +1,9 @@
 <script lang="ts"></script>
 
 <script setup lang="ts">
-import RegisterPage from '@/features/auth/pages/RegisterPage.vue';
+import ConfirmPage from '@/features/auth/pages/ConfirmPage.vue';
 </script>
 
 <template>
-  <RegisterPage />
+  <ConfirmPage />
 </template>

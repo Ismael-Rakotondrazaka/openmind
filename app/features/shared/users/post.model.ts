@@ -1,7 +1,12 @@
-import type { Database, Enums } from '@/types/database/schema';
+import type {
+  Constants,
+  Database,
+  Enums,
+  Tables,
+  TablesInsert,
+  TablesUpdate,
+} from '@/types/database/schema';
 
-import { Tables, TablesInsert, TablesUpdate } from '@/types/database/schema';
-import { Constants } from '@/types/database/schema';
 import { createEnumConstants } from '@/utils';
 
 export type PostProcessingStatus = Enums<'post_processing_status'>;

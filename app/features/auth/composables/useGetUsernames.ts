@@ -17,6 +17,6 @@ export const useGetUsernames = (params: UseGetUsernamesParams) => {
 
       return getUsernames(params);
     },
-    queryKey: ['usernames'],
+    queryKey: ['usernames', params],
   });
 };

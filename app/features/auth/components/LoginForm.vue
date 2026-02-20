@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 
+import { toast } from 'vue-sonner';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -16,11 +18,44 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { LoginBodySchema } from '@/features/auth/auth.schema';
 import { cn } from '@/lib/utils';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];
 }>();
+
+const { handleSubmit, isSubmitting, resetForm } = useForm({
+  initialValues: {
+    email: '',
+    password: '',
+  },
+  validationSchema: toTypedSchema(LoginBodySchema),
+});
+
+const userSBClient = useSupabaseClient();
+const redirectInfo = useSupabaseCookieRedirect();
+
+const createMessageHandler = handleSubmit(async values => {
+  const { error } = await userSBClient.auth.signInWithPassword({
+    email: values.email,
+    password: values.password,
+  });
+
+  if (error) {
+    toast.error(getAuthErrorMessage(error));
+    return;
+  }
+
+  toast.success('Login successful');
+
+  setTimeout(() => {
+    resetForm();
+  }, 3000);
+
+  const path = redirectInfo.pluck();
+  navigateTo(path || '/');
+});
 </script>
 
 <template>
@@ -29,12 +64,27 @@ const props = defineProps<{
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
+          Sign in to access your account and enjoy personalized features. Enter
+          your credentials to securely connect and make the most of our
+          services.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form id="login" method="POST" @submit="createMessageHandler">
           <FieldGroup>
+            <VeeField v-slot="{ field, errors }" name="email">
+              <Field :data-invalid="!!errors.length">
+                <FieldLabel for="email">Email</FieldLabel>
+                <Input
+                  id="email"
+                  v-bind="field"
+                  placeholder="email@example.com"
+                  :aria-invalid="!!errors.length"
+                />
+                <FieldError v-if="errors.length" :errors="errors" />
+              </Field>
+            </VeeField>
+
             <Field>
               <FieldLabel for="email"> Email </FieldLabel>
               <Input
@@ -57,7 +107,9 @@ const props = defineProps<{
               <Input id="password" type="password" required />
             </Field>
             <Field>
-              <Button type="submit"> Login </Button>
+              <Button type="submit" :disabled="isSubmitting">
+                {{ isSubmitting ? 'Logging in...' : 'Login' }}
+              </Button>
               <FieldDescription class="text-center">
                 Don't have an account?
                 <NuxtLink to="register">Sign up</NuxtLink>

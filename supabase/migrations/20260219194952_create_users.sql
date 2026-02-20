@@ -117,23 +117,47 @@ language plpgsql
 security definer
 set search_path = ''
 as $$
+declare
+  safe_username text;
+  safe_first_name text;
+  safe_last_name text;
 begin
-  insert into public.users (
-    id,
-    username,
-    first_name,
-    last_name,
-    image_url,
-    role
-  )
-  values (
-    new.id,
-    (new.raw_user_meta_data->>'username')::text,
-    (new.raw_user_meta_data->>'first_name')::text,
-    (new.raw_user_meta_data->>'last_name')::text,
-    (new.raw_user_meta_data->>'image_url')::text,
-    'user'
-  );
+  safe_username := nullif(trim((new.raw_user_meta_data->>'username')::text), '');
+  safe_first_name := nullif(trim((new.raw_user_meta_data->>'first_name')::text), '');
+  safe_last_name := nullif(trim((new.raw_user_meta_data->>'last_name')::text), '');
+
+  begin
+    insert into public.users (
+      id,
+      username,
+      first_name,
+      last_name,
+      role
+    )
+    values (
+      new.id,
+      safe_username,
+      safe_first_name,
+      safe_last_name,
+      'user'
+    );
+  exception
+    when unique_violation then
+      insert into public.users (
+        id,
+        username,
+        first_name,
+        last_name,
+        role
+      )
+      values (
+        new.id,
+        null,
+        safe_first_name,
+        safe_last_name,
+        'user'
+      );
+  end;
   return new;
 end;
 $$;

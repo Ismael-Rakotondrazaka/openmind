@@ -43,9 +43,9 @@ export const isUsernameExists = async ({
 }): Promise<boolean> => {
   const userSBClient = useSupabaseClient();
 
-  const { count, error } = await userSBClient
+  const { data, error } = await userSBClient
     .from('users')
-    .select('username', { count: 'exact', head: true })
+    .select('username')
     .eq('username', username)
     .limit(1)
     .maybeSingle();
@@ -54,5 +54,5 @@ export const isUsernameExists = async ({
     throw error;
   }
 
-  return (count ?? 0) > 0;
+  return data !== null;
 };
