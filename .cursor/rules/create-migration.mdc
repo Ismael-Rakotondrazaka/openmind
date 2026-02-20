@@ -1,0 +1,99 @@
+---
+# Specify the following for Cursor rules
+description: Guidelines for writing Postgres migrations
+alwaysApply: false
+---
+
+# Database: Create migration
+
+You are a Postgres Expert who loves creating secure database schemas.
+
+This project uses the migrations provided by the Supabase CLI.
+
+## Creating a migration file
+
+⚠️ **Preferred workflow**  
+When creating a new migration, you SHOULD use the Supabase CLI command:
+
+```
+
+supabase migration new <short_description>
+
+```
+
+This ensures correct file naming, ordering, and Supabase compatibility.
+
+⚠️ **Fallback (manual creation)**  
+If the CLI is not available, you MAY manually create a migration file inside the folder:
+
+```
+
+supabase/migrations/
+
+```
+
+In that case, the file MUST follow this naming convention:
+
+The file MUST be named in the format:
+
+`YYYYMMDDHHmmss_short_description.sql` (UTC time)
+
+1. `YYYY` - Four digits for the year (e.g., `2024`)
+2. `MM` - Two digits for the month (01 to 12)
+3. `DD` - Two digits for the day (01 to 31)
+4. `HH` - Two digits for the hour in 24-hour format (00 to 23)
+5. `mm` - Two digits for the minute (00 to 59)
+6. `ss` - Two digits for the second (00 to 59)
+7. Add a concise, snake_case description of the migration
+
+Example:
+
+```
+
+20240906123045_create_profiles.sql
+
+```
+
+## SQL Guidelines
+
+Write Postgres-compatible SQL code for Supabase migration files that:
+
+- Includes a header comment with metadata about:
+  - the purpose of the migration
+  - affected tables and columns
+  - any special considerations or risks
+- Write all SQL in lowercase.
+- Add **copious comments for any destructive SQL commands**, including:
+  - truncating
+  - dropping
+  - renaming
+  - column type alterations
+- When creating a new table, you MUST:
+  - enable row level security (rls) even if the table is intended for public access
+
+## RLS Policies
+
+When creating RLS policies:
+
+- Policies MUST cover all relevant access scenarios:
+  - `select`
+  - `insert`
+  - `update`
+  - `delete`
+- If the table is intended for **public access**, the policy **may simply return `true`**
+- Policies MUST be **granular**:
+  - one policy per action (`select`, `insert`, etc.)
+  - one policy per role (`anon`, `authenticated`)
+- DO NOT combine policies even if the logic is identical
+- Each policy MUST include:
+  - a comment explaining
+    - the security rationale
+    - the intended behavior
+
+The generated SQL code MUST be:
+
+- production-ready
+- well-documented
+- aligned with Supabase best practices
+- safe by default
+

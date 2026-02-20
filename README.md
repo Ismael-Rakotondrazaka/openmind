@@ -1,45 +1,75 @@
-# openmind-app
+# Nuxt Minimal Starter
 
-Unleash Your Thoughts, Explore Every Topic.
+Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-<figure>
-  <img src="https://openmind.onrender.com/images/logo.svg" alt="Logo of OpenMind" style="width: 12rem"/>
+## Setup
 
-  <figcaption>
-  Logo of OpenMind
-  </figcaption>
-</figure>
+Make sure to install dependencies:
 
-Live: [https://openmind.onrender.com](https://openmind.onrender.com), enjoy :wink:
-
-## Project Setup
-
-```sh
+```bash
+# npm
 npm install
+
+# pnpm
+pnpm install
+
+# yarn
+yarn install
+
+# bun
+bun install
 ```
 
-### Compile and Hot-Reload for Development
+## Development Server
 
-```sh
+Start the development server on `http://localhost:3000`:
+
+```bash
+# npm
 npm run dev
+
+# pnpm
+pnpm dev
+
+# yarn
+yarn dev
+
+# bun
+bun run dev
 ```
 
-### Compile and Build for Production
+## Production
 
-```sh
+Build the application for production:
+
+```bash
+# npm
 npm run build
+
+# pnpm
+pnpm build
+
+# yarn
+yarn build
+
+# bun
+bun run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+Locally preview production build:
 
-```sh
-npm run lint
+```bash
+# npm
+npm run preview
+
+# pnpm
+pnpm preview
+
+# yarn
+yarn preview
+
+# bun
+bun run preview
 ```
 
-### Seed
-
-```sh
-npm run db:seed:dev # massive fake data
-or
-npm run db:seed:prod # less data, but like real
-```
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

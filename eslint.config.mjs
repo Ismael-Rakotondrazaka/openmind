@@ -1,67 +1,56 @@
 // @ts-check
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import withNuxt from "./.nuxt/eslint.config.mjs";
-// import tseslint from "typescript-eslint";
+import perfectionist from 'eslint-plugin-perfectionist';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
-// Your custom configs here
+import withNuxt from './.nuxt/eslint.config.mjs';
+
+const ignores = [
+  'node_modules/**',
+  '.next/**',
+  'out/**',
+  'build/**',
+  'next-env.d.ts',
+  'shared/types/database.ts',
+  'scripts',
+  'core/**',
+  'tests',
+  'apify',
+];
+
 export default withNuxt([
   {
-    ignores: [
-      // # ignore generate imports
-      "auto-imports.d.ts",
-      "components.d.ts",
-      "nuxt.d.ts",
-      // # nuxt and other artefacts
-      ".nuxt",
-      ".output",
-      "node_modules",
-      "dist",
-      "public",
-      "presets",
-      // prisma generated
-      "prisma/generated",
-    ],
+    ignores,
     rules: {
-      "no-console": "error",
-      semi: ["error", "always"],
-      quotes: ["error", "double"],
-      "semi-style": ["error", "last"],
-      "semi-spacing": [
-        "error",
-        {
-          before: false,
-          after: true,
-        },
-      ],
-      "comma-dangle": [
-        "error",
-        {
-          arrays: "only-multiline",
-          objects: "only-multiline",
-          imports: "only-multiline",
-          exports: "only-multiline",
-          functions: "only-multiline",
-        },
-      ],
-      indent: ["error", 2],
-      "no-unused-vars": [
-        "error",
-        {
-          vars: "all",
-          args: "after-used",
-          ignoreRestSiblings: false,
-        },
-      ],
-      curly: ["error", "multi-line"],
-      "vue/v-on-event-hyphenation": [
-        "error",
-        "always",
-        {
-          autofix: true,
-        },
-      ],
-      "import/no-named-as-default-member": "off",
+      'vue/html-self-closing': 'off',
     },
   },
-  eslintPluginPrettierRecommended,
+  {
+    ...eslintPluginPrettierRecommended,
+    ignores,
+    rules: {
+      'prettier/prettier': [
+        'error',
+        {
+          arrowParens: 'avoid',
+          bracketSameLine: false,
+          bracketSpacing: true,
+          endOfLine: 'lf',
+          jsxSingleQuote: true,
+          plugins: ['prettier-plugin-tailwindcss'],
+          printWidth: 80,
+          proseWrap: 'preserve',
+          quoteProps: 'as-needed',
+          semi: true,
+          singleQuote: true,
+          tabWidth: 2,
+          trailingComma: 'es5',
+          useTabs: false,
+        },
+      ],
+    },
+  },
+  {
+    ...perfectionist.configs['recommended-alphabetical'],
+    ignores,
+  },
 ]);

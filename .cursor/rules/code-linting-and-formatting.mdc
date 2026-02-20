@@ -1,0 +1,45 @@
+---
+description: Code linting and formatting rules (JS/TS only)
+alwaysApply: true
+---
+
+## Linting & Formatting Enforcement (Scoped)
+
+This rule applies **ONLY** to the following file types:
+
+- `.js`
+- `.ts`
+- `.jsx`
+- `.tsx`
+- `.json`
+
+### Rules
+
+- **Never manually fix linting or formatting errors** unless it is technically impossible to use the automated fixer.
+- **Always use the following command to fix linting issues on specific files:**
+
+```bash
+  npm run lint:fix:files -- <file-path1> <file-path2> ...
+````
+
+### Mandatory Enforcement
+
+**Any `.js`, `.ts`, `.jsx`, `.tsx`, or `.json` file** that is **created or modified** during this chat **MUST** be passed to the lint fix command **before the response is considered complete**.
+* Files outside the listed extensions are **explicitly excluded** from this rule.
+
+### When Auto-Fix Fails
+
+* If linting **cannot be fixed automatically**, you must clearly explain:
+
+  - Why auto-fix failed
+  - What exact manual change is required
+
+* Do **not** commit, suggest, or validate code for the scoped file types unless it has been lint-fixed according to this rule.
+
+## End-of-Response Requirement
+
+* At the end of every response where scoped files were **created or updated**, explicitly show the exact command that was (or must be) executed, for example:
+
+```bash
+npm run lint:fix:files -- src/app.ts src/utils/helpers.ts
+```
