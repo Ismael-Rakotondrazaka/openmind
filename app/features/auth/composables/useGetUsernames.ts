@@ -7,7 +7,16 @@ export interface UseGetUsernamesParams {
 
 export const useGetUsernames = (params: UseGetUsernamesParams) => {
   return useQuery({
-    queryFn: () => getUsernames(params),
+    queryFn: () => {
+      if (!params.username) {
+        return {
+          count: 0,
+          data: [],
+        };
+      }
+
+      return getUsernames(params);
+    },
     queryKey: ['usernames'],
   });
 };

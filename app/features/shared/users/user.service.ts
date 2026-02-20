@@ -35,3 +35,24 @@ export const getUsernames = async ({
     }, [] as string[]),
   };
 };
+
+export const isUsernameExists = async ({
+  username,
+}: {
+  username: string;
+}): Promise<boolean> => {
+  const userSBClient = useSupabaseClient();
+
+  const { count, error } = await userSBClient
+    .from('users')
+    .select('username', { count: 'exact', head: true })
+    .eq('username', username)
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return (count ?? 0) > 0;
+};
