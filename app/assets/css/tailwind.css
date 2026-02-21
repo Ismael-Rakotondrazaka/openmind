@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+html, body {
+  font-family: "Inter", sans-serif;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

@@ -46,7 +46,7 @@ const usernameExistsQuery = useIsUsernameExists({
   },
 });
 
-const showConfirmEmailModal = ref(true);
+const showConfirmEmailModal = ref(false);
 
 const createMessageHandler = handleSubmit(async values => {
   usernameToCheck.value = values.username;

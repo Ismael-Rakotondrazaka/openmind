@@ -36,7 +36,7 @@ const { handleSubmit, isSubmitting, resetForm } = useForm({
 const userSBClient = useSupabaseClient();
 const redirectInfo = useSupabaseCookieRedirect();
 
-const createMessageHandler = handleSubmit(async values => {
+const handleLogin = handleSubmit(async values => {
   const { error } = await userSBClient.auth.signInWithPassword({
     email: values.email,
     password: values.password,
@@ -70,7 +70,7 @@ const createMessageHandler = handleSubmit(async values => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form id="login" method="POST" @submit="createMessageHandler">
+        <form id="login" method="POST" @submit="handleLogin">
           <FieldGroup>
             <VeeField v-slot="{ field, errors }" name="email">
               <Field :data-invalid="!!errors.length">
@@ -78,6 +78,7 @@ const createMessageHandler = handleSubmit(async values => {
                 <Input
                   id="email"
                   v-bind="field"
+                  type="email"
                   placeholder="email@example.com"
                   :aria-invalid="!!errors.length"
                 />
@@ -85,27 +86,27 @@ const createMessageHandler = handleSubmit(async values => {
               </Field>
             </VeeField>
 
-            <Field>
-              <FieldLabel for="email"> Email </FieldLabel>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </Field>
-            <Field>
-              <div class="flex items-center">
-                <FieldLabel for="password"> Password </FieldLabel>
-                <a
-                  href="#"
-                  class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                >
-                  Forgot your password?
-                </a>
-              </div>
-              <Input id="password" type="password" required />
-            </Field>
+            <VeeField v-slot="{ field, errors }" name="password">
+              <Field :data-invalid="!!errors.length">
+                <div class="flex items-center">
+                  <FieldLabel for="password">Password</FieldLabel>
+                  <NuxtLink
+                    :to="{ name: 'password-reset' }"
+                    class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                  >
+                    Forgot your password?
+                  </NuxtLink>
+                </div>
+                <Input
+                  id="password"
+                  v-bind="field"
+                  type="password"
+                  :aria-invalid="!!errors.length"
+                />
+                <FieldError v-if="errors.length" :errors="errors" />
+              </Field>
+            </VeeField>
+
             <Field>
               <Button type="submit" :disabled="isSubmitting">
                 {{ isSubmitting ? 'Logging in...' : 'Login' }}
