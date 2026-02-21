@@ -3,7 +3,7 @@
 -- Affected: public.tags
 
 create table public.tags (
-  id bigint generated always as identity primary key,
+  id uuid primary key default gen_random_uuid(),
   value text not null
 );
 

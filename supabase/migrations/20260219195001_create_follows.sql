@@ -3,7 +3,7 @@
 -- Affected: public.follows
 
 create table public.follows (
-  id bigint generated always as identity primary key,
+  id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
   follower_id uuid not null references public.users (id) on delete cascade,
   following_id uuid not null references public.users (id) on delete cascade,

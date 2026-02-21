@@ -17,7 +17,8 @@
     "db:reset:remote": "supabase db reset --linked",
     "db:generate-types:local": "supabase gen types typescript --local > shared/types/database.ts",
     "db:generate-types:remote": "supabase gen types typescript --linked > shared/types/database.ts",
-    "migrate:data": "tsx scripts/data-migration/index.ts"
+    "migrate:data": "tsx scripts/data-migration/index.ts",
+    "seed:generate": "tsx scripts/seed-migration/index.ts"
   },
   "dependencies": {
     "@editorjs/editorjs": "^2.31.3",
@@ -47,8 +48,10 @@
     "nuxt": "^4.3.1",
     "reka-ui": "^2.8.2",
     "shadcn-nuxt": "^2.4.3",
+    "slugify": "^1.6.6",
     "tailwind-merge": "^3.4.1",
     "ufo": "^1.6.3",
+    "uuid": "^13.0.0",
     "vaul-vue": "^0.4.1",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.28",
@@ -57,9 +60,11 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.3.0",
     "@iconify-json/mdi": "^1.2.3",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
+    "@types/uuid": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-perfectionist": "^5.5.0",
     "eslint-plugin-prettier": "^5.5.5",

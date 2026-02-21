@@ -4,7 +4,7 @@
 
 create table public.user_tags (
   user_id uuid not null references public.users (id) on delete cascade,
-  tag_id bigint not null references public.tags (id) on delete cascade,
+  tag_id uuid not null references public.tags (id) on delete cascade,
   primary key (user_id, tag_id)
 );
 

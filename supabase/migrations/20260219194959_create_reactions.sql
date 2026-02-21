@@ -4,7 +4,7 @@
 -- Notes: type stored as text; one reaction per user per post or per comment.
 
 create table public.reactions (
-  id bigint generated always as identity primary key,
+  id uuid primary key default gen_random_uuid(),
   type text not null,
   created_at timestamptz not null default now(),
   user_id uuid not null references public.users (id) on delete cascade,

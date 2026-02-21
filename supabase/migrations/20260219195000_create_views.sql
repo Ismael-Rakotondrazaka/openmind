@@ -3,7 +3,7 @@
 -- Affected: public.views
 
 create table public.views (
-  id bigint generated always as identity primary key,
+  id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   user_id uuid not null references public.users (id) on delete cascade,

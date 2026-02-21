@@ -131,15 +131,15 @@ export type Database = {
       post_tags: {
         Row: {
           post_id: string
-          tag_id: number
+          tag_id: string
         }
         Insert: {
           post_id: string
-          tag_id: number
+          tag_id: string
         }
         Update: {
           post_id?: string
-          tag_id?: number
+          tag_id?: string
         }
         Relationships: [
           {
@@ -289,30 +289,30 @@ export type Database = {
       }
       tags: {
         Row: {
-          id: number
+          id: string
           value: string
         }
         Insert: {
-          id?: never
+          id?: string
           value: string
         }
         Update: {
-          id?: never
+          id?: string
           value?: string
         }
         Relationships: []
       }
       user_tags: {
         Row: {
-          tag_id: number
+          tag_id: string
           user_id: string
         }
         Insert: {
-          tag_id: number
+          tag_id: string
           user_id: string
         }
         Update: {
-          tag_id?: number
+          tag_id?: string
           user_id?: string
         }
         Relationships: [

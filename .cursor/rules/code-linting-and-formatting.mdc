@@ -1,5 +1,5 @@
 ---
-description: Code linting and formatting rules (JS/TS only)
+description: Code linting and formatting rules (JS/TS/Vue)
 alwaysApply: true
 ---
 
@@ -9,8 +9,7 @@ This rule applies **ONLY** to the following file types:
 
 - `.js`
 - `.ts`
-- `.jsx`
-- `.tsx`
+- `.vue`
 - `.json`
 
 ### Rules
@@ -24,7 +23,7 @@ This rule applies **ONLY** to the following file types:
 
 ### Mandatory Enforcement
 
-**Any `.js`, `.ts`, `.jsx`, `.tsx`, or `.json` file** that is **created or modified** during this chat **MUST** be passed to the lint fix command **before the response is considered complete**.
+**Any `.js`, `.ts`, `.vue`, or `.json` file** that is **created or modified** during this chat **MUST** be passed to the lint fix command **before the response is considered complete**.
 * Files outside the listed extensions are **explicitly excluded** from this rule.
 
 ### When Auto-Fix Fails
