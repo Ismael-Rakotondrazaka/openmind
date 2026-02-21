@@ -161,40 +161,37 @@ export type Database = {
       posts: {
         Row: {
           author_id: string
-          content: string
+          content: Json
           cover_url: string | null
           created_at: string
           deleted_at: string | null
           id: string
           is_visible: boolean
           slug: string
-          summary: string | null
           title: string
           updated_at: string
         }
         Insert: {
           author_id: string
-          content: string
+          content: Json
           cover_url?: string | null
           created_at?: string
           deleted_at?: string | null
           id?: string
           is_visible?: boolean
           slug: string
-          summary?: string | null
           title: string
           updated_at?: string
         }
         Update: {
           author_id?: string
-          content?: string
+          content?: Json
           cover_url?: string | null
           created_at?: string
           deleted_at?: string | null
           id?: string
           is_visible?: boolean
           slug?: string
-          summary?: string | null
           title?: string
           updated_at?: string
         }
