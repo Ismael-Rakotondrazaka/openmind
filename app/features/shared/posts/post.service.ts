@@ -22,6 +22,10 @@ export const getPosts = async (
     query = query.eq('author_id', filters.author_id);
   }
 
+  if (filters.status) {
+    query = query.eq('status', filters.status);
+  }
+
   if (filters.search) {
     query = query.ilike('title', `%${filters.search}%`);
   }
@@ -58,6 +62,10 @@ export const getPostsCount = async (
 
   if (filters.author_id) {
     query = query.eq('author_id', filters.author_id);
+  }
+
+  if (filters.status) {
+    query = query.eq('status', filters.status);
   }
 
   if (filters.search) {

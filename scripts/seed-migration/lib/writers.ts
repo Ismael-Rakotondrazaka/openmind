@@ -43,9 +43,9 @@ export function writeFollows(model: BuiltModel): string {
 export function writePosts(model: BuiltModel): string {
   const values = model.posts.map(
     p =>
-      `  (${quote(p.id)}, ${quote(p.title)}, ${quote(p.slug)}, ${quote(p.author_id)}, ${p.cover_url ? quote(p.cover_url) : 'NULL'}, '${escapeJsonForSql(p.content)}'::jsonb, ${p.is_visible}, ${quoteTs(p.created_at)}, ${quoteTs(p.updated_at)})`
+      `  (${quote(p.id)}, ${quote(p.title)}, ${quote(p.slug)}, ${quote(p.author_id)}, ${p.cover_url ? quote(p.cover_url) : 'NULL'}, '${escapeJsonForSql(p.content)}'::jsonb, ${quote(p.status)}, ${quoteTs(p.created_at)}, ${quoteTs(p.updated_at)})`
   );
-  return `-- Seed: public.posts\nINSERT INTO public.posts (id, title, slug, author_id, cover_url, content, is_visible, created_at, updated_at) VALUES\n${values.join(',\n')};`;
+  return `-- Seed: public.posts\nINSERT INTO public.posts (id, title, slug, author_id, cover_url, content, status, created_at, updated_at) VALUES\n${values.join(',\n')};`;
 }
 
 export function writePostTags(model: BuiltModel): string {

@@ -12,8 +12,14 @@ export interface PostFilters {
   page?: number;
   search?: string;
   sortOrder?: SortOrder;
+  status?: PostStatus;
 }
+
+export const PostStatuses = ['draft', 'published'] as const;
+
+export const PostStatus = createEnumConstants(PostStatuses);
 
 export type PostInsert = TablesInsert<'posts'>;
 export type PostOrderBy = 'created_at';
+export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus];
 export type PostUpdate = TablesUpdate<'posts'>;

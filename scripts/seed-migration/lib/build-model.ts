@@ -21,6 +21,7 @@ import type {
 } from './types.js';
 
 import { createSeededRandom, intBetween, pick, pickMany } from './random.js';
+import { PostStatus } from './types.js';
 
 const REACTION_TYPES: ReactionType[] = ['like', 'love', 'celebrate'];
 const INSTANCE_ID = '00000000-0000-0000-0000-000000000000';
@@ -92,8 +93,8 @@ export function buildModel(
       cover_url: a.coverUrl ?? null,
       created_at: toIso(created),
       id,
-      is_visible: true,
       slug: slugify(a.title, { lower: true, strict: true }) || `post-${i + 1}`,
+      status: PostStatus.published,
       title: a.title,
       updated_at: toIso(created),
     };

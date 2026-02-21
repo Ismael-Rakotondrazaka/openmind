@@ -166,7 +166,7 @@ export type Database = {
           created_at: string
           deleted_at: string | null
           id: string
-          is_visible: boolean
+          status: string
           slug: string
           title: string
           updated_at: string
@@ -178,7 +178,7 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           id?: string
-          is_visible?: boolean
+          status?: string
           slug: string
           title: string
           updated_at?: string
@@ -190,7 +190,7 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           id?: string
-          is_visible?: boolean
+          status?: string
           slug?: string
           title?: string
           updated_at?: string

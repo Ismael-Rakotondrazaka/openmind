@@ -30,8 +30,8 @@ export interface BuiltPost {
   cover_url: null | string;
   created_at: string;
   id: string;
-  is_visible: boolean;
   slug: string;
+  status: PostStatus;
   title: string;
   updated_at: string;
 }
@@ -93,5 +93,12 @@ export interface EditorJsContent {
   time?: number;
   version?: string;
 }
+
+export const PostStatus = {
+  draft: 'draft',
+  published: 'published',
+} as const;
+
+export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus];
 
 export type ReactionType = 'celebrate' | 'like' | 'love';
