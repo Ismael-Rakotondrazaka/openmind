@@ -38,3 +38,40 @@ create policy "Users can unfollow (delete their own follow)"
   on public.follows for delete
   to authenticated
   using ( (select auth.uid()) = follower_id );
+
+-- Keep public.users.follower_count and following_count in sync with public.follows
+create or replace function public.sync_follow_counts()
+returns trigger
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if tg_op = 'INSERT' then
+    update public.users
+    set following_count = following_count + 1
+    where id = new.follower_id;
+    update public.users
+    set follower_count = follower_count + 1
+    where id = new.following_id;
+  elsif tg_op = 'DELETE' then
+    update public.users
+    set following_count = following_count - 1
+    where id = old.follower_id;
+    update public.users
+    set follower_count = follower_count - 1
+    where id = old.following_id;
+  end if;
+  return coalesce(new, old);
+end;
+$$;
+
+create trigger sync_follow_counts_on_insert
+  after insert on public.follows
+  for each row
+  execute function public.sync_follow_counts();
+
+create trigger sync_follow_counts_on_delete
+  after delete on public.follows
+  for each row
+  execute function public.sync_follow_counts();

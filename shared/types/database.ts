@@ -352,6 +352,8 @@ export type Database = {
           created_at: string
           deleted_at: string | null
           first_name: string | null
+          follower_count: number
+          following_count: number
           id: string
           image_url: string | null
           last_name: string | null
@@ -363,6 +365,8 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           first_name?: string | null
+          follower_count?: number
+          following_count?: number
           id: string
           image_url?: string | null
           last_name?: string | null
@@ -374,6 +378,8 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           first_name?: string | null
+          follower_count?: number
+          following_count?: number
           id?: string
           image_url?: string | null
           last_name?: string | null

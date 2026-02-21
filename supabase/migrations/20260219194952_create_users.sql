@@ -10,6 +10,8 @@ create table public.users (
   last_name text,
   image_url text,
   role text not null default 'user' check (role in ('admin', 'moderator', 'user')),
+  follower_count integer not null default 0,
+  following_count integer not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   deleted_at timestamptz
