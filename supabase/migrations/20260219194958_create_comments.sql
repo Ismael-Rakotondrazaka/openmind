@@ -11,10 +11,14 @@ create table public.comments (
   post_id uuid not null references public.posts (id) on delete cascade,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  deleted_at timestamptz
+  deleted_at timestamptz,
+  reactions_count integer not null default 0,
+  reactions_details jsonb not null default '{}'::jsonb
 );
 
 comment on table public.comments is 'Threaded comments on posts; depth is 0 for top-level, 1 for first reply, etc.';
+comment on column public.comments.reactions_count is 'Total number of reactions on this comment; maintained by trigger on public.reactions.';
+comment on column public.comments.reactions_details is 'Per-type reaction counts, e.g. {"like": 5, "love": 2, "celebrate": 1}; maintained by trigger on public.reactions.';
 
 create index comments_post_id_idx on public.comments (post_id);
 create index comments_author_id_idx on public.comments (author_id);

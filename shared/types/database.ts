@@ -44,6 +44,8 @@ export type Database = {
           id: string
           parent_id: string | null
           post_id: string
+          reactions_count: number
+          reactions_details: Json
           updated_at: string
         }
         Insert: {
@@ -55,6 +57,8 @@ export type Database = {
           id?: string
           parent_id?: string | null
           post_id: string
+          reactions_count?: number
+          reactions_details?: Json
           updated_at?: string
         }
         Update: {
@@ -66,6 +70,8 @@ export type Database = {
           id?: string
           parent_id?: string | null
           post_id?: string
+          reactions_count?: number
+          reactions_details?: Json
           updated_at?: string
         }
         Relationships: [
@@ -166,8 +172,10 @@ export type Database = {
           created_at: string
           deleted_at: string | null
           id: string
-          status: string
+          reactions_count: number
+          reactions_details: Json
           slug: string
+          status: string
           title: string
           updated_at: string
         }
@@ -178,8 +186,10 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           id?: string
-          status?: string
+          reactions_count?: number
+          reactions_details?: Json
           slug: string
+          status?: string
           title: string
           updated_at?: string
         }
@@ -190,8 +200,10 @@ export type Database = {
           created_at?: string
           deleted_at?: string | null
           id?: string
-          status?: string
+          reactions_count?: number
+          reactions_details?: Json
           slug?: string
+          status?: string
           title?: string
           updated_at?: string
         }
@@ -211,7 +223,7 @@ export type Database = {
           created_at: string
           id: string
           post_id: string | null
-          type: 'celebrate' | 'like' | 'love'
+          type: string
           user_id: string
         }
         Insert: {
@@ -219,7 +231,7 @@ export type Database = {
           created_at?: string
           id?: string
           post_id?: string | null
-          type?: 'celebrate' | 'like' | 'love'
+          type?: string
           user_id: string
         }
         Update: {
@@ -227,7 +239,7 @@ export type Database = {
           created_at?: string
           id?: string
           post_id?: string | null
-          type?: 'celebrate' | 'like' | 'love'
+          type?: string
           user_id?: string
         }
         Relationships: [
@@ -415,7 +427,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      sync_reactions_count_for_target: {
+        Args: { p_comment_id: string; p_post_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

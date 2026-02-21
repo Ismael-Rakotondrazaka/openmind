@@ -12,10 +12,14 @@ create table public.posts (
   status text not null default 'published' check (status in ('published', 'draft')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  deleted_at timestamptz
+  deleted_at timestamptz,
+  reactions_count integer not null default 0,
+  reactions_details jsonb not null default '{}'::jsonb
 );
 
 comment on table public.posts is 'User-authored posts with slug, content and visibility.';
+comment on column public.posts.reactions_count is 'Total number of reactions on this post; maintained by trigger on public.reactions.';
+comment on column public.posts.reactions_details is 'Per-type reaction counts, e.g. {"like": 5, "love": 2, "celebrate": 1}; maintained by trigger on public.reactions.';
 
 create unique index posts_slug_key on public.posts (slug);
 create index posts_author_id_idx on public.posts (author_id);
