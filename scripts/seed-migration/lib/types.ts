@@ -58,6 +58,7 @@ export interface BuiltSavedPost {
 
 export interface BuiltTag {
   id: string;
+  slug: string;
   value: string;
 }
 

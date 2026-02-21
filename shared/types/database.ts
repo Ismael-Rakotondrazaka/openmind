@@ -97,19 +97,19 @@ export type Database = {
           created_at: string
           follower_id: string
           following_id: string
-          id: number
+          id: string
         }
         Insert: {
           created_at?: string
           follower_id: string
           following_id: string
-          id?: never
+          id?: string
         }
         Update: {
           created_at?: string
           follower_id?: string
           following_id?: string
-          id?: never
+          id?: string
         }
         Relationships: [
           {
@@ -209,7 +209,7 @@ export type Database = {
         Row: {
           comment_id: string | null
           created_at: string
-          id: number
+          id: string
           post_id: string | null
           type: string
           user_id: string
@@ -217,7 +217,7 @@ export type Database = {
         Insert: {
           comment_id?: string | null
           created_at?: string
-          id?: never
+          id?: string
           post_id?: string | null
           type: string
           user_id: string
@@ -225,7 +225,7 @@ export type Database = {
         Update: {
           comment_id?: string | null
           created_at?: string
-          id?: never
+          id?: string
           post_id?: string | null
           type?: string
           user_id?: string
@@ -290,14 +290,17 @@ export type Database = {
       tags: {
         Row: {
           id: string
+          slug: string
           value: string
         }
         Insert: {
           id?: string
+          slug: string
           value: string
         }
         Update: {
           id?: string
+          slug?: string
           value?: string
         }
         Relationships: []
@@ -371,21 +374,21 @@ export type Database = {
       views: {
         Row: {
           created_at: string
-          id: number
+          id: string
           post_id: string
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          id?: never
+          id?: string
           post_id: string
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
-          id?: never
+          id?: string
           post_id?: string
           updated_at?: string
           user_id?: string

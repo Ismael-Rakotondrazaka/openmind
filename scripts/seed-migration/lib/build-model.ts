@@ -67,10 +67,19 @@ export function buildModel(
   });
 
   const tagValues = [...new Set(articles.flatMap(a => a.tags))];
-  const tags: BuiltTag[] = tagValues.map(value => ({
-    id: uuidV4(),
-    value,
-  }));
+  const usedSlugs = new Set<string>();
+  const tags: BuiltTag[] = tagValues.map(value => {
+    let slug = slugify(value, { lower: true, strict: true }) || 'tag';
+    while (usedSlugs.has(slug)) {
+      slug = `${slug}-${uuidV4().slice(0, 8)}`;
+    }
+    usedSlugs.add(slug);
+    return {
+      id: uuidV4(),
+      slug,
+      value,
+    };
+  });
   const tagValueToId = new Map(tags.map(t => [t.value, t.id]));
 
   const posts: BuiltPost[] = articles.map((a, i) => {

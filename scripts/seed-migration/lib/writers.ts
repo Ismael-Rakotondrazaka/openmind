@@ -72,8 +72,10 @@ export function writeSavedPosts(model: BuiltModel): string {
 }
 
 export function writeTags(model: BuiltModel): string {
-  const values = model.tags.map(t => `  (${quote(t.id)}, ${quote(t.value)})`);
-  return `-- Seed: public.tags\nINSERT INTO public.tags (id, value) VALUES\n${values.join(',\n')};`;
+  const values = model.tags.map(
+    t => `  (${quote(t.id)}, ${quote(t.value)}, ${quote(t.slug)})`
+  );
+  return `-- Seed: public.tags\nINSERT INTO public.tags (id, value, slug) VALUES\n${values.join(',\n')};`;
 }
 
 export function writeUserTags(model: BuiltModel): string {
