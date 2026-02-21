@@ -1,11 +1,11 @@
 -- Migration: create reactions table
 -- Purpose: User reactions (like, love, celebrate) on posts or comments.
 -- Affected: public.reactions
--- Notes: type stored as text; one reaction per user per post or per comment.
+-- Notes: type constrained to like, love, celebrate; default like; one reaction per user per post or per comment.
 
 create table public.reactions (
   id uuid primary key default gen_random_uuid(),
-  type text not null,
+  type text not null default 'like' check (type in ('like', 'love', 'celebrate')),
   created_at timestamptz not null default now(),
   user_id uuid not null references public.users (id) on delete cascade,
   post_id uuid references public.posts (id) on delete cascade,
