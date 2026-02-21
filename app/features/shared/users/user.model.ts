@@ -1,4 +1,4 @@
-export const Roles = ['admin', 'user', 'moderator'] as const;
+export const Roles = ['admin', 'moderator', 'user'] as const;
 
 export const Role = createEnumConstants(Roles);
 

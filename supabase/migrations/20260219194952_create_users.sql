@@ -9,7 +9,7 @@ create table public.users (
   first_name text,
   last_name text,
   image_url text,
-  role text not null default 'user',
+  role text not null default 'user' check (role in ('admin', 'moderator', 'user')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   deleted_at timestamptz
