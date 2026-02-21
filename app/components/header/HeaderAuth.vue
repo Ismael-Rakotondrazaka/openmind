@@ -38,7 +38,7 @@ const handleLogout = async () => {
   <header
     class="fixed top-0 right-0 left-0 z-2 container mx-auto w-full rounded-b-md border-x border-b bg-[#e5fcd5] p-2"
   >
-    <nav class="flex items-center justify-between gap-4 py-2">
+    <nav class="flex items-center justify-between gap-4">
       <div class="flex items-center gap-0.5 md:gap-2">
         <NuxtLink :to="{ name: 'index' }" as-child>
           <Button variant="ghost">
