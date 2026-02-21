@@ -1,7 +1,9 @@
+<script lang="ts" setup>
+import CreatePostPage from '~/features/shared/posts/pages/CreatePostPage.vue';
+</script>
+
 <template>
-  <div></div>
+  <CreatePostPage />
 </template>
 
-<script lang="ts" setup></script>
-
-<style></style>
+<style scoped></style>

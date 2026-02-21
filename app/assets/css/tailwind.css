@@ -123,3 +123,11 @@ html, body {
     @apply bg-background text-foreground;
   }
 }
+
+.ce-block__content {
+  max-width: calc(100% - 7rem) !important;
+}
+
+.ce-toolbar__content {
+  max-width: calc(100% - 7rem) !important;
+}
