@@ -45,6 +45,7 @@ export default defineNuxtConfig({
           // Utilities
           'queryOptions',
           'infiniteQueryOptions',
+          'keepPreviousData',
 
           // Classes
           'QueryClient',

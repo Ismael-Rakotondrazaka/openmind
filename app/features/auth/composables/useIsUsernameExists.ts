@@ -13,6 +13,6 @@ export const useIsUsernameExists = (params: UseIsUsernameExistsParams) => {
 
       return isUsernameExists(params);
     },
-    queryKey: ['username', 'exists', params],
+    queryKey: ['usernames', 'exists', params],
   });
 };

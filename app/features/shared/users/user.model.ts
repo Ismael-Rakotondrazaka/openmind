@@ -13,6 +13,8 @@ export const RoleLabel: Record<Role, string> = {
 export type User = Tables<'users'>;
 
 export interface UserFilters {
+  limit?: number;
+  page?: number;
   role?: Role;
   search?: string;
   username?: string;

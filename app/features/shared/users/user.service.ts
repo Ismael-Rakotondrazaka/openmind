@@ -1,6 +1,60 @@
 import type { PaginationResult } from '@/features/shared/paginations/pagination.model';
 
+import type { User, UserFilters } from './user.model';
+
 import { UserConfig } from './user.config';
+
+export const getUsers = async (
+  filters: UserFilters
+): Promise<PaginationResult<User>> => {
+  const client = useSupabaseClient();
+
+  let query = client.from('users').select('*', { count: 'exact' });
+
+  if (filters.role) {
+    query = query.eq('role', filters.role);
+  }
+
+  if (filters.username) {
+    query = query.eq('username', filters.username);
+  }
+
+  if (filters.search) {
+    query = query.or(
+      `username.ilike.%${filters.search}%,first_name.ilike.%${filters.search}%,last_name.ilike.%${filters.search}%`
+    );
+  }
+
+  const page = filters.page ?? UserConfig.PAGE_DEFAULT;
+  const limit = filters.limit ?? UserConfig.PAGE_SIZE_DEFAULT;
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  query = query.order('created_at', { ascending: false }).range(from, to);
+
+  const { count, data, error } = await query;
+
+  if (error) throw error;
+
+  return {
+    count: count ?? 0,
+    data: data ?? [],
+  };
+};
+
+export const getUser = async (id: string): Promise<null | User> => {
+  const client = useSupabaseClient();
+
+  const { data, error } = await client
+    .from('users')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  return data;
+};
 
 export const getUsernames = async ({
   limit,
@@ -55,4 +109,32 @@ export const isUsernameExists = async ({
   }
 
   return data !== null;
+};
+
+export const getUsersCount = async (
+  filters: UserFilters = {}
+): Promise<number> => {
+  const client = useSupabaseClient();
+
+  let query = client.from('users').select('id', { count: 'exact', head: true });
+
+  if (filters.role) {
+    query = query.eq('role', filters.role);
+  }
+
+  if (filters.username) {
+    query = query.eq('username', filters.username);
+  }
+
+  if (filters.search) {
+    query = query.or(
+      `username.ilike.%${filters.search}%,first_name.ilike.%${filters.search}%,last_name.ilike.%${filters.search}%`
+    );
+  }
+
+  const { count, error } = await query;
+
+  if (error) throw error;
+
+  return count ?? 0;
 };
