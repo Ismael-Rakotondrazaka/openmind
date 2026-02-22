@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid';
 import slugify from 'slugify';
 import { toast } from 'vue-sonner';
 
-import EditorJs from '@/components/editor/EditorJs.client.vue';
+import EditorJsClient from '@/components/editor/EditorJs.client.vue';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/card';
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -141,8 +142,9 @@ const onSubmit = handleSubmit(async values => {
       <CardHeader>
         <CardTitle>Create a post</CardTitle>
         <CardDescription>
-          Share your thoughts with the community. Add a title, content, and
-          optional cover image and tags.
+          Get ready to share your thoughts! Creating an article is easy. Just
+          fill out the form below, and let your ideas shine. Start now and be
+          part of our community!
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -151,6 +153,10 @@ const onSubmit = handleSubmit(async values => {
             <VeeField v-slot="{ field, errors }" name="title">
               <Field :data-invalid="!!errors.length">
                 <FieldLabel for="title">Title</FieldLabel>
+                <FieldDescription>
+                  Craft a captivating headline that summarizes the essence of
+                  your article and sparks curiosity.
+                </FieldDescription>
                 <Input
                   id="title"
                   v-bind="field"
@@ -165,7 +171,11 @@ const onSubmit = handleSubmit(async values => {
             <VeeField v-slot="{ field, errors }" name="content">
               <Field :data-invalid="!!errors.length">
                 <FieldLabel for="content">Content</FieldLabel>
-                <EditorJs
+                <FieldDescription>
+                  Pour your ideas, insights, and expertise into engaging and
+                  informative prose to captivate your audience.
+                </FieldDescription>
+                <EditorJsClient
                   :content="field.value ?? { blocks: [] }"
                   class="min-h-24 w-full rounded-md border"
                   @update:content="field.onChange"
@@ -176,6 +186,9 @@ const onSubmit = handleSubmit(async values => {
 
             <Field>
               <FieldLabel>Cover image (optional)</FieldLabel>
+              <FieldDescription>
+                Choose an eye-catching image to grab your audience's attention.
+              </FieldDescription>
               <input
                 type="file"
                 accept="image/*"
@@ -194,6 +207,10 @@ const onSubmit = handleSubmit(async values => {
             <VeeField v-slot="{ field, errors }" name="newTags">
               <Field :data-invalid="!!errors.length">
                 <FieldLabel for="newTags">Tags (optional)</FieldLabel>
+                <FieldDescription>
+                  Add descriptive keywords to categorize your article and
+                  improve discoverability.
+                </FieldDescription>
                 <TagsInput
                   :model-value="field.value"
                   :aria-invalid="!!errors.length"
