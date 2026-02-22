@@ -1,9 +1,9 @@
 import { withQuery } from 'ufo';
 
 export interface UseUserImageUrlProps {
-  first_name?: string;
+  first_name?: null | string;
   image_url?: null | string;
-  last_name?: string;
+  last_name?: null | string;
 }
 
 interface FormatFallbackUrlOptions {
@@ -25,17 +25,23 @@ const defaultOptions: FormatFallbackUrlOptions = {
   size: 200,
 };
 
-export const useUserImageUrl = <T extends UseUserImageUrlProps>({
-  first_name,
-  image_url,
-  last_name,
-}: T) => {
+export const useUserImageUrl = <
+  T extends MaybeRefOrGetter<UseUserImageUrlProps>,
+>(
+  user: T
+) => {
   return computed(() => {
-    if (image_url) {
-      return image_url;
+    const userValue = toValue(user);
+
+    if (userValue.image_url) {
+      return userValue.image_url;
     }
 
-    return formatFallbackUrl(first_name, last_name, defaultOptions);
+    return formatFallbackUrl(
+      userValue.first_name,
+      userValue.last_name,
+      defaultOptions
+    );
   });
 };
 

@@ -38,3 +38,27 @@ create trigger update_views_updated_at
   before update on public.views
   for each row
   execute function public.handle_updated_at();
+
+create or replace function public.views_sync_posts_views_count_trigger()
+returns trigger
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if tg_op in ('delete', 'update') and old.post_id is not null then
+    perform public.sync_posts_views_count(old.post_id);
+  end if;
+  if tg_op in ('insert', 'update') and new.post_id is not null then
+    perform public.sync_posts_views_count(new.post_id);
+  end if;
+  return coalesce(new, old);
+end;
+$$;
+
+comment on function public.views_sync_posts_views_count_trigger() is 'After insert/update/delete on views, syncs views_count on the affected post(s).';
+
+create trigger views_sync_posts_views_count
+  after insert or update or delete on public.views
+  for each row
+  execute function public.views_sync_posts_views_count_trigger();

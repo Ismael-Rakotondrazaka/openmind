@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto mt-15 min-h-svh">
+  <div class="mx-auto mt-15 min-h-svh w-full max-w-175">
     <CreatePostForm />
   </div>
 </template>

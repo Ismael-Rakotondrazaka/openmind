@@ -83,6 +83,30 @@ create trigger comments_broadcast_changes
   for each row
   execute function public.comments_broadcast_changes();
 
+create or replace function public.comments_sync_posts_comments_count_trigger()
+returns trigger
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if tg_op in ('delete', 'update') and old.post_id is not null then
+    perform public.sync_posts_comments_count(old.post_id);
+  end if;
+  if tg_op in ('insert', 'update') and new.post_id is not null then
+    perform public.sync_posts_comments_count(new.post_id);
+  end if;
+  return coalesce(new, old);
+end;
+$$;
+
+comment on function public.comments_sync_posts_comments_count_trigger() is 'After insert/update/delete on comments, syncs comments_count on the affected post(s).';
+
+create trigger comments_sync_posts_comments_count
+  after insert or update or delete on public.comments
+  for each row
+  execute function public.comments_sync_posts_comments_count_trigger();
+
 -- RLS: allow clients to subscribe to comment broadcast channel (topic = post:<id>:comments)
 create policy "Anyone can receive comment broadcasts for posts"
   on realtime.messages for select

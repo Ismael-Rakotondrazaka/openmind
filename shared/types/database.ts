@@ -167,24 +167,29 @@ export type Database = {
       posts: {
         Row: {
           author_id: string
+          comments_count: number
           content: Json
           cover_url: string | null
           created_at: string
           deleted_at: string | null
           id: string
+          published_at: string | null
           reactions_count: number
           reactions_details: Json
           slug: string
           status: string
           title: string
           updated_at: string
+          views_count: number
         }
         Insert: {
           author_id: string
+          comments_count?: number
           content: Json
           cover_url?: string | null
           created_at?: string
           deleted_at?: string | null
+          published_at?: string | null
           id?: string
           reactions_count?: number
           reactions_details?: Json
@@ -192,20 +197,24 @@ export type Database = {
           status?: string
           title: string
           updated_at?: string
+          views_count?: number
         }
         Update: {
           author_id?: string
+          comments_count?: number
           content?: Json
           cover_url?: string | null
           created_at?: string
           deleted_at?: string | null
           id?: string
+          published_at?: string | null
           reactions_count?: number
           reactions_details?: Json
           slug?: string
           status?: string
           title?: string
           updated_at?: string
+          views_count?: number
         }
         Relationships: [
           {
@@ -433,6 +442,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      sync_posts_comments_count: {
+        Args: { p_post_id: string }
+        Returns: undefined
+      }
+      sync_posts_views_count: {
+        Args: { p_post_id: string }
+        Returns: undefined
+      }
       sync_reactions_count_for_target: {
         Args: { p_comment_id: string; p_post_id: string }
         Returns: undefined
