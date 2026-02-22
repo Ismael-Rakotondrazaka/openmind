@@ -1,9 +1,12 @@
 import type { SortOrder } from '#imports';
 
+import type { ReactionType } from '../reactions/reaction.model';
+
 export type Post = {
   author: Tables<'users'>;
+  reactions_details: Partial<Record<ReactionType, number>>;
   tags: { tag: Tables<'tags'> }[];
-} & Tables<'posts'>;
+} & Omit<Tables<'posts'>, 'reactions_details'>;
 
 export interface PostFilters {
   author_id?: string;

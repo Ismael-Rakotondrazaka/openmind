@@ -13,9 +13,15 @@ export const useUpdateReaction = () => {
       queryClient.invalidateQueries({ queryKey: ['reactions'] });
       queryClient.invalidateQueries({ queryKey: ['posts'] });
 
+      if (data.post_id) {
+        queryClient.invalidateQueries({
+          queryKey: ['post', data.post_id],
+        });
+      }
+
       if (data.comment_id) {
         queryClient.invalidateQueries({
-          queryKey: ['comments', data.comment_id],
+          queryKey: ['comment', data.comment_id],
         });
       }
     },

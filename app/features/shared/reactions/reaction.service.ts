@@ -48,7 +48,7 @@ export const getReactions = async (
 
   return {
     count: count ?? 0,
-    data: data ?? [],
+    data: (data as Reaction[]) ?? [],
   };
 };
 
@@ -95,7 +95,7 @@ export const getReaction = async (id: string): Promise<null | Reaction> => {
 
   if (error) throw error;
 
-  return data;
+  return data as null | Reaction;
 };
 
 export const getUserReactionToPost = async (
@@ -113,7 +113,7 @@ export const getUserReactionToPost = async (
 
   if (error) throw error;
 
-  return data;
+  return data as null | Reaction;
 };
 
 export const getUserReactionToComment = async (
@@ -131,7 +131,7 @@ export const getUserReactionToComment = async (
 
   if (error) throw error;
 
-  return data;
+  return data as null | Reaction;
 };
 
 export const hasUserReactedToPost = async (
@@ -235,7 +235,7 @@ export const createReaction = async (
 
   if (error) throw error;
 
-  return data;
+  return data as Reaction;
 };
 
 export const updateReaction = async (
@@ -253,7 +253,7 @@ export const updateReaction = async (
 
   if (error) throw error;
 
-  return data;
+  return data as Reaction;
 };
 
 export const deleteReaction = async (id: string): Promise<void> => {

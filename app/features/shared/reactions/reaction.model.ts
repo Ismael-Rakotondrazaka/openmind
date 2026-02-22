@@ -10,7 +10,9 @@ export const ReactionTypeLabel: Record<ReactionType, string> = {
   [ReactionType.love]: 'Love',
 };
 
-export type Reaction = Tables<'reactions'>;
+export type Reaction = {
+  type: ReactionType;
+} & Omit<Tables<'reactions'>, 'type'>;
 
 export interface ReactionFilters {
   comment_id?: string;

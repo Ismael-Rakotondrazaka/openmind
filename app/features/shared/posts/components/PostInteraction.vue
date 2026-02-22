@@ -1,8 +1,44 @@
 <template>
   <div class="">
-    <p class="text-secondary-foreground mb-2 text-sm">
-      {{ reactionsSummaryText }}
-    </p>
+    <button
+      v-if="post.reactions_count"
+      class="group mb-2 flex flex-row items-center justify-start gap-2"
+    >
+      <div
+        class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale"
+      >
+        <Avatar v-if="post.reactions_details.like">
+          <AvatarFallback class="">
+            <Icon
+              :name="ReactionStatusIcon.active[ReactionType.like]"
+              size="1rem"
+            />
+          </AvatarFallback>
+        </Avatar>
+        <Avatar v-if="post.reactions_details.love">
+          <AvatarFallback class="">
+            <Icon
+              :name="ReactionStatusIcon.active[ReactionType.love]"
+              size="1rem"
+            />
+          </AvatarFallback>
+        </Avatar>
+        <Avatar v-if="post.reactions_details.celebrate">
+          <AvatarFallback class="">
+            <Icon
+              :name="ReactionStatusIcon.active[ReactionType.celebrate]"
+              size="1rem"
+            />
+          </AvatarFallback>
+        </Avatar>
+      </div>
+
+      <p
+        class="text-secondary-foreground group-hover:text-primary text-xs group-hover:underline"
+      >
+        {{ reactionsSummaryText }}
+      </p>
+    </button>
 
     <div class="flex flex-row items-center justify-start gap-2">
       <HoverCard>
