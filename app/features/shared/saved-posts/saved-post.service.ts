@@ -9,12 +9,23 @@ import type {
 
 import { SavedPostConfig } from './saved-post.config';
 
+const SAVED_POST_SELECT = `
+  *,
+  post:post_id(
+    *,
+    author:author_id(*),
+    tags:post_tags(tag:tag_id(*))
+  )
+` as const;
+
 export const getSavedPosts = async (
   filters: SavedPostFilters
 ): Promise<PaginationResult<SavedPost>> => {
   const client = useSupabaseClient();
 
-  let query = client.from('saved_posts').select('*', { count: 'exact' });
+  let query = client
+    .from('saved_posts')
+    .select(SAVED_POST_SELECT, { count: 'exact' });
 
   if (filters.post_id) {
     query = query.eq('post_id', filters.post_id);
@@ -73,7 +84,7 @@ export const createSavedPost = async (
   const { data, error } = await client
     .from('saved_posts')
     .insert(savedPost)
-    .select()
+    .select(SAVED_POST_SELECT)
     .single();
 
   if (error) throw error;
@@ -108,10 +119,28 @@ export const updateSavedPost = async (
     .update(updates)
     .eq('user_id', userId)
     .eq('post_id', postId)
-    .select()
+    .select(SAVED_POST_SELECT)
     .single();
 
   if (error) throw error;
 
   return data;
+};
+
+export const isPostSaved = async (
+  userId: string,
+  postId: string
+): Promise<boolean> => {
+  const client = useSupabaseClient();
+
+  const { data, error } = await client
+    .from('saved_posts')
+    .select('user_id')
+    .eq('user_id', userId)
+    .eq('post_id', postId)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  return data !== null;
 };

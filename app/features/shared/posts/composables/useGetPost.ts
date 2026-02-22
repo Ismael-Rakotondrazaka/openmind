@@ -1,14 +1,16 @@
 import { getPost } from '~/features/shared/posts/post.service';
 
-export const useGetPost = (id?: string) => {
+export const useGetPost = (id: MaybeRefOrGetter<string | undefined>) => {
   return useQuery({
     queryFn: async () => {
-      if (!id) {
+      const _id = toValue(id);
+
+      if (!_id) {
         return null;
       }
 
-      return getPost(id);
+      return getPost(_id);
     },
-    queryKey: ['posts', id],
+    queryKey: ['post', id],
   });
 };

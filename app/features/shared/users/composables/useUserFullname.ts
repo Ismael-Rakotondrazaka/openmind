@@ -4,6 +4,22 @@ export interface UseUserFullnameProps {
   username?: null | string;
 }
 
+export const getUserFullname = <T extends UseUserFullnameProps>(user: T) => {
+  if (!user.username && !user.first_name && !user.last_name) {
+    return 'User';
+  }
+
+  if (!user.first_name && !user.last_name) {
+    return user.username || 'User';
+  }
+
+  return (
+    `${user.first_name || ''} ${user.last_name || ''}`.trim() ||
+    user.username ||
+    'User'
+  );
+};
+
 export const useUserFullname = <
   T extends MaybeRefOrGetter<UseUserFullnameProps>,
 >(
@@ -12,18 +28,6 @@ export const useUserFullname = <
   return computed<string>(() => {
     const userValue = toValue(user);
 
-    if (!userValue.username && !userValue.first_name && !userValue.last_name) {
-      return 'User';
-    }
-
-    if (!userValue.first_name && !userValue.last_name) {
-      return userValue.username || 'User';
-    }
-
-    return (
-      `${userValue.first_name || ''} ${userValue.last_name || ''}`.trim() ||
-      userValue.username ||
-      'User'
-    );
+    return getUserFullname(userValue);
   });
 };

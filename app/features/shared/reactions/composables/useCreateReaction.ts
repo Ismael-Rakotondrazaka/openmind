@@ -9,8 +9,20 @@ export const useCreateReaction = () => {
     mutationFn: async (reaction: ReactionInsert) => {
       return createReaction(reaction);
     },
-    onSuccess: () => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['reactions'] });
+
+      if (data.post_id) {
+        queryClient.invalidateQueries({
+          queryKey: ['post', data.post_id],
+        });
+      }
+
+      if (data.comment_id) {
+        queryClient.invalidateQueries({
+          queryKey: ['comment', data.comment_id],
+        });
+      }
     },
   });
 };

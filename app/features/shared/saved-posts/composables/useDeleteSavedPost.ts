@@ -1,11 +1,17 @@
 import { deleteSavedPost } from '~/features/shared/saved-posts/saved-post.service';
 
-export const useDeleteSavedPost = (userId: string, postId: string) => {
+export interface UseDeleteSavedPostParams {
+  postId: string;
+  userId: string;
+}
+
+export const useDeleteSavedPost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
-      return deleteSavedPost(userId, postId);
+    mutationFn: async (params: MaybeRefOrGetter<UseDeleteSavedPostParams>) => {
+      const _params = toValue(params);
+      return deleteSavedPost(_params.userId, _params.postId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['saved-posts'] });

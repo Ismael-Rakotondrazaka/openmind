@@ -1,3 +1,5 @@
+import type { SortOrder } from '#imports';
+
 import type { PaginationResult } from '@/features/shared/paginations/pagination.model';
 
 import type {
@@ -5,6 +7,7 @@ import type {
   ReactionFilters,
   ReactionInsert,
   ReactionUpdate,
+  ReactionUserPreview,
 } from './reaction.model';
 
 import { ReactionConfig } from './reaction.config';
@@ -93,6 +96,130 @@ export const getReaction = async (id: string): Promise<null | Reaction> => {
   if (error) throw error;
 
   return data;
+};
+
+export const getUserReactionToPost = async (
+  userId: string,
+  postId: string
+): Promise<null | Reaction> => {
+  const client = useSupabaseClient();
+
+  const { data, error } = await client
+    .from('reactions')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('post_id', postId)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  return data;
+};
+
+export const getUserReactionToComment = async (
+  userId: string,
+  commentId: string
+): Promise<null | Reaction> => {
+  const client = useSupabaseClient();
+
+  const { data, error } = await client
+    .from('reactions')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('comment_id', commentId)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  return data;
+};
+
+export const hasUserReactedToPost = async (
+  userId: string,
+  postId: string
+): Promise<boolean> => {
+  const reaction = await getUserReactionToPost(userId, postId);
+  return reaction !== null;
+};
+
+export const hasUserReactedToComment = async (
+  userId: string,
+  commentId: string
+): Promise<boolean> => {
+  const reaction = await getUserReactionToComment(userId, commentId);
+  return reaction !== null;
+};
+
+const REACTION_USER_SELECT =
+  'user:user_id(id, first_name, last_name, username)';
+
+export interface GetUsersWhoReactedToPostParams {
+  excludeUserId?: string;
+  limit?: number;
+  orderBy?: 'created_at';
+  postId: string;
+  sortOrder?: SortOrder;
+}
+
+export const getUsersWhoReactedToPost = async (
+  params: GetUsersWhoReactedToPostParams
+): Promise<ReactionUserPreview[]> => {
+  const client = useSupabaseClient();
+
+  const { excludeUserId, limit, orderBy, postId, sortOrder = 'desc' } = params;
+
+  let query = client
+    .from('reactions')
+    .select(REACTION_USER_SELECT)
+    .eq('post_id', postId);
+
+  if (orderBy) {
+    query = query.order(orderBy, { ascending: sortOrder === 'asc' });
+  }
+
+  if (excludeUserId) {
+    query = query.neq('user_id', excludeUserId);
+  }
+
+  if (limit != null && limit > 0) {
+    query = query.limit(limit);
+  }
+
+  const { data, error } = await query;
+
+  if (error) throw error;
+
+  const users = (data ?? [])
+    .map(row => (row as { user: ReactionUserPreview }).user)
+    .filter((user): user is ReactionUserPreview => user != null);
+
+  return users;
+};
+
+export const getUsersWhoReactedToComment = async (
+  commentId: string,
+  excludeUserId?: string
+): Promise<ReactionUserPreview[]> => {
+  const client = useSupabaseClient();
+
+  let query = client
+    .from('reactions')
+    .select(REACTION_USER_SELECT)
+    .eq('comment_id', commentId);
+
+  if (excludeUserId) {
+    query = query.neq('user_id', excludeUserId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) throw error;
+
+  const users = (data ?? [])
+    .map(row => (row as { user: ReactionUserPreview }).user)
+    .filter((user): user is ReactionUserPreview => user != null);
+
+  return users;
 };
 
 export const createReaction = async (

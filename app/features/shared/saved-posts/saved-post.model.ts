@@ -1,4 +1,6 @@
-export type SavedPost = Tables<'saved_posts'>;
+import type { Post } from '~/features/shared/posts/post.model';
+
+export type SavedPost = { post: Post } & Tables<'saved_posts'>;
 
 export interface SavedPostFilters {
   limit?: number;

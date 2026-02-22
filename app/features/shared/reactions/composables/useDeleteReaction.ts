@@ -1,14 +1,17 @@
 import { deleteReaction } from '~/features/shared/reactions/reaction.service';
 
-export const useDeleteReaction = (id: string) => {
+export const useDeleteReaction = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (id: string) => {
       return deleteReaction(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reactions'] });
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+
+      queryClient.invalidateQueries({ queryKey: ['post'] });
     },
   });
 };
