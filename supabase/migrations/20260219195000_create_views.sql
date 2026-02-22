@@ -42,7 +42,7 @@ create trigger update_views_updated_at
 create or replace function public.views_sync_posts_views_count_trigger()
 returns trigger
 language plpgsql
-security invoker
+security definer
 set search_path = ''
 as $$
 begin

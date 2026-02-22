@@ -86,7 +86,7 @@ create trigger comments_broadcast_changes
 create or replace function public.comments_sync_posts_comments_count_trigger()
 returns trigger
 language plpgsql
-security invoker
+security definer
 set search_path = ''
 as $$
 begin

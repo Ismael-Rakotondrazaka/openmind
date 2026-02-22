@@ -50,7 +50,7 @@ create policy "Users can delete their own reactions"
 create or replace function public.sync_reactions_count_for_target(p_post_id uuid, p_comment_id uuid)
 returns void
 language plpgsql
-security invoker
+security definer
 set search_path = ''
 as $$
 declare
@@ -104,7 +104,7 @@ comment on function public.sync_reactions_count_for_target(uuid, uuid) is 'Recom
 create or replace function public.reactions_sync_counts_trigger()
 returns trigger
 language plpgsql
-security invoker
+security definer
 set search_path = ''
 as $$
 declare

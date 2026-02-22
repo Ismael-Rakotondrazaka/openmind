@@ -88,7 +88,7 @@ create trigger posts_set_published_at
 create or replace function public.sync_posts_views_count(p_post_id uuid)
 returns void
 language plpgsql
-security invoker
+security definer
 set search_path = ''
 as $$
 declare
@@ -114,7 +114,7 @@ comment on function public.sync_posts_views_count(uuid) is 'Recomputes views_cou
 create or replace function public.sync_posts_comments_count(p_post_id uuid)
 returns void
 language plpgsql
-security invoker
+security definer
 set search_path = ''
 as $$
 declare
