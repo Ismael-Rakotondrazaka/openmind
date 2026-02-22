@@ -6,7 +6,6 @@ import { nanoid } from 'nanoid';
 import slugify from 'slugify';
 import { toast } from 'vue-sonner';
 
-import EditorJsClient from '@/components/editor/EditorJs.client.vue';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -175,7 +174,7 @@ const onSubmit = handleSubmit(async values => {
                   Pour your ideas, insights, and expertise into engaging and
                   informative prose to captivate your audience.
                 </FieldDescription>
-                <EditorJsClient
+                <EditorJs
                   :content="field.value ?? { blocks: [] }"
                   class="min-h-24 w-full rounded-md border"
                   @update:content="field.onChange"

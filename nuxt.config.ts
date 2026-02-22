@@ -74,6 +74,10 @@ export default defineNuxtConfig({
           'MutationStateOptions',
         ],
       },
+      {
+        from: '@vueuse/router',
+        imports: ['useRouteQuery'],
+      },
     ],
   },
   modules: [

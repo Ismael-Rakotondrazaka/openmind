@@ -10,6 +10,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useDateFormat } from '@vueuse/core';
+
 interface Props {
   date: string;
 }
