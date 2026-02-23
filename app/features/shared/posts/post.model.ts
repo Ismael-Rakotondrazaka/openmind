@@ -1,12 +1,14 @@
+import type { OutputData } from '@editorjs/editorjs';
 import type { SortOrder } from '#imports';
 
 import type { ReactionType } from '../reactions/reaction.model';
 
 export type Post = {
   author: Tables<'users'>;
+  content: OutputData;
   reactions_details: Partial<Record<ReactionType, number>>;
   tags: { tag: Tables<'tags'> }[];
-} & Omit<Tables<'posts'>, 'reactions_details'>;
+} & Omit<Tables<'posts'>, 'content' | 'reactions_details'>;
 
 export interface PostFilters {
   author_id?: string;

@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="mb-2">
     <button
       v-if="post.reactions_count"
       class="group mb-2 flex flex-row items-center justify-start gap-2"

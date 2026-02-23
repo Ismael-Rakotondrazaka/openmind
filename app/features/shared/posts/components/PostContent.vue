@@ -1,33 +1,19 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
-  <div>
-    <h1 class="mb-2 line-clamp-2 text-lg font-bold text-slate-900 md:text-xl">
-      {{ post.title }}
-    </h1>
-
-    <div class="mb-2 space-x-1">
-      <Badge v-for="tag in post.tags" :key="tag.tag.id" variant="secondary">
-        {{ tag.tag.value }}
-      </Badge>
-    </div>
-
-    <figure v-if="post.cover_url !== null" class="mb-3">
-      <img
-        :src="post.cover_url"
-        class="aspect-video w-full rounded-md object-cover object-center"
-        :alt="post.title"
-      />
-    </figure>
-  </div>
+  <div
+    class="prose container mx-auto mb-2 max-w-none"
+    v-html="renderEditorHTML"
+  />
 </template>
 
 <script lang="ts" setup>
-import Badge from '~/components/ui/badge/Badge.vue';
-
-import type { Post } from '../post.model';
+import type { OutputData } from '@editorjs/editorjs';
 
 type Props = {
-  post: Post;
+  content: OutputData;
 };
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const renderEditorHTML = useRenderEditorHTML(() => props.content);
 </script>

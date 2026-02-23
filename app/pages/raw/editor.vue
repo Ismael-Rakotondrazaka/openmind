@@ -5,10 +5,7 @@
     <div class="prose container mx-auto min-h-svh max-w-none bg-blue-500">
       {{ JSON.stringify(content, null, 2) }}
     </div>
-    <div
-      class="prose container mx-auto min-h-svh max-w-none bg-green-500"
-      v-html="renderEditorHTML"
-    />
+    <div class="prose container mx-auto max-w-none" v-html="renderEditorHTML" />
   </div>
 </template>
 

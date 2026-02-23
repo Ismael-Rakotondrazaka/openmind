@@ -19,6 +19,7 @@ import PostCard from '../components/PostCard.vue';
 import PostContent from '../components/PostContent.vue';
 import PostHeader from '../components/PostHeader.vue';
 import PostInteraction from '../components/PostInteraction.vue';
+import PostIntro from '../components/PostIntro.vue';
 import { useGetPost } from '../composables/useGetPost';
 import { useGetPosts } from '../composables/useGetPosts';
 
@@ -65,8 +66,9 @@ const { data } = useGetPost(() => route.params.postId);
 <template>
   <div v-if="data" class="mx-auto mt-15 min-h-svh w-full max-w-175">
     <PostHeader :post="data" />
-    <PostContent :post="data" />
+    <PostIntro :post="data" />
     <PostInteraction :post="data" />
+    <PostContent :content="data.content" />
   </div>
 </template>
 

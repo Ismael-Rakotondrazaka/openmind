@@ -68,6 +68,16 @@ const handleDeleteSavedPost = async () => {
 
   toast.info('Post removed from saved');
 };
+
+const router = useRouter();
+
+const goBack = () => {
+  if (window?.history?.length > 1) {
+    router.back();
+  } else {
+    navigateTo('/');
+  }
+};
 </script>
 
 <template>
@@ -76,6 +86,14 @@ const handleDeleteSavedPost = async () => {
       <div
         class="mr-3 inline-flex items-center gap-2 text-sm text-gray-900 dark:text-white"
       >
+        <Button
+          variant="ghost"
+          size="icon"
+          class="rounded-full"
+          @click="goBack"
+        >
+          <Icon name="mdi:arrow-left" size="1rem" />
+        </Button>
         <Avatar>
           <AvatarImage :src="authorImageUrl" :alt="authorFullname" />
           <AvatarFallback>
