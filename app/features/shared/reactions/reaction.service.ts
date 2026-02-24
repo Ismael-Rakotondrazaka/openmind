@@ -8,6 +8,7 @@ import type {
   ReactionInsert,
   ReactionUpdate,
   ReactionUserPreview,
+  ReactionWithUser,
 } from './reaction.model';
 
 import { ReactionConfig } from './reaction.config';
@@ -49,6 +50,50 @@ export const getReactions = async (
   return {
     count: count ?? 0,
     data: (data as Reaction[]) ?? [],
+  };
+};
+
+const REACTIONS_WITH_USER_SELECT = '*, user:user_id(*)';
+
+export const getReactionsWithUsers = async (
+  filters: ReactionFilters
+): Promise<PaginationResult<ReactionWithUser>> => {
+  const client = useSupabaseClient();
+
+  let query = client
+    .from('reactions')
+    .select(REACTIONS_WITH_USER_SELECT, { count: 'exact' });
+
+  if (filters.comment_id) {
+    query = query.eq('comment_id', filters.comment_id);
+  }
+
+  if (filters.post_id) {
+    query = query.eq('post_id', filters.post_id);
+  }
+
+  if (filters.type) {
+    query = query.eq('type', filters.type);
+  }
+
+  if (filters.user_id) {
+    query = query.eq('user_id', filters.user_id);
+  }
+
+  const page = filters.page ?? ReactionConfig.PAGE_DEFAULT;
+  const limit = filters.limit ?? ReactionConfig.PAGE_SIZE_DEFAULT;
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  query = query.order('created_at', { ascending: false }).range(from, to);
+
+  const { count, data, error } = await query;
+
+  if (error) throw error;
+
+  return {
+    count: count ?? 0,
+    data: (data as ReactionWithUser[]) ?? [],
   };
 };
 

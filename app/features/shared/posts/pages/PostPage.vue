@@ -1,64 +1,45 @@
 <script lang="ts" setup>
-import type { RouteNamedMap } from 'vue-router/auto-routes';
-
-import { SortOrder } from '#imports';
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-
-import type { PostFilters } from '../post.model';
-
-import PostCard from '../components/PostCard.vue';
+import ReactionsDrawer from '../../reactions/components/ReactionsDrawer.vue';
+import { ReactionTypes } from '../../reactions/reaction.model';
 import PostContent from '../components/PostContent.vue';
 import PostHeader from '../components/PostHeader.vue';
 import PostInteraction from '../components/PostInteraction.vue';
 import PostIntro from '../components/PostIntro.vue';
 import { useGetPost } from '../composables/useGetPost';
-import { useGetPosts } from '../composables/useGetPosts';
 
-const SortOptions = ['recent', 'top'] as const;
+const VALID_REACTION_TABS = ['all', ...ReactionTypes] as const;
+type ReactionTab = (typeof VALID_REACTION_TABS)[number];
 
-const SortOption = createEnumConstants(SortOptions);
+const reactionsDrawerOpen = useRouteQuery<'false' | 'true', boolean>(
+  'showReactionsDrawer',
+  'false',
+  {
+    transform: {
+      get: val => val === 'true',
+      set: val => (val ? 'true' : 'false'),
+    },
+  }
+);
 
-type SortOption = (typeof SortOption)[keyof typeof SortOption];
-
-const SortLabel: Record<SortOption, string> = {
-  [SortOption.recent]: 'Recent',
-  [SortOption.top]: 'Top',
-};
-
-const sort = useRouteQuery<SortOption>('sort', SortOption.recent);
+const reactionsTab = useRouteQuery<string, ReactionTab>('reactionsTab', 'all', {
+  transform: {
+    get: val =>
+      VALID_REACTION_TABS.includes(val as ReactionTab)
+        ? (val as ReactionTab)
+        : 'all',
+    set: val => val,
+  },
+});
 
 const route = useRoute('u-userKey-p-postId-postSlug');
 
-const sortOrderMap: Record<
-  SortOption,
-  {
-    orderBy: PostFilters['orderBy'];
-    sortOrder: SortOrder;
-  }
-> = {
-  [SortOption.recent]: {
-    orderBy: 'created_at',
-    sortOrder: SortOrder.desc,
-  },
-  [SortOption.top]: {
-    orderBy: 'reactions_count',
-    sortOrder: SortOrder.desc,
-  },
+const showReactionsDrawer = () => {
+  reactionsDrawerOpen.value = true;
 };
 
-const sortBy = computed<PostFilters['orderBy']>(
-  () => sortOrderMap[sort.value].orderBy
-);
-const sortOrder = computed<SortOrder>(() => sortOrderMap[sort.value].sortOrder);
+const hideReactionsDrawer = () => {
+  reactionsDrawerOpen.value = false;
+};
 
 const { data } = useGetPost(() => route.params.postId);
 </script>
@@ -67,8 +48,19 @@ const { data } = useGetPost(() => route.params.postId);
   <div v-if="data" class="mx-auto mt-15 min-h-svh w-full max-w-175">
     <PostHeader :post="data" />
     <PostIntro :post="data" />
-    <PostInteraction :post="data" />
+    <PostInteraction
+      :post="data"
+      :reactions-drawer-open="reactionsDrawerOpen"
+      @reactions-drawer:open="showReactionsDrawer"
+      @reactions-drawer:close="hideReactionsDrawer"
+    />
     <PostContent :content="data.content" />
+    <ReactionsDrawer
+      v-model:open="reactionsDrawerOpen"
+      v-model:selected-reaction-tab="reactionsTab"
+      :post-id="data.id"
+      :reactions-details="data.reactions_details"
+    />
   </div>
 </template>
 

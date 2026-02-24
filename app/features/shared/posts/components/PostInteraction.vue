@@ -1,107 +1,3 @@
-<template>
-  <div class="mb-2">
-    <button
-      v-if="post.reactions_count"
-      class="group mb-2 flex flex-row items-center justify-start gap-2"
-    >
-      <div
-        class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale"
-      >
-        <Avatar v-if="post.reactions_details.like">
-          <AvatarFallback class="">
-            <Icon
-              :name="ReactionStatusIcon.active[ReactionType.like]"
-              size="1rem"
-            />
-          </AvatarFallback>
-        </Avatar>
-        <Avatar v-if="post.reactions_details.love">
-          <AvatarFallback class="">
-            <Icon
-              :name="ReactionStatusIcon.active[ReactionType.love]"
-              size="1rem"
-            />
-          </AvatarFallback>
-        </Avatar>
-        <Avatar v-if="post.reactions_details.celebrate">
-          <AvatarFallback class="">
-            <Icon
-              :name="ReactionStatusIcon.active[ReactionType.celebrate]"
-              size="1rem"
-            />
-          </AvatarFallback>
-        </Avatar>
-      </div>
-
-      <p
-        class="text-secondary-foreground group-hover:text-primary text-xs group-hover:underline"
-      >
-        {{ reactionsSummaryText }}
-      </p>
-    </button>
-
-    <div class="flex flex-row items-center justify-start gap-2">
-      <HoverCard>
-        <HoverCardTrigger>
-          <Button
-            :variant="userReactionToPost ? 'default' : 'secondary'"
-            size="sm"
-            class="rounded-full"
-            @click="handleToggleReaction"
-          >
-            <Icon :name="reactionButtonIcon" />
-            {{ formattedReactionsCount }}
-          </Button>
-        </HoverCardTrigger>
-        <HoverCardContent class="flex w-min flex-row flex-nowrap gap-4 p-2">
-          <button
-            v-for="reaction in ReactionTypes"
-            :key="reaction"
-            class="flex cursor-pointer flex-col items-center justify-center gap-2"
-            type="button"
-            @click="() => handleReactToPost(reaction)"
-          >
-            <Button
-              :variant="
-                userReactionToPost?.type === reaction ? 'default' : 'secondary'
-              "
-              size="icon"
-              class="rounded-full"
-              as="div"
-            >
-              <Icon
-                :name="
-                  userReactionToPost?.type === reaction
-                    ? ReactionStatusIcon.active[reaction]
-                    : ReactionStatusIcon.inactive[reaction]
-                "
-              />
-            </Button>
-            <span
-              class="text-xs font-medium"
-              :class="
-                userReactionToPost?.type === reaction
-                  ? 'text-primary'
-                  : 'text-secondary-foreground'
-              "
-            >
-              {{ ReactionTypeLabel[reaction] }}
-            </span>
-          </button>
-        </HoverCardContent>
-      </HoverCard>
-      <Button variant="secondary" size="sm" class="rounded-full">
-        <Icon name="mdi:comment" />
-        {{ formattedCommentsCount }}
-      </Button>
-      <Button variant="secondary" size="sm" class="rounded-full">
-        <Icon name="mdi:eye" />
-        {{ formattedViewsCount }}
-      </Button>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import {
   HoverCard,
@@ -126,7 +22,13 @@ import { getUserFullname } from '../../users/composables/useUserFullname';
 
 type Props = {
   post: Post;
+  reactionsDrawerOpen: boolean;
 };
+
+const emit = defineEmits<{
+  'reactions-drawer:close': [];
+  'reactions-drawer:open': [];
+}>();
 
 const props = defineProps<Props>();
 
@@ -259,3 +161,109 @@ const handleToggleReaction = async () => {
   }
 };
 </script>
+
+<template>
+  <div class="mb-2">
+    <button
+      v-if="post.reactions_count"
+      class="group mb-2 flex flex-row items-center justify-start gap-2"
+      type="button"
+      @click="emit('reactions-drawer:open')"
+    >
+      <div
+        class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale"
+      >
+        <Avatar v-if="post.reactions_details.like">
+          <AvatarFallback class="">
+            <Icon
+              :name="ReactionStatusIcon.active[ReactionType.like]"
+              size="1rem"
+            />
+          </AvatarFallback>
+        </Avatar>
+        <Avatar v-if="post.reactions_details.love">
+          <AvatarFallback class="">
+            <Icon
+              :name="ReactionStatusIcon.active[ReactionType.love]"
+              size="1rem"
+            />
+          </AvatarFallback>
+        </Avatar>
+        <Avatar v-if="post.reactions_details.celebrate">
+          <AvatarFallback class="">
+            <Icon
+              :name="ReactionStatusIcon.active[ReactionType.celebrate]"
+              size="1rem"
+            />
+          </AvatarFallback>
+        </Avatar>
+      </div>
+
+      <span
+        class="text-secondary-foreground group-hover:text-primary text-xs group-hover:underline"
+      >
+        {{ reactionsSummaryText }}
+      </span>
+    </button>
+
+    <div class="flex flex-row items-center justify-start gap-2">
+      <HoverCard>
+        <HoverCardTrigger>
+          <Button
+            :variant="userReactionToPost ? 'default' : 'secondary'"
+            size="sm"
+            class="rounded-full"
+            @click="handleToggleReaction"
+          >
+            <Icon :name="reactionButtonIcon" />
+            {{ formattedReactionsCount }}
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent class="flex w-min flex-row flex-nowrap gap-4 p-2">
+          <button
+            v-for="reaction in ReactionTypes"
+            :key="reaction"
+            class="flex cursor-pointer flex-col items-center justify-center gap-2"
+            type="button"
+            @click="() => handleReactToPost(reaction)"
+          >
+            <Button
+              :variant="
+                userReactionToPost?.type === reaction ? 'default' : 'secondary'
+              "
+              size="icon"
+              class="rounded-full"
+              as="div"
+            >
+              <Icon
+                :name="
+                  userReactionToPost?.type === reaction
+                    ? ReactionStatusIcon.active[reaction]
+                    : ReactionStatusIcon.inactive[reaction]
+                "
+              />
+            </Button>
+            <span
+              class="text-xs font-medium"
+              :class="
+                userReactionToPost?.type === reaction
+                  ? 'text-primary'
+                  : 'text-secondary-foreground'
+              "
+            >
+              {{ ReactionTypeLabel[reaction] }}
+            </span>
+          </button>
+        </HoverCardContent>
+      </HoverCard>
+      <Button variant="secondary" size="sm" class="rounded-full">
+        <Icon name="mdi:comment" />
+        {{ formattedCommentsCount }}
+      </Button>
+      <Button variant="secondary" size="sm" class="rounded-full">
+        <Icon name="mdi:eye" />
+        {{ formattedViewsCount }}
+      </Button>
+    </div>
+  </div>
+</template>
