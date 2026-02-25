@@ -20,6 +20,7 @@ export const useUpdateReaction = () => {
       }
 
       if (data.comment_id) {
+        queryClient.invalidateQueries({ queryKey: ['comments'] });
         queryClient.invalidateQueries({
           queryKey: ['comment', data.comment_id],
         });

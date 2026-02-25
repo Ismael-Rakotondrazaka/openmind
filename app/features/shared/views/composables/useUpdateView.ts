@@ -15,8 +15,9 @@ export const useUpdateView = () => {
     }) => {
       return updateView(id, updates);
     },
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['views'] });
+      queryClient.invalidateQueries({ queryKey: ['view', id] });
     },
   });
 };

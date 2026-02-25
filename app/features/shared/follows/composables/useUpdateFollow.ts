@@ -15,8 +15,9 @@ export const useUpdateFollow = () => {
     }) => {
       return updateFollow(id, updates);
     },
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['follows'] });
+      queryClient.invalidateQueries({ queryKey: ['follow', id] });
     },
   });
 };

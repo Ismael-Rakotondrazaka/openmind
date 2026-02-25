@@ -7,8 +7,9 @@ export const useDeleteTag = () => {
     mutationFn: async (id: string) => {
       return deleteTag(id);
     },
-    onSuccess: () => {
+    onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['tags'] });
+      queryClient.invalidateQueries({ queryKey: ['tag', id] });
     },
   });
 };

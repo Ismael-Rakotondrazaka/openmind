@@ -9,8 +9,9 @@ export const useUpdateTag = () => {
     mutationFn: async ({ id, updates }: { id: string; updates: TagUpdate }) => {
       return updateTag(id, updates);
     },
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['tags'] });
+      queryClient.invalidateQueries({ queryKey: ['tag', id] });
     },
   });
 };

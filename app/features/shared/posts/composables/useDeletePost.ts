@@ -7,8 +7,9 @@ export const useDeletePost = () => {
     mutationFn: async (id: string) => {
       return deletePost(id);
     },
-    onSuccess: () => {
+    onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['post', id] });
     },
   });
 };

@@ -9,9 +9,10 @@ export const useCreatePostTag = () => {
     mutationFn: async (postTag: PostTagInsert) => {
       return createPostTag(postTag);
     },
-    onSuccess: () => {
+    onSuccess: (_, { post_id }) => {
       queryClient.invalidateQueries({ queryKey: ['post-tags'] });
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['post', post_id] });
     },
   });
 };

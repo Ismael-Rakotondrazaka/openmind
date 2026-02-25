@@ -13,9 +13,10 @@ export const useDeletePostTag = () => {
     }) => {
       return deletePostTag(postId, tagId);
     },
-    onSuccess: () => {
+    onSuccess: (_, { postId }) => {
       queryClient.invalidateQueries({ queryKey: ['post-tags'] });
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['post', postId] });
     },
   });
 };

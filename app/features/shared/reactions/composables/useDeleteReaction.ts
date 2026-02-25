@@ -10,8 +10,9 @@ export const useDeleteReaction = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reactions'] });
       queryClient.invalidateQueries({ queryKey: ['posts'] });
-
       queryClient.invalidateQueries({ queryKey: ['post'] });
+      queryClient.invalidateQueries({ queryKey: ['comments'] });
+      queryClient.invalidateQueries({ queryKey: ['comment'] });
     },
   });
 };

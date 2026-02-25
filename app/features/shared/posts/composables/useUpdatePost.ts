@@ -15,8 +15,9 @@ export const useUpdatePost = () => {
     }) => {
       return updatePost(id, updates);
     },
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['post', id] });
     },
   });
 };

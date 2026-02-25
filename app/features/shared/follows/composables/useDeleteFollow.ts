@@ -7,8 +7,9 @@ export const useDeleteFollow = () => {
     mutationFn: async (id: string) => {
       return deleteFollow(id);
     },
-    onSuccess: () => {
+    onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['follows'] });
+      queryClient.invalidateQueries({ queryKey: ['follow', id] });
     },
   });
 };

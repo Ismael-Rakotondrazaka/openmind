@@ -7,8 +7,9 @@ export const useDeleteComment = () => {
     mutationFn: async (id: string) => {
       return deleteComment(id);
     },
-    onSuccess: () => {
+    onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['comments'] });
+      queryClient.invalidateQueries({ queryKey: ['comment', id] });
     },
   });
 };

@@ -7,8 +7,9 @@ export const useDeleteView = () => {
     mutationFn: async (id: string) => {
       return deleteView(id);
     },
-    onSuccess: () => {
+    onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['views'] });
+      queryClient.invalidateQueries({ queryKey: ['view', id] });
     },
   });
 };

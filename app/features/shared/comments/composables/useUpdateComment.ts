@@ -15,8 +15,9 @@ export const useUpdateComment = () => {
     }) => {
       return updateComment(id, updates);
     },
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['comments'] });
+      queryClient.invalidateQueries({ queryKey: ['comment', id] });
     },
   });
 };
