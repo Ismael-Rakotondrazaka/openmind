@@ -92,6 +92,7 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@nuxtjs/supabase',
     '@vueuse/nuxt',
+    '@stefanobartoletti/nuxt-social-share',
   ],
   runtimeConfig: {
     public: {
@@ -113,6 +114,9 @@ export default defineNuxtConfig({
      * @default "Ui"
      */
     prefix: '',
+  },
+  socialShare: {
+    baseUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
   supabase: {
     redirectOptions: {
