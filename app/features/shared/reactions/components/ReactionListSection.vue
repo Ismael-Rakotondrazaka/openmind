@@ -1,6 +1,7 @@
 <template>
   <div>
-    <ReactionList v-if="data" :reactions="data.data" />
+    <ReactionListSkeleton v-if="isPending" />
+    <ReactionList v-else-if="data" :reactions="data.data" />
   </div>
 </template>
 
@@ -9,6 +10,7 @@ import type { ReactionType } from '../reaction.model';
 
 import { useGetReactionsWithUsers } from '../composables/useGetReactionsWithUsers';
 import ReactionList from './ReactionList.vue';
+import ReactionListSkeleton from './ReactionListSkeleton.vue';
 
 interface Props {
   commentId?: string;
@@ -18,7 +20,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const { data } = useGetReactionsWithUsers(() => ({
+const { data, isPending } = useGetReactionsWithUsers(() => ({
   limit: 10,
   page: 1,
   post_id: props.postId,
