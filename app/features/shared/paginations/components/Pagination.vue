@@ -16,12 +16,12 @@ import { cn } from '@/lib/utils';
 
 interface Props {
   class?: HTMLAttributes['class'];
-  currentPage: number;
   itemLabel?: string;
   itemLabelPlural?: string;
+  limit: number;
+  limitOptions?: number[];
   ofLabel?: string;
-  pageSize: number;
-  pageSizeOptions?: number[];
+  page: number;
   rowsPerPageLabel?: string;
   siblingCount?: number;
   totalCount: number;
@@ -30,11 +30,11 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   class: undefined,
-  itemLabel: 'élément',
+  itemLabel: 'item',
   itemLabelPlural: undefined,
-  ofLabel: 'sur',
-  pageSizeOptions: () => [10, 20, 25, 50, 100],
-  rowsPerPageLabel: 'Lignes par page',
+  limitOptions: () => [10, 20, 25, 50, 100],
+  ofLabel: 'of',
+  rowsPerPageLabel: 'Rows per page',
   siblingCount: 1,
 });
 
@@ -52,11 +52,11 @@ const countText = computed(
 
 const pageInfo = computed(
   () =>
-    `Page ${props.currentPage} ${props.ofLabel} ${props.totalPages} (${countText.value})`
+    `Page ${props.page} ${props.ofLabel} ${props.totalPages} (${countText.value})`
 );
 
 const options = computed(() =>
-  Array.from(new Set([props.pageSize, ...props.pageSizeOptions])).sort(
+  Array.from(new Set([props.limit, ...props.limitOptions])).sort(
     (a, b) => a - b
   )
 );
@@ -82,7 +82,7 @@ function onPageSizeChange(value: unknown) {
           {{ rowsPerPageLabel }}
         </Label>
         <Select
-          :model-value="String(pageSize)"
+          :model-value="String(limit)"
           @update:model-value="onPageSizeChange"
         >
           <SelectTrigger id="rows-per-page" class="w-20">
@@ -104,8 +104,8 @@ function onPageSizeChange(value: unknown) {
 
     <Pagination
       class="mx-0 w-auto"
-      :items-per-page="pageSize"
-      :page="currentPage"
+      :items-per-page="limit"
+      :page="page"
       :sibling-count="siblingCount"
       :total="totalCount"
       @update:page="onPageChange"
@@ -115,7 +115,7 @@ function onPageSizeChange(value: unknown) {
         <template v-for="(item, i) in items" :key="i">
           <PaginationItem
             v-if="item.type === 'page'"
-            :is-active="item.value === currentPage"
+            :is-active="item.value === page"
             :value="item.value"
           >
             {{ item.value }}
