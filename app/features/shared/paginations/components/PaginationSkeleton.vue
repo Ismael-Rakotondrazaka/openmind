@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UiLabel from '@/components/ui/label/Label.vue';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -9,13 +9,21 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+
+interface Props {
+  compact?: boolean;
+}
+
+withDefaults(defineProps<Props>(), {
+  compact: false,
+});
 </script>
 
 <template>
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div class="flex flex-wrap items-center gap-4">
       <div class="flex items-center gap-2">
-        <UiLabel for="rows-per-page"> Lignes par page </UiLabel>
+        <Label v-if="!compact" for="rows-per-page">Rows per page</Label>
         <Select disabled :model-value="'20'">
           <SelectTrigger id="rows-per-page" class="w-20">
             <SelectValue />
@@ -27,7 +35,7 @@ import { Skeleton } from '@/components/ui/skeleton';
           </SelectContent>
         </Select>
       </div>
-      <Skeleton class="h-4 w-48" />
+      <Skeleton v-if="!compact" class="h-4 w-48" />
     </div>
 
     <div class="mx-0 w-auto">

@@ -1,22 +1,27 @@
 <script lang="ts"></script>
 
 <script setup lang="ts">
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 
 import {
   Drawer,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Pagination from '~/features/shared/paginations/components/Pagination.vue';
+import PaginationSkeleton from '~/features/shared/paginations/components/PaginationSkeleton.vue';
 
+import { useGetReactionsWithUsers } from '../composables/useGetReactionsWithUsers';
 import {
   ReactionStatusIcon,
   type ReactionType,
   ReactionTypes,
 } from '../reaction.model';
-import ReactionListSection from './ReactionListSection.vue';
+import ReactionList from './ReactionList.vue';
+import ReactionListSkeleton from './ReactionListSkeleton.vue';
 
 interface props {
   postId: string;
@@ -45,6 +50,20 @@ const limit = useRouteQuery('reactionsLimit', 10, { transform: Number });
 watch(selectedReactionTab, () => {
   page.value = 1;
 });
+
+const { data, isPending } = useGetReactionsWithUsers(() => ({
+  limit: limit.value,
+  page: page.value,
+  post_id: props.postId,
+  type:
+    selectedReactionTab.value === 'all'
+      ? undefined
+      : (selectedReactionTab.value as ReactionType),
+}));
+
+const totalPages = computed(() =>
+  Math.ceil((data.value?.count ?? 0) / limit.value)
+);
 </script>
 
 <template>
@@ -77,13 +96,8 @@ watch(selectedReactionTab, () => {
             </TabsList>
 
             <TabsContent value="all">
-              <ReactionListSection
-                :limit="limit"
-                :page="page"
-                :post-id="postId"
-                @limit:update="limit = $event"
-                @page:update="page = $event"
-              />
+              <ReactionListSkeleton v-if="isPending" />
+              <ReactionList v-else-if="data" :reactions="data.data" />
             </TabsContent>
 
             <TabsContent
@@ -91,17 +105,25 @@ watch(selectedReactionTab, () => {
               :key="reactionType"
               :value="reactionType"
             >
-              <ReactionListSection
-                :limit="limit"
-                :page="page"
-                :post-id="postId"
-                :type="reactionType"
-                @limit:update="limit = $event"
-                @page:update="page = $event"
-              />
+              <ReactionListSkeleton v-if="isPending" />
+              <ReactionList v-else-if="data" :reactions="data.data" />
             </TabsContent>
           </Tabs>
         </div>
+
+        <DrawerFooter>
+          <PaginationSkeleton v-if="isPending" compact />
+          <Pagination
+            v-else
+            compact
+            :limit="limit"
+            :page="page"
+            :total-count="data?.count ?? 0"
+            :total-pages="totalPages"
+            @page-change="page = $event"
+            @page-size-change="limit = $event"
+          />
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   </div>

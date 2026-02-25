@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 
 interface Props {
   class?: HTMLAttributes['class'];
+  compact?: boolean;
   itemLabel?: string;
   itemLabelPlural?: string;
   limit: number;
@@ -30,6 +31,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   class: undefined,
+  compact: false,
   itemLabel: 'item',
   itemLabelPlural: undefined,
   limitOptions: () => [10, 20, 25, 50, 100],
@@ -78,7 +80,7 @@ function onPageSizeChange(value: unknown) {
   >
     <div class="flex flex-wrap items-center gap-4">
       <div class="flex items-center gap-2">
-        <Label for="rows-per-page">
+        <Label v-if="!compact" for="rows-per-page">
           {{ rowsPerPageLabel }}
         </Label>
         <Select
@@ -97,7 +99,7 @@ function onPageSizeChange(value: unknown) {
           </SelectContent>
         </Select>
       </div>
-      <p class="text-muted-foreground text-sm">
+      <p v-if="!compact" class="text-muted-foreground text-sm">
         {{ pageInfo }}
       </p>
     </div>
