@@ -4,14 +4,18 @@ export interface UseIsUsernameExistsParams {
   username: string;
 }
 
-export const useIsUsernameExists = (params: UseIsUsernameExistsParams) => {
+export const useIsUsernameExists = (
+  params: MaybeRefOrGetter<UseIsUsernameExistsParams>
+) => {
   return useQuery({
     queryFn: () => {
-      if (!params.username) {
+      const _params = toValue(params);
+
+      if (!_params.username) {
         return false;
       }
 
-      return isUsernameExists(params);
+      return isUsernameExists(_params);
     },
     queryKey: ['usernames', 'exists', params],
   });

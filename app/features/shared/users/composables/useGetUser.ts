@@ -1,13 +1,15 @@
 import { getUser } from '~/features/shared/users/user.service';
 
-export const useGetUser = (id?: string) => {
+export const useGetUser = (id: MaybeRefOrGetter<string | undefined>) => {
   return useQuery({
     queryFn: async () => {
-      if (!id) {
+      const _id = toValue(id);
+
+      if (!_id) {
         return null;
       }
 
-      return getUser(id);
+      return getUser(_id);
     },
     queryKey: ['users', id],
   });

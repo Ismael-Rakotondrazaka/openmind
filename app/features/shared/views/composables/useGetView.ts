@@ -1,13 +1,15 @@
 import { getView } from '~/features/shared/views/view.service';
 
-export const useGetView = (id?: string) => {
+export const useGetView = (id: MaybeRefOrGetter<string | undefined>) => {
   return useQuery({
     queryFn: async () => {
-      if (!id) {
+      const _id = toValue(id);
+
+      if (!_id) {
         return null;
       }
 
-      return getView(id);
+      return getView(_id);
     },
     queryKey: ['views', id],
   });

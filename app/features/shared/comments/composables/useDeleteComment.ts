@@ -1,10 +1,10 @@
 import { deleteComment } from '~/features/shared/comments/comment.service';
 
-export const useDeleteComment = (id: string) => {
+export const useDeleteComment = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (id: string) => {
       return deleteComment(id);
     },
     onSuccess: () => {

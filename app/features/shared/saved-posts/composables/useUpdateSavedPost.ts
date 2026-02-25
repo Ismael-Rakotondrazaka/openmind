@@ -2,15 +2,19 @@ import { updateSavedPost } from '~/features/shared/saved-posts/saved-post.servic
 
 import type { SavedPostUpdate } from '../saved-post.model';
 
-export const useUpdateSavedPost = (
-  userId: string,
-  postId: string,
-  updates: SavedPostUpdate
-) => {
+export const useUpdateSavedPost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({
+      postId,
+      updates,
+      userId,
+    }: {
+      postId: string;
+      updates: SavedPostUpdate;
+      userId: string;
+    }) => {
       return updateSavedPost(userId, postId, updates);
     },
     onSuccess: () => {

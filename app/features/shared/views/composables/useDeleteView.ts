@@ -1,10 +1,10 @@
 import { deleteView } from '~/features/shared/views/view.service';
 
-export const useDeleteView = (id: string) => {
+export const useDeleteView = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (id: string) => {
       return deleteView(id);
     },
     onSuccess: () => {

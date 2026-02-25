@@ -9,9 +9,8 @@ export const useDeleteSavedPost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: MaybeRefOrGetter<UseDeleteSavedPostParams>) => {
-      const _params = toValue(params);
-      return deleteSavedPost(_params.userId, _params.postId);
+    mutationFn: async ({ postId, userId }: UseDeleteSavedPostParams) => {
+      return deleteSavedPost(userId, postId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['saved-posts'] });

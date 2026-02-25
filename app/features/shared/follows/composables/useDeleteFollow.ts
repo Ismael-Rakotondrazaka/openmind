@@ -1,10 +1,10 @@
 import { deleteFollow } from '~/features/shared/follows/follow.service';
 
-export const useDeleteFollow = (id: string) => {
+export const useDeleteFollow = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (id: string) => {
       return deleteFollow(id);
     },
     onSuccess: () => {

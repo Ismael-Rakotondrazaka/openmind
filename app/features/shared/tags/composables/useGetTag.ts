@@ -1,13 +1,15 @@
 import { getTag } from '~/features/shared/tags/tag.service';
 
-export const useGetTag = (id?: string) => {
+export const useGetTag = (id: MaybeRefOrGetter<string | undefined>) => {
   return useQuery({
     queryFn: async () => {
-      if (!id) {
+      const _id = toValue(id);
+
+      if (!_id) {
         return null;
       }
 
-      return getTag(id);
+      return getTag(_id);
     },
     queryKey: ['tags', id],
   });

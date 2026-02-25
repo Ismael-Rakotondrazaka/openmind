@@ -1,10 +1,10 @@
 import { deletePost } from '~/features/shared/posts/post.service';
 
-export const useDeletePost = (id: string) => {
+export const useDeletePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (id: string) => {
       return deletePost(id);
     },
     onSuccess: () => {

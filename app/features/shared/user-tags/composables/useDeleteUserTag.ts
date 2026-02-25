@@ -1,10 +1,16 @@
 import { deleteUserTag } from '~/features/shared/user-tags/user-tag.service';
 
-export const useDeleteUserTag = (userId: string, tagId: string) => {
+export const useDeleteUserTag = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({
+      tagId,
+      userId,
+    }: {
+      tagId: string;
+      userId: string;
+    }) => {
       return deleteUserTag(userId, tagId);
     },
     onSuccess: () => {

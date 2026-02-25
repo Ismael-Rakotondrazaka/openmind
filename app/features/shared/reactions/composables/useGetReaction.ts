@@ -1,13 +1,15 @@
 import { getReaction } from '~/features/shared/reactions/reaction.service';
 
-export const useGetReaction = (id?: string) => {
+export const useGetReaction = (id: MaybeRefOrGetter<string | undefined>) => {
   return useQuery({
     queryFn: async () => {
-      if (!id) {
+      const _id = toValue(id);
+
+      if (!_id) {
         return null;
       }
 
-      return getReaction(id);
+      return getReaction(_id);
     },
     queryKey: ['reactions', id],
   });

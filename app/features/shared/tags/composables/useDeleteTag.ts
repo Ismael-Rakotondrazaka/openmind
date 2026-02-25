@@ -1,10 +1,10 @@
 import { deleteTag } from '~/features/shared/tags/tag.service';
 
-export const useDeleteTag = (id: string) => {
+export const useDeleteTag = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (id: string) => {
       return deleteTag(id);
     },
     onSuccess: () => {

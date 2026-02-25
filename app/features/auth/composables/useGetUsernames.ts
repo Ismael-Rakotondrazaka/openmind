@@ -5,17 +5,21 @@ export interface UseGetUsernamesParams {
   username: string;
 }
 
-export const useGetUsernames = (params: UseGetUsernamesParams) => {
+export const useGetUsernames = (
+  params: MaybeRefOrGetter<UseGetUsernamesParams>
+) => {
   return useQuery({
     queryFn: () => {
-      if (!params.username) {
+      const _params = toValue(params);
+
+      if (!_params.username) {
         return {
           count: 0,
           data: [],
         };
       }
 
-      return getUsernames(params);
+      return getUsernames(_params);
     },
     queryKey: ['usernames', params],
   });

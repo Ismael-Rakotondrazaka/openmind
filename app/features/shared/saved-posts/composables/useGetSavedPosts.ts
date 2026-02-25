@@ -2,11 +2,13 @@ import type { SavedPostFilters } from '~/features/shared/saved-posts/saved-post.
 
 import { getSavedPosts } from '~/features/shared/saved-posts/saved-post.service';
 
-export const useGetSavedPosts = (filters?: SavedPostFilters) => {
+export const useGetSavedPosts = (
+  filters: MaybeRefOrGetter<SavedPostFilters> = {}
+) => {
   return useQuery({
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      return getSavedPosts(filters ?? {});
+      return getSavedPosts(toValue(filters));
     },
     queryKey: ['saved-posts', filters],
   });

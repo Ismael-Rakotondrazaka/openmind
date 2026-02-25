@@ -1,13 +1,15 @@
 import { getFollow } from '~/features/shared/follows/follow.service';
 
-export const useGetFollow = (id?: string) => {
+export const useGetFollow = (id: MaybeRefOrGetter<string | undefined>) => {
   return useQuery({
     queryFn: async () => {
-      if (!id) {
+      const _id = toValue(id);
+
+      if (!_id) {
         return null;
       }
 
-      return getFollow(id);
+      return getFollow(_id);
     },
     queryKey: ['follows', id],
   });
