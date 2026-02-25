@@ -11,6 +11,6 @@ export const useGetFollow = (id: MaybeRefOrGetter<string | undefined>) => {
 
       return getFollow(_id);
     },
-    queryKey: ['follows', id],
+    queryKey: ['follow', id],
   });
 };

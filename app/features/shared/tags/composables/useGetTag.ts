@@ -11,6 +11,6 @@ export const useGetTag = (id: MaybeRefOrGetter<string | undefined>) => {
 
       return getTag(_id);
     },
-    queryKey: ['tags', id],
+    queryKey: ['tag', id],
   });
 };

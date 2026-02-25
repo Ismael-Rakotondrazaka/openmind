@@ -11,6 +11,6 @@ export const useGetUser = (id: MaybeRefOrGetter<string | undefined>) => {
 
       return getUser(_id);
     },
-    queryKey: ['users', id],
+    queryKey: ['user', id],
   });
 };

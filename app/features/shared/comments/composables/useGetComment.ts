@@ -11,6 +11,6 @@ export const useGetComment = (id: MaybeRefOrGetter<string | undefined>) => {
 
       return getComment(_id);
     },
-    queryKey: ['comments', id],
+    queryKey: ['comment', id],
   });
 };

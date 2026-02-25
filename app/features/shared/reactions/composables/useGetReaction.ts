@@ -11,6 +11,6 @@ export const useGetReaction = (id: MaybeRefOrGetter<string | undefined>) => {
 
       return getReaction(_id);
     },
-    queryKey: ['reactions', id],
+    queryKey: ['reaction', id],
   });
 };

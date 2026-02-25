@@ -11,6 +11,6 @@ export const useGetView = (id: MaybeRefOrGetter<string | undefined>) => {
 
       return getView(_id);
     },
-    queryKey: ['views', id],
+    queryKey: ['view', id],
   });
 };
