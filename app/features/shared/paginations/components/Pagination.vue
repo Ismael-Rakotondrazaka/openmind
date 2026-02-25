@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  MoreHorizontal,
-} from 'lucide-vue-next';
 import { computed } from 'vue';
 
+import { Label } from '@/components/ui/label';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -38,30 +42,6 @@ const emit = defineEmits<{
   pageChange: [page: number];
   pageSizeChange: [size: number];
 }>();
-
-function getPaginationRange(
-  currentPage: number,
-  totalPages: number,
-  siblingCount: number
-): ('ellipsis' | number)[] {
-  if (totalPages <= 0) return [];
-  if (totalPages === 1) return [1];
-
-  const left = Math.max(2, currentPage - siblingCount);
-  const right = Math.min(totalPages - 1, currentPage + siblingCount);
-  const items: ('ellipsis' | number)[] = [1];
-
-  if (left > 2) items.push('ellipsis');
-  for (let p = left; p <= right; p++) items.push(p);
-  if (right < totalPages - 1) items.push('ellipsis');
-  if (totalPages > 1) items.push(totalPages);
-
-  return items;
-}
-
-const range = computed(() =>
-  getPaginationRange(props.currentPage, props.totalPages, props.siblingCount)
-);
 
 const plural = computed(() => props.itemLabelPlural ?? `${props.itemLabel}s`);
 
@@ -98,9 +78,9 @@ function onPageSizeChange(value: unknown) {
   >
     <div class="flex flex-wrap items-center gap-4">
       <div class="flex items-center gap-2">
-        <UiLabel for="rows-per-page">
+        <Label for="rows-per-page">
           {{ rowsPerPageLabel }}
-        </UiLabel>
+        </Label>
         <Select
           :model-value="String(pageSize)"
           @update:model-value="onPageSizeChange"
@@ -122,57 +102,28 @@ function onPageSizeChange(value: unknown) {
       </p>
     </div>
 
-    <div class="mx-0 w-auto">
-      <nav class="flex flex-row items-center gap-1" aria-label="Pagination">
-        <span class="inline-flex">
-          <UiButton
-            aria-label="Aller à la page précédente"
-            class="gap-1 px-2.5 sm:pl-2.5"
-            :disabled="currentPage <= 1"
-            size="default"
-            variant="ghost"
-            @click="onPageChange(currentPage - 1)"
+    <Pagination
+      class="mx-0 w-auto"
+      :items-per-page="pageSize"
+      :page="currentPage"
+      :sibling-count="siblingCount"
+      :total="totalCount"
+      @update:page="onPageChange"
+    >
+      <PaginationContent v-slot="{ items }">
+        <PaginationPrevious />
+        <template v-for="(item, i) in items" :key="i">
+          <PaginationItem
+            v-if="item.type === 'page'"
+            :is-active="item.value === currentPage"
+            :value="item.value"
           >
-            <ChevronLeftIcon />
-            <span class="hidden sm:inline">Précédent</span>
-          </UiButton>
-        </span>
-
-        <template
-          v-for="(item, i) in range"
-          :key="item === 'ellipsis' ? `ellipsis-${i}` : item"
-        >
-          <span v-if="item === 'ellipsis'" class="inline-flex">
-            <span class="flex size-9 items-center justify-center" aria-hidden>
-              <MoreHorizontal class="size-4" />
-            </span>
-          </span>
-          <span v-else class="inline-flex">
-            <UiButton
-              :aria-current="currentPage === item ? 'page' : undefined"
-              size="icon"
-              :variant="currentPage === item ? 'outline' : 'ghost'"
-              @click="onPageChange(item)"
-            >
-              {{ item }}
-            </UiButton>
-          </span>
+            {{ item.value }}
+          </PaginationItem>
+          <PaginationEllipsis v-else :index="i" />
         </template>
-
-        <span class="inline-flex">
-          <UiButton
-            aria-label="Aller à la page suivante"
-            class="gap-1 px-2.5 sm:pr-2.5"
-            :disabled="currentPage >= totalPages"
-            size="default"
-            variant="ghost"
-            @click="onPageChange(currentPage + 1)"
-          >
-            <span class="hidden sm:inline">Suivant</span>
-            <ChevronRightIcon />
-          </UiButton>
-        </span>
-      </nav>
-    </div>
+        <PaginationNext />
+      </PaginationContent>
+    </Pagination>
   </div>
 </template>
