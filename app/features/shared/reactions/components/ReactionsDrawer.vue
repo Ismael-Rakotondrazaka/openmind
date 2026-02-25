@@ -1,6 +1,8 @@
 <script lang="ts"></script>
 
 <script setup lang="ts">
+import { watch } from 'vue';
+
 import {
   Drawer,
   DrawerContent,
@@ -36,6 +38,13 @@ const selectedReactionTab = defineModel<ReactionTab>('selectedReactionTab', {
   default: 'all',
   required: false,
 });
+
+const page = useRouteQuery('reactionsPage', 1, { transform: Number });
+const limit = useRouteQuery('reactionsLimit', 10, { transform: Number });
+
+watch(selectedReactionTab, () => {
+  page.value = 1;
+});
 </script>
 
 <template>
@@ -68,7 +77,13 @@ const selectedReactionTab = defineModel<ReactionTab>('selectedReactionTab', {
             </TabsList>
 
             <TabsContent value="all">
-              <ReactionListSection :post-id="postId" />
+              <ReactionListSection
+                :limit="limit"
+                :page="page"
+                :post-id="postId"
+                @limit:update="limit = $event"
+                @page:update="page = $event"
+              />
             </TabsContent>
 
             <TabsContent
@@ -76,7 +91,14 @@ const selectedReactionTab = defineModel<ReactionTab>('selectedReactionTab', {
               :key="reactionType"
               :value="reactionType"
             >
-              <ReactionListSection :post-id="postId" :type="reactionType" />
+              <ReactionListSection
+                :limit="limit"
+                :page="page"
+                :post-id="postId"
+                :type="reactionType"
+                @limit:update="limit = $event"
+                @page:update="page = $event"
+              />
             </TabsContent>
           </Tabs>
         </div>
