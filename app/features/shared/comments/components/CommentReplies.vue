@@ -14,6 +14,23 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{ reply: []; replySubmitted: [] }>();
 
+const formContainerRef = ref<HTMLElement | null>(null);
+
+watch(
+  () => props.showReplyForm,
+  async val => {
+    if (val) {
+      await nextTick();
+      setTimeout(() => {
+        formContainerRef.value?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        });
+      }, 300);
+    }
+  }
+);
+
 const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
   useGetComments(() => ({
     limit: CommentConfig.PAGE_SIZE_DEFAULT,
@@ -51,12 +68,13 @@ const replies = computed(() =>
       />
     </template>
 
-    <CommentForm
-      v-if="showReplyForm"
-      :post-id="postId"
-      :parent-id="parentId"
-      :depth="1"
-      @submitted="emit('replySubmitted')"
-    />
+    <div v-if="showReplyForm" ref="formContainerRef" class="pb-2">
+      <CommentForm
+        :post-id="postId"
+        :parent-id="parentId"
+        :depth="1"
+        @submitted="emit('replySubmitted')"
+      />
+    </div>
   </div>
 </template>
