@@ -29,7 +29,7 @@ const handleReply = (commentId: string) => {
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div>
     <template v-if="isLoading">
       <div v-for="i in 3" :key="i" class="flex gap-3">
         <div class="bg-muted size-8 shrink-0 animate-pulse rounded-full" />
@@ -52,7 +52,7 @@ const handleReply = (commentId: string) => {
       </button>
 
       <template v-if="comments.length">
-        <div v-for="comment in comments" :key="comment.id" class="space-y-1">
+        <div v-for="comment in comments" :key="comment.id">
           <CommentListItem
             :comment="comment"
             :show-reply-button="true"

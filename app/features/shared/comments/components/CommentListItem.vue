@@ -34,7 +34,9 @@ const reactionsTab = ref<ReactionTab>('all');
 </script>
 
 <template>
-  <div class="flex gap-3">
+  <div
+    class="group/comment hover:bg-muted flex gap-3 rounded-lg p-3 transition-all duration-200"
+  >
     <NuxtLink
       :to="{
         name: 'u-userKey',

@@ -27,7 +27,7 @@ const replies = computed(() =>
 </script>
 
 <template>
-  <div class="mt-2 space-y-3 pl-11">
+  <div class="pl-11">
     <template v-if="isLoading">
       <div class="bg-muted h-4 w-32 animate-pulse rounded" />
     </template>
