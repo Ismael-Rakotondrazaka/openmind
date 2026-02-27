@@ -46,7 +46,7 @@ const { data } = useGetPost(() => route.params.postId);
 </script>
 
 <template>
-  <div v-if="data" class="mx-auto mt-15 min-h-svh w-full max-w-175">
+  <div v-if="data" class="mx-auto mt-15 min-h-svh w-full max-w-175 px-2">
     <PostHeader :post="data" />
     <PostIntro :post="data" />
     <PostInteraction

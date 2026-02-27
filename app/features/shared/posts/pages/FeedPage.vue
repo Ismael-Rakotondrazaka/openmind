@@ -60,7 +60,7 @@ const posts = computed(() => data.value?.data ?? []);
 </script>
 
 <template>
-  <div class="mx-auto mt-15 min-h-svh w-full max-w-175">
+  <div class="mx-auto mt-15 min-h-svh w-full max-w-175 px-2">
     <h1 class="mb-4 text-2xl font-bold">Feed</h1>
 
     <Select v-model="sort">
