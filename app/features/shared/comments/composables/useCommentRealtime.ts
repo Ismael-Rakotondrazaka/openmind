@@ -66,13 +66,16 @@ export const useCommentRealtime = (postId: MaybeRefOrGetter<string>) => {
           if (data) {
             prependCommentToCache(queryClient, data as unknown as Comment);
           }
+          queryClient.invalidateQueries({ queryKey: ['post', id] });
         }
       )
       .on('broadcast', { event: 'UPDATE' }, () => {
         queryClient.invalidateQueries({ queryKey: ['comments'] });
+        queryClient.invalidateQueries({ queryKey: ['post', id] });
       })
       .on('broadcast', { event: 'DELETE' }, () => {
         queryClient.invalidateQueries({ queryKey: ['comments'] });
+        queryClient.invalidateQueries({ queryKey: ['post', id] });
       })
       .subscribe();
 

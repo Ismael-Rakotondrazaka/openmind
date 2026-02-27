@@ -48,10 +48,6 @@ const handleCopyShareUrl = async () => {
       <div class="grid gap-4">
         <div class="space-y-2">
           <h4 class="leading-none font-medium">Share</h4>
-          <p class="text-muted-foreground text-sm">
-            Copy the share URL to share the post with your friends or social
-            media.
-          </p>
         </div>
 
         <div class="flex flex-row flex-nowrap items-center gap-2">
