@@ -23,6 +23,7 @@
   "dependencies": {
     "@editorjs/editorjs": "^2.31.3",
     "@editorjs/header": "^2.8.8",
+    "@editorjs/image": "^2.10.3",
     "@editorjs/list": "^2.0.9",
     "@editorjs/paragraph": "^2.11.7",
     "@nuxt/a11y": "^1.0.0-alpha.1",
