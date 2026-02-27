@@ -15,8 +15,8 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   reply: [];
-  replyCancelled: [];
-  replySubmitted: [];
+  'reply:cancelled': [];
+  'reply:submitted': [];
 }>();
 
 const formContainerRef = ref<HTMLElement | null>(null);
@@ -83,8 +83,8 @@ const replies = computed(() =>
             ? `Reply to ${parentAuthorName}'s comment`
             : undefined
         "
-        @cancelled="emit('replyCancelled')"
-        @submitted="emit('replySubmitted')"
+        @cancelled="emit('reply:cancelled')"
+        @submitted="emit('reply:submitted')"
       />
     </div>
   </div>
