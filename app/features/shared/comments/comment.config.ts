@@ -1,3 +1,3 @@
 export const CommentConfig = {
-  PAGE_SIZE_DEFAULT: 50,
+  PAGE_SIZE_DEFAULT: 10,
 };

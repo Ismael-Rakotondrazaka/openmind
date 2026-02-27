@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { CommentConfig } from '../comment.config';
 import { useGetComments } from '../composables/useGetComments';
 import CommentListItem from './CommentListItem.vue';
 import CommentReplies from './CommentReplies.vue';
@@ -13,7 +14,7 @@ const replyingTo = ref<null | string>(null);
 
 const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
   useGetComments(() => ({
-    limit: 1, // TODO Change to 10
+    limit: CommentConfig.PAGE_SIZE_DEFAULT,
     parent_id: null,
     post_id: props.postId,
   }));

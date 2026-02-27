@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { Post } from '~/features/shared/posts/post.model';
 
+import { useCommentRealtime } from '../composables/useCommentRealtime';
 import CommentForm from './CommentForm.vue';
 import CommentList from './CommentList.vue';
 
@@ -10,24 +11,7 @@ type Props = {
 
 const props = defineProps<Props>();
 
-const supabase = useSupabaseClient();
-const queryClient = useQueryClient();
-
-onMounted(() => {
-  const channel = supabase
-    .channel(`post:${props.post.id}:comments`)
-    .on('broadcast', { event: 'UPDATE' }, () => {
-      queryClient.invalidateQueries({ queryKey: ['comments'] });
-    })
-    .on('broadcast', { event: 'DELETE' }, () => {
-      queryClient.invalidateQueries({ queryKey: ['comments'] });
-    })
-    .subscribe();
-
-  onUnmounted(() => {
-    supabase.removeChannel(channel);
-  });
-});
+useCommentRealtime(() => props.post.id);
 </script>
 
 <template>
