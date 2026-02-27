@@ -6,12 +6,19 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { useUserFullname } from '~/features/shared/users/composables/useUserFullname';
 import { useUserImageUrl } from '~/features/users/composables/useUserImageUrl';
 
+import type { ReactionTypes } from '../../reactions/reaction.model';
 import type { Comment } from '../comment.model';
+
+import ReactionsDrawer from '../../reactions/components/ReactionsDrawer.vue';
+import CommentReactionActions from './CommentReactionActions.vue';
+import CommentReactionsSummary from './CommentReactionsSummary.vue';
 
 type Props = {
   comment: Comment;
   showReplyButton?: boolean;
 };
+
+type ReactionTab = 'all' | (typeof ReactionTypes)[number];
 
 const props = defineProps<Props>();
 
@@ -21,6 +28,9 @@ const userFullname = useUserFullname(() => props.comment.author);
 const userImageUrl = useUserImageUrl(() => props.comment.author);
 const timeAgo = useTimeAgo(() => new Date(props.comment.created_at));
 const renderedContent = useRenderEditorHTML(() => props.comment.content);
+
+const reactionsDrawerOpen = ref(false);
+const reactionsTab = ref<ReactionTab>('all');
 </script>
 
 <template>
@@ -54,14 +64,29 @@ const renderedContent = useRenderEditorHTML(() => props.comment.content);
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="prose prose-sm max-w-none" v-html="renderedContent" />
 
-      <button
-        v-if="showReplyButton"
-        class="text-muted-foreground hover:text-foreground self-start text-xs font-medium transition-colors"
-        type="button"
-        @click="emit('reply')"
-      >
-        Reply
-      </button>
+      <CommentReactionsSummary
+        :comment="comment"
+        @reactions-drawer:open="reactionsDrawerOpen = true"
+      />
+
+      <div class="flex items-center gap-2">
+        <CommentReactionActions :comment="comment" />
+        <button
+          v-if="showReplyButton"
+          class="text-muted-foreground hover:text-foreground text-xs font-medium transition-colors"
+          type="button"
+          @click="emit('reply')"
+        >
+          Reply
+        </button>
+      </div>
     </div>
   </div>
+
+  <ReactionsDrawer
+    v-model:open="reactionsDrawerOpen"
+    v-model:selected-reaction-tab="reactionsTab"
+    :comment-id="comment.id"
+    :reactions-details="comment.reactions_details"
+  />
 </template>

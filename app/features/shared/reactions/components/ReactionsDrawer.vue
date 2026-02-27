@@ -24,7 +24,8 @@ import ReactionList from './ReactionList.vue';
 import ReactionListSkeleton from './ReactionListSkeleton.vue';
 
 interface props {
-  postId: string;
+  commentId?: string;
+  postId?: string;
   reactionsDetails: Partial<Record<ReactionType, number>>;
 }
 
@@ -51,7 +52,12 @@ watch(selectedReactionTab, () => {
   page.value = 1;
 });
 
+watch(open, val => {
+  if (val) page.value = 1;
+});
+
 const { data, isPending } = useGetReactionsWithUsers(() => ({
+  comment_id: props.commentId,
   limit: limit.value,
   page: page.value,
   post_id: props.postId,
