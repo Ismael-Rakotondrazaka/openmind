@@ -131,3 +131,27 @@ html, body {
 .ce-toolbar__content {
   max-width: calc(100% - 7rem) !important;
 }
+
+/* EditorJS image tool classes — mirrors editor visual behavior */
+figure.with-border {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+figure.with-background {
+  background-color: var(--muted);
+  padding: 15px;
+}
+
+figure.with-background img {
+  display: block;
+  max-width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+figure.stretched img {
+  display: block;
+  width: 100%;
+}
