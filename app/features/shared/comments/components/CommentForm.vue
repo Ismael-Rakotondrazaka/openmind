@@ -9,6 +9,7 @@ type Props = {
   depth?: number;
   parentId?: null | string;
   postId: string;
+  title?: string;
 };
 
 const props = defineProps<Props>();
@@ -47,6 +48,7 @@ const handleSubmit = async () => {
 
 <template>
   <form v-if="user" class="flex flex-col gap-2" @submit.prevent="handleSubmit">
+    <p v-if="title" class="text-muted-foreground text-sm">{{ title }}</p>
     <EditorJs
       :key="editorKey"
       v-model:content="content"

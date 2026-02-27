@@ -5,6 +5,7 @@ import CommentForm from './CommentForm.vue';
 import CommentListItem from './CommentListItem.vue';
 
 type Props = {
+  parentAuthorName?: string;
   parentId: string;
   postId: string;
   showReplyForm: boolean;
@@ -73,6 +74,11 @@ const replies = computed(() =>
         :post-id="postId"
         :parent-id="parentId"
         :depth="1"
+        :title="
+          parentAuthorName
+            ? `Reply to ${parentAuthorName}'s comment`
+            : undefined
+        "
         @submitted="emit('replySubmitted')"
       />
     </div>

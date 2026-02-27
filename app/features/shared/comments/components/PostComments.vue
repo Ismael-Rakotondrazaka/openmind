@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { Post } from '~/features/shared/posts/post.model';
 
+import { getUserFullname } from '~/features/shared/users/composables/useUserFullname';
+
 import { useCommentRealtime } from '../composables/useCommentRealtime';
 import CommentForm from './CommentForm.vue';
 import CommentList from './CommentList.vue';
@@ -12,6 +14,10 @@ type Props = {
 const props = defineProps<Props>();
 
 useCommentRealtime(() => props.post.id);
+
+const formTitle = computed(
+  () => `Comment on ${getUserFullname(props.post.author)}'s post`
+);
 </script>
 
 <template>
@@ -28,6 +34,6 @@ useCommentRealtime(() => props.post.id);
 
     <CommentList :post-id="post.id" />
 
-    <CommentForm :post-id="post.id" />
+    <CommentForm :post-id="post.id" :title="formTitle" />
   </div>
 </template>

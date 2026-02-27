@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { getUserFullname } from '~/features/shared/users/composables/useUserFullname';
+
 import { CommentConfig } from '../comment.config';
 import { useGetComments } from '../composables/useGetComments';
 import CommentListItem from './CommentListItem.vue';
@@ -62,6 +64,7 @@ const handleReply = (commentId: string) => {
             :parent-id="comment.id"
             :post-id="postId"
             :show-reply-form="replyingTo === comment.id"
+            :parent-author-name="getUserFullname(comment.author)"
             @reply="handleReply(comment.id)"
             @reply-submitted="replyingTo = null"
           />
