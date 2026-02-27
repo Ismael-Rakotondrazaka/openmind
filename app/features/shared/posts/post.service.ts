@@ -49,7 +49,7 @@ export const getPosts = async (
 
   return {
     count: count ?? 0,
-    data: data ?? [],
+    data: (data ?? []) as unknown as Post[],
   };
 };
 
@@ -96,7 +96,7 @@ export const getPost = async (id: string): Promise<null | Post> => {
 
   if (error) throw error;
 
-  return data;
+  return data as unknown as null | Post;
 };
 
 export const createPost = async (post: PostInsert): Promise<Post> => {
@@ -116,7 +116,7 @@ export const createPost = async (post: PostInsert): Promise<Post> => {
 
   if (error) throw error;
 
-  return data;
+  return data as unknown as Post;
 };
 
 export const updatePost = async (
@@ -140,7 +140,7 @@ export const updatePost = async (
 
   if (error) throw error;
 
-  return data;
+  return data as unknown as Post;
 };
 
 export const deletePost = async (id: string): Promise<void> => {

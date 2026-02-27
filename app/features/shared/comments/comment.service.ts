@@ -30,16 +30,32 @@ export const getComments = async (
     query = query.eq('post_id', filters.post_id);
   }
 
-  const page = filters.page ?? CommentConfig.PAGE_DEFAULT;
+  if (filters.depth !== undefined) {
+    query = query.eq('depth', filters.depth);
+  }
+
+  if ('parent_id' in filters) {
+    if (filters.parent_id === null) {
+      query = query.is('parent_id', null);
+    } else if (filters.parent_id) {
+      query = query.eq('parent_id', filters.parent_id);
+    }
+  }
+
   const limit = filters.limit ?? CommentConfig.PAGE_SIZE_DEFAULT;
-  const from = (page - 1) * limit;
-  const to = from + limit - 1;
+
+  if (filters.before) {
+    query = query.lt('created_at', filters.before);
+  }
 
   query = query
     .order(filters.orderBy ?? 'created_at', {
-      ascending: filters.sortOrder === SortOrder.asc,
+      ascending:
+        filters.sortOrder !== undefined
+          ? filters.sortOrder === SortOrder.asc
+          : true,
     })
-    .range(from, to);
+    .limit(limit);
 
   const { count, data, error } = await query;
 
@@ -47,7 +63,7 @@ export const getComments = async (
 
   return {
     count: count ?? 0,
-    data: data ?? [],
+    data: (data ?? []) as unknown as Comment[],
   };
 };
 
@@ -91,7 +107,7 @@ export const getComment = async (id: string): Promise<Comment | null> => {
 
   if (error) throw error;
 
-  return data;
+  return data as unknown as Comment | null;
 };
 
 export const createComment = async (
@@ -112,7 +128,7 @@ export const createComment = async (
 
   if (error) throw error;
 
-  return data;
+  return data as unknown as Comment;
 };
 
 export const updateComment = async (
@@ -135,7 +151,7 @@ export const updateComment = async (
 
   if (error) throw error;
 
-  return data;
+  return data as unknown as Comment;
 };
 
 export const deleteComment = async (id: string): Promise<void> => {

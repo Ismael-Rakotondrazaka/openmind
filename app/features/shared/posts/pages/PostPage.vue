@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import PostComments from '../../comments/components/PostComments.vue';
 import ReactionsDrawer from '../../reactions/components/ReactionsDrawer.vue';
 import { ReactionTypes } from '../../reactions/reaction.model';
 import PostContent from '../components/PostContent.vue';
@@ -55,6 +56,7 @@ const { data } = useGetPost(() => route.params.postId);
       @reactions-drawer:close="hideReactionsDrawer"
     />
     <PostContent :content="data.content" />
+    <PostComments :post="data" />
     <ReactionsDrawer
       v-model:open="reactionsDrawerOpen"
       v-model:selected-reaction-tab="reactionsTab"

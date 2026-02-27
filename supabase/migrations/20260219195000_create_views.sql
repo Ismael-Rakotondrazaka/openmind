@@ -46,10 +46,10 @@ security definer
 set search_path = ''
 as $$
 begin
-  if tg_op in ('delete', 'update') and old.post_id is not null then
+  if tg_op in ('DELETE', 'UPDATE') and old.post_id is not null then
     perform public.sync_posts_views_count(old.post_id);
   end if;
-  if tg_op in ('insert', 'update') and new.post_id is not null then
+  if tg_op in ('INSERT', 'UPDATE') and new.post_id is not null then
     perform public.sync_posts_views_count(new.post_id);
   end if;
   return coalesce(new, old);

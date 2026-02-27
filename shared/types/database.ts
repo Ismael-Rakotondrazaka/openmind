@@ -189,8 +189,8 @@ export type Database = {
           cover_url?: string | null
           created_at?: string
           deleted_at?: string | null
-          published_at?: string | null
           id?: string
+          published_at?: string | null
           reactions_count?: number
           reactions_details?: Json
           slug: string

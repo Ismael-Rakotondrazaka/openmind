@@ -6,8 +6,8 @@
         Interactive pagination with page and page size controls.
       </p>
       <Pagination
-        :current-page="currentPage"
-        :page-size="pageSize"
+        :page="currentPage"
+        :limit="pageSize"
         :total-count="totalCount"
         :total-pages="totalPages"
         @page-change="currentPage = $event"

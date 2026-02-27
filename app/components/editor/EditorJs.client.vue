@@ -11,15 +11,16 @@ const content = defineModel<OutputData>('content', {
   required: false,
 });
 
+const holderId = useId();
+
 let editor: EditorJS | null = null;
 
 onMounted(() => {
   editor = new EditorJS({
     data: content.value,
-    holder: 'editorjs',
+    holder: holderId,
     async onChange(api) {
       const data = await api.saver.save();
-      console.log('data', data);
       content.value = data;
     },
     tools: {
@@ -36,5 +37,5 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div id="editorjs" class="prose w-full max-w-none" />
+  <div :id="holderId" class="prose w-full max-w-none" />
 </template>

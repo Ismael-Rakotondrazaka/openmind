@@ -48,7 +48,7 @@ export const getSavedPosts = async (
 
   return {
     count: count ?? 0,
-    data: data ?? [],
+    data: (data ?? []) as unknown as SavedPost[],
   };
 };
 
@@ -89,7 +89,7 @@ export const createSavedPost = async (
 
   if (error) throw error;
 
-  return data;
+  return data as unknown as SavedPost;
 };
 
 export const deleteSavedPost = async (
@@ -124,7 +124,7 @@ export const updateSavedPost = async (
 
   if (error) throw error;
 
-  return data;
+  return data as unknown as SavedPost;
 };
 
 export const isPostSaved = async (
