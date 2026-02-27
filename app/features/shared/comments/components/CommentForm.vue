@@ -14,7 +14,7 @@ type Props = {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits<{ submitted: [] }>();
+const emit = defineEmits<{ cancelled: []; submitted: [] }>();
 
 const user = useSupabaseUser();
 const content = ref<OutputData>({ blocks: [] });
@@ -54,7 +54,17 @@ const handleSubmit = async () => {
       v-model:content="content"
       class="min-h-16 w-full rounded-md border"
     />
-    <div class="flex justify-end">
+    <div class="flex justify-end gap-2">
+      <Button
+        v-if="parentId"
+        type="button"
+        size="sm"
+        variant="ghost"
+        :disabled="isPending"
+        @click="emit('cancelled')"
+      >
+        Cancel
+      </Button>
       <Button type="submit" size="sm" :disabled="isPending || isEmpty">
         <Icon v-if="isPending" name="mdi:loading" class="animate-spin" />
         <Icon v-else name="mdi:send" />

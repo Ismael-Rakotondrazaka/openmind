@@ -66,6 +66,7 @@ const handleReply = (commentId: string) => {
             :show-reply-form="replyingTo === comment.id"
             :parent-author-name="getUserFullname(comment.author)"
             @reply="handleReply(comment.id)"
+            @reply-cancelled="replyingTo = null"
             @reply-submitted="replyingTo = null"
           />
         </div>
