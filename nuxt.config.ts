@@ -129,6 +129,7 @@ export default defineNuxtConfig({
         '/raw/**',
         '/u/*',
         '/u/*/p/*/*',
+        '/about',
       ],
       include: undefined,
       login: '/login',
