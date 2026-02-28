@@ -80,6 +80,12 @@ const handleReactToPost = async (reactionType: ReactionType) => {
   });
 };
 
+const scrollToCommentForm = () => {
+  document
+    .getElementById('comment-form')
+    ?.scrollIntoView({ behavior: 'smooth' });
+};
+
 const handleToggleReaction = async () => {
   if (userReactionToPost.value) {
     await deleteReactionMutation.mutateAsync(userReactionToPost.value.id);
@@ -148,7 +154,12 @@ const handleToggleReaction = async () => {
         </button>
       </HoverCardContent>
     </HoverCard>
-    <Button variant="secondary" size="sm" class="rounded-full">
+    <Button
+      variant="secondary"
+      size="sm"
+      class="rounded-full"
+      @click="scrollToCommentForm"
+    >
       <Icon name="mdi:comment" />
       {{ formattedCommentsCount }}
     </Button>

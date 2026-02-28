@@ -52,7 +52,7 @@ const handleSubmit = async () => {
     <EditorJs
       :key="editorKey"
       v-model:content="content"
-      class="min-h-16 w-full rounded-md border"
+      class="min-h-16 w-full rounded-md border pb-2"
     />
     <div class="flex justify-end gap-2">
       <Button

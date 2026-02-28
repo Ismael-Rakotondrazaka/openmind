@@ -34,6 +34,6 @@ const formTitle = computed(
 
     <CommentList :post-id="post.id" />
 
-    <CommentForm :post-id="post.id" :title="formTitle" />
+    <CommentForm id="comment-form" :post-id="post.id" :title="formTitle" />
   </div>
 </template>
