@@ -41,30 +41,30 @@ type RequiredIssue = {
  * ```
  * import { zu } from 'zod_utilz'
  * const errorMap = zu.makeErrorMap( {
- *     required: 'Custom required message',
- *     invalid_type: ( { data } ) => `${ data } is an invalid type`,
- *     too_big: ( { maximum } ) => `Maximum length is ${ maximum }`,
+ *     required: 'Required',
+ *     invalid_type: ( { data } ) => `Invalid type: ${ data }`,
+ *     too_big: ( { maximum } ) => `Max ${ maximum } characters`,
  *     invalid_enum_value: ( { data, options } ) =>
- *         `${ data } is not a valid enum value. Valid options: ${ options?.join( ' | ' ) } `,
+ *         `Invalid value. Allowed: ${ options?.join( ' | ' ) }`,
  * } )
  *
  * const stringSchema = z.string( { errorMap } ).max( 32 )
  *
  * zu.SPR( stringSchema.safeParse( undefined ) ).error?.issues[ 0 ].message
- * // Custom required message
+ * // Required
  *
  * zu.SPR( stringSchema.safeParse( 42 ) ).error?.issues[ 0 ].message
- * // 42 is an invalid type
+ * // Invalid type: 42
  *
  * zu.SPR( stringSchema.safeParse(
- *     'this string is over the maximum length'
+ *     'this string is too long'
  * ) ).error?.issues[ 0 ].message
- * // Maximum length is 32
+ * // Max 32 characters
  *
  * const enumSchema = z.enum( [ 'foo', 'bar' ], { errorMap } )
  *
  * zu.SPR( enumSchema.safeParse( 'baz' ) ).error?.issues[ 0 ].message
- * // baz is not a valid enum value. Valid options: foo | bar
+ * // Invalid value. Allowed: foo | bar
  * ```
  */
 function makeErrorMap(config: ErrorMapConfig): z.ZodErrorMap {
@@ -93,41 +93,41 @@ export default defineNuxtPlugin(() => {
   z.setErrorMap(
     makeErrorMap({
       required: context =>
-        `This field is required, expect a ${context.expected}, received a ${context.received}`,
+        `Required - expected ${context.expected}, got ${context.received}`,
       too_big: ctx => {
         const map: Record<
           z.ZodTooBigIssue['type'],
           Record<'exact' | 'inclusive' | 'not_inclusive', string>
         > = {
           array: {
-            exact: `Must contain exactly {{maximum}} element(s), given ${(ctx.data as unknown[]).length} element(s)`,
-            inclusive: `Must contain at most {{maximum}} element(s), given ${(ctx.data as unknown[]).length} element(s)`,
-            not_inclusive: `Must contain less than {{maximum}} element(s), given ${(ctx.data as unknown[]).length} element(s)`,
+            exact: `Must have exactly {{maximum}} item(s) - has ${(ctx.data as unknown[]).length}`,
+            inclusive: `Max {{maximum}} item(s) - has ${(ctx.data as unknown[]).length}`,
+            not_inclusive: `Must have < {{maximum}} item(s) - has ${(ctx.data as unknown[]).length}`,
           },
           bigint: {
-            exact: `Must be exactly {{maximum}}, given ${(ctx.data as bigint).toString()}`,
-            inclusive: `Must be less than or equal to {{maximum}}, given ${(ctx.data as bigint).toString()}`,
-            not_inclusive: `Must be less than {{maximum}}, given ${(ctx.data as bigint).toString()}`,
+            exact: `Must be exactly {{maximum}} - got ${(ctx.data as bigint).toString()}`,
+            inclusive: `Max {{maximum}} - got ${(ctx.data as bigint).toString()}`,
+            not_inclusive: `Must be < {{maximum}} - got ${(ctx.data as bigint).toString()}`,
           },
           date: {
             exact: 'Must be exactly {{- maximum, datetime}}',
-            inclusive: 'Must be before or equal to {{- maximum, datetime}}',
-            not_inclusive: 'Must be before {{- maximum, datetime}}',
+            inclusive: 'Must be ≤ {{- maximum, datetime}}',
+            not_inclusive: 'Must be < {{- maximum, datetime}}',
           },
           number: {
-            exact: `Must be exactly {{maximum}}, given ${ctx.data}`,
-            inclusive: `Must be less than or equal to {{maximum}}, given ${ctx.data}`,
-            not_inclusive: `Must be less than {{maximum}}, given ${ctx.data}`,
+            exact: `Must be exactly {{maximum}} - got ${ctx.data}`,
+            inclusive: `Max {{maximum}} - got ${ctx.data}`,
+            not_inclusive: `Must be < {{maximum}} - got ${ctx.data}`,
           },
           set: {
-            exact: 'Invalid input',
-            inclusive: 'Invalid input',
-            not_inclusive: 'Invalid input',
+            exact: 'Invalid',
+            inclusive: 'Invalid',
+            not_inclusive: 'Invalid',
           },
           string: {
-            exact: `Must contain exactly {{maximum}} character(s), given ${(ctx.data as string).length} character(s)`,
-            inclusive: `Must contain at most {{maximum}} character(s), given ${(ctx.data as string).length} character(s)`,
-            not_inclusive: `Must contain under {{maximum}} character(s), given ${(ctx.data as string).length} character(s)`,
+            exact: `Must be exactly {{maximum}} char(s) - ${(ctx.data as string).length} given`,
+            inclusive: `Max {{maximum}} char(s) - ${(ctx.data as string).length} given`,
+            not_inclusive: `Must be < {{maximum}} char(s) - ${(ctx.data as string).length} given`,
           },
         };
 
@@ -161,34 +161,34 @@ export default defineNuxtPlugin(() => {
             Record<'exact' | 'inclusive' | 'not_inclusive', string>
           > = {
             array: {
-              exact: `Must contain exactly {{minimum}} element(s), given ${ctx.data.length} element(s)`,
-              inclusive: `Must contain at least {{minimum}} element(s), given ${ctx.data.length} element(s)`,
-              not_inclusive: `Must contain more than {{minimum}} element(s), given ${ctx.data.length} element(s)`,
+              exact: `Must have exactly {{minimum}} item(s) - has ${ctx.data.length}`,
+              inclusive: `Min {{minimum}} item(s) - has ${ctx.data.length}`,
+              not_inclusive: `Must have > {{minimum}} item(s) - has ${ctx.data.length}`,
             },
             bigint: {
-              exact: `Must be exactly {{minimum}}, given ${(ctx.data as bigint).toString()}`,
-              inclusive: `Must be greater than or equal to {{minimum}}, given ${(ctx.data as bigint).toString()}`,
-              not_inclusive: `Must be greater than {{minimum}}, given ${(ctx.data as bigint).toString()}`,
+              exact: `Must be exactly {{minimum}} - got ${(ctx.data as bigint).toString()}`,
+              inclusive: `Min {{minimum}} - got ${(ctx.data as bigint).toString()}`,
+              not_inclusive: `Must be > {{minimum}} - got ${(ctx.data as bigint).toString()}`,
             },
             date: {
               exact: 'Must be exactly {{- minimum, datetime}}',
-              inclusive: 'Must be after or equal to {{- minimum, datetime}}',
-              not_inclusive: 'Must be after {{- minimum, datetime}}',
+              inclusive: 'Must be ≥ {{- minimum, datetime}}',
+              not_inclusive: 'Must be > {{- minimum, datetime}}',
             },
             number: {
-              exact: `Must be exactly {{minimum}}, given ${ctx.data}`,
-              inclusive: `Must be greater than or equal to {{minimum}}, given ${ctx.data}`,
-              not_inclusive: `Must be greater than {{minimum}}, given ${ctx.data}`,
+              exact: `Must be exactly {{minimum}} - got ${ctx.data}`,
+              inclusive: `Min {{minimum}} - got ${ctx.data}`,
+              not_inclusive: `Must be > {{minimum}} - got ${ctx.data}`,
             },
             set: {
-              exact: 'Invalid input',
-              inclusive: 'Invalid input',
-              not_inclusive: 'Invalid input',
+              exact: 'Invalid',
+              inclusive: 'Invalid',
+              not_inclusive: 'Invalid',
             },
             string: {
-              exact: `Must contain exactly {{minimum}} character(s), given ${ctx.data.length} character(s)`,
-              inclusive: `Must contain at least {{minimum}} character(s), given ${ctx.data.length} character(s)`,
-              not_inclusive: `Must contain over {{minimum}} character(s), given ${ctx.data.length} character(s)`,
+              exact: `Must be exactly {{minimum}} char(s) - ${ctx.data.length} given`,
+              inclusive: `Min {{minimum}} char(s) - ${ctx.data.length} given`,
+              not_inclusive: `Must be > {{minimum}} char(s) - ${ctx.data.length} given`,
             },
           };
 
