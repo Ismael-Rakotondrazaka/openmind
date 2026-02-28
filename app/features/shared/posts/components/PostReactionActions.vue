@@ -117,7 +117,10 @@ const handleToggleReaction = async () => {
           {{ formattedReactionsCount }}
         </Button>
       </HoverCardTrigger>
-      <HoverCardContent class="flex w-min flex-row flex-nowrap gap-4 p-2">
+      <HoverCardContent
+        v-if="user"
+        class="flex w-min flex-row flex-nowrap gap-4 p-2"
+      >
         <button
           v-for="reaction in ReactionTypes"
           :key="reaction"

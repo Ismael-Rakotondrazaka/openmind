@@ -32,7 +32,7 @@
         {{ PostStatusLabel[post.status] }}
       </Badge>
 
-      <DropdownMenu>
+      <DropdownMenu v-if="user || isAuthor">
         <DropdownMenuTrigger as-child>
           <Button variant="ghost" size="icon">
             <Icon name="mdi:dots-vertical" size="1rem" />
@@ -40,14 +40,17 @@
         </DropdownMenuTrigger>
         <DropdownMenuContent class="w-56" align="start">
           <DropdownMenuGroup>
-            <DropdownMenuItem v-if="!isPostSaved" @click="handleSavePost">
+            <DropdownMenuItem
+              v-if="user && !isPostSaved"
+              @click="handleSavePost"
+            >
               Save for later
               <DropdownMenuShortcut>
                 <Icon name="mdi:bookmark" size="1rem" />
               </DropdownMenuShortcut>
             </DropdownMenuItem>
             <DropdownMenuItem
-              v-else
+              v-else-if="user && isPostSaved"
               variant="destructive"
               @click="handleDeleteSavedPost"
             >
