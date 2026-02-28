@@ -7,8 +7,9 @@ export type Post = {
   author: Tables<'users'>;
   content: OutputData;
   reactions_details: Partial<Record<ReactionType, number>>;
+  status: PostStatus;
   tags: { tag: Tables<'tags'> }[];
-} & Omit<Tables<'posts'>, 'content' | 'reactions_details'>;
+} & Omit<Tables<'posts'>, 'content' | 'reactions_details' | 'status'>;
 
 export interface PostFilters {
   author_id?: string;
@@ -24,6 +25,11 @@ export interface PostFilters {
 export const PostStatuses = ['draft', 'published'] as const;
 
 export const PostStatus = createEnumConstants(PostStatuses);
+
+export const PostStatusLabel: Record<PostStatus, string> = {
+  [PostStatus.draft]: 'Draft',
+  [PostStatus.published]: 'Published',
+};
 
 export type PostInsert = TablesInsert<'posts'>;
 export type PostOrderBy = 'created_at' | 'reactions_count';

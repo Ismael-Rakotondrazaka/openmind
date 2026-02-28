@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { refDebounced } from '@vueuse/core';
 
+import type { PostStatus } from '~/features/shared/posts/post.model';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,12 +11,21 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import Pagination from '~/features/shared/paginations/components/Pagination.vue';
 import PostCard from '~/features/shared/posts/components/PostCard.vue';
 import { useGetPosts } from '~/features/shared/posts/composables/useGetPosts';
+import { PostStatuses } from '~/features/shared/posts/post.model';
 import { useGetTags } from '~/features/shared/tags/composables/useGetTags';
 
 interface Props {
+  isOwnProfile?: boolean;
   profileId: string;
 }
 
@@ -23,10 +34,11 @@ const props = defineProps<Props>();
 const postSearch = ref('');
 const debouncedPostSearch = refDebounced(postSearch, 300);
 const selectedTagIds = ref<string[]>([]);
+const selectedStatus = ref<'all' | PostStatus>('all');
 const postsPage = ref(1);
 const postsLimit = ref(10);
 
-watch([debouncedPostSearch, selectedTagIds], () => {
+watch([debouncedPostSearch, selectedTagIds, selectedStatus], () => {
   postsPage.value = 1;
 });
 
@@ -60,7 +72,7 @@ const { data: postsData, isPending: isPostsPending } = useGetPosts(() => ({
   limit: postsLimit.value,
   page: postsPage.value,
   search: debouncedPostSearch.value || undefined,
-  status: 'published',
+  status: selectedStatus.value === 'all' ? undefined : selectedStatus.value,
   tagIds: selectedTagIds.value.length ? selectedTagIds.value : undefined,
 }));
 
@@ -74,6 +86,21 @@ const postsTotalPages = computed(() =>
     <div class="flex flex-col gap-2">
       <Input v-model="postSearch" placeholder="Search posts..." />
       <div class="flex flex-wrap items-center gap-2">
+        <Select v-if="isOwnProfile" v-model="selectedStatus">
+          <SelectTrigger class="h-8 w-36 text-sm">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem
+              v-for="status in PostStatuses"
+              :key="status"
+              :value="status"
+            >
+              {{ status.charAt(0).toUpperCase() + status.slice(1) }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
         <Popover v-model:open="isTagPopoverOpen">
           <PopoverTrigger as-child>
             <Button variant="outline" size="sm" class="gap-1.5">
@@ -122,7 +149,6 @@ const postsTotalPages = computed(() =>
             </div>
           </PopoverContent>
         </Popover>
-
         <Badge
           v-for="tag in selectedTagObjects"
           :key="tag.id"

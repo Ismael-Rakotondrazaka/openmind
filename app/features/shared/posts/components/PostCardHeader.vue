@@ -27,53 +27,56 @@
       </div>
     </div>
 
-    <DropdownMenu>
-      <DropdownMenuTrigger as-child>
-        <Button variant="ghost" size="icon">
-          <Icon name="mdi:dots-vertical" size="1rem" />
-        </Button>
-      </DropdownMenuTrigger>
+    <div class="flex flex-row items-center justify-end gap-2">
+      <Badge v-if="post.status === PostStatus.draft" variant="destructive">
+        {{ PostStatusLabel[post.status] }}
+      </Badge>
 
-      <DropdownMenuContent class="w-56" align="start">
-        <DropdownMenuGroup>
-          <DropdownMenuItem v-if="!isPostSaved" @click="handleSavePost">
-            Save for later
-            <DropdownMenuShortcut>
-              <Icon name="mdi:bookmark" size="1rem" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            v-else
-            variant="destructive"
-            @click="handleDeleteSavedPost"
-          >
-            Remove from saved
-            <DropdownMenuShortcut>
-              <Icon name="mdi:bookmark-remove" size="1rem" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-
-          <NuxtLink
-            v-if="isAuthor"
-            :to="{
-              name: 'posts-postId-edit',
-              params: {
-                postId: post.id,
-              },
-            }"
-            as-child
-          >
-            <DropdownMenuItem>
-              Edit
+      <DropdownMenu>
+        <DropdownMenuTrigger as-child>
+          <Button variant="ghost" size="icon">
+            <Icon name="mdi:dots-vertical" size="1rem" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent class="w-56" align="start">
+          <DropdownMenuGroup>
+            <DropdownMenuItem v-if="!isPostSaved" @click="handleSavePost">
+              Save for later
               <DropdownMenuShortcut>
-                <Icon name="mdi:pencil" size="1rem" />
+                <Icon name="mdi:bookmark" size="1rem" />
               </DropdownMenuShortcut>
             </DropdownMenuItem>
-          </NuxtLink>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <DropdownMenuItem
+              v-else
+              variant="destructive"
+              @click="handleDeleteSavedPost"
+            >
+              Remove from saved
+              <DropdownMenuShortcut>
+                <Icon name="mdi:bookmark-remove" size="1rem" />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+            <NuxtLink
+              v-if="isAuthor"
+              :to="{
+                name: 'posts-postId-edit',
+                params: {
+                  postId: post.id,
+                },
+              }"
+              as-child
+            >
+              <DropdownMenuItem>
+                Edit
+                <DropdownMenuShortcut>
+                  <Icon name="mdi:pencil" size="1rem" />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </NuxtLink>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   </address>
 </template>
 
@@ -92,11 +95,10 @@ import {
 import { useUserFullname } from '~/features/shared/users/composables/useUserFullname';
 import { useUserImageUrl } from '~/features/users/composables/useUserImageUrl';
 
-import type { Post } from '../post.model';
-
 import { useCreateSavedPost } from '../../saved-posts/composables/useCreateSavedPost';
 import { useDeleteSavedPost } from '../../saved-posts/composables/useDeleteSavedPost';
 import { useIsPostSaved } from '../../saved-posts/composables/useIsPostSaved';
+import { type Post, PostStatus, PostStatusLabel } from '../post.model';
 import PostPublishDate from './PostPublishDate.vue';
 
 type Props = {

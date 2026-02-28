@@ -66,7 +66,7 @@ const shareUrl = computed(() => {
         </TabsList>
 
         <TabsContent value="posts">
-          <ProfilePostsTab :profile-id="profile.id" />
+          <ProfilePostsTab :profile-id="profile.id" :is-own-profile="true" />
         </TabsContent>
 
         <TabsContent value="followers">
