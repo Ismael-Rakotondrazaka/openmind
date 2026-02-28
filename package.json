@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck",
-    "typecheck:files": "vue-tsc --noEmit",
+    "typecheck:files": "node scripts/typecheck-files.mjs",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
     "lint:fix:files": "eslint --fix",
