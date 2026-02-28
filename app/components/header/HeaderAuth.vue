@@ -58,6 +58,18 @@ const handleLogout = async () => {
       </div>
 
       <div class="flex items-center gap-2">
+        <NuxtLink
+          :to="{
+            name: 'posts-new',
+          }"
+          as-child
+        >
+          <Button variant="default" size="icon" class="rounded-full">
+            <Icon name="mdi:add" size="1rem" />
+            <span class="sr-only">New post</span>
+          </Button>
+        </NuxtLink>
+
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Avatar>
