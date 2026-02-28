@@ -55,13 +55,6 @@ const handleLogout = async () => {
             >
           </Button>
         </NuxtLink>
-
-        <NuxtLink :to="{ name: 'search' }">
-          <Button variant="ghost">
-            <Icon name="mdi:magnify" />
-            <span class="sr-only md:not-sr-only">Search</span>
-          </Button>
-        </NuxtLink>
       </div>
 
       <div class="flex items-center gap-2">
