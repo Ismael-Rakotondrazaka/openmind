@@ -14,7 +14,7 @@
         <p class="text-center">
           Created by
           <NuxtLink
-            to="https://github.com/Ismael-Rakotondrazaka"
+            to="https://www.ismaelrakoto.coom"
             target="_blank"
             class="text-primary hover:underline"
           >
