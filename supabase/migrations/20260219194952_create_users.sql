@@ -19,7 +19,7 @@ create table public.users (
 );
 
 comment on table public.users is 'Application users; auth is handled by Supabase.';
-comment on column public.users.posts_count is 'Total number of non-deleted posts by this user; maintained by trigger on public.posts.';
+comment on column public.users.posts_count is 'Total number of published, non-deleted posts by this user; maintained by trigger on public.posts.';
 
 create unique index users_username_key on public.users (username) where username is not null;
 create index users_role_idx on public.users (role);

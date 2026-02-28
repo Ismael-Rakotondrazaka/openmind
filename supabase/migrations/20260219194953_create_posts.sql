@@ -144,19 +144,24 @@ language plpgsql
 security invoker
 set search_path = ''
 as $$
+declare
+  old_counted boolean;
+  new_counted boolean;
 begin
   if tg_op = 'INSERT' then
-    if new.deleted_at is null then
+    if new.deleted_at is null and new.status = 'published' then
       update public.users set posts_count = posts_count + 1 where id = new.author_id;
     end if;
   elsif tg_op = 'DELETE' then
-    if old.deleted_at is null then
+    if old.deleted_at is null and old.status = 'published' then
       update public.users set posts_count = posts_count - 1 where id = old.author_id;
     end if;
   elsif tg_op = 'UPDATE' then
-    if old.deleted_at is null and new.deleted_at is not null then
+    old_counted := old.deleted_at is null and old.status = 'published';
+    new_counted := new.deleted_at is null and new.status = 'published';
+    if old_counted and not new_counted then
       update public.users set posts_count = posts_count - 1 where id = new.author_id;
-    elsif old.deleted_at is not null and new.deleted_at is null then
+    elsif not old_counted and new_counted then
       update public.users set posts_count = posts_count + 1 where id = new.author_id;
     end if;
   end if;
@@ -164,7 +169,7 @@ begin
 end;
 $$;
 
-comment on function public.sync_users_posts_count() is 'Keeps users.posts_count in sync when posts are inserted, deleted, or soft-deleted.';
+comment on function public.sync_users_posts_count() is 'Keeps users.posts_count in sync when posts are inserted, deleted, or soft-deleted. Only counts published posts.';
 
 create trigger sync_users_posts_count_on_insert
   after insert on public.posts
@@ -177,6 +182,6 @@ create trigger sync_users_posts_count_on_delete
   execute function public.sync_users_posts_count();
 
 create trigger sync_users_posts_count_on_update
-  after update of deleted_at on public.posts
+  after update of deleted_at, status on public.posts
   for each row
   execute function public.sync_users_posts_count();
