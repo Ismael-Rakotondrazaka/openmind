@@ -17,7 +17,16 @@ export default defineNuxtPlugin(nuxt => {
 
   // Modify your Vue Query global settings here
   const queryClient = new QueryClient({
-    defaultOptions: { queries: { staleTime: 5000 } },
+    defaultOptions: {
+      mutations: {
+        retry: 0,
+      },
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: 1,
+        staleTime: 30_000,
+      },
+    },
   });
   const options: VueQueryPluginOptions = { queryClient };
 
