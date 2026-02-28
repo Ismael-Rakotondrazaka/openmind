@@ -136,3 +136,47 @@ end;
 $$;
 
 comment on function public.sync_posts_comments_count(uuid) is 'Recomputes comments_count for one post from public.comments (non-deleted only); used by trigger.';
+
+-- Keep public.users.posts_count in sync with public.posts
+create or replace function public.sync_users_posts_count()
+returns trigger
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if tg_op = 'INSERT' then
+    if new.deleted_at is null then
+      update public.users set posts_count = posts_count + 1 where id = new.author_id;
+    end if;
+  elsif tg_op = 'DELETE' then
+    if old.deleted_at is null then
+      update public.users set posts_count = posts_count - 1 where id = old.author_id;
+    end if;
+  elsif tg_op = 'UPDATE' then
+    if old.deleted_at is null and new.deleted_at is not null then
+      update public.users set posts_count = posts_count - 1 where id = new.author_id;
+    elsif old.deleted_at is not null and new.deleted_at is null then
+      update public.users set posts_count = posts_count + 1 where id = new.author_id;
+    end if;
+  end if;
+  return coalesce(new, old);
+end;
+$$;
+
+comment on function public.sync_users_posts_count() is 'Keeps users.posts_count in sync when posts are inserted, deleted, or soft-deleted.';
+
+create trigger sync_users_posts_count_on_insert
+  after insert on public.posts
+  for each row
+  execute function public.sync_users_posts_count();
+
+create trigger sync_users_posts_count_on_delete
+  after delete on public.posts
+  for each row
+  execute function public.sync_users_posts_count();
+
+create trigger sync_users_posts_count_on_update
+  after update of deleted_at on public.posts
+  for each row
+  execute function public.sync_users_posts_count();
