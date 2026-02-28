@@ -1,13 +1,9 @@
-<template>
-  <div>
-    
-  </div>
-</template>
-
 <script lang="ts" setup>
-
+import AuthUserProfilePage from '~/features/users/pages/AuthUserProfilePage.vue';
 </script>
 
-<style>
+<template>
+  <AuthUserProfilePage />
+</template>
 
-</style>
+<style></style>
