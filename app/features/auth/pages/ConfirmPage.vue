@@ -19,7 +19,7 @@ watch(
         // Get redirect path, and clear it from the cookie
         const path = redirectInfo.pluck();
         // Redirect to the saved path, or fallback to home
-        return navigateTo(path || '/feed');
+        return navigateTo(path || '/');
       }, 3000);
     }
   },

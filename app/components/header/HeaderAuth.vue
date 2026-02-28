@@ -29,7 +29,7 @@ const handleLogout = async () => {
   }
   toast.success('Logged out successfully');
   navigateTo({
-    name: 'feed',
+    name: 'index',
   });
 };
 </script>
@@ -56,7 +56,7 @@ const handleLogout = async () => {
           </Button>
         </NuxtLink>
 
-        <NuxtLink :to="{ name: 'feed' }">
+        <NuxtLink :to="{ name: 'index' }">
           <Button variant="ghost">
             <Icon
               class="sr-only md:not-sr-only"

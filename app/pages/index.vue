@@ -1,7 +1,9 @@
-<template>
-  <div></div>
-</template>
+<script lang="ts" setup>
+import FeedPage from '~/features/shared/posts/pages/FeedPage.vue';
+</script>
 
-<script lang="ts" setup></script>
+<template>
+  <FeedPage />
+</template>
 
 <style></style>

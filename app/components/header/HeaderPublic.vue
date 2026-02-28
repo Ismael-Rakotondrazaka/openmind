@@ -20,7 +20,7 @@
           </Button>
         </NuxtLink>
 
-        <NuxtLink :to="{ name: 'feed' }">
+        <NuxtLink :to="{ name: 'index' }">
           <Button variant="ghost">
             <Icon
               class="sr-only md:not-sr-only"
