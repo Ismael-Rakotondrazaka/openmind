@@ -16,13 +16,21 @@ type Props = {
   post: Post;
 };
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
-const route = useRoute('u-userKey-p-postId-postSlug');
+const router = useRouter();
 const config = useRuntimeConfig();
 
 const shareUrl = computed(() => {
-  return `${config.public.appUrl}${route.fullPath}`;
+  const resolved = router.resolve({
+    name: 'u-userKey-p-postId-postSlug',
+    params: {
+      postId: props.post.id,
+      postSlug: props.post.slug,
+      userKey: props.post.author.username || props.post.author.id,
+    },
+  });
+  return `${config.public.appUrl}${resolved.fullPath}`;
 });
 
 const { copy } = useClipboard();

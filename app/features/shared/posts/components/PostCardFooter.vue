@@ -1,38 +1,30 @@
 <template>
-  <div class="flex flex-row items-center justify-start gap-2">
-    <Button variant="secondary" size="sm">
-      <Icon name="mdi:thumbs-up" />
-      {{ formattedReactionsCount }}
-    </Button>
-
-    <Button variant="secondary" size="sm">
-      <Icon name="mdi:comment" />
-      {{ formattedCommentsCount }}
-    </Button>
-
-    <Button variant="secondary" size="sm">
-      <Icon name="mdi:eye" />
-      {{ formattedViewsCount }}
-    </Button>
+  <div>
+    <PostInteraction
+      :post="post"
+      :reactions-drawer-open="reactionsDrawerOpen"
+      @reactions-drawer:open="reactionsDrawerOpen = true"
+      @reactions-drawer:close="reactionsDrawerOpen = false"
+    />
+    <ReactionsDrawer
+      v-model:open="reactionsDrawerOpen"
+      :post-id="post.id"
+      :reactions-details="post.reactions_details"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { Post } from '../post.model';
 
+import ReactionsDrawer from '../../reactions/components/ReactionsDrawer.vue';
+import PostInteraction from './PostInteraction.vue';
+
 type Props = {
   post: Post;
 };
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
-const formattedReactionsCount = useNumericAbbreviation(
-  () => props.post.reactions_count
-);
-const formattedViewsCount = useNumericAbbreviation(
-  () => props.post.views_count
-);
-const formattedCommentsCount = useNumericAbbreviation(
-  () => props.post.comments_count
-);
+const reactionsDrawerOpen = ref(false);
 </script>
