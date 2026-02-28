@@ -1,6 +1,6 @@
 import type { PaginationResult } from '@/features/shared/paginations/pagination.model';
 
-import type { User, UserFilters } from './user.model';
+import type { User, UserFilters, UserUpdate } from './user.model';
 
 import { UserConfig } from './user.config';
 
@@ -109,6 +109,24 @@ export const isUsernameExists = async ({
   }
 
   return data !== null;
+};
+
+export const updateUser = async (
+  id: string,
+  updates: UserUpdate
+): Promise<User> => {
+  const client = useSupabaseClient();
+
+  const { data, error } = await client
+    .from('users')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
 };
 
 export const getUsersCount = async (
