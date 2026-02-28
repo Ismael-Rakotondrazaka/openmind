@@ -5,6 +5,7 @@ import type {
   UserTagFilters,
   UserTagInsert,
   UserTagUpdate,
+  UserTagWithDetails,
 } from './user-tag.model';
 
 import { UserTagConfig } from './user-tag.config';
@@ -94,6 +95,21 @@ export const deleteUserTag = async (
     .eq('tag_id', tagId);
 
   if (error) throw error;
+};
+
+export const getUserTagsWithDetails = async (
+  userId: string
+): Promise<UserTagWithDetails[]> => {
+  const client = useSupabaseClient();
+
+  const { data, error } = await client
+    .from('user_tags')
+    .select('*, tag:tag_id(*)')
+    .eq('user_id', userId);
+
+  if (error) throw error;
+
+  return (data ?? []) as unknown as UserTagWithDetails[];
 };
 
 export const updateUserTag = async (

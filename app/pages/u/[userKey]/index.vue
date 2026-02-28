@@ -1,7 +1,9 @@
-<template>
-  <div></div>
-</template>
+<script lang="ts" setup>
+import UserProfilePage from '~/features/users/pages/UserProfilePage.vue';
+</script>
 
-<script lang="ts" setup></script>
+<template>
+  <UserProfilePage />
+</template>
 
 <style></style>
