@@ -10,4 +10,8 @@ export interface FollowFilters {
 }
 
 export type FollowInsert = TablesInsert<'follows'>;
+
 export type FollowUpdate = TablesUpdate<'follows'>;
+export type FollowWithFollowing = {
+  following: Tables<'users'>;
+} & Tables<'follows'>;

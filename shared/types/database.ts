@@ -37,7 +37,7 @@ export type Database = {
       comments: {
         Row: {
           author_id: string
-          content: string
+          content: Json
           created_at: string
           deleted_at: string | null
           depth: number
@@ -50,7 +50,7 @@ export type Database = {
         }
         Insert: {
           author_id: string
-          content: string
+          content: Json
           created_at?: string
           deleted_at?: string | null
           depth?: number
@@ -63,7 +63,7 @@ export type Database = {
         }
         Update: {
           author_id?: string
-          content?: string
+          content?: Json
           created_at?: string
           deleted_at?: string | null
           depth?: number
@@ -366,6 +366,7 @@ export type Database = {
           id: string
           image_url: string | null
           last_name: string | null
+          posts_count: number
           role: string
           updated_at: string
           username: string | null
@@ -379,6 +380,7 @@ export type Database = {
           id: string
           image_url?: string | null
           last_name?: string | null
+          posts_count?: number
           role?: string
           updated_at?: string
           username?: string | null
@@ -392,6 +394,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           last_name?: string | null
+          posts_count?: number
           role?: string
           updated_at?: string
           username?: string | null
