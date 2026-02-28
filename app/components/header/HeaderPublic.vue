@@ -20,16 +20,6 @@
           </Button>
         </NuxtLink>
 
-        <NuxtLink :to="{ name: 'index' }">
-          <Button variant="ghost">
-            <Icon
-              class="sr-only md:not-sr-only"
-              name="mdi:format-list-bulleted"
-            />
-            <span>Feed</span>
-          </Button>
-        </NuxtLink>
-
         <NuxtLink :to="{ name: 'search' }">
           <Button variant="ghost">
             <Icon name="mdi:magnify" />
