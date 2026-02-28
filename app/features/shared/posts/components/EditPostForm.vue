@@ -96,6 +96,7 @@ const onSubmit = handleSubmit(async values => {
       updates: {
         content: values.content as unknown as Tables<'posts'>['content'],
         cover_url: values.coverUrl ?? null,
+        slug: slugify(values.title, { lower: true, strict: true }),
         status: submitStatus.value,
         title: values.title,
       },
