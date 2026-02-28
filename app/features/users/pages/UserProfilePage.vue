@@ -451,8 +451,12 @@ const filteredFollowing = computed(() => {
         </TabsContent>
 
         <!-- Followers tab -->
-        <TabsContent value="followers" class="mt-4 flex flex-col gap-4">
-          <Input v-model="followerSearch" placeholder="Search followers..." />
+        <TabsContent value="followers" class="mt-4 flex flex-col">
+          <Input
+            v-model="followerSearch"
+            placeholder="Search followers..."
+            class="mb-4"
+          />
 
           <div v-if="isFollowersPending" class="text-muted-foreground text-sm">
             Loading...
@@ -482,8 +486,12 @@ const filteredFollowing = computed(() => {
         </TabsContent>
 
         <!-- Following tab -->
-        <TabsContent value="following" class="mt-4 flex flex-col gap-4">
-          <Input v-model="followingSearch" placeholder="Search following..." />
+        <TabsContent value="following" class="mt-4 flex flex-col">
+          <Input
+            v-model="followingSearch"
+            placeholder="Search following..."
+            class="mb-4"
+          />
 
           <div v-if="isFollowingPending" class="text-muted-foreground text-sm">
             Loading...
