@@ -8,13 +8,6 @@ import { toast } from 'vue-sonner';
 
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
   Field,
   FieldDescription,
   FieldError,
@@ -126,7 +119,9 @@ const onSubmit = handleSubmit(async values => {
         : 'Post saved as draft'
     );
     resetForm();
-    await navigateTo(`/posts/${post.id}`);
+    await navigateTo({
+      name: 'profile',
+    });
   } catch (error) {
     toast.error(
       error instanceof Error ? error.message : 'Failed to create post'
@@ -136,124 +131,112 @@ const onSubmit = handleSubmit(async values => {
 </script>
 
 <template>
-  <div :class="cn('flex flex-col gap-6', props.class)">
-    <Card>
-      <CardHeader>
-        <CardTitle>Create a post</CardTitle>
-        <CardDescription>
-          Get ready to share your thoughts! Creating an article is easy. Just
-          fill out the form below, and let your ideas shine. Start now and be
-          part of our community!
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form id="create-post" method="POST" @submit="onSubmit">
-          <FieldGroup>
-            <VeeField v-slot="{ field, errors }" name="title">
-              <Field :data-invalid="!!errors.length">
-                <FieldLabel for="title">Title</FieldLabel>
-                <FieldDescription>
-                  Craft a captivating headline that summarizes the essence of
-                  your article and sparks curiosity.
-                </FieldDescription>
-                <Input
-                  id="title"
-                  v-bind="field"
-                  type="text"
-                  placeholder="Your post title"
-                  :aria-invalid="!!errors.length"
-                />
-                <FieldError v-if="errors.length" :errors="errors" />
-              </Field>
-            </VeeField>
+  <div :class="cn('flex flex-col gap-6 pb-2', props.class)">
+    <h3 class="leading-none font-semibold">Create a post</h3>
+    <p class="text-muted-foreground text-sm">
+      Get ready to share your thoughts! Creating an article is easy. Just fill
+      out the form below, and let your ideas shine. Start now and be part of our
+      community!
+    </p>
 
-            <VeeField v-slot="{ field, errors }" name="content">
-              <Field :data-invalid="!!errors.length">
-                <FieldLabel for="content">Content</FieldLabel>
-                <FieldDescription>
-                  Pour your ideas, insights, and expertise into engaging and
-                  informative prose to captivate your audience.
-                </FieldDescription>
-                <EditorJs
-                  :content="field.value ?? { blocks: [] }"
-                  class="min-h-24 w-full rounded-md border"
-                  @update:content="field.onChange"
-                />
-                <FieldError v-if="errors.length" :errors="errors" />
-              </Field>
-            </VeeField>
+    <form id="create-post" method="POST" @submit="onSubmit">
+      <FieldGroup>
+        <VeeField v-slot="{ field, errors }" name="title">
+          <Field :data-invalid="!!errors.length">
+            <FieldLabel for="title">Title</FieldLabel>
+            <FieldDescription>
+              Craft a captivating headline that summarizes the essence of your
+              article and sparks curiosity.
+            </FieldDescription>
+            <Input
+              id="title"
+              v-bind="field"
+              type="text"
+              placeholder="Your post title"
+              :aria-invalid="!!errors.length"
+            />
+            <FieldError v-if="errors.length" :errors="errors" />
+          </Field>
+        </VeeField>
 
-            <Field>
-              <FieldLabel>Cover image (optional)</FieldLabel>
-              <FieldDescription>
-                Choose an eye-catching image to grab your audience's attention.
-              </FieldDescription>
-              <input
-                type="file"
-                accept="image/*"
-                class="border-input file:border-primary file:bg-primary file:text-primary-foreground mt-1 block w-full rounded-md border bg-transparent text-sm file:mr-4 file:rounded-md file:border-0 file:px-4 file:py-2 file:text-sm file:font-medium"
-                :disabled="coverUploading"
-                @change="handleCoverChange"
-              />
-              <p
-                v-if="coverUploading"
-                class="text-muted-foreground mt-1 text-sm"
-              >
-                Uploading...
-              </p>
-            </Field>
+        <VeeField v-slot="{ field, errors }" name="content">
+          <Field :data-invalid="!!errors.length">
+            <FieldLabel for="content">Content</FieldLabel>
+            <FieldDescription>
+              Pour your ideas, insights, and expertise into engaging and
+              informative prose to captivate your audience.
+            </FieldDescription>
+            <EditorJs
+              :content="field.value ?? { blocks: [] }"
+              class="min-h-24 w-full rounded-md border"
+              @update:content="field.onChange"
+            />
+            <FieldError v-if="errors.length" :errors="errors" />
+          </Field>
+        </VeeField>
 
-            <VeeField v-slot="{ field, errors }" name="newTags">
-              <Field :data-invalid="!!errors.length">
-                <FieldLabel for="newTags">Tags (optional)</FieldLabel>
-                <FieldDescription>
-                  Add descriptive keywords to categorize your article and
-                  improve discoverability.
-                </FieldDescription>
-                <TagsInput
-                  :model-value="field.value"
-                  :aria-invalid="!!errors.length"
-                  class="min-h-10"
-                  @update:model-value="field.onChange"
-                >
-                  <TagsInputItem
-                    v-for="tag in field.value"
-                    :key="tag"
-                    :value="tag"
-                  >
-                    <TagsInputItemText />
-                    <TagsInputItemDelete />
-                  </TagsInputItem>
-                  <TagsInputInput placeholder="Add a tag and press Enter" />
-                </TagsInput>
-                <FieldError v-if="errors.length" :errors="errors" />
-              </Field>
-            </VeeField>
+        <Field>
+          <FieldLabel>Cover image (optional)</FieldLabel>
+          <FieldDescription>
+            Choose an eye-catching image to grab your audience's attention.
+          </FieldDescription>
+          <input
+            type="file"
+            accept="image/*"
+            class="border-input file:border-primary file:bg-primary file:text-primary-foreground mt-1 block w-full rounded-md border bg-transparent text-sm file:mr-4 file:rounded-md file:border-0 file:px-4 file:py-2 file:text-sm file:font-medium"
+            :disabled="coverUploading"
+            @change="handleCoverChange"
+          />
+          <p v-if="coverUploading" class="text-muted-foreground mt-1 text-sm">
+            Uploading...
+          </p>
+        </Field>
 
-            <div class="flex flex-nowrap gap-2">
-              <Button
-                type="submit"
-                :disabled="isSubmitting"
-                @click="submitStatus = 'published'"
-              >
-                <Icon name="mdi:publish" size="1rem" />
+        <VeeField v-slot="{ field, errors }" name="newTags">
+          <Field :data-invalid="!!errors.length">
+            <FieldLabel for="newTags">Tags (optional)</FieldLabel>
+            <FieldDescription>
+              Add descriptive keywords to categorize your article and improve
+              discoverability.
+            </FieldDescription>
+            <TagsInput
+              :model-value="field.value"
+              :aria-invalid="!!errors.length"
+              class="min-h-10"
+              @update:model-value="field.onChange"
+            >
+              <TagsInputItem v-for="tag in field.value" :key="tag" :value="tag">
+                <TagsInputItemText />
+                <TagsInputItemDelete />
+              </TagsInputItem>
+              <TagsInputInput placeholder="Add a tag and press Enter" />
+            </TagsInput>
+            <FieldError v-if="errors.length" :errors="errors" />
+          </Field>
+        </VeeField>
 
-                {{ isSubmitting ? 'Creating...' : 'Publish' }}
-              </Button>
-              <Button
-                type="submit"
-                variant="outline"
-                :disabled="isSubmitting"
-                @click="submitStatus = 'draft'"
-              >
-                <Icon name="mdi:content-save-outline" size="1rem" />
+        <div class="flex flex-nowrap gap-2">
+          <Button
+            type="submit"
+            :disabled="isSubmitting"
+            @click="submitStatus = 'published'"
+          >
+            <Icon name="mdi:publish" size="1rem" />
 
-                {{ isSubmitting ? 'Saving...' : 'Save as draft' }}
-              </Button>
-            </div>
-          </FieldGroup>
-        </form>
-      </CardContent>
-    </Card>
+            {{ isSubmitting ? 'Creating...' : 'Publish' }}
+          </Button>
+          <Button
+            type="submit"
+            variant="outline"
+            :disabled="isSubmitting"
+            @click="submitStatus = 'draft'"
+          >
+            <Icon name="mdi:content-save-outline" size="1rem" />
+
+            {{ isSubmitting ? 'Saving...' : 'Save as draft' }}
+          </Button>
+        </div>
+      </FieldGroup>
+    </form>
   </div>
 </template>
