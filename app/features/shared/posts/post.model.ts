@@ -18,6 +18,7 @@ export interface PostFilters {
   search?: string;
   sortOrder?: SortOrder;
   status?: PostStatus;
+  tagIds?: string[];
 }
 
 export const PostStatuses = ['draft', 'published'] as const;

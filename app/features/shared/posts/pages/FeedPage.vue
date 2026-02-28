@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import { watchDebounced } from '@vueuse/core';
 import { SortOrder } from '#imports';
 
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -13,6 +15,7 @@ import {
 
 import type { PostFilters } from '../post.model';
 
+import FeedTagFilter from '../components/FeedTagFilter.vue';
 import PostCard from '../components/PostCard.vue';
 import { useGetPosts } from '../composables/useGetPosts';
 
@@ -51,9 +54,25 @@ const sortBy = computed<PostFilters['orderBy']>(
 );
 const sortOrder = computed<SortOrder>(() => sortOrderMap[sort.value].sortOrder);
 
+const searchQuery = useRouteQuery<string>('search', '');
+const searchInput = ref(searchQuery.value);
+watchDebounced(searchInput, val => (searchQuery.value = val), {
+  debounce: 400,
+});
+
+const tagsRaw = useRouteQuery<string>('tags', '');
+const selectedTagIds = computed<string[]>({
+  get: () => (tagsRaw.value ? tagsRaw.value.split(',').filter(Boolean) : []),
+  set: (ids: string[]) => {
+    tagsRaw.value = ids.join(',');
+  },
+});
+
 const { data } = useGetPosts(() => ({
   orderBy: sortBy.value,
+  search: searchQuery.value || undefined,
   sortOrder: sortOrder.value,
+  tagIds: selectedTagIds.value.length ? selectedTagIds.value : undefined,
 }));
 
 const posts = computed(() => data.value?.data ?? []);
@@ -63,25 +82,42 @@ const posts = computed(() => data.value?.data ?? []);
   <div class="mx-auto mt-15 min-h-svh w-full max-w-175 px-2">
     <h1 class="mb-4 text-2xl font-bold">Feed</h1>
 
-    <Select v-model="sort">
-      <SelectTrigger class="w-[180px]">
-        <SelectValue placeholder="Sort" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Sort by</SelectLabel>
-          <SelectItem
-            v-for="option in SortOptions"
-            :key="option"
-            :value="option"
-          >
-            {{ SortLabel[option] }}
-          </SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <div class="flex flex-wrap items-center gap-2">
+      <div class="relative min-w-48 flex-1">
+        <Icon
+          name="mdi:magnify"
+          size="1rem"
+          class="text-muted-foreground absolute top-1/2 left-2.5 -translate-y-1/2"
+        />
+        <Input
+          v-model="searchInput"
+          placeholder="Search posts..."
+          class="pl-8"
+        />
+      </div>
 
-    <Separator class="my-2" />
+      <FeedTagFilter v-model="selectedTagIds" />
+
+      <Select v-model="sort">
+        <SelectTrigger class="w-[140px]">
+          <SelectValue placeholder="Sort" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Sort by</SelectLabel>
+            <SelectItem
+              v-for="option in SortOptions"
+              :key="option"
+              :value="option"
+            >
+              {{ SortLabel[option] }}
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+
+    <Separator class="my-4" />
 
     <ul class="">
       <li

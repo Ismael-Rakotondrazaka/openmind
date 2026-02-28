@@ -30,6 +30,23 @@ export const getPosts = async (
     query = query.ilike('title', `%${filters.search}%`);
   }
 
+  if (filters.tagIds && filters.tagIds.length > 0) {
+    const { data: postTagData, error: ptError } = await postSBClient
+      .from('post_tags')
+      .select('post_id')
+      .in('tag_id', filters.tagIds);
+
+    if (ptError) throw ptError;
+
+    const postIds = [...new Set(postTagData?.map(pt => pt.post_id) ?? [])];
+
+    if (postIds.length === 0) {
+      return { count: 0, data: [] };
+    }
+
+    query = query.in('id', postIds);
+  }
+
   const page = filters.page ?? PostConfig.PAGE_DEFAULT;
 
   const limit = filters.limit ?? PostConfig.PAGE_SIZE_DEFAULT;
