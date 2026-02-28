@@ -1,13 +1,9 @@
-<template>
-  <div>
-    
-  </div>
-</template>
-
 <script lang="ts" setup>
-
+import EditPostPage from '~/features/shared/posts/pages/EditPostPage.vue';
 </script>
 
-<style>
+<template>
+  <EditPostPage />
+</template>
 
-</style>
+<style></style>
