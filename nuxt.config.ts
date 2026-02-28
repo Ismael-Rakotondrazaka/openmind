@@ -127,6 +127,8 @@ export default defineNuxtConfig({
         '/password/reset',
         '/password/update',
         '/raw/**',
+        '/u/*',
+        '/u/*/p/*/*',
       ],
       include: undefined,
       login: '/login',
