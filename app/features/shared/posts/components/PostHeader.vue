@@ -147,11 +147,9 @@ const goBack = () => {
           <NuxtLink
             v-if="isAuthor"
             :to="{
-              name: 'u-userKey-p-postId-postSlug-edit',
+              name: 'posts-postId-edit',
               params: {
-                userKey: post.author.username || post.author.id,
                 postId: post.id,
-                postSlug: post.slug,
               },
             }"
             as-child
