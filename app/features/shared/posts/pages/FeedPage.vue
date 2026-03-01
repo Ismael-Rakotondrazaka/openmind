@@ -13,9 +13,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import Pagination from '../../paginations/components/Pagination.vue';
 import FeedTagFilter from '../components/FeedTagFilter.vue';
 import PostCard from '../components/PostCard.vue';
 import { useGetPosts } from '../composables/useGetPosts';
+import { PostConfig } from '../post.config';
 import { type PostFilters, PostStatus } from '../post.model';
 
 const SortOptions = ['recent', 'top'] as const;
@@ -59,6 +61,13 @@ watchDebounced(searchInput, val => (searchQuery.value = val), {
   debounce: 400,
 });
 
+const page = useRouteQuery<number>('page', PostConfig.PAGE_DEFAULT, {
+  transform: Number,
+});
+const limit = useRouteQuery<number>('limit', PostConfig.PAGE_SIZE_DEFAULT, {
+  transform: Number,
+});
+
 const tagsRaw = useRouteQuery<string>('tags', '');
 const selectedTagIds = computed<string[]>({
   get: () => (tagsRaw.value ? tagsRaw.value.split(',').filter(Boolean) : []),
@@ -67,8 +76,29 @@ const selectedTagIds = computed<string[]>({
   },
 });
 
+watch([sort, searchQuery, tagsRaw], () => {
+  page.value = PostConfig.PAGE_DEFAULT;
+});
+
+watch(page, value => {
+  if (!Number.isFinite(value) || value < PostConfig.PAGE_DEFAULT) {
+    page.value = PostConfig.PAGE_DEFAULT;
+  }
+});
+
+watch(limit, value => {
+  if (!Number.isFinite(value) || value <= 0) {
+    limit.value = PostConfig.PAGE_SIZE_DEFAULT;
+    return;
+  }
+
+  page.value = PostConfig.PAGE_DEFAULT;
+});
+
 const { data } = useGetPosts(() => ({
+  limit: limit.value,
   orderBy: sortBy.value,
+  page: page.value,
   search: searchQuery.value || undefined,
   sortOrder: sortOrder.value,
   status: PostStatus.published,
@@ -76,6 +106,16 @@ const { data } = useGetPosts(() => ({
 }));
 
 const posts = computed(() => data.value?.data ?? []);
+const totalCount = computed(() => data.value?.count ?? 0);
+const totalPages = computed(() =>
+  Math.max(1, Math.ceil(totalCount.value / limit.value))
+);
+
+watch(totalPages, pages => {
+  if (page.value > pages) {
+    page.value = pages;
+  }
+});
 </script>
 
 <template>
@@ -128,6 +168,16 @@ const posts = computed(() => data.value?.data ?? []);
         <PostCard :post="post" />
       </li>
     </ul>
+
+    <Pagination
+      class="mt-6"
+      :limit="limit"
+      :page="page"
+      :total-count="totalCount"
+      :total-pages="totalPages"
+      @page-change="page = $event"
+      @page-size-change="limit = $event"
+    />
   </div>
 </template>
 
