@@ -13,11 +13,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import type { PostFilters } from '../post.model';
-
 import FeedTagFilter from '../components/FeedTagFilter.vue';
 import PostCard from '../components/PostCard.vue';
 import { useGetPosts } from '../composables/useGetPosts';
+import { type PostFilters, PostStatus } from '../post.model';
 
 const SortOptions = ['recent', 'top'] as const;
 
@@ -72,6 +71,7 @@ const { data } = useGetPosts(() => ({
   orderBy: sortBy.value,
   search: searchQuery.value || undefined,
   sortOrder: sortOrder.value,
+  status: PostStatus.published,
   tagIds: selectedTagIds.value.length ? selectedTagIds.value : undefined,
 }));
 
