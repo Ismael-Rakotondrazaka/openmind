@@ -1,5 +1,11 @@
 <script lang="ts" setup>
 import CreatePostPage from '~/features/shared/posts/pages/CreatePostPage.vue';
+
+useSeoMeta({
+  ogImage: '/images/og-openmind.png',
+  twitterCard: 'summary_large_image',
+  twitterImage: '/images/og-openmind.png',
+});
 </script>
 
 <template>

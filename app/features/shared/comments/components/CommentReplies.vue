@@ -69,7 +69,7 @@ const replies = computed(() =>
         :key="reply.id"
         :comment="reply"
         :show-reply-button="true"
-        @reply="emit('reply')"
+        @reply="() => emit('reply')"
       />
     </template>
 

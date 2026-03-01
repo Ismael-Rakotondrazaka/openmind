@@ -58,7 +58,7 @@ const handleReply = (commentId: string) => {
           <CommentListItem
             :comment="comment"
             :show-reply-button="true"
-            @reply="handleReply(comment.id)"
+            @reply="() => handleReply(comment.id)"
           />
           <CommentReplies
             :parent-id="comment.id"

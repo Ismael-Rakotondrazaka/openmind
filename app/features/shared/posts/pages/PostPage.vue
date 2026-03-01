@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { Post } from '../post.model';
+
 import PostComments from '../../comments/components/PostComments.vue';
 import ReactionsDrawer from '../../reactions/components/ReactionsDrawer.vue';
 import { ReactionTypes } from '../../reactions/reaction.model';
@@ -6,7 +8,6 @@ import PostContent from '../components/PostContent.vue';
 import PostHeader from '../components/PostHeader.vue';
 import PostInteraction from '../components/PostInteraction.vue';
 import PostIntro from '../components/PostIntro.vue';
-import { useGetPost } from '../composables/useGetPost';
 
 const VALID_REACTION_TABS = ['all', ...ReactionTypes] as const;
 type ReactionTab = (typeof VALID_REACTION_TABS)[number];
@@ -32,7 +33,7 @@ const reactionsTab = useRouteQuery<string, ReactionTab>('reactionsTab', 'all', {
   },
 });
 
-const route = useRoute('u-userKey-p-postId-postSlug');
+defineProps<{ post: Post }>();
 
 const showReactionsDrawer = () => {
   reactionsDrawerOpen.value = true;
@@ -41,27 +42,25 @@ const showReactionsDrawer = () => {
 const hideReactionsDrawer = () => {
   reactionsDrawerOpen.value = false;
 };
-
-const { data } = useGetPost(() => route.params.postId);
 </script>
 
 <template>
-  <div v-if="data" class="mx-auto mt-15 min-h-svh w-full max-w-175 px-2">
-    <PostHeader :post="data" />
-    <PostIntro :post="data" />
+  <div class="mx-auto mt-15 min-h-svh w-full max-w-175 px-2">
+    <PostHeader :post="post" />
+    <PostIntro :post="post" />
     <PostInteraction
-      :post="data"
+      :post="post"
       :reactions-drawer-open="reactionsDrawerOpen"
       @reactions-drawer:open="showReactionsDrawer"
       @reactions-drawer:close="hideReactionsDrawer"
     />
-    <PostContent :content="data.content" />
-    <PostComments :post="data" />
+    <PostContent :content="post.content" />
+    <PostComments :post="post" />
     <ReactionsDrawer
       v-model:open="reactionsDrawerOpen"
       v-model:selected-reaction-tab="reactionsTab"
-      :post-id="data.id"
-      :reactions-details="data.reactions_details"
+      :post-id="post.id"
+      :reactions-details="post.reactions_details"
     />
   </div>
 </template>

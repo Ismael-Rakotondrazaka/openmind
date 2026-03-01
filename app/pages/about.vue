@@ -33,4 +33,10 @@
 
 <script lang="ts" setup>
 const config = useRuntimeConfig();
+
+useSeoMeta({
+  ogImage: '/images/og-openmind.png',
+  twitterCard: 'summary_large_image',
+  twitterImage: '/images/og-openmind.png',
+});
 </script>
