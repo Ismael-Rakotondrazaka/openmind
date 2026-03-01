@@ -45,7 +45,7 @@ export const useUserImageUrl = <
   });
 };
 
-const formatFallbackUrl = (
+export const formatFallbackUrl = (
   first_name?: null | string,
   last_name?: null | string,
   options: FormatFallbackUrlOptions = {}
