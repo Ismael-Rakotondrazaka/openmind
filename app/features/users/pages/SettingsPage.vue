@@ -16,10 +16,6 @@ const { data: user, isLoading: isUserLoading } = useGetUser(
   <div class="mx-auto mt-15 min-h-svh w-full max-w-175 px-2">
     <h1 class="mb-6 text-2xl font-bold">Settings</h1>
 
-    <pre>{{ JSON.stringify(claims, null, 2) }}</pre>
-    <br />
-    {{ user }}
-
     <div v-if="isUserLoading" class="mb-5 flex justify-center py-10">
       <Spinner />
     </div>
