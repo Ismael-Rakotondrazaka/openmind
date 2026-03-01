@@ -16,6 +16,7 @@ import {
 import Pagination from '../../paginations/components/Pagination.vue';
 import FeedTagFilter from '../components/FeedTagFilter.vue';
 import PostCard from '../components/PostCard.vue';
+import PostCardSkeleton from '../components/PostCardSkeleton.vue';
 import { useGetPosts } from '../composables/useGetPosts';
 import { PostConfig } from '../post.config';
 import { type PostFilters, PostStatus } from '../post.model';
@@ -95,7 +96,7 @@ watch(limit, value => {
   page.value = PostConfig.PAGE_DEFAULT;
 });
 
-const { data } = useGetPosts(() => ({
+const { data, isPending } = useGetPosts(() => ({
   limit: limit.value,
   orderBy: sortBy.value,
   page: page.value,
@@ -160,13 +161,24 @@ watch(totalPages, pages => {
     <Separator class="my-4" />
 
     <ul class="">
-      <li
-        v-for="post in posts"
-        :key="post.id"
-        class="border-b pt-4 pb-4 first:pt-0 last:border-b-0"
-      >
-        <PostCard :post="post" />
-      </li>
+      <template v-if="isPending">
+        <li
+          v-for="n in limit"
+          :key="n"
+          class="border-b pt-4 pb-4 first:pt-0 last:border-b-0"
+        >
+          <PostCardSkeleton />
+        </li>
+      </template>
+      <template v-else>
+        <li
+          v-for="post in posts"
+          :key="post.id"
+          class="border-b pt-4 pb-4 first:pt-0 last:border-b-0"
+        >
+          <PostCard :post="post" />
+        </li>
+      </template>
     </ul>
 
     <Pagination
