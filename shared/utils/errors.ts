@@ -1,6 +1,6 @@
 import type { AuthError } from '@supabase/auth-js';
 
-const authErrorCodeMessageMap: Record<string, string> = {
+export const authErrorCodeMessageMap: Record<string, string> = {
   anonymous_provider_disabled: 'Anonymous sign-in is disabled.',
   bad_code_verifier: 'The code verifier is invalid. Please try again.',
   bad_json: 'The request format is invalid.',

@@ -28,3 +28,9 @@ export const PasswordUpdateBodySchema = z.object({
 });
 
 export type PasswordUpdateBody = z.infer<typeof PasswordUpdateBodySchema>;
+
+export const ChangeEmailBodySchema = z.object({
+  email: z.string().email(),
+});
+
+export type ChangeEmailBody = z.infer<typeof ChangeEmailBodySchema>;

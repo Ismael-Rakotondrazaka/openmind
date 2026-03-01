@@ -21,10 +21,5 @@ export interface UserFilters {
 }
 
 export type UserInsert = TablesInsert<'users'>;
-export interface UserMetadata {
-  first_name?: null | string;
-  image_url?: null | string;
-  last_name?: null | string;
-}
 
 export type UserUpdate = TablesUpdate<'users'>;

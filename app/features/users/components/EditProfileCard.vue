@@ -29,6 +29,7 @@ import {
   TagsInputItemText,
 } from '@/components/ui/tags-input';
 import { useIsUsernameExists } from '@/features/auth/composables/useIsUsernameExists';
+import { useUpdateAuthUserMetadata } from '@/features/auth/composables/useUpdateAuthUserMetadata';
 import { useCreateTag } from '@/features/shared/tags/composables/useCreateTag';
 import { useFindTagByValue } from '@/features/shared/tags/composables/useFindTagByValue';
 import { useCreateUserTag } from '@/features/shared/user-tags/composables/useCreateUserTag';
@@ -37,9 +38,7 @@ import { useGetUserTagsWithDetails } from '@/features/shared/user-tags/composabl
 import { useUpdateUser } from '@/features/shared/users/composables/useUpdateUser';
 import { useUploadUserAvatar } from '@/features/shared/users/composables/useUploadUserAvatar';
 import { getUserFullname } from '@/features/shared/users/composables/useUserFullname';
-
-import { useUpdateAuthUserMetadata } from '../../shared/users/composables/useUpdateAuthUserMetadata';
-import { formatFallbackUrl } from '../composables/useUserImageUrl';
+import { formatFallbackUrl } from '@/features/users/composables/useUserImageUrl';
 
 interface Props {
   user: User;
@@ -96,7 +95,7 @@ const { handleSubmit, isSubmitting, resetForm, setFieldError } = useForm({
   validationSchema: toTypedSchema(SettingsSchema),
 });
 
-const stopInitWatch = watchEffect(() => {
+watchEffect(() => {
   if (props.user && userTagsData.value !== undefined) {
     resetForm({
       values: {
@@ -106,7 +105,6 @@ const stopInitWatch = watchEffect(() => {
         username: props.user.username ?? '',
       },
     });
-    stopInitWatch();
   }
 });
 

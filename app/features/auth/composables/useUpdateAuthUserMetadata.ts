@@ -1,6 +1,6 @@
-import type { UserMetadata } from '../user.model';
+import type { UserMetadata } from '../auth.model';
 
-import { updateAuthUserMetadata } from '../user.service';
+import { updateAuthUserMetadata } from '../auth.service';
 
 export const useUpdateAuthUserMetadata = () => {
   return useMutation({
