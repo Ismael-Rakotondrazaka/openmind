@@ -94,6 +94,10 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@stefanobartoletti/nuxt-social-share',
   ],
+  robots: {
+    allow: '*',
+    disallow: ['/posts/*/edit', '/profile', '/profile/edit'],
+  },
   runtimeConfig: {
     public: {
       appUrl: 'http://localhost:3000',
@@ -115,6 +119,19 @@ export default defineNuxtConfig({
      */
     prefix: '',
   },
+  sitemap: {
+    sitemaps: {
+      pages: {
+        includeAppSources: true,
+      },
+      posts: {
+        sources: ['/api/__sitemap__/posts'],
+      },
+      users: {
+        sources: ['/api/__sitemap__/users'],
+      },
+    },
+  },
   socialShare: {
     baseUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
@@ -126,7 +143,6 @@ export default defineNuxtConfig({
         '/register',
         '/password/reset',
         '/password/update',
-        '/raw/**',
         '/u/*',
         '/u/*/p/*/*',
         '/about',
