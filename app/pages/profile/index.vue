@@ -3,7 +3,9 @@ import AuthUserProfilePage from '~/features/users/pages/AuthUserProfilePage.vue'
 </script>
 
 <template>
-  <AuthUserProfilePage />
+  <div class="min-h-svh">
+    <AuthUserProfilePage />
+  </div>
 </template>
 
 <style></style>

@@ -5,5 +5,7 @@ import LoginPage from '@/features/auth/pages/LoginPage.vue';
 </script>
 
 <template>
-  <LoginPage />
+  <div class="min-h-svh">
+    <LoginPage />
+  </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-w-4xl space-y-12 py-10">
+  <div class="container min-h-svh max-w-4xl space-y-12 py-10">
     <div>
       <h1 class="mb-2 text-2xl font-semibold">Pagination (raw test)</h1>
       <p class="text-muted-foreground mb-6 text-sm">

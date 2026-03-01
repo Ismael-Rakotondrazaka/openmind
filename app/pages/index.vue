@@ -3,7 +3,9 @@ import FeedPage from '~/features/shared/posts/pages/FeedPage.vue';
 </script>
 
 <template>
-  <FeedPage />
+  <div class="min-h-svh">
+    <FeedPage />
+  </div>
 </template>
 
 <style></style>

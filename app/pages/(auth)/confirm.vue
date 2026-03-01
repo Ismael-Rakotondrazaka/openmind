@@ -5,5 +5,7 @@ import ConfirmPage from '@/features/auth/pages/ConfirmPage.vue';
 </script>
 
 <template>
-  <ConfirmPage />
+  <div class="min-h-svh">
+    <ConfirmPage />
+  </div>
 </template>

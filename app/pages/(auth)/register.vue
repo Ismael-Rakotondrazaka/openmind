@@ -6,5 +6,7 @@ definePageMeta({
 </script>
 
 <template>
-  <RegisterPage />
+  <div class="min-h-svh">
+    <RegisterPage />
+  </div>
 </template>

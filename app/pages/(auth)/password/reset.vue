@@ -5,5 +5,7 @@ import PasswordResetPage from '@/features/auth/pages/PasswordResetPage.vue';
 </script>
 
 <template>
-  <PasswordResetPage />
+  <div class="min-h-svh">
+    <PasswordResetPage />
+  </div>
 </template>

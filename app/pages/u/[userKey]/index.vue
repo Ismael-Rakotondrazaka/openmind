@@ -3,7 +3,9 @@ import UserProfilePage from '~/features/users/pages/UserProfilePage.vue';
 </script>
 
 <template>
-  <UserProfilePage />
+  <div class="min-h-svh">
+    <UserProfilePage />
+  </div>
 </template>
 
 <style></style>

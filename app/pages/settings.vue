@@ -11,5 +11,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <SettingsPage />
+  <div class="min-h-svh">
+    <SettingsPage />
+  </div>
 </template>

@@ -3,7 +3,9 @@ import EditPostPage from '~/features/shared/posts/pages/EditPostPage.vue';
 </script>
 
 <template>
-  <EditPostPage />
+  <div class="min-h-svh">
+    <EditPostPage />
+  </div>
 </template>
 
 <style></style>

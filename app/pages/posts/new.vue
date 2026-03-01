@@ -3,7 +3,9 @@ import CreatePostPage from '~/features/shared/posts/pages/CreatePostPage.vue';
 </script>
 
 <template>
-  <CreatePostPage />
+  <div class="min-h-svh">
+    <CreatePostPage />
+  </div>
 </template>
 
 <style scoped></style>

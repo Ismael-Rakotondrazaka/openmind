@@ -1,5 +1,5 @@
 <template>
-  <main style="padding: 16px; font-family: sans-serif">
+  <main class="min-h-svh" style="padding: 16px; font-family: sans-serif">
     <h1>useGetUsernames Debug Page</h1>
 
     <div style="display: flex; gap: 8px; margin: 12px 0; align-items: end">

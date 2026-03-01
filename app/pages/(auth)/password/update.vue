@@ -5,5 +5,7 @@ import PasswordUpdatePage from '@/features/auth/pages/PasswordUpdatePage.vue';
 </script>
 
 <template>
-  <PasswordUpdatePage />
+  <div class="min-h-svh">
+    <PasswordUpdatePage />
+  </div>
 </template>
