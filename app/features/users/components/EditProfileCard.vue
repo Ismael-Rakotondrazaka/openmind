@@ -38,6 +38,7 @@ import { useUpdateUser } from '@/features/shared/users/composables/useUpdateUser
 import { useUploadUserAvatar } from '@/features/shared/users/composables/useUploadUserAvatar';
 import { getUserFullname } from '@/features/shared/users/composables/useUserFullname';
 
+import { useUpdateAuthUserMetadata } from '../../shared/users/composables/useUpdateAuthUserMetadata';
 import { formatFallbackUrl } from '../composables/useUserImageUrl';
 
 interface Props {
@@ -123,6 +124,8 @@ const createUserTagMutation = useCreateUserTag();
 const deleteUserTagMutation = useDeleteUserTag();
 const findTagByValue = useFindTagByValue();
 
+const updateAuthUserMetadataMutation = useUpdateAuthUserMetadata();
+
 const onSubmit = handleSubmit(async values => {
   if (!props.user) return;
 
@@ -154,6 +157,12 @@ const onSubmit = handleSubmit(async values => {
         last_name: values.lastName,
         username: values.username,
       },
+    });
+
+    await updateAuthUserMetadataMutation.mutateAsync({
+      first_name: values.firstName,
+      image_url: imageUrl,
+      last_name: values.lastName,
     });
 
     const originalTagMap = new Map(
