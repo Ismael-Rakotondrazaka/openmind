@@ -19,6 +19,7 @@ const props = withDefaults(
     } & PaginationNextProps
   >(),
   {
+    class: undefined,
     size: 'default',
   }
 );

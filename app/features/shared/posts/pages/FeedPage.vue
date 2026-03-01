@@ -99,7 +99,7 @@ const posts = computed(() => data.value?.data ?? []);
       <FeedTagFilter v-model="selectedTagIds" />
 
       <Select v-model="sort">
-        <SelectTrigger class="w-[140px]">
+        <SelectTrigger class="w-35">
           <SelectValue placeholder="Sort" />
         </SelectTrigger>
         <SelectContent>

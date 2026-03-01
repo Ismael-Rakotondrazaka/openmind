@@ -19,6 +19,7 @@ const props = withDefaults(
     } & PaginationListItemProps
   >(),
   {
+    class: undefined,
     size: 'icon',
   }
 );

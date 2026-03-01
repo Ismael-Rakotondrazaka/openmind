@@ -14,6 +14,7 @@ defineOptions({
 const props = withDefaults(
   defineProps<{ class?: HTMLAttributes['class'] } & HoverCardContentProps>(),
   {
+    class: undefined,
     sideOffset: 4,
   }
 );

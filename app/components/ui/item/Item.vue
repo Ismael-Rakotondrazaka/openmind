@@ -20,6 +20,9 @@ const props = withDefaults(
   >(),
   {
     as: 'div',
+    class: undefined,
+    size: 'default',
+    variant: 'default',
   }
 );
 </script>
