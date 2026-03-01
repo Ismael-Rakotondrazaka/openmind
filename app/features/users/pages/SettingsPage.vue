@@ -3,6 +3,7 @@ import { useGetUser } from '@/features/shared/users/composables/useGetUser';
 import { useGetAuthClaims } from '~/features/auth/composables/useGetAuthClaims';
 
 import EditEmailCard from '../components/EditEmailCard.vue';
+import EditPasswordCard from '../components/EditPasswordCard.vue';
 import EditProfileCard from '../components/EditProfileCard.vue';
 
 const authUser = useSupabaseUser();
@@ -23,5 +24,7 @@ const { data: user, isLoading: isUserLoading } = useGetUser(
     <EditProfileCard v-if="user" :user="user" class="mb-5" />
 
     <EditEmailCard v-if="claims?.email" :email="claims.email" class="mb-5" />
+
+    <EditPasswordCard class="mb-5" />
   </div>
 </template>

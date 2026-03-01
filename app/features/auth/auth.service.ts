@@ -32,6 +32,20 @@ export const updateAuthUserEmail = async (
   return data?.user?.id ?? null;
 };
 
+export const updateAuthUserPassword = async (
+  password: string
+): Promise<null | string> => {
+  const client = useSupabaseClient();
+
+  const { data, error } = await client.auth.updateUser({
+    password,
+  });
+
+  if (error) throw error;
+
+  return data?.user?.id ?? null;
+};
+
 export const getAuthClaims = async () => {
   const client = useSupabaseClient();
 
