@@ -38,6 +38,13 @@
         />
       </NuxtLink>
     </figure>
+
+    <p
+      v-if="contentPreview"
+      class="text-muted-foreground mb-3 line-clamp-5 text-sm"
+    >
+      {{ contentPreview }}
+    </p>
   </div>
 </template>
 
@@ -50,5 +57,16 @@ type Props = {
   post: Post;
 };
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const contentPreview = computed(() => {
+  const blocks = props.post.content?.blocks;
+  if (!blocks?.length) return '';
+  return blocks
+    .filter(
+      block => typeof (block.data as { text?: string })?.text === 'string'
+    )
+    .map(block => (block.data as { text: string }).text.replace(/<[^>]*>/g, ''))
+    .join(' ');
+});
 </script>
