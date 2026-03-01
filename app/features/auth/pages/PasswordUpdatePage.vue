@@ -1,18 +1,13 @@
-<script setup lang="ts">
-const supabase = useSupabaseClient();
-const newPassword = ref('');
-
-const updateUserPassword = async () => {
-  const { error } = await supabase.auth.updateUser({
-    password: newPassword.value,
-  });
-  if (error) console.log(error);
-};
-</script>
-
 <template>
-  <div>
-    <input v-model="newPassword" type="password" />
-    <button @click="updateUserPassword">Update Password</button>
+  <div class="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <div class="w-full max-w-sm">
+      <PasswordUpdateForm />
+    </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+import PasswordUpdateForm from '@/features/auth/components/PasswordUpdateForm.vue';
+</script>
+
+<style scoped></style>

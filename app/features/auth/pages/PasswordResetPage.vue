@@ -1,20 +1,13 @@
-<script setup lang="ts">
-const supabase = useSupabaseClient();
-const email = ref('');
-
-const config = useRuntimeConfig();
-
-const requestResetPassword = async () => {
-  const { error } = await supabase.auth.resetPasswordForEmail(email.value, {
-    redirectTo: `${config.public.appUrl}/password/update`,
-  });
-  if (error) console.log(error);
-};
-</script>
-
 <template>
-  <div>
-    <input v-model="email" type="email" />
-    <button @click="requestResetPassword">Reset Password</button>
+  <div class="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <div class="w-full max-w-sm">
+      <PasswordResetForm />
+    </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+import PasswordResetForm from '@/features/auth/components/PasswordResetForm.vue';
+</script>
+
+<style scoped></style>
