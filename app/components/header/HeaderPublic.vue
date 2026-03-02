@@ -8,14 +8,14 @@
           <Button variant="ghost">
             <NuxtImg
               src="/images/logo-150x150.png"
-              alt="OpenMind"
+              alt="Openmind"
               class="h-6 w-6"
               width="24"
               height="24"
             />
 
             <span class="sr-only text-base font-bold md:not-sr-only"
-              >OpenMind</span
+              >Openmind</span
             >
           </Button>
         </NuxtLink>

@@ -31,10 +31,10 @@ const profileDescription = computed(() => {
   if (!user?.username) return undefined;
 
   if (profileName.value) {
-    return `View ${profileName.value}'s profile (${user.username}) on OpenMind.`;
+    return `View ${profileName.value}'s profile (${user.username}) on Openmind.`;
   }
 
-  return `View ${user.username}'s profile on OpenMind.`;
+  return `View ${user.username}'s profile on Openmind.`;
 });
 
 useSeoMeta({
@@ -43,7 +43,7 @@ useSeoMeta({
   ogImage: () => profileImage.value,
   ogTitle: () => {
     const user = profile.value;
-    if (!user?.username) return 'OpenMind';
+    if (!user?.username) return 'Openmind';
 
     if (profileName.value) {
       return `${profileName.value} (${user.username})`;
@@ -54,20 +54,20 @@ useSeoMeta({
   ogType: 'profile',
   title: () => {
     const user = profile.value;
-    if (!user?.username) return 'OpenMind';
+    if (!user?.username) return 'Openmind';
 
     if (profileName.value) {
-      return `${profileName.value} (${user.username}) | OpenMind`;
+      return `${profileName.value} (${user.username}) | Openmind`;
     }
 
-    return `${user.username} | OpenMind`;
+    return `${user.username} | Openmind`;
   },
   twitterCard: 'summary',
   twitterDescription: () => profileDescription.value,
   twitterImage: () => profileImage.value,
   twitterTitle: () => {
     const user = profile.value;
-    if (!user?.username) return 'OpenMind';
+    if (!user?.username) return 'Openmind';
 
     if (profileName.value) {
       return `${profileName.value} (${user.username})`;

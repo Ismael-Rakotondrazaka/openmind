@@ -34,23 +34,23 @@ const metaDescription = computed(() => {
   if (!data.value?.title) return undefined;
 
   if (authorName.value) {
-    return `Read ${data.value.title} by ${authorName.value} on OpenMind.`;
+    return `Read ${data.value.title} by ${authorName.value} on Openmind.`;
   }
 
-  return `Read ${data.value.title} on OpenMind.`;
+  return `Read ${data.value.title} on Openmind.`;
 });
 
 useSeoMeta({
   description: () => metaDescription.value,
   ogDescription: () => metaDescription.value,
   ogImage: () => postImage.value,
-  ogTitle: () => data.value?.title ?? 'OpenMind',
+  ogTitle: () => data.value?.title ?? 'Openmind',
   ogType: 'article',
-  title: () => data.value?.title ?? 'OpenMind',
+  title: () => data.value?.title ?? 'Openmind',
   twitterCard: 'summary_large_image',
   twitterDescription: () => metaDescription.value,
   twitterImage: () => postImage.value,
-  twitterTitle: () => data.value?.title ?? 'OpenMind',
+  twitterTitle: () => data.value?.title ?? 'Openmind',
 });
 </script>
 

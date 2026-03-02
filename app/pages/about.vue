@@ -2,7 +2,7 @@
   <div class="flex min-h-svh items-center justify-center px-6 py-32">
     <Card class="w-full max-w-lg">
       <CardHeader>
-        <CardTitle class="text-2xl">OpenMind</CardTitle>
+        <CardTitle class="text-2xl">Openmind</CardTitle>
         <CardDescription
           >Unleash Your Thoughts, Explore Every Topic.</CardDescription
         >
