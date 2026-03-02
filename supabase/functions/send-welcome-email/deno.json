@@ -1,0 +1,24 @@
+{
+  "imports": {
+    "@eslint/js": "npm:@eslint/js@^9.39.2",
+    "@hono/hono": "jsr:@hono/hono@^4.11.4",
+    "@std/assert": "jsr:@std/assert@^1.0.16",
+    "@std/crypto": "jsr:@std/crypto@^1.0.5",
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.6",
+    "@std/testing": "jsr:@std/testing@^1.0.16",
+    "@supabase/functions-js": "jsr:@supabase/functions-js@^2.90.1",
+    "@supabase/supabase-js": "jsr:@supabase/supabase-js@^2.90.1",
+    "change-case": "npm:change-case@^5.4.4",
+    "date-fns": "npm:date-fns@^4.1.0",
+    "destr": "npm:destr@^2.0.5",
+    "eslint": "npm:eslint@^9.39.2",
+    "eslint-config-prettier": "npm:eslint-config-prettier@^10.1.8",
+    "eslint-plugin-perfectionist": "npm:eslint-plugin-perfectionist@^5.3.1",
+    "eslint-plugin-prettier": "npm:eslint-plugin-prettier@^5.5.4",
+    "http-status-codes": "npm:http-status-codes@^2.3.0",
+    "type-fest": "npm:type-fest@^5.4.0",
+    "typescript-eslint": "npm:typescript-eslint@^8.53.0",
+    "xss": "npm:xss@^1.0.15",
+    "zod": "npm:zod@^3.24.0"
+  }
+}

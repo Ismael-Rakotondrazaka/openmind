@@ -1,19 +1,28 @@
-node_modules
-*.log*
+# Nuxt dev/build outputs
+.output
+.data
 .nuxt
 .nitro
 .cache
-.output
-.env
 dist
-*.sqlite
 
-# VSCode
-.vscode
+# Node dependencies
+node_modules
 
-# VSCodeCounter
-.VSCodeCounter
+# Logs
+logs
+*.log
 
-# secret folder
-secrets
-GCSServiceAccount.json
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Temporary files
+temp
+tmp

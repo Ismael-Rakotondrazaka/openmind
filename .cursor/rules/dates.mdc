@@ -1,0 +1,11 @@
+---
+description: Guidelines for using dates
+alwaysApply: true
+---
+
+# Dates: Use date-fns
+
+Always use the `date-fns` library for any date manipulation, formatting, or comparison.
+
+- **DO**: `import { format, compareAsc } from 'date-fns';`
+- **DON'T**: Use `moment.js` or standard `Date.parse()`

@@ -1,0 +1,337 @@
+---
+
+# 🟢 Architecture Nuxt 4 – Règles et Bonnes Pratiques
+
+---
+
+# 1️⃣ GESTION DES REQUÊTES
+
+## A. API Server Routes (`server/api/`)
+
+Dans Nuxt 4, les endpoints backend sont gérés par **Nitro**.
+
+### 📁 Structure :
+
+```
+server/
+├── api/
+│   ├── payments/
+│   │   ├── index.get.ts        # GET /api/payments
+│   │   ├── index.post.ts       # POST /api/payments
+│   │   └── [id].get.ts         # GET /api/payments/:id
+│   │
+│   └── create-payment-intent.post.ts
+```
+
+### 🔹 Règles :
+
+* Un fichier par méthode HTTP (`.get.ts`, `.post.ts`, `.put.ts`, `.delete.ts`)
+* Utiliser `defineEventHandler`
+* Utiliser `getQuery`, `readBody`, `getRouterParam`
+* Toujours gérer les erreurs avec `createError`
+
+### Exemple :
+
+```ts
+// server/api/payments/index.get.ts
+export default defineEventHandler(async (event) => {
+  try {
+    return await getPaymentsFromDB()
+  } catch (error) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Failed to fetch payments'
+    })
+  }
+})
+```
+
+---
+
+## B. Services (`features/*/services/`)
+
+Les services encapsulent :
+
+* Logique métier
+* Appels vers `/api`
+* Intégrations externes (Stripe, Supabase…)
+
+📁 Structure :
+
+```
+features/payments/services/payment.service.ts
+```
+
+### Règles :
+
+* Fonctions pures (pas de composables Vue)
+* Typage strict
+* Aucune dépendance UI
+* Gestion d’erreurs cohérente
+
+```ts
+// features/payments/services/payment.service.ts
+
+export async function getPayments() {
+  return await $fetch('/api/payments')
+}
+
+export async function createPayment(payload: CreatePaymentInput) {
+  return await $fetch('/api/payments', {
+    method: 'POST',
+    body: payload
+  })
+}
+```
+
+---
+
+## C. Appels API depuis les composants
+
+⚠️ RÈGLE ABSOLUE :
+
+> ❌ Ne jamais faire de `$fetch()` direct dans les composants Vue.
+
+Toujours passer par :
+
+```
+Component → Composable → Service → API Route
+```
+
+---
+
+# 2️⃣ ORGANISATION DES COMPOSANTS
+
+## 📁 Structure recommandée
+
+```
+components/              # Composants globaux réutilisables
+├── ui/
+│   ├── BaseButton.vue
+│   └── BaseDialog.vue
+│
+└── layout/
+    ├── AppHeader.vue
+    └── AppFooter.vue
+
+features/
+└── payments/
+    └── components/
+        ├── PaymentModal.vue
+        ├── PaymentList.vue
+        └── PaymentForm.vue
+```
+
+---
+
+## Règles
+
+* `components/` → global
+* `features/*/components/` → spécifique feature
+* Un composant = un fichier
+* Nom en PascalCase
+* Séparer logique et UI (via composables)
+
+---
+
+# 3️⃣ ORGANISATION DES COMPOSABLES (Hooks Vue)
+
+Dans Nuxt, on utilise des **composables** au lieu de hooks React.
+
+---
+
+## 📁 Structure :
+
+```
+composables/                    # Globaux
+├── useAuth.ts
+├── useDebounce.ts
+
+features/
+└── payments/
+    └── composables/
+        ├── usePayments.ts
+        ├── useCreatePayment.ts
+```
+
+---
+
+## Exemple avec `useAsyncData`
+
+```ts
+// features/payments/composables/usePayments.ts
+
+import { getPayments } from '../services/payment.service'
+
+export function usePayments() {
+  return useAsyncData('payments', () => getPayments())
+}
+```
+
+---
+
+## Mutation :
+
+```ts
+// features/payments/composables/useCreatePayment.ts
+
+import { createPayment } from '../services/payment.service'
+
+export function useCreatePayment() {
+  const loading = ref(false)
+
+  const execute = async (payload: CreatePaymentInput) => {
+    loading.value = true
+    try {
+      return await createPayment(payload)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  return { execute, loading }
+}
+```
+
+---
+
+# 4️⃣ STRUCTURE GLOBALE NUxt 4
+
+```
+.
+├── app.vue
+├── pages/                    # File-based routing
+│   ├── index.vue
+│   ├── dashboard.vue
+│   └── payments.vue
+│
+├── components/
+│
+├── features/
+│   └── payments/
+│       ├── components/
+│       ├── composables/
+│       ├── services/
+│       ├── types/
+│       └── index.ts
+│
+├── composables/
+│
+├── server/
+│   ├── api/
+│   └── middleware/
+│
+├── plugins/
+│
+├── middleware/
+│
+├── lib/
+│   ├── supabase/
+│   ├── stripe.ts
+│   └── utils.ts
+│
+├── types/
+│
+├── i18n/
+│
+└── nuxt.config.ts
+```
+
+---
+
+# 5️⃣ CONVENTIONS
+
+## Naming
+
+| Élément     | Convention       |
+| ----------- | ---------------- |
+| Composants  | PascalCase.vue   |
+| Composables | useXxx.ts        |
+| Services    | xxx.service.ts   |
+| Types       | PascalCase       |
+| Constantes  | UPPER_SNAKE_CASE |
+
+---
+
+# 6️⃣ SÉPARATION DES RESPONSABILITÉS
+
+```
+Component (UI)
+   ↓
+Composable (logique réutilisable)
+   ↓
+Service (appels API / logique métier)
+   ↓
+Server API (Nitro endpoint)
+```
+
+---
+
+# 7️⃣ RÈGLES SPÉCIFIQUES NUXT 4
+
+### SSR par défaut
+
+* `useAsyncData` pour données serveur
+* `useFetch` seulement si besoin simplifié
+* `server/` est toujours backend
+
+### Middleware
+
+* `middleware/auth.ts` pour protection des routes
+* `defineNuxtRouteMiddleware`
+
+### Plugins
+
+* `plugins/stripe.client.ts`
+* `plugins/supabase.ts`
+
+---
+
+# 8️⃣ PERFORMANCE
+
+* Utiliser `useAsyncData` avec clé stable
+* Pagination côté serveur
+* Éviter `watch` inutiles
+* Lazy components via `defineAsyncComponent`
+* Préférer `v-memo` pour optimisation
+
+---
+
+# 9️⃣ RÈGLES QUALITÉ CODE
+
+* TypeScript strict
+* Pas de `any`
+* Services = fonctions pures
+* Pas de logique métier dans composants
+* Commentaires uniquement si valeur ajoutée
+* Toujours gérer les erreurs côté serveur
+
+---
+
+# 🔟 CHECKLIST
+
+* [ ] Pas de `$fetch` dans composants
+* [ ] Services isolés
+* [ ] Composables par feature
+* [ ] Structure feature-first
+* [ ] API dans `server/api`
+* [ ] Types stricts
+* [ ] Erreurs centralisées
+* [ ] Alias `@/` utilisé
+* [ ] SSR-friendly
+
+---
+
+# 🎯 RÉSUMÉ VISUEL NUXT 4
+
+```
+Component → Composable → Service → Nitro API
+```
+
+```
+feature/
+  ├── components/
+  ├── composables/
+  ├── services/
+  └── types/
+```

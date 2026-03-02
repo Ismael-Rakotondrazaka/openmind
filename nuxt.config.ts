@@ -1,177 +1,177 @@
+import type { NuxtConfig } from 'nuxt/schema';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from '@tailwindcss/vite';
+
 export default defineNuxtConfig({
-  app: {
-    pageTransition: {
-      name: "page",
-      mode: "in-out",
-    },
+  compatibilityDate: '2025-07-15',
+  components: {
+    dirs: [
+      {
+        global: true,
+        path: '~/components/global',
+      },
+      {
+        path: '~/components/common',
+        pathPrefix: false,
+      },
+      '~/components',
+      {
+        ignore: ['**/*.vue', '**/*.ts'],
+        path: '~/features',
+      },
+    ],
   },
-
-  nitro: {
-    experimental: {
-      websocket: true,
-    },
+  css: ['~/assets/css/tailwind.css'],
+  devtools: { enabled: true },
+  experimental: {
+    typedPages: true,
   },
+  imports: {
+    presets: [
+      {
+        from: '@tanstack/vue-query',
+        imports: [
+          // Composables
+          'useQuery',
+          'useInfiniteQuery',
+          'useMutation',
+          'useQueries',
+          'useQueryClient',
+          'useIsFetching',
+          'useIsMutating',
+          'useMutationState',
 
+          // Utilities
+          'queryOptions',
+          'infiniteQueryOptions',
+          'keepPreviousData',
+
+          // Classes
+          'QueryClient',
+          'QueryCache',
+          'MutationCache',
+
+          // Plugin
+          'VueQueryPlugin',
+          'VueQueryPluginOptions',
+
+          // Types (for type support)
+          'DefinedInitialDataInfiniteOptions',
+          'DefinedInitialQueryOptions',
+          'UndefinedInitialDataInfiniteOptions',
+          'UndefinedInitialQueryOptions',
+          'UseInfiniteQueryOptions',
+          'UseInfiniteQueryReturnType',
+          'UseQueryOptions',
+          'UseQueryReturnType',
+          'UseQueriesOptions',
+          'UseQueriesResults',
+          'UseMutationOptions',
+          'UseMutationReturnType',
+          'QueryFilters',
+          'MutationFilters',
+          'MutationStateOptions',
+        ],
+      },
+      {
+        from: '@vueuse/router',
+        imports: ['useRouteQuery'],
+      },
+    ],
+  },
   modules: [
-    "@nuxtjs/tailwindcss",
-    "nuxt-primevue",
-    "@sidebase/nuxt-auth",
-    "@vee-validate/nuxt",
-    "nuxt-typed-router",
-    "@nuxt/image",
-    "@vueuse/nuxt",
-    "@nuxt/eslint",
-    "@formkit/auto-animate/nuxt",
-    "@nuxtjs/seo",
+    '@nuxt/a11y',
+    '@nuxt/eslint',
+    '@nuxt/fonts',
+    '@nuxt/hints',
+    '@nuxt/icon',
+    '@nuxt/image',
+    '@vee-validate/nuxt',
+    '@nuxtjs/seo',
+    'shadcn-nuxt',
+    '@nuxtjs/supabase',
+    '@vueuse/nuxt',
+    '@stefanobartoletti/nuxt-social-share',
   ],
-
-  site: {
-    indexable: true,
-    name: "OpenMind",
-    description: "Unleash Your Thoughts, Explore Every Topic.",
-    defaultLocale: "en",
+  robots: {
+    allow: '*',
+    disallow: ['/posts/*/edit', '/profile', '/profile/edit'],
   },
-
-  typescript: {
-    shim: false,
-  },
-
   runtimeConfig: {
-    smtpHost: "",
-    smtpPort: "",
-    smtpUser: "",
-    smtpPassword: "",
-    informationEmail: "",
-    bucketName: "",
-    bucketEntryPoint: "",
-    signedMutationUrlLifetime: 0,
-    authSecret: "",
     public: {
-      appUrl: "http://localhost:3000",
-      appVersion: "1.0.0",
-      WSEntryPoint: "ws://localhost:3000/api/_ws",
+      appUrl: 'http://localhost:3000',
+      appVersion: 'latest',
+      siteUrl: 'http://localhost:3000',
     },
   },
-
-  components: [
-    {
-      path: "~/components",
-      extensions: ["vue"],
+  shadcn: {
+    /**
+     * Directory that the component lives in.
+     * Will respect the Nuxt aliases.
+     * @link https://nuxt.com/docs/api/nuxt-config#alias
+     * @default "@/components/ui"
+     */
+    componentDir: '@/components/ui',
+    /**
+     * Prefix for all the imported component.
+     * @default "Ui"
+     */
+    prefix: '',
+  },
+  sitemap: {
+    sitemaps: {
+      pages: {
+        includeAppSources: true,
+      },
+      posts: {
+        sources: ['/api/__sitemap__/posts'],
+      },
+      users: {
+        sources: ['/api/__sitemap__/users'],
+      },
     },
-    {
-      path: "~/components/tags",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/articles",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/commons",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/inputs",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/reactions",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/comments",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/savedArticles",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/views",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/users",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/dialogs",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/follows",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/OgImage",
-      extensions: ["vue"],
-    },
-    {
-      path: "~/components/home",
-      extensions: ["vue"],
-    },
-  ],
-
-  primevue: {
-    cssLayerOrder: "tailwind-base, primevue, tailwind-utilities",
-    options: {
-      ripple: true,
-    },
-    components: {
-      prefix: "Prime",
-      include: [
-        "AutoComplete",
-        "Avatar",
-        "AvatarGroup",
-        "Button",
-        "Badge",
-        "Card",
-        "Chip",
-        "ConfirmDialog",
-        "Dialog",
-        "Divider",
-        "DropDown",
-        "Editor",
-        "Image",
-        "InputGroup",
-        "InputText",
-        "Menu",
-        "MenuBar",
-        "OverlayPanel",
-        "Paginator",
-        "Password",
-        "ScrollTop",
-        "SideBar",
-        "TimeLine",
-        "TabView",
-        "TabPanel",
-        "Toast",
+  },
+  socialShare: {
+    baseUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  },
+  supabase: {
+    redirectOptions: {
+      callback: '/confirm',
+      exclude: [
+        '/',
+        '/register',
+        '/password/reset',
+        '/password/update',
+        '/u/*',
+        '/u/*/p/*/*',
+        '/about',
       ],
-      exclude: ["Galleria", "Chart"],
+      include: undefined,
+      login: '/login',
+      saveRedirectToCookie: true,
+    },
+    types: '#shared/types/database.ts',
+  },
+  typescript: {
+    tsConfig: {
+      exclude: ['shared/types/database.ts'],
     },
   },
-
-  css: [
-    "primeicons/primeicons.css",
-    "primevue/resources/themes/lara-light-teal/theme.css",
-  ],
-
   veeValidate: {
+    // disable or enable auto imports
     autoImports: true,
+    // Use different names for components
     componentNames: {
-      Form: "VeeForm",
-      Field: "VeeField",
-      FieldArray: "VeeFieldArray",
-      ErrorMessage: "VeeErrorMessage",
+      ErrorMessage: 'VeeErrorMessage',
+      Field: 'VeeField',
+      FieldArray: 'VeeFieldArray',
+      Form: 'VeeForm',
     },
   },
-
-  image: {
-    domains: ["storage.googleapis.com"],
-  },
-
-  devtools: {
-    enabled: true,
+  vite: {
+    plugins: [
+      tailwindcss() as Exclude<NuxtConfig['vite'], undefined>['plugins'],
+    ],
   },
 });
