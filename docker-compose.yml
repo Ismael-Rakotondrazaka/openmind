@@ -1,7 +1,10 @@
+version: '3.9'
+
 services:
   app:
     image: openmind:${APP_VERSION:-latest}
     container_name: openmind
+
     build:
       context: .
       args:
@@ -9,20 +12,27 @@ services:
         NUXT_SITE_URL: ${NUXT_SITE_URL}
         NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL}
         NUXT_PUBLIC_APP_VERSION: ${NUXT_PUBLIC_APP_VERSION}
+        SUPABASE_URL: ${SUPABASE_URL}
+        SUPABASE_KEY: ${SUPABASE_KEY}
+
     environment:
       NUXT_PUBLIC_APP_URL: ${NUXT_PUBLIC_APP_URL}
       NUXT_PUBLIC_APP_VERSION: ${NUXT_PUBLIC_APP_VERSION}
       NUXT_SITE_URL: ${NUXT_SITE_URL}
       NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL}
+
       SUPABASE_URL: ${SUPABASE_URL}
       SUPABASE_KEY: ${SUPABASE_KEY}
       SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY}
+
     restart: always
+
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.openmind.rule=Host(`openmind.ismaelrakoto.com`)'
       - 'traefik.http.routers.openmind.entrypoints=websecure'
       - 'traefik.http.routers.openmind.tls.certresolver=leresolver'
+
     networks:
       - web
 
