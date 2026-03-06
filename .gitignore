@@ -26,3 +26,8 @@ logs
 # Temporary files
 temp
 tmp
+
+# Supabase
+supabase/.temp/
+supabase/.trash/
+supabase/functions/.env

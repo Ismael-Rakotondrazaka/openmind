@@ -1,0 +1,44 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.nuxt
+.output
+.data
+.nitro
+.cache
+dist
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# VCS and editor files
+.git
+.gitignore
+.vscode
+.idea
+
+# Local/temp files
+temp
+tmp
+.DS_Store
+Thumbs.db
+
+# Local editor metadata
+.fleet
+
+# Supabase local artifacts
+supabase/.temp/
+supabase/.trash/
+supabase/.branches/
+supabase/functions/.env
