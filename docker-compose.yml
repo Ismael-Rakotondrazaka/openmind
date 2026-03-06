@@ -14,12 +14,15 @@ services:
       NUXT_PUBLIC_APP_VERSION: ${NUXT_PUBLIC_APP_VERSION}
       NUXT_SITE_URL: ${NUXT_SITE_URL}
       NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL}
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_KEY: ${SUPABASE_KEY}
+      SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY}
     restart: always
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.openmind.rule=Host(`openmind.ismaelrakoto.com`)"
-      - "traefik.http.routers.openmind.entrypoints=websecure"
-      - "traefik.http.routers.openmind.tls.certresolver=leresolver"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.openmind.rule=Host(`openmind.ismaelrakoto.com`)'
+      - 'traefik.http.routers.openmind.entrypoints=websecure'
+      - 'traefik.http.routers.openmind.tls.certresolver=leresolver'
     networks:
       - web
 
