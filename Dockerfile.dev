@@ -1,0 +1,16 @@
+FROM node:20-alpine
+
+# @link https://nuxt.com/docs/getting-started/deployment#entry-point
+ENV NITRO_HOST=0.0.0.0
+ENV NITRO_PORT=3000
+
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]

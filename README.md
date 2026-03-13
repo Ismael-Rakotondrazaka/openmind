@@ -53,15 +53,14 @@ Copy `.env.example` to `.env` and fill in the values:
 cp .env.example .env
 ```
 
-| Variable | Description |
-|---|---|
-| `NUXT_PUBLIC_APP_URL` | Public frontend URL |
-| `NUXT_SITE_URL` | SEO site URL |
-| `SUPABASE_URL` | Supabase project URL |
-| `SUPABASE_KEY` | Supabase publishable (anon) key |
-| `SUPABASE_SECRET_KEY` | Supabase service role key |
-| `BREVO_API_KEY` | Brevo API key (transactional emails) |
-| `APP_VERSION` | App version string |
+| Variable                   | Description                          |
+| -------------------------- | ------------------------------------ |
+| `NUXT_PUBLIC_APP_URL`      | Public frontend URL                  |
+| `NUXT_PUBLIC_SITE_URL`     | SEO site URL                         |
+| `NUXT_PUBLIC_SUPABASE_URL` | Supabase project URL                 |
+| `NUXT_PUBLIC_SUPABASE_KEY` | Supabase publishable (anon) key      |
+| `NUXT_SUPABASE_SECRET_KEY` | Supabase service role key            |
+| `BREVO_API_KEY`            | Brevo API key (transactional emails) |
 
 ### Local Database
 

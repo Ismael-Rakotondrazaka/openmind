@@ -100,9 +100,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      appUrl: 'http://localhost:3000',
-      appVersion: 'latest',
-      siteUrl: 'http://localhost:3000',
+      appUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000',
+      appVersion: process.env.NUXT_PUBLIC_APP_VERSION || 'latest',
     },
   },
   shadcn: {
@@ -118,6 +117,10 @@ export default defineNuxtConfig({
      * @default "Ui"
      */
     prefix: '',
+  },
+  site: {
+    name: 'OpenMind',
+    url: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   },
   sitemap: {
     sitemaps: {
@@ -136,6 +139,7 @@ export default defineNuxtConfig({
     baseUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
   supabase: {
+    key: process.env.NUXT_PUBLIC_SUPABASE_KEY || '',
     redirectOptions: {
       callback: '/confirm',
       exclude: [
@@ -151,7 +155,9 @@ export default defineNuxtConfig({
       login: '/login',
       saveRedirectToCookie: true,
     },
+    secretKey: process.env.NUXT_SUPABASE_SECRET_KEY || '',
     types: '#shared/types/database.ts',
+    url: process.env.NUXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321',
   },
   typescript: {
     tsConfig: {

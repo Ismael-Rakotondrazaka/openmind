@@ -1,0 +1,44 @@
+services:
+  app:
+    image: openmind-dev:${NUXT_PUBLIC_APP_VERSION:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: openmind-dev
+    working_dir: /app
+    command: npm run dev
+    environment:
+      NUXT_PUBLIC_APP_URL: ${NUXT_PUBLIC_APP_URL}
+      NUXT_PUBLIC_APP_VERSION: ${NUXT_PUBLIC_APP_VERSION:-latest}
+      NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL}
+      NUXT_PUBLIC_SUPABASE_URL: ${NUXT_PUBLIC_SUPABASE_URL}
+      NUXT_PUBLIC_SUPABASE_KEY: ${NUXT_PUBLIC_SUPABASE_KEY}
+      NUXT_SUPABASE_SECRET_KEY: ${NUXT_SUPABASE_SECRET_KEY}
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          initial_sync: true
+          ignore:
+            - node_modules
+            - .nuxt
+            - .output
+            - .git
+            - .data
+            - .nitro
+            - .cache
+            - dist
+        - action: rebuild
+          path: package.json
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openmind.rule=Host(`openmind.localhost`)"
+      - "traefik.http.routers.openmind.entrypoints=web"
+      - "traefik.http.services.openmind.loadbalancer.server.port=3000"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
