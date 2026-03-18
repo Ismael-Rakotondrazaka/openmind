@@ -51,7 +51,7 @@
     "lucide-vue-next": "^0.574.0",
     "nanoid": "^5.1.6",
     "nuxt": "^4.3.1",
-    "reka-ui": "^2.8.2",
+    "reka-ui": "^2.9.2",
     "shadcn-nuxt": "^2.4.3",
     "slugify": "^1.6.6",
     "tailwind-merge": "^3.4.1",

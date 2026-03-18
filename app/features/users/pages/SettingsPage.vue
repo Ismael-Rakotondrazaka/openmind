@@ -8,6 +8,8 @@ import EditPasswordCard from '../components/EditPasswordCard.vue';
 import EditPasswordCardSkeleton from '../components/EditPasswordCardSkeleton.vue';
 import EditProfileCard from '../components/EditProfileCard.vue';
 import EditProfileCardSkeleton from '../components/EditProfileCardSkeleton.vue';
+import NotificationPreferencesCard from '../components/NotificationPreferencesCard.vue';
+import NotificationPreferencesCardSkeleton from '../components/NotificationPreferencesCardSkeleton.vue';
 
 const authUser = useSupabaseUser();
 const { data: claims, isPending: isClaimsPending } = useGetAuthClaims();
@@ -35,5 +37,8 @@ const { data: user, isPending: isUserPending } = useGetUser(
       class="mb-5"
     />
     <EditPasswordCard v-else class="mb-5" />
+
+    <NotificationPreferencesCardSkeleton v-if="!authUser" class="mb-5" />
+    <NotificationPreferencesCard v-else class="mb-5" />
   </div>
 </template>
