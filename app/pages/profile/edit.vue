@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-svh"></div>
+  <div class="min-h-svh py-2"></div>
 </template>
 
 <script lang="ts" setup>

@@ -11,7 +11,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="min-h-svh">
+  <div class="min-h-svh py-2">
     <PasswordUpdatePage />
   </div>
 </template>

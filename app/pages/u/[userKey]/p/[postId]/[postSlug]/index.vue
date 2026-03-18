@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-svh">
+  <div class="min-h-svh py-2">
     <PostPage v-if="data" :post="data" />
   </div>
 </template>
