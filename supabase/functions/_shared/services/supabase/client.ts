@@ -6,7 +6,7 @@ import { getEnv } from '../../utils/getEnv.ts';
 
 export const createSupabaseClient = (token: string) => {
   return createClient<Database>(
-    getEnv('NUXT_PUBLIC_SUPABASE_URL'),
+    getEnv('SUPABASE_URL'),
     getEnv('SUPABASE_ANON_KEY'),
     {
       global: {
@@ -22,7 +22,7 @@ export const createSupabaseClient = (token: string) => {
  */
 export const createSupabaseServiceClient = (): SupabaseClient<Database> => {
   return createClient<Database>(
-    getEnv('NUXT_PUBLIC_SUPABASE_URL'),
+    getEnv('SUPABASE_URL'),
     getEnv('SUPABASE_SERVICE_ROLE_KEY'),
     {
       auth: {

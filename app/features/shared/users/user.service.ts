@@ -63,9 +63,9 @@ export const getUsernames = async ({
   limit?: number;
   username?: string;
 }): Promise<PaginationResult<string>> => {
-  const userSBClient = useSupabaseClient();
+  const client = useSupabaseClient();
 
-  let query = userSBClient.from('users').select('username');
+  let query = client.from('users').select('username');
 
   if (username) {
     query = query.eq('username', username);
@@ -95,9 +95,9 @@ export const isUsernameExists = async ({
 }: {
   username: string;
 }): Promise<boolean> => {
-  const userSBClient = useSupabaseClient();
+  const client = useSupabaseClient();
 
-  const { data, error } = await userSBClient
+  const { data, error } = await client
     .from('users')
     .select('username')
     .eq('username', username)

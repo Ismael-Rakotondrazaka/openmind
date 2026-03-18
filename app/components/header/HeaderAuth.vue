@@ -12,6 +12,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useNotificationRealtime } from '~/features/shared/notifications/composables/useNotificationRealtime';
+import { useGetUser } from '~/features/shared/users/composables/useGetUser';
 
 interface Props {
   imageUrl: string;
@@ -19,6 +21,18 @@ interface Props {
 }
 
 defineProps<Props>();
+
+const authUser = useSupabaseUser();
+const { data: currentUser } = useGetUser(() => authUser.value?.sub);
+
+const unreadCount = computed(
+  () => currentUser.value?.unread_notifications_count ?? 0
+);
+const badgeLabel = computed(() =>
+  unreadCount.value > 99 ? '+99' : String(unreadCount.value)
+);
+
+useNotificationRealtime();
 
 const handleLogout = async () => {
   const userSBClient = useSupabaseClient();
@@ -58,6 +72,19 @@ const handleLogout = async () => {
       </div>
 
       <div class="flex items-center gap-2">
+        <NuxtLink :to="{ name: 'notifications' }" as-child>
+          <Button variant="ghost" size="icon" class="relative rounded-full">
+            <Icon name="mdi:bell-outline" size="1.25rem" />
+            <span
+              v-if="unreadCount > 0"
+              class="bg-primary text-primary-foreground absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] leading-none font-bold"
+            >
+              {{ badgeLabel }}
+            </span>
+            <span class="sr-only">Notificationsm</span>
+          </Button>
+        </NuxtLink>
+
         <NuxtLink
           :to="{
             name: 'posts-new',

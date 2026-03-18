@@ -7,9 +7,9 @@ import { PostConfig } from './post.config';
 export const getPosts = async (
   filters: PostFilters
 ): Promise<PaginationResult<Post>> => {
-  const postSBClient = useSupabaseClient();
+  const client = useSupabaseClient();
 
-  let query = postSBClient.from('posts').select(
+  let query = client.from('posts').select(
     `
     *,
     author:author_id(*),
@@ -31,7 +31,7 @@ export const getPosts = async (
   }
 
   if (filters.tagIds && filters.tagIds.length > 0) {
-    const { data: postTagData, error: ptError } = await postSBClient
+    const { data: postTagData, error: ptError } = await client
       .from('post_tags')
       .select('post_id')
       .in('tag_id', filters.tagIds);
@@ -97,9 +97,9 @@ export const getPostsCount = async (
 };
 
 export const getPost = async (id: string): Promise<null | Post> => {
-  const postSBClient = useSupabaseClient();
+  const client = useSupabaseClient();
 
-  const { data, error } = await postSBClient
+  const { data, error } = await client
     .from('posts')
     .select(
       `
@@ -117,9 +117,9 @@ export const getPost = async (id: string): Promise<null | Post> => {
 };
 
 export const createPost = async (post: PostInsert): Promise<Post> => {
-  const postSBClient = useSupabaseClient();
+  const client = useSupabaseClient();
 
-  const { data, error } = await postSBClient
+  const { data, error } = await client
     .from('posts')
     .insert(post)
     .select(
@@ -140,9 +140,9 @@ export const updatePost = async (
   id: string,
   updates: PostUpdate
 ): Promise<Post> => {
-  const postSBClient = useSupabaseClient();
+  const client = useSupabaseClient();
 
-  const { data, error } = await postSBClient
+  const { data, error } = await client
     .from('posts')
     .update(updates)
     .eq('id', id)
@@ -161,9 +161,9 @@ export const updatePost = async (
 };
 
 export const deletePost = async (id: string): Promise<void> => {
-  const postSBClient = useSupabaseClient();
+  const client = useSupabaseClient();
 
-  const { error } = await postSBClient.from('posts').delete().eq('id', id);
+  const { error } = await client.from('posts').delete().eq('id', id);
 
   if (error) throw error;
 };

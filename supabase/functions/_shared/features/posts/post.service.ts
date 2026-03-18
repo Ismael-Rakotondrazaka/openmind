@@ -1,8 +1,7 @@
-import { type SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
+import type { Database } from '../../../../../types/database/schema.ts';
 import type { Post, PostInsert } from './post.model.ts';
-
-import { Database } from '../../../../../types/database/schema.ts';
 
 export const createPost = async (
   supabase: SupabaseClient<Database>,

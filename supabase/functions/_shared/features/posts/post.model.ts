@@ -1,11 +1,11 @@
-import type { Enums } from '../../../../../types/database/schema.ts';
-
-import {
+import type {
+  Constants,
+  Enums,
   Tables,
   TablesInsert,
   TablesUpdate,
 } from '../../../../../types/database/schema.ts';
-import { Constants } from '../../../../../types/database/schema.ts';
+
 import { createEnumConstants } from '../../utils/enums.ts';
 
 export type PostProcessingStatus = Enums<'post_processing_status'>;

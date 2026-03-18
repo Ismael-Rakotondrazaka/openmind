@@ -134,6 +134,111 @@ export type Database = {
           },
         ]
       }
+      notification_queue: {
+        Row: {
+          actor_id: string | null
+          channels: string[]
+          created_at: string
+          data: Json
+          error_message: string | null
+          id: string
+          process_after: string
+          recipient_id: string
+          status: string
+          type: string
+        }
+        Insert: {
+          actor_id?: string | null
+          channels?: string[]
+          created_at?: string
+          data?: Json
+          error_message?: string | null
+          id?: string
+          process_after?: string
+          recipient_id: string
+          status?: string
+          type: string
+        }
+        Update: {
+          actor_id?: string | null
+          channels?: string[]
+          created_at?: string
+          data?: Json
+          error_message?: string | null
+          id?: string
+          process_after?: string
+          recipient_id?: string
+          status?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_queue_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_queue_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          actor_id: string | null
+          aggregate_key: string | null
+          created_at: string
+          data: Json
+          id: string
+          read_at: string | null
+          recipient_id: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          actor_id?: string | null
+          aggregate_key?: string | null
+          created_at?: string
+          data?: Json
+          id?: string
+          read_at?: string | null
+          recipient_id: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          actor_id?: string | null
+          aggregate_key?: string | null
+          created_at?: string
+          data?: Json
+          id?: string
+          read_at?: string | null
+          recipient_id?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_tags: {
         Row: {
           post_id: string
@@ -368,6 +473,7 @@ export type Database = {
           last_name: string | null
           posts_count: number
           role: string
+          unread_notifications_count: number
           updated_at: string
           username: string | null
         }
@@ -382,6 +488,7 @@ export type Database = {
           last_name?: string | null
           posts_count?: number
           role?: string
+          unread_notifications_count?: number
           updated_at?: string
           username?: string | null
         }
@@ -396,6 +503,7 @@ export type Database = {
           last_name?: string | null
           posts_count?: number
           role?: string
+          unread_notifications_count?: number
           updated_at?: string
           username?: string | null
         }
@@ -445,6 +553,46 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_notification_queue_batch: {
+        Args: { p_limit?: number }
+        Returns: {
+          actor_id: string | null
+          channels: string[]
+          created_at: string
+          data: Json
+          error_message: string | null
+          id: string
+          process_after: string
+          recipient_id: string
+          status: string
+          type: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "notification_queue"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      enqueue_notification: {
+        Args: {
+          p_actor_id: string
+          p_channels?: string[]
+          p_data?: Json
+          p_process_after?: string
+          p_recipient_id: string
+          p_type: string
+        }
+        Returns: undefined
+      }
+      mark_notification_queue_failed: {
+        Args: { p_error: string; p_ids: string[] }
+        Returns: undefined
+      }
+      mark_notification_queue_processed: {
+        Args: { p_ids: string[] }
+        Returns: undefined
+      }
       sync_posts_comments_count: {
         Args: { p_post_id: string }
         Returns: undefined
@@ -456,6 +604,17 @@ export type Database = {
       sync_reactions_count_for_target: {
         Args: { p_comment_id: string; p_post_id: string }
         Returns: undefined
+      }
+      upsert_notification: {
+        Args: {
+          p_actor_count_delta?: number
+          p_actor_id: string
+          p_aggregate_key?: string
+          p_data: Json
+          p_recipient_id: string
+          p_type: string
+        }
+        Returns: string
       }
     }
     Enums: {
