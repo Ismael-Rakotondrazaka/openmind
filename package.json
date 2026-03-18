@@ -66,6 +66,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.3.0",
+    "@iconify-json/lucide": "^1.2.98",
     "@iconify-json/mdi": "^1.2.3",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
