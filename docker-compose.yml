@@ -1,8 +1,5 @@
 services:
   app:
-    image: openmind:${NUXT_PUBLIC_APP_VERSION:-latest}
-    container_name: openmind
-
     build:
       context: .
       args:
@@ -21,17 +18,3 @@ services:
       NUXT_SUPABASE_SECRET_KEY: ${NUXT_SUPABASE_SECRET_KEY}
 
     restart: always
-
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.openmind.rule=Host(`openmind.ismaelrakoto.com`)'
-      - 'traefik.http.routers.openmind.entrypoints=websecure'
-      - 'traefik.http.routers.openmind.tls.certresolver=leresolver'
-      - "traefik.http.services.openmind.loadbalancer.server.port=3000"
-
-    networks:
-      - web
-
-networks:
-  web:
-    external: true

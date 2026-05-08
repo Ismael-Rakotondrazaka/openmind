@@ -1,0 +1,58 @@
+name: Deploy Openmind
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # 1. Get code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Login to GHCR
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 3. Build and push image
+      - name: Build and Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          build-args: |
+            NUXT_PUBLIC_APP_URL=${{ vars.NUXT_PUBLIC_APP_URL }}
+            NUXT_PUBLIC_APP_VERSION=${{ vars.NUXT_PUBLIC_APP_VERSION }}
+            NUXT_PUBLIC_SITE_URL=${{ vars.NUXT_PUBLIC_SITE_URL }}
+            NUXT_PUBLIC_SUPABASE_URL=${{ vars.NUXT_PUBLIC_SUPABASE_URL }}
+            NUXT_PUBLIC_SUPABASE_KEY=${{ vars.NUXT_PUBLIC_SUPABASE_KEY }}
+          tags: |
+            ghcr.io/ismael-rakotondrazaka/openmind:latest
+            ghcr.io/ismael-rakotondrazaka/openmind:${{ github.sha }}
+
+      # 4. Deploy on VPS
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+
+          script: |
+            cd ~/projects/openmind
+
+            docker compose pull
+
+            docker compose up -d --remove-orphans
