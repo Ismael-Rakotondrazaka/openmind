@@ -93,6 +93,8 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     '@vueuse/nuxt',
     '@stefanobartoletti/nuxt-social-share',
+    '@pinia/nuxt',
+    '@pinia/colada-nuxt',
   ],
   robots: {
     allow: '*',
