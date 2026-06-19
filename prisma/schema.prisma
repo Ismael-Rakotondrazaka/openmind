@@ -1,0 +1,331 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Auth
+// ---------------------------------------------------------------------------
+
+/// One row per person — holds credentials, social profile, and general role
+model User {
+  id                       String    @id @default(uuid()) @db.Uuid
+  email                    String    @unique
+  /// user | moderator | admin
+  role                     String    @default("user")
+  username                 String?   @unique
+  firstName                String?   @map("first_name")
+  lastName                 String?   @map("last_name")
+  imageUrl                 String?   @map("image_url")
+  followerCount            Int       @default(0) @map("follower_count")
+  followingCount           Int       @default(0) @map("following_count")
+  postsCount               Int       @default(0) @map("posts_count")
+  unreadNotificationsCount Int       @default(0) @map("unread_notifications_count")
+  createdAt                DateTime  @default(now()) @map("created_at")
+  updatedAt                DateTime  @updatedAt @map("updated_at")
+  deletedAt                DateTime? @map("deleted_at")
+  emailVerifiedAt          DateTime? @map("email_verified_at")
+
+  identities              UserIdentity[]
+  emailVerificationTokens EmailVerificationToken[]
+  passwordResetTokens     PasswordResetToken[]
+  posts                   Post[]
+  comments                Comment[]
+  reactions               Reaction[]
+  followedBy              Follow[]                @relation("Following")
+  following               Follow[]                @relation("Follower")
+  savedPosts              SavedPost[]
+  views                   View[]
+  tags                    UserTag[]
+  notifications           Notification[]          @relation("NotificationRecipient")
+  actedNotifications      Notification[]          @relation("NotificationActor")
+  notificationQueue       NotificationQueue[]     @relation("QueueRecipient")
+  actedQueue              NotificationQueue[]     @relation("QueueActor")
+  notificationPreferences NotificationPreference[]
+
+  @@map("users")
+}
+
+/// One row per provider per user — supports email/password and OAuth
+model UserIdentity {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  /// email | google | github | ...
+  provider   String
+  /// Provider's own user ID; null for email/password
+  providerId String?   @map("provider_id")
+  /// scrypt hash (nuxt-auth-utils hashPassword); only set when provider = 'email'
+  password   String?
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerId], map: "user_identities_provider_provider_id_unique")
+  @@map("user_identities")
+}
+
+model EmailVerificationToken {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  token        String   @unique
+  /// signup | email_change
+  type         String   @default("signup")
+  pendingEmail String?  @map("pending_email")
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("email_verification_tokens")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  token     String    @unique
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
+}
+
+// ---------------------------------------------------------------------------
+// Tags
+// ---------------------------------------------------------------------------
+
+model Tag {
+  id    String @id @default(uuid()) @db.Uuid
+  value String @unique
+  slug  String @unique
+
+  posts PostTag[]
+  users UserTag[]
+
+  @@map("tags")
+}
+
+/// Junction: posts ↔ tags
+model PostTag {
+  postId String @map("post_id") @db.Uuid
+  tagId  String @map("tag_id") @db.Uuid
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+/// Junction: users ↔ tags (interest tags)
+model UserTag {
+  userId String @map("user_id") @db.Uuid
+  tagId  String @map("tag_id") @db.Uuid
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([userId, tagId])
+  @@map("user_tags")
+}
+
+// ---------------------------------------------------------------------------
+// Posts & Comments
+// ---------------------------------------------------------------------------
+
+/// Blog/community posts authored by users
+model Post {
+  id               String    @id @default(uuid()) @db.Uuid
+  authorId         String    @map("author_id") @db.Uuid
+  title            String
+  slug             String    @unique
+  /// EditorJS OutputData stored as JSON
+  content          Json
+  coverUrl         String?   @map("cover_url")
+  /// draft | published
+  status           String    @default("draft")
+  publishedAt      DateTime? @map("published_at")
+  reactionsCount   Int       @default(0) @map("reactions_count")
+  /// { like: n, love: n, celebrate: n }
+  reactionsDetails Json      @default("{}") @map("reactions_details")
+  commentsCount    Int       @default(0) @map("comments_count")
+  viewsCount       Int       @default(0) @map("views_count")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+
+  author    User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  tags      PostTag[]
+  comments  Comment[]
+  reactions Reaction[]
+  savedBy   SavedPost[]
+  views     View[]
+
+  @@map("posts")
+}
+
+/// Nested comments on posts; supports threading via parentId
+model Comment {
+  id               String    @id @default(uuid()) @db.Uuid
+  postId           String    @map("post_id") @db.Uuid
+  authorId         String    @map("author_id") @db.Uuid
+  parentId         String?   @map("parent_id") @db.Uuid
+  /// EditorJS OutputData stored as JSON
+  content          Json
+  /// 0 = top-level, 1 = reply; max depth enforced in application
+  depth            Int       @default(0)
+  reactionsCount   Int       @default(0) @map("reactions_count")
+  /// { like: n, love: n, celebrate: n }
+  reactionsDetails Json      @default("{}") @map("reactions_details")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+
+  post      Post       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent    Comment?   @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[]  @relation("CommentReplies")
+  reactions Reaction[]
+
+  @@map("comments")
+}
+
+// ---------------------------------------------------------------------------
+// Reactions
+// ---------------------------------------------------------------------------
+
+/// A user's reaction to a post or a comment (postId XOR commentId)
+model Reaction {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  postId    String?  @map("post_id") @db.Uuid
+  commentId String?  @map("comment_id") @db.Uuid
+  /// like | love | celebrate | insightful
+  type      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post    Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId], map: "reactions_user_post_unique")
+  @@unique([userId, commentId], map: "reactions_user_comment_unique")
+  @@map("reactions")
+}
+
+// ---------------------------------------------------------------------------
+// Follows
+// ---------------------------------------------------------------------------
+
+model Follow {
+  id          String   @id @default(uuid()) @db.Uuid
+  followerId  String   @map("follower_id") @db.Uuid
+  followingId String   @map("following_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  follower  User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId], map: "follows_unique")
+  @@map("follows")
+}
+
+// ---------------------------------------------------------------------------
+// Saved Posts & Views
+// ---------------------------------------------------------------------------
+
+model SavedPost {
+  userId    String   @map("user_id") @db.Uuid
+  postId    String   @map("post_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([userId, postId])
+  @@map("saved_posts")
+}
+
+/// One row per user per post — upserted on each visit
+model View {
+  id        String   @id @default(uuid()) @db.Uuid
+  postId    String   @map("post_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId], map: "views_post_user_unique")
+  @@map("views")
+}
+
+// ---------------------------------------------------------------------------
+// Notifications
+// ---------------------------------------------------------------------------
+
+/// In-app notifications delivered to a recipient
+model Notification {
+  id           String    @id @default(uuid()) @db.Uuid
+  recipientId  String    @map("recipient_id") @db.Uuid
+  actorId      String?   @map("actor_id") @db.Uuid
+  /// comment_reacted | comment_replied | post_commented | post_reacted | user_followed | user_welcomed
+  type         String
+  /// { post_id, post_slug, comment_id, reaction_type, actor_count, ... }
+  data         Json      @default("{}")
+  /// Groups similar notifications (e.g. same post + same type) for aggregation
+  aggregateKey String?   @map("aggregate_key")
+  readAt       DateTime? @map("read_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  recipientUser User  @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  actorUser     User? @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@map("notifications")
+}
+
+/// User preferences controlling which notification types are delivered on which channels
+model NotificationPreference {
+  userId    String   @map("user_id") @db.Uuid
+  /// comments | follows | reactions
+  groupName String   @map("group_name")
+  /// in_app
+  channel   String
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupName, channel])
+  @@map("notification_preferences")
+}
+
+/// Work queue for dispatching notifications asynchronously
+model NotificationQueue {
+  id           String   @id @default(uuid()) @db.Uuid
+  recipientId  String   @map("recipient_id") @db.Uuid
+  actorId      String?  @map("actor_id") @db.Uuid
+  type         String
+  /// Channels to deliver on: in_app, email, push, ...
+  channels     String[]
+  data         Json     @default("{}")
+  /// pending | processing | done | failed
+  status       String   @default("pending")
+  processAfter DateTime @default(now()) @map("process_after")
+  errorMessage String?  @map("error_message")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  recipientUser User  @relation("QueueRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  actorUser     User? @relation("QueueActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@map("notification_queue")
+}

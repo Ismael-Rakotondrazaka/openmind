@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FetchError } from 'ofetch';
 import type { HTMLAttributes } from 'vue';
 
 import { toast } from 'vue-sonner';
@@ -25,7 +26,9 @@ const props = defineProps<{
   class?: HTMLAttributes['class'];
 }>();
 
-const supabase = useSupabaseClient();
+const route = useRoute();
+const localeRoute = useLocaleRoute();
+const { t } = useI18n();
 
 const { handleSubmit, isSubmitting, resetForm } = useForm({
   initialValues: {
@@ -35,21 +38,26 @@ const { handleSubmit, isSubmitting, resetForm } = useForm({
 });
 
 const updateUserPassword = handleSubmit(async values => {
-  const { error } = await supabase.auth.updateUser({
-    password: values.password,
-  });
+  const loginRoute = localeRoute({ name: 'login' });
 
-  if (error) {
-    toast.error(getAuthErrorMessage(error));
+  const token = route.query.token;
+  if (typeof token !== 'string') {
+    toast.error(t('auth.passwordUpdate.invalidLink'));
     return;
   }
 
-  toast.success('Password updated successfully.');
-  resetForm();
-
-  await navigateTo({
-    name: 'index',
-  });
+  try {
+    await $fetch('/api/auth/password/reset/confirm', {
+      body: { password: values.password, token },
+      method: 'POST',
+    });
+    toast.success(t('toasts.password.updated'));
+    resetForm();
+    await navigateTo(loginRoute);
+  } catch (error: unknown) {
+    const msg = (error as FetchError)?.data?.message ?? 'errors.default';
+    toast.error(getAuthErrorMessage({ code: msg, message: msg }));
+  }
 });
 </script>
 
@@ -57,20 +65,22 @@ const updateUserPassword = handleSubmit(async values => {
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader>
-        <CardTitle>Set your new password</CardTitle>
+        <CardTitle>{{ t('auth.passwordUpdate.title') }}</CardTitle>
         <CardDescription>
-          Choose a strong new password to secure your account.
+          {{ t('auth.passwordUpdate.description') }}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form id="password-update" method="POST" @submit="updateUserPassword">
           <FieldGroup>
-            <VeeField v-slot="{ field, errors }" name="password">
+            <VeeField v-slot="{ errors, componentField }" name="password">
               <Field :data-invalid="!!errors.length">
-                <FieldLabel for="password">New password</FieldLabel>
+                <FieldLabel for="password">{{
+                  t('auth.passwordUpdate.newPasswordLabel')
+                }}</FieldLabel>
                 <Input
                   id="password"
-                  v-bind="field"
+                  v-bind="componentField"
                   type="password"
                   :aria-invalid="!!errors.length"
                 />
@@ -80,11 +90,17 @@ const updateUserPassword = handleSubmit(async values => {
 
             <Field>
               <Button type="submit" :disabled="isSubmitting">
-                {{ isSubmitting ? 'Updating password...' : 'Update password' }}
+                {{
+                  isSubmitting
+                    ? t('loading.changingPassword')
+                    : t('buttons.changePassword')
+                }}
               </Button>
               <FieldDescription class="text-center">
-                Back to
-                <NuxtLink to="login">Login</NuxtLink>
+                {{ t('auth.passwordReset.remembered') }}
+                <NuxtLinkLocale :to="{ name: 'login' }">{{
+                  t('buttons.login')
+                }}</NuxtLinkLocale>
               </FieldDescription>
             </Field>
           </FieldGroup>

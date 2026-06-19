@@ -1,0 +1,43 @@
+{
+  "posts": {
+    "createPostTitle": "Create a post",
+    "createPostDescription": "Get ready to share your thoughts! Creating an article is easy. Just fill out the form below, and let your ideas shine. Start now and be part of our community!",
+    "editPostTitle": "Edit post",
+    "editPostDescription": "Update your post details below. Changes will be reflected immediately after saving.",
+    "title": "Title",
+    "titlePlaceholder": "Your post title",
+    "titleDescription": "Craft a captivating headline that summarizes the essence of your article and sparks curiosity.",
+    "content": "Content",
+    "contentPlaceholder": "Share your thoughts...",
+    "contentDescription": "Pour your ideas, insights, and expertise into engaging and informative prose to captivate your audience.",
+    "coverImage": "Cover image",
+    "coverImageDescription": "Choose an eye-catching image to grab your audience's attention.",
+    "tags": "Tags",
+    "tagsDescription": "Add descriptive keywords to categorize your article and improve discoverability.",
+    "optional": "(optional)",
+    "reactions": "Reactions",
+    "all": "All",
+    "recent": "Recent",
+    "top": "Top",
+    "noNotifications": "No notifications yet",
+    "createdBy": "Created by",
+    "feedTitle": "Feed",
+    "sortBy": "Sort by",
+    "searchPosts": "Search posts...",
+    "loadMore": "Load more",
+    "tagsButton": "Tags",
+    "searchTags": "Search tags...",
+    "noTagsFound": "No tags found",
+    "editPost": "Edit post",
+    "saveForLater": "Save for later",
+    "removeFromSaved": "Remove from saved",
+    "reactToPosts": "React to posts",
+    "notFound": "Post not found",
+    "shareTitle": "Share",
+    "shareUrlCopied": "Share URL copied to clipboard",
+    "failedToCopyShareUrl": "Failed to copy share URL"
+  },
+  "tags": {
+    "noMatching": "No matching tags."
+  }
+}

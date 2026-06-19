@@ -6,7 +6,36 @@ on:
       - master
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Prepare Nuxt
+        run: npx nuxt prepare
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint:ci
+
   deploy:
+    needs: check
     runs-on: ubuntu-latest
 
     permissions:
@@ -26,8 +55,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 3. Build and push image
-      - name: Build and Push
+      # 3. Build and push app image
+      - name: Build and Push App
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -36,23 +65,25 @@ jobs:
             NUXT_PUBLIC_APP_URL=${{ vars.NUXT_PUBLIC_APP_URL }}
             NUXT_PUBLIC_APP_VERSION=${{ vars.NUXT_PUBLIC_APP_VERSION }}
             NUXT_PUBLIC_SITE_URL=${{ vars.NUXT_PUBLIC_SITE_URL }}
-            NUXT_PUBLIC_SUPABASE_URL=${{ vars.NUXT_PUBLIC_SUPABASE_URL }}
-            NUXT_PUBLIC_SUPABASE_KEY=${{ vars.NUXT_PUBLIC_SUPABASE_KEY }}
           tags: |
             ghcr.io/ismael-rakotondrazaka/openmind:latest
             ghcr.io/ismael-rakotondrazaka/openmind:${{ github.sha }}
 
-      # 4. Deploy on VPS
-      - name: SSH Deploy
-        uses: appleboy/ssh-action@v1.2.0
+      # 4. Build and push setup image
+      - name: Build and Push Setup
+        uses: docker/build-push-action@v6
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
+          context: .
+          file: Dockerfile.setup
+          push: true
+          tags: |
+            ghcr.io/ismael-rakotondrazaka/openmind:setup
 
-          script: |
-            cd ~/projects/openmind
-
-            docker compose pull
-
-            docker compose up -d --remove-orphans
+      # 5. Trigger boot repo deploy
+      - name: Trigger Boot Deploy
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.BOOT_PAT }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository_owner }}/${{ vars.BOOT_REPO }}/actions/workflows/deploy.yml/dispatch" \
+            -d '{"ref":"main"}'

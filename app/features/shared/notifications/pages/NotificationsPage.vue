@@ -1,29 +1,41 @@
 <script lang="ts" setup>
+import { useMutation, useQuery } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
+
 import { Button } from '@/components/ui/button';
 
 import NotificationItem from '../components/NotificationItem.vue';
 import NotificationItemSkeleton from '../components/NotificationItemSkeleton.vue';
-import { useGetUserNotifications } from '../composables/useGetUserNotifications';
-import { useMarkAllNotificationsRead } from '../composables/useMarkAllNotificationsRead';
+import {
+  notificationListQuery,
+  useMarkAllNotificationsRead,
+} from '../notification.query';
 
-const authUser = useSupabaseUser();
+const { t } = useI18n();
+const page = ref(1);
+const pageSize = 20;
+const fetchFn = useRequestFetch();
 
-const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
-  useGetUserNotifications(() => authUser.value?.sub);
+const { data, isLoading: isPending } = useQuery(() =>
+  notificationListQuery({ fetchFn, page: page.value, pageSize })
+);
 
-const { isPending: isMarkingAll, mutate: markAllRead } =
-  useMarkAllNotificationsRead();
+const { isLoading: isMarkingAll, mutate: markAllRead } = useMutation(
+  useMarkAllNotificationsRead()
+);
 
-const notifications = computed(
-  () => data.value?.pages.flatMap(p => p.data) ?? []
+const notifications = computed(() => data.value?.data ?? []);
+
+const hasMore = computed(
+  () => (data.value?.count ?? 0) > page.value * pageSize
 );
 
 const hasUnread = computed(() =>
-  notifications.value.some(n => n.read_at === null)
+  notifications.value.some(n => n.readAt === null)
 );
 
 const unreadCount = computed(
-  () => notifications.value.filter(n => n.read_at === null).length
+  () => notifications.value.filter(n => n.readAt === null).length
 );
 </script>
 
@@ -31,7 +43,7 @@ const unreadCount = computed(
   <div class="mx-auto mt-15 min-h-svh w-full max-w-175 px-2">
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-2xl font-bold">
-        Notifications
+        {{ t('notifications.notificationsTitle') }}
         <span
           v-if="unreadCount > 0"
           class="text-muted-foreground text-xl font-normal"
@@ -47,7 +59,7 @@ const unreadCount = computed(
         @click="markAllRead()"
       >
         <Icon v-if="isMarkingAll" name="mdi:loading" class="animate-spin" />
-        Mark all as read
+        {{ t('notifications.markAllAsRead') }}
       </Button>
     </div>
 
@@ -63,18 +75,9 @@ const unreadCount = computed(
           :notification="notification"
         />
 
-        <div v-if="hasNextPage" class="flex justify-center pt-4">
-          <Button
-            variant="outline"
-            :disabled="isFetchingNextPage"
-            @click="fetchNextPage()"
-          >
-            <Icon
-              v-if="isFetchingNextPage"
-              name="mdi:loading"
-              class="animate-spin"
-            />
-            Load more
+        <div v-if="hasMore" class="flex justify-center pt-4">
+          <Button variant="outline" @click="page++">
+            {{ t('notifications.loadMore') }}
           </Button>
         </div>
       </template>
@@ -84,7 +87,9 @@ const unreadCount = computed(
         class="text-muted-foreground flex flex-col items-center gap-2 py-16 text-center"
       >
         <Icon name="mdi:bell-outline" size="2.5rem" />
-        <p class="text-sm">No notifications yet</p>
+        <p class="text-sm">
+          {{ t('notifications.noNotificationsYet') }}
+        </p>
       </div>
     </div>
   </div>

@@ -1,9 +1,13 @@
 <!-- eslint-disable vue/no-v-html -->
 <script lang="ts" setup>
 import type { OutputData } from '@editorjs/editorjs';
+import type { Comment } from '#shared/features/comments';
 
+import { useMutation } from '@pinia/colada';
 import { useTimeAgo } from '@vueuse/core';
+import { useI18n } from 'vue-i18n';
 
+import LoginPromptModal from '@/components/common/LoginPromptModal.vue';
 import ResponsiveModal from '@/components/common/ResponsiveModal.vue';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -19,49 +23,55 @@ import {
 import { useUserFullname } from '~/features/shared/users/composables/useUserFullname';
 import { useUserImageUrl } from '~/features/users/composables/useUserImageUrl';
 
-import type { ReactionTypes } from '../../reactions/reaction.model';
-import type { Comment } from '../comment.model';
-
-import ReactionsDrawer from '../../reactions/components/ReactionsDrawer.vue';
-import { useDeleteComment } from '../composables/useDeleteComment';
-import { useUpdateComment } from '../composables/useUpdateComment';
+import { useReactionsDrawer } from '../../reactions/composables/useReactionsDrawer';
+import { useDestroyComment, useUpdateComment } from '../comment.query';
 import CommentReactionActions from './CommentReactionActions.vue';
 import CommentReactionsSummary from './CommentReactionsSummary.vue';
 
 type Props = {
-  comment: Comment;
+  comment: Serialize<Comment>;
   showReplyButton?: boolean;
 };
-
-type ReactionTab = 'all' | (typeof ReactionTypes)[number];
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<{ reply: [] }>();
 
-const user = useSupabaseUser();
-const userFullname = useUserFullname(() => props.comment.author);
+const { t } = useI18n();
+const { user } = useUserSession();
+const userFullname = useUserFullname(
+  () => props.comment.author,
+  t('users.defaultUsername')
+);
 const userImageUrl = useUserImageUrl(() => props.comment.author);
-const timeAgo = useTimeAgo(() => new Date(props.comment.created_at));
-const renderedContent = useRenderEditorHTML(() => props.comment.content);
+const timeAgo = useTimeAgo(() => new Date(props.comment.createdAt));
+const renderedContent = useRenderEditorHTML(
+  () => props.comment.content as OutputData
+);
 
-const reactionsDrawerOpen = ref(false);
-const reactionsTab = ref<ReactionTab>('all');
+const { openForComment } = useReactionsDrawer();
 
-const isAuthor = computed(() => user.value?.sub === props.comment.author_id);
+const isAuthor = computed(() => user.value?.id === props.comment.authorId);
 
 const isEditing = ref(false);
-const editContent = ref<OutputData>(
-  props.comment.content as unknown as OutputData
-);
+const editContent = ref<OutputData>(props.comment.content as OutputData);
 const editorKey = ref(0);
 
 const deleteDialogOpen = ref(false);
+const loginPromptOpen = ref(false);
 
-const { isPending: isUpdating, mutateAsync: updateComment } =
-  useUpdateComment();
-const { isPending: isDeleting, mutateAsync: deleteComment } =
-  useDeleteComment();
+const handleReplyClick = () => {
+  if (!user.value?.id) {
+    loginPromptOpen.value = true;
+    return;
+  }
+  emit('reply');
+};
+
+const { isLoading: isUpdating, mutateAsync: updateComment } =
+  useMutation(useUpdateComment());
+const { isLoading: isDeleting, mutateAsync: deleteComment } =
+  useMutation(useDestroyComment());
 
 const isEmpty = computed(
   () =>
@@ -72,7 +82,7 @@ const isEmpty = computed(
 );
 
 const handleStartEdit = () => {
-  editContent.value = props.comment.content as unknown as OutputData;
+  editContent.value = props.comment.content as OutputData;
   editorKey.value++;
   isEditing.value = true;
 };
@@ -84,25 +94,27 @@ const handleCancelEdit = () => {
 const handleSaveEdit = async () => {
   if (isEmpty.value) return;
   await updateComment({
-    id: props.comment.id,
-    updates: {
-      content: editContent.value as unknown as Tables<'comments'>['content'],
+    body: {
+      content: editContent.value,
     },
+    id: props.comment.id,
   });
   isEditing.value = false;
 };
 
 const handleDelete = async () => {
-  await deleteComment(props.comment.id);
+  await deleteComment({ id: props.comment.id });
   deleteDialogOpen.value = false;
 };
+
+const isExpanded = ref(false);
 </script>
 
 <template>
   <div
     class="group/comment hover:bg-muted flex gap-3 rounded-lg p-3 transition-all duration-200"
   >
-    <NuxtLink
+    <NuxtLinkLocale
       :to="{
         name: 'u-userKey',
         params: { userKey: comment.author.username || comment.author.id },
@@ -112,12 +124,12 @@ const handleDelete = async () => {
       <Avatar class="size-8">
         <AvatarImage :src="userImageUrl" />
       </Avatar>
-    </NuxtLink>
+    </NuxtLinkLocale>
 
     <div class="flex flex-1 flex-col gap-1">
       <div class="flex items-center justify-between">
         <div class="flex items-baseline gap-2">
-          <NuxtLink
+          <NuxtLinkLocale
             :to="{
               name: 'u-userKey',
               params: { userKey: comment.author.username || comment.author.id },
@@ -125,7 +137,7 @@ const handleDelete = async () => {
             class="text-sm font-semibold hover:underline"
           >
             {{ userFullname }}
-          </NuxtLink>
+          </NuxtLinkLocale>
           <span class="text-muted-foreground text-xs">{{ timeAgo }}</span>
         </div>
 
@@ -142,7 +154,7 @@ const handleDelete = async () => {
           <DropdownMenuContent class="w-56" align="end">
             <DropdownMenuGroup>
               <DropdownMenuItem @click="handleStartEdit">
-                Edit
+                {{ t('comments.edit') }}
                 <DropdownMenuShortcut>
                   <Icon name="mdi:pencil" size="1rem" />
                 </DropdownMenuShortcut>
@@ -152,7 +164,7 @@ const handleDelete = async () => {
                 variant="destructive"
                 @click="deleteDialogOpen = true"
               >
-                Delete
+                {{ t('comments.delete') }}
                 <DropdownMenuShortcut>
                   <Icon name="mdi:trash-can" size="1rem" />
                 </DropdownMenuShortcut>
@@ -176,7 +188,7 @@ const handleDelete = async () => {
             :disabled="isUpdating"
             @click="handleCancelEdit"
           >
-            Cancel
+            {{ t('comments.cancel') }}
           </Button>
           <Button
             type="button"
@@ -185,18 +197,32 @@ const handleDelete = async () => {
             @click="handleSaveEdit"
           >
             <Icon v-if="isUpdating" name="mdi:loading" class="animate-spin" />
-            Save
+            {{ t('comments.save') }}
           </Button>
         </div>
       </template>
 
       <template v-else>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div class="prose prose-sm max-w-none" v-html="renderedContent" />
+        <!-- eslint-disable vue/no-v-html -->
+        <div
+          class="prose prose-sm max-w-none"
+          :class="{ 'line-clamp-5': !isExpanded }"
+          v-html="renderedContent"
+        />
+        <!-- eslint-enable vue/no-v-html -->
+        <button
+          class="text-muted-foreground hover:text-foreground text-xs text-left font-medium transition-colors"
+          type="button"
+          @click="isExpanded = !isExpanded"
+        >
+          {{ isExpanded ? t('comments.showLess') : t('comments.showMore') }}
+        </button>
 
         <CommentReactionsSummary
           :comment="comment"
-          @reactions-drawer:open="reactionsDrawerOpen = true"
+          @reactions-drawer:open="
+            openForComment(comment.id, comment.reactionsDetails)
+          "
         />
 
         <div class="flex items-center gap-2">
@@ -205,26 +231,24 @@ const handleDelete = async () => {
             v-if="showReplyButton"
             class="text-muted-foreground hover:text-foreground text-xs font-medium transition-colors"
             type="button"
-            @click="emit('reply')"
+            @click="handleReplyClick"
           >
-            Reply
+            {{ t('comments.reply') }}
           </button>
         </div>
       </template>
     </div>
   </div>
 
-  <ReactionsDrawer
-    v-model:open="reactionsDrawerOpen"
-    v-model:selected-reaction-tab="reactionsTab"
-    :comment-id="comment.id"
-    :reactions-details="comment.reactions_details"
+  <LoginPromptModal
+    v-model:open="loginPromptOpen"
+    :action="t('reactions.replyToComments')"
   />
 
   <ResponsiveModal v-model:open="deleteDialogOpen">
-    <template #title>Delete comment</template>
+    <template #title>{{ t('comments.deleteComment') }}</template>
     <template #description>
-      This action cannot be undone. The comment will be permanently deleted.
+      {{ t('comments.deleteCommentDescription') }}
     </template>
     <div class="flex justify-end gap-2 pt-4">
       <Button
@@ -233,7 +257,7 @@ const handleDelete = async () => {
         :disabled="isDeleting"
         @click="deleteDialogOpen = false"
       >
-        Cancel
+        {{ t('comments.cancel') }}
       </Button>
       <Button
         type="button"
@@ -242,7 +266,7 @@ const handleDelete = async () => {
         @click="handleDelete"
       >
         <Icon v-if="isDeleting" name="mdi:loading" class="animate-spin" />
-        Delete
+        {{ t('comments.delete') }}
       </Button>
     </div>
   </ResponsiveModal>

@@ -1,30 +1,22 @@
+import { useQueryCache } from '@pinia/colada';
+import { WsNotificationMessageType } from '#shared/features/notifications';
+import { watch } from 'vue';
+
+import { NOTIFICATION_QUERY_KEYS } from '../notification.query';
+
 export const useNotificationRealtime = () => {
-  const supabase = useSupabaseClient();
-  const queryClient = useQueryClient();
-  const authUser = useSupabaseUser();
+  const { data } = useGlobalWs();
+  const queryCache = useQueryCache();
 
-  onMounted(() => {
-    const userId = authUser.value?.sub;
-    if (!userId) return;
-
-    const channel = supabase
-      .channel(`notifications:${userId}`, { config: { private: true } })
-      .on('broadcast', { event: 'INSERT' }, () => {
-        queryClient.invalidateQueries({ queryKey: ['notifications'] });
-        queryClient.invalidateQueries({ queryKey: ['user', userId] });
-      })
-      .on('broadcast', { event: 'UPDATE' }, () => {
-        queryClient.invalidateQueries({ queryKey: ['notifications'] });
-        queryClient.invalidateQueries({ queryKey: ['user', userId] });
-      })
-      .on('broadcast', { event: 'DELETE' }, () => {
-        queryClient.invalidateQueries({ queryKey: ['notifications'] });
-        queryClient.invalidateQueries({ queryKey: ['user', userId] });
-      })
-      .subscribe();
-
-    onUnmounted(() => {
-      supabase.removeChannel(channel);
-    });
+  watch(data, raw => {
+    if (!raw || raw === 'pong') return;
+    try {
+      const msg = JSON.parse(raw as string) as { type?: string };
+      if (msg.type === WsNotificationMessageType) {
+        queryCache.invalidateQueries({ key: NOTIFICATION_QUERY_KEYS.root });
+      }
+    } catch {
+      // ignore malformed messages
+    }
   });
 };

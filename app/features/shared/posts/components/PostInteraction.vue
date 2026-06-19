@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import type { Post } from '../post.model';
+import type { PostView } from '#shared/features/posts';
 
 import PostReactionActions from './PostReactionActions.vue';
 import PostReactionsSummary from './PostReactionsSummary.vue';
 import PostSharePopover from './PostSharePopover.vue';
 
 type Props = {
-  post: Post;
+  post: Serialize<PostView>;
   reactionsDrawerOpen: boolean;
 };
 

@@ -1,4 +1,8 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+</script>
 
 <template>
   <footer class="container mx-auto">
@@ -6,7 +10,7 @@
       <div class="flex items-center justify-around p-7">
         <img
           src="/images/logo-300x300.png"
-          alt="Openmind logo"
+          :alt="t('footerComponent.logoAlt')"
           class="hidden w-1/6 rounded-full md:block"
         />
 
@@ -17,7 +21,7 @@
                 href="mailto:contact@ismaelrakoto.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Email"
+                :aria-label="t('footerComponent.email')"
               >
                 <Icon name="mdi:email" />
               </a>
@@ -28,7 +32,7 @@
                 href="https://github.com/Ismael-Rakotondrazaka/openmind"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub"
+                :aria-label="t('footerComponent.github')"
               >
                 <Icon name="mdi:github" />
               </a>
@@ -38,34 +42,34 @@
           <div
             class="flex flex-wrap items-center justify-center gap-x-5 gap-y-3"
           >
-            <NuxtLink :to="{ name: 'index' }" as-child>
-              <Button variant="link">Home</Button>
-            </NuxtLink>
+            <NuxtLinkLocale :to="{ name: 'index' }" as-child>
+              <Button variant="link">{{ t('buttons.home') }}</Button>
+            </NuxtLinkLocale>
 
-            <NuxtLink to="/about" as-child>
-              <Button variant="link">About</Button>
-            </NuxtLink>
+            <NuxtLinkLocale :to="{ name: 'about' }" as-child>
+              <Button variant="link">{{ t('buttons.about') }}</Button>
+            </NuxtLinkLocale>
 
-            <NuxtLink :to="{ name: 'login' }" as-child>
-              <Button variant="link">Sign in</Button>
-            </NuxtLink>
+            <NuxtLinkLocale :to="{ name: 'login' }" as-child>
+              <Button variant="link">{{ t('buttons.login') }}</Button>
+            </NuxtLinkLocale>
 
-            <NuxtLink :to="{ name: 'register' }" as-child>
-              <Button variant="link">Register</Button>
-            </NuxtLink>
+            <NuxtLinkLocale :to="{ name: 'register' }" as-child>
+              <Button variant="link">{{ t('buttons.register') }}</Button>
+            </NuxtLinkLocale>
           </div>
         </div>
       </div>
     </div>
 
     <div class="bg-[#1a6b4b] p-7 text-center text-white">
-      © Copyright {{ new Date().getFullYear() }}
+      {{ t('footerComponent.copyright') }} {{ new Date().getFullYear() }}
       <a
         href="https://github.com/Ismael-Rakotondrazaka"
         target="_blank"
         rel="noopener noreferrer"
         class="underline"
-        >Ismael</a
+        >{{ t('footerComponent.ismael') }}</a
       >
     </div>
   </footer>

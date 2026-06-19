@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+import type { PostView } from '#shared/features/posts';
+
 import { useClipboard } from '@vueuse/core';
+import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
 
 import { Button } from '@/components/ui/button';
@@ -10,26 +13,28 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
-import type { Post } from '../post.model';
-
 type Props = {
-  post: Post;
+  post: Serialize<PostView>;
 };
 
 const props = defineProps<Props>();
 
+const { t } = useI18n();
 const router = useRouter();
+const localePath = useLocalePath();
 const config = useRuntimeConfig();
 
 const shareUrl = computed(() => {
-  const resolved = router.resolve({
-    name: 'u-userKey-p-postId-postSlug',
-    params: {
-      postId: props.post.id,
-      postSlug: props.post.slug,
-      userKey: props.post.author.username || props.post.author.id,
-    },
-  });
+  const resolved = router.resolve(
+    localePath({
+      name: 'u-userKey-p-postId-postSlug',
+      params: {
+        postId: props.post.id,
+        postSlug: props.post.slug,
+        userKey: props.post.author.username || props.post.author.id,
+      },
+    })
+  );
   return `${config.public.appUrl}${resolved.fullPath}`;
 });
 
@@ -37,9 +42,9 @@ const { copy } = useClipboard();
 const handleCopyShareUrl = async () => {
   try {
     await copy(shareUrl.value);
-    toast.success('Share URL copied to clipboard');
+    toast.success(t('posts.shareUrlCopied'));
   } catch {
-    toast.error('Failed to copy share URL');
+    toast.error(t('posts.failedToCopyShareUrl'));
   }
 };
 </script>
@@ -49,13 +54,15 @@ const handleCopyShareUrl = async () => {
     <PopoverTrigger as-child>
       <Button variant="secondary" size="icon" class="rounded-full">
         <Icon name="mdi:share-variant" />
-        <span class="sr-only">Share</span>
+        <span class="sr-only">{{ t('posts.shareTitle') }}</span>
       </Button>
     </PopoverTrigger>
     <PopoverContent class="w-80">
       <div class="grid gap-4">
         <div class="space-y-2">
-          <h4 class="leading-none font-medium">Share</h4>
+          <h4 class="leading-none font-medium">
+            {{ t('posts.shareTitle') }}
+          </h4>
         </div>
 
         <div class="flex flex-row flex-nowrap items-center gap-2">
@@ -67,7 +74,7 @@ const handleCopyShareUrl = async () => {
             @click="handleCopyShareUrl"
           >
             <Icon name="mdi:content-copy" />
-            <span class="sr-only">Copy</span>
+            <span class="sr-only">{{ t('buttons.copy') }}</span>
           </Button>
         </div>
 
@@ -83,7 +90,7 @@ const handleCopyShareUrl = async () => {
                 : undefined
             "
             :title="post.title"
-            :image="post.cover_url ?? undefined"
+            :image="post.coverUrl ?? undefined"
           />
           <SocialShare
             network="facebook"

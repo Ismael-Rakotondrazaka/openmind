@@ -11,24 +11,24 @@ export const NotificationPreferenceGroup = createEnumConstants(
 export type NotificationPreferenceGroup =
   (typeof NotificationPreferenceGroup)[keyof typeof NotificationPreferenceGroup];
 
+// These keys should be translated in components using t('notifications.preferencesComments', etc.)
 export const NotificationPreferenceGroupLabel: Record<
   NotificationPreferenceGroup,
   string
 > = {
-  [NotificationPreferenceGroup.comments]: 'Comments',
-  [NotificationPreferenceGroup.follows]: 'Follows',
-  [NotificationPreferenceGroup.reactions]: 'Reactions',
+  [NotificationPreferenceGroup.comments]: 'notifications.preferencesComments',
+  [NotificationPreferenceGroup.follows]: 'notifications.preferencesFollows',
+  [NotificationPreferenceGroup.reactions]: 'notifications.preferencesReactions',
 };
 
+// These descriptions should be translated in components using t()
 export const NotificationPreferenceGroupDescription: Record<
   NotificationPreferenceGroup,
   string
 > = {
-  [NotificationPreferenceGroup.comments]:
-    'When someone comments on your posts or replies to your comments',
-  [NotificationPreferenceGroup.follows]: 'When someone follows you',
-  [NotificationPreferenceGroup.reactions]:
-    'When someone reacts to your posts or comments',
+  [NotificationPreferenceGroup.comments]: 'notifications.descriptionComments',
+  [NotificationPreferenceGroup.follows]: 'notifications.descriptionFollows',
+  [NotificationPreferenceGroup.reactions]: 'notifications.descriptionReactions',
 };
 
 export const NotificationChannels = ['in_app'] as const;

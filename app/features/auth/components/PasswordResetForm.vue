@@ -25,8 +25,7 @@ const props = defineProps<{
   class?: HTMLAttributes['class'];
 }>();
 
-const supabase = useSupabaseClient();
-const config = useRuntimeConfig();
+const { t } = useI18n();
 
 const { handleSubmit, isSubmitting, resetForm } = useForm({
   initialValues: {
@@ -36,17 +35,16 @@ const { handleSubmit, isSubmitting, resetForm } = useForm({
 });
 
 const requestResetPassword = handleSubmit(async values => {
-  const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
-    redirectTo: `${config.public.appUrl}/password/update`,
-  });
-
-  if (error) {
-    toast.error(getAuthErrorMessage(error));
-    return;
+  try {
+    await $fetch('/api/auth/password/reset', {
+      body: { email: values.email },
+      method: 'POST',
+    });
+    toast.success(t('toasts.password.resetEmailSent'));
+    resetForm();
+  } catch {
+    toast.error(t('toasts.password.failedToSendResetEmail'));
   }
-
-  toast.success('Password reset email sent. Check your inbox.');
-  resetForm();
 });
 </script>
 
@@ -54,23 +52,24 @@ const requestResetPassword = handleSubmit(async values => {
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader>
-        <CardTitle>Reset your password</CardTitle>
+        <CardTitle>{{ t('auth.passwordReset.title') }}</CardTitle>
         <CardDescription>
-          Enter your account email and we’ll send you a secure link to set a new
-          password.
+          {{ t('auth.passwordReset.description') }}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form id="password-reset" method="POST" @submit="requestResetPassword">
           <FieldGroup>
-            <VeeField v-slot="{ field, errors }" name="email">
+            <VeeField v-slot="{ errors, componentField }" name="email">
               <Field :data-invalid="!!errors.length">
-                <FieldLabel for="email">Email</FieldLabel>
+                <FieldLabel for="email">{{
+                  t('forms.fields.email.label')
+                }}</FieldLabel>
                 <Input
                   id="email"
-                  v-bind="field"
+                  v-bind="componentField"
                   type="email"
-                  placeholder="email@example.com"
+                  :placeholder="t('forms.fields.email.placeholder')"
                   :aria-invalid="!!errors.length"
                 />
                 <FieldError v-if="errors.length" :errors="errors" />
@@ -79,11 +78,17 @@ const requestResetPassword = handleSubmit(async values => {
 
             <Field>
               <Button type="submit" :disabled="isSubmitting">
-                {{ isSubmitting ? 'Sending reset link...' : 'Send reset link' }}
+                {{
+                  isSubmitting
+                    ? t('loading.sendingResetLink')
+                    : t('buttons.sendResetLink')
+                }}
               </Button>
               <FieldDescription class="text-center">
-                Remembered your password?
-                <NuxtLink to="login">Login</NuxtLink>
+                {{ t('auth.passwordReset.remembered') }}
+                <NuxtLinkLocale :to="{ name: 'login' }">{{
+                  t('buttons.login')
+                }}</NuxtLinkLocale>
               </FieldDescription>
             </Field>
           </FieldGroup>

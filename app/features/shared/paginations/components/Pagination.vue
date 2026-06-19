@@ -2,6 +2,7 @@
 import type { HTMLAttributes } from 'vue';
 
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { Label } from '@/components/ui/label';
 import {
@@ -13,6 +14,8 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { cn } from '@/lib/utils';
+
+const { t } = useI18n();
 
 interface Props {
   class?: HTMLAttributes['class'];
@@ -35,8 +38,8 @@ const props = withDefaults(defineProps<Props>(), {
   itemLabel: 'item',
   itemLabelPlural: undefined,
   limitOptions: () => [10, 20, 25, 50, 100],
-  ofLabel: 'of',
-  rowsPerPageLabel: 'Rows per page',
+  ofLabel: undefined,
+  rowsPerPageLabel: undefined,
   siblingCount: 1,
 });
 
@@ -52,9 +55,18 @@ const countText = computed(
     `${props.totalCount} ${props.totalCount !== 1 ? plural.value : props.itemLabel}`
 );
 
-const pageInfo = computed(
-  () =>
-    `Page ${props.page} ${props.ofLabel} ${props.totalPages} (${countText.value})`
+const ofLabel = computed(() => props.ofLabel ?? t('pagination.of'));
+const rowsPerPageLabel = computed(
+  () => props.rowsPerPageLabel ?? t('pagination.rowsPerPage')
+);
+
+const pageInfo = computed(() =>
+  t('pagination.pageDisplay', {
+    count: countText.value,
+    of: ofLabel.value,
+    page: props.page,
+    total: props.totalPages,
+  })
 );
 
 const options = computed(() =>

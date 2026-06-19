@@ -1,0 +1,20 @@
+{
+  "comments": {
+    "heading": "Commentaires",
+    "commentOnPost": "Commentaire sur le post de {name}",
+    "noCommentsYet": "Pas encore de commentaires. Soyez le premier à commenter!",
+    "deleteComment": "Supprimer le commentaire",
+    "deleteCommentDescription": "Cette action ne peut pas être annulée. Le commentaire sera supprimé définitivement.",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "reply": "Répondre",
+    "replyToAuthorComment": "Répondre au commentaire de {author}",
+    "replyToComments": "répondre aux commentaires",
+    "loadPrevious": "Charger les commentaires précédents",
+    "loadPreviousReplies": "Charger les réponses précédentes",
+    "showMore": "Voir plus",
+    "showLess": "Voir moins"
+  }
+}

@@ -1,81 +1,88 @@
 <script lang="ts" setup>
 import type { RouteLocationRaw } from 'vue-router';
 
+import { useMutation } from '@pinia/colada';
 import { useTimeAgo } from '@vueuse/core';
+import { type Notification, NotificationType } from '#shared/features/notifications';
+import { useI18n } from 'vue-i18n';
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { useUserFullname } from '~/features/shared/users/composables/useUserFullname';
 import { useUserImageUrl } from '~/features/users/composables/useUserImageUrl';
 
-import type { Notification } from '../notification.model';
+import { useMarkNotificationsRead } from '../notification.query';
 
-import { useMarkNotificationRead } from '../composables/useMarkNotificationRead';
-import { NotificationType } from '../notification.model';
+const props = defineProps<{ notification: Serialize<Notification> }>();
 
-const props = defineProps<{ notification: Notification }>();
+const { t } = useI18n();
+const { mutate: markRead } = useMutation(useMarkNotificationsRead());
+const timeAgo = useTimeAgo(() => new Date(props.notification.createdAt));
+const localePath = useLocalePath();
 
-const { mutate: markRead } = useMarkNotificationRead();
-const timeAgo = useTimeAgo(() => new Date(props.notification.created_at));
+const actorFullname = useUserFullname(
+  () => props.notification.actorUser ?? {},
+  t('users.defaultUsername')
+);
+const actorImageUrl = useUserImageUrl(() => props.notification.actorUser ?? {});
 
-const actorFullname = useUserFullname(() => props.notification.actor ?? {});
-const actorImageUrl = useUserImageUrl(() => props.notification.actor ?? {});
-
-const isUnread = computed(() => props.notification.read_at === null);
+const isUnread = computed(() => props.notification.readAt === null);
 
 const notificationLink = computed(() => {
   const { data, type } = props.notification;
 
   if (type === NotificationType.user_followed) {
     const username =
-      props.notification.actor?.username ?? props.notification.actor_id;
+      props.notification.actorUser?.username ?? props.notification.actorId;
     if (!username) return null;
-    return { name: 'u-userKey', params: { userKey: username } };
+    return localePath({ name: 'u-userKey', params: { userKey: username } });
   }
 
-  if (data.post_slug && data.post_id && data.post_author_username) {
-    return {
+  if (data.postSlug && data.postId && data.postAuthorUsername) {
+    return localePath({
       name: 'u-userKey-p-postId-postSlug',
       params: {
-        postId: data.post_id,
-        postSlug: data.post_slug,
-        userKey: data.post_author_username,
+        postId: data.postId,
+        postSlug: data.postSlug,
+        userKey: data.postAuthorUsername,
       },
-    };
+    });
   }
 
   return null;
 });
 
-const actorName = computed(() => actorFullname.value || 'Someone');
+const actorName = computed(
+  () => actorFullname.value || t('notifications.someone')
+);
 
 const message = computed(() => {
   const { data, type } = props.notification;
   const name = actorName.value;
-  const count = data.actor_count ?? 1;
+  const count = data.actorCount ?? 1;
   const others =
-    count > 1 ? ` and ${count - 1} other${count - 1 > 1 ? 's' : ''}` : '';
+    count > 1 ? ` ${t('notifications.andXOthers', { count: count - 1 })}` : '';
 
   switch (type) {
     case NotificationType.comment_reacted:
-      return `${name}${others} reacted to your comment`;
+      return `${name}${others} ${t('notifications.reactedToYourComment')}`;
     case NotificationType.comment_replied:
-      return `${name} replied to your comment`;
+      return `${name} ${t('notifications.repliedToYourComment')}`;
     case NotificationType.post_commented:
-      return `${name} commented on your post`;
+      return `${name} ${t('notifications.commentedOnYourPost')}`;
     case NotificationType.post_reacted:
-      return `${name}${others} reacted to your post`;
+      return `${name}${others} ${t('notifications.reactedToYourPost')}`;
     case NotificationType.user_followed:
-      return `${name} started following you`;
+      return `${name} ${t('notifications.startedFollowingYou')}`;
     case NotificationType.user_welcomed:
-      return 'Welcome! Your account has been verified.';
+      return t('notifications.welcomeVerified');
     default:
-      return `${name} interacted with your content`;
+      return `${name} ${t('notifications.interactedWithContent', { fallback: 'interacted with your content' })}`;
   }
 });
 
 const handleClick = () => {
   if (isUnread.value) {
-    markRead(props.notification.id);
+    markRead({ body: { ids: [props.notification.id] } });
   }
   if (notificationLink.value) {
     navigateTo(notificationLink.value as RouteLocationRaw);
@@ -89,12 +96,12 @@ const handleClick = () => {
     :class="{ 'bg-muted/50': isUnread }"
     @click="handleClick"
   >
-    <NuxtLink
-      v-if="notification.actor"
+    <NuxtLinkLocale
+      v-if="notification.actorUser"
       :to="{
         name: 'u-userKey',
         params: {
-          userKey: notification.actor.username ?? notification.actor.id,
+          userKey: notification.actorUser.username ?? notification.actorUser.id,
         },
       }"
       class="shrink-0"
@@ -103,10 +110,13 @@ const handleClick = () => {
       <Avatar class="size-9">
         <AvatarImage :src="actorImageUrl" :alt="actorName" />
       </Avatar>
-    </NuxtLink>
+    </NuxtLinkLocale>
 
     <Avatar v-else class="size-9 shrink-0">
-      <AvatarImage :src="actorImageUrl" alt="User" />
+      <AvatarImage
+        :src="actorImageUrl"
+        :alt="t('common.accessibility.userAvatar')"
+      />
     </Avatar>
 
     <div class="flex min-w-0 flex-1 flex-col gap-0.5">

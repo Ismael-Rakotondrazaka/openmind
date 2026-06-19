@@ -1,0 +1,16 @@
+{
+  "pagination": {
+    "first": "First",
+    "previous": "Previous",
+    "next": "Next",
+    "last": "Last",
+    "morePages": "More pages",
+    "rowsPerPage": "Rows per page",
+    "close": "Close",
+    "posts": "posts",
+    "followers": "followers",
+    "of": "of",
+    "pageDisplay": "Page {page} {of} {total} ({count})",
+    "pageOf": "Page {page} of {total}"
+  }
+}

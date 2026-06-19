@@ -5,28 +5,33 @@
 </template>
 
 <script lang="ts" setup>
-import { useGetPost } from '~/features/shared/posts/composables/useGetPost';
+import { useQuery } from '@pinia/colada';
+
 import PostPage from '~/features/shared/posts/pages/PostPage.vue';
+import { postByIdQuery } from '~/features/shared/posts/post.query';
 import { formatFallbackUrl } from '~/features/users/composables/useUserImageUrl';
 
 const route = useRoute('u-userKey-p-postId-postSlug');
+const fetchFn = useRequestFetch();
 
-const { data } = useGetPost(() => route.params.postId);
+const { data } = useQuery(() =>
+  postByIdQuery({ fetchFn, id: route.params.postId as string })
+);
 
 const authorName = computed(() => {
   const author = data.value?.author;
   if (!author) return undefined;
   return (
-    [author.first_name, author.last_name].filter(Boolean).join(' ') || undefined
+    [author.firstName, author.lastName].filter(Boolean).join(' ') || undefined
   );
 });
 
 const postImage = computed(
   () =>
-    data.value?.cover_url ??
+    data.value?.coverUrl ??
     formatFallbackUrl(
-      data.value?.author?.first_name,
-      data.value?.author?.last_name
+      data.value?.author?.firstName,
+      data.value?.author?.lastName
     )
 );
 

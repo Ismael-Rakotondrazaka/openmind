@@ -4,10 +4,7 @@ import Header from '@editorjs/header';
 import ImageTool from '@editorjs/image';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
-import { nanoid } from 'nanoid';
-import slugify from 'slugify';
-
-import { POST_FILES_BUCKET } from '~/features/shared/posts/post.config';
+import { useI18n } from 'vue-i18n';
 
 const content = defineModel<OutputData>('content', {
   default: () => ({
@@ -17,25 +14,29 @@ const content = defineModel<OutputData>('content', {
 });
 
 const holderId = useId();
-const client = useSupabaseClient();
-const user = useSupabaseUser();
+const { user } = useUserSession();
+const { t } = useI18n();
 
 let editor: EditorJS | null = null;
 
 async function uploadFile(file: File): Promise<string> {
-  if (!user.value?.sub) throw new Error('Not authenticated');
-  const lastDot = file.name.lastIndexOf('.');
-  const baseName = lastDot > 0 ? file.name.slice(0, lastDot) : file.name;
-  const ext = lastDot > 0 ? file.name.slice(lastDot) : '';
-  const sanitizedName = slugify(baseName, { lower: true, strict: true });
-  const path = `${user.value.sub}/openmind__${sanitizedName}__${nanoid()}${ext}`;
-  const { error } = await client.storage
-    .from(POST_FILES_BUCKET)
-    .upload(path, file, { upsert: false });
-  if (error) throw error;
-  const {
-    data: { publicUrl },
-  } = client.storage.from(POST_FILES_BUCKET).getPublicUrl(path);
+  if (!user.value) throw new Error(t('common.auth.notAuthenticated'));
+
+  const { publicUrl, uploadUrl } = await $fetch<{
+    path: string;
+    publicUrl: string;
+    uploadUrl: string;
+  }>('/api/storage/posts/files/presign', {
+    body: { contentType: file.type, fileName: file.name },
+    method: 'POST',
+  });
+
+  await fetch(uploadUrl, {
+    body: file,
+    headers: { 'Content-Type': file.type },
+    method: 'PUT',
+  });
+
   return publicUrl;
 }
 

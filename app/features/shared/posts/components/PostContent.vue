@@ -10,7 +10,7 @@
 import type { OutputData } from '@editorjs/editorjs';
 
 type Props = {
-  content: OutputData;
+  content?: Serialize<OutputData>;
 };
 
 const props = defineProps<Props>();

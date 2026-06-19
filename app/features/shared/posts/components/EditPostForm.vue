@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { OutputData } from '@editorjs/editorjs';
+import type { Post } from '#shared/features/posts';
 import type { HTMLAttributes } from 'vue';
 
-import slugify from 'slugify';
+import { useMutation } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
-
-import type { Post } from '@/features/shared/posts/post.model';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -17,25 +17,25 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
-  TagsInput,
-  TagsInputInput,
-  TagsInputItem,
-  TagsInputItemDelete,
-  TagsInputItemText,
-} from '@/components/ui/tags-input';
-import { useCreatePostTag } from '@/features/shared/post-tags/composables/useCreatePostTag';
-import { useDeletePostTag } from '@/features/shared/post-tags/composables/useDeletePostTag';
-import { useUpdatePost } from '@/features/shared/posts/composables/useUpdatePost';
+  useDestroyPostTag,
+  useStorePostTag,
+} from '@/features/shared/post-tags/post-tag.query';
 import { useUploadPostFile } from '@/features/shared/posts/composables/useUploadPostFile';
+import { useUpdatePost } from '@/features/shared/posts/post.query';
 import { UpdatePostSchema } from '@/features/shared/posts/post.schema';
-import { useCreateTag } from '@/features/shared/tags/composables/useCreateTag';
-import { useFindTagByValue } from '@/features/shared/tags/composables/useFindTagByValue';
+import TagsInputAutocomplete from '@/features/shared/tags/components/TagsInputAutocomplete.vue';
+import { useStoreTag } from '@/features/shared/tags/tag.query';
+import { findTagByValue } from '@/features/shared/tags/tag.service';
 import { cn } from '@/lib/utils';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];
-  post: Post;
+  post: Serialize<Post>;
 }>();
+
+const localePath = useLocalePath();
 
 const originalTagMap = computed(
   () => new Map(props.post.tags.map(t => [t.tag.value, t.tag.id]))
@@ -44,20 +44,19 @@ const originalTagMap = computed(
 const { handleSubmit, isSubmitting, setFieldValue } = useForm({
   initialValues: {
     content: props.post.content as OutputData,
-    coverUrl: props.post.cover_url ?? null,
+    coverUrl: props.post.coverUrl ?? null,
     tags: props.post.tags.map(t => t.tag.value),
     title: props.post.title,
   },
   validationSchema: toTypedSchema(UpdatePostSchema),
 });
 
-const user = useSupabaseUser();
+const { user } = useUserSession();
 const uploadPostFile = useUploadPostFile();
-const updatePostMutation = useUpdatePost();
-const createTagMutation = useCreateTag();
-const createPostTagMutation = useCreatePostTag();
-const deletePostTagMutation = useDeletePostTag();
-const findTagByValue = useFindTagByValue();
+const { mutateAsync: updatePost } = useMutation(useUpdatePost());
+const { mutateAsync: storeTag } = useMutation(useStoreTag());
+const { mutateAsync: storePostTag } = useMutation(useStorePostTag());
+const { mutateAsync: destroyPostTag } = useMutation(useDestroyPostTag());
 const coverUploading = ref(false);
 const submitStatus = ref<'draft' | 'published'>(
   props.post.status as 'draft' | 'published'
@@ -72,7 +71,7 @@ const handleCoverChange = async (event: Event) => {
     const { publicUrl } = await uploadPostFile(user.value.id, file);
     setFieldValue('coverUrl', publicUrl);
   } catch {
-    toast.error('Failed to upload cover image');
+    toast.error(t('toasts.post.failedToUploadCover'));
   } finally {
     coverUploading.value = false;
     input.value = '';
@@ -85,26 +84,24 @@ const goBack = () => {
   if (window?.history?.length > 1) {
     router.back();
   } else {
-    navigateTo('/');
+    navigateTo(localePath({ name: 'index' }));
   }
 };
 
 const onSubmit = handleSubmit(async values => {
   try {
-    await updatePostMutation.mutateAsync({
-      id: props.post.id,
-      updates: {
-        content: values.content as unknown as Tables<'posts'>['content'],
-        cover_url: values.coverUrl ?? null,
-        slug: slugify(values.title, { lower: true, strict: true }),
+    await updatePost({
+      body: {
+        content: values.content as unknown as Record<string, unknown>,
+        coverUrl: values.coverUrl ?? null,
         status: submitStatus.value,
         title: values.title,
       },
+      id: props.post.id,
     });
 
     const currentTagValues = values.tags;
 
-    // Resolve all current tag values to IDs
     const resolvedTagIds: string[] = [];
     const uniqueValues = [...new Set(currentTagValues)];
 
@@ -116,47 +113,36 @@ const onSubmit = handleSubmit(async values => {
         if (existing) {
           resolvedTagIds.push(existing.id);
         } else {
-          const tag = await createTagMutation.mutateAsync({
-            slug: slugify(value, { lower: true, strict: true }),
-            value,
-          });
+          const tag = await storeTag({ body: { value } });
           resolvedTagIds.push(tag.id);
         }
       }
     }
 
-    // Add new post-tag associations
     const originalIds = new Set(originalTagMap.value.values());
     for (const tagId of resolvedTagIds) {
       if (!originalIds.has(tagId)) {
-        await createPostTagMutation.mutateAsync({
-          post_id: props.post.id,
-          tag_id: tagId,
-        });
+        await storePostTag({ body: { postId: props.post.id, tagId } });
       }
     }
 
-    // Remove deleted post-tag associations
     const resolvedSet = new Set(resolvedTagIds);
     for (const [, tagId] of originalTagMap.value) {
       if (!resolvedSet.has(tagId)) {
-        await deletePostTagMutation.mutateAsync({
-          postId: props.post.id,
-          tagId,
-        });
+        await destroyPostTag({ postId: props.post.id, tagId });
       }
     }
 
     toast.success(
       submitStatus.value === 'published'
-        ? 'Post published'
-        : 'Post saved as draft'
+        ? t('toasts.post.published')
+        : t('toasts.post.savedDraft')
     );
 
     goBack();
   } catch (error) {
     toast.error(
-      error instanceof Error ? error.message : 'Failed to update post'
+      error instanceof Error ? error.message : t('toasts.post.failedToUpdate')
     );
   }
 });
@@ -164,29 +150,28 @@ const onSubmit = handleSubmit(async values => {
 
 <template>
   <div :class="cn('space-y-6', props.class)">
-    <h3 class="leading-none font-semibold">Edit post</h3>
+    <h3 class="leading-none font-semibold">
+      {{ t('posts.editPostTitle') }}
+    </h3>
 
     <p class="text-muted-foreground text-sm">
-      Update your post details below. Changes will be reflected immediately
-      after saving.
+      {{ t('posts.editPostDescription') }}
     </p>
 
     <form id="edit-post" method="POST" @submit="onSubmit">
       <FieldGroup>
-        <VeeField v-slot="{ field, errors }" name="title">
+        <VeeField v-slot="{ errors, componentField }" name="title">
           <Field :data-invalid="!!errors.length">
-            <FieldLabel for="title">Title</FieldLabel>
+            <FieldLabel for="title">{{ t('posts.title') }}</FieldLabel>
             <FieldDescription>
-              Craft a captivating headline that summarizes the essence of your
-              article and sparks curiosity.
+              {{ t('posts.titleDescription') }}
             </FieldDescription>
             <Input
               id="title"
-              :model-value="field.value as string"
+              v-bind="componentField"
               type="text"
-              placeholder="Your post title"
+              :placeholder="t('posts.titlePlaceholder')"
               :aria-invalid="!!errors.length"
-              @update:model-value="field.onChange"
             />
             <FieldError v-if="errors.length" :errors="errors" />
           </Field>
@@ -194,10 +179,9 @@ const onSubmit = handleSubmit(async values => {
 
         <VeeField v-slot="{ field, errors }" name="content">
           <Field :data-invalid="!!errors.length">
-            <FieldLabel for="content">Content</FieldLabel>
+            <FieldLabel for="content">{{ t('posts.content') }}</FieldLabel>
             <FieldDescription>
-              Pour your ideas, insights, and expertise into engaging and
-              informative prose to captivate your audience.
+              {{ t('posts.contentDescription') }}
             </FieldDescription>
             <EditorJs
               :content="field.value ?? { blocks: [] }"
@@ -209,9 +193,11 @@ const onSubmit = handleSubmit(async values => {
         </VeeField>
 
         <Field>
-          <FieldLabel>Cover image (optional)</FieldLabel>
+          <FieldLabel
+            >{{ t('posts.coverImage') }} {{ t('posts.optional') }}</FieldLabel
+          >
           <FieldDescription>
-            Choose an eye-catching image to grab your audience's attention.
+            {{ t('posts.coverImageDescription') }}
           </FieldDescription>
           <input
             type="file"
@@ -221,29 +207,23 @@ const onSubmit = handleSubmit(async values => {
             @change="handleCoverChange"
           />
           <p v-if="coverUploading" class="text-muted-foreground mt-1 text-sm">
-            Uploading...
+            {{ t('loading.uploading') }}
           </p>
         </Field>
 
-        <VeeField v-slot="{ field, errors }" name="tags">
+        <VeeField v-slot="{ errors, field, handleChange }" name="tags">
           <Field :data-invalid="!!errors.length">
-            <FieldLabel for="tags">Tags (optional)</FieldLabel>
+            <FieldLabel for="tags"
+              >{{ t('posts.tags') }} {{ t('posts.optional') }}</FieldLabel
+            >
             <FieldDescription>
-              Add descriptive keywords to categorize your article and improve
-              discoverability.
+              {{ t('posts.tagsDescription') }}
             </FieldDescription>
-            <TagsInput
+            <TagsInputAutocomplete
               :model-value="field.value"
               :aria-invalid="!!errors.length"
-              class="min-h-10"
-              @update:model-value="field.onChange"
-            >
-              <TagsInputItem v-for="tag in field.value" :key="tag" :value="tag">
-                <TagsInputItemText />
-                <TagsInputItemDelete />
-              </TagsInputItem>
-              <TagsInputInput placeholder="Add a tag and press Enter" />
-            </TagsInput>
+              @update:model-value="handleChange($event)"
+            />
             <FieldError v-if="errors.length" :errors="errors" />
           </Field>
         </VeeField>
@@ -256,7 +236,7 @@ const onSubmit = handleSubmit(async values => {
           >
             <Icon name="mdi:publish" size="1rem" />
 
-            {{ isSubmitting ? 'Saving...' : 'Publish' }}
+            {{ isSubmitting ? t('loading.saving') : t('buttons.publish') }}
           </Button>
           <Button
             type="submit"
@@ -266,7 +246,7 @@ const onSubmit = handleSubmit(async values => {
           >
             <Icon name="mdi:content-save-outline" size="1rem" />
 
-            {{ isSubmitting ? 'Saving...' : 'Save as draft' }}
+            {{ isSubmitting ? t('loading.saving') : t('buttons.saveDraft') }}
           </Button>
         </div>
       </FieldGroup>

@@ -1,0 +1,45 @@
+{
+  "forms": {
+    "buttons": {
+      "submit": "Envoyer",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "reset": "Réinitialiser",
+      "send": "Envoyer",
+      "signIn": "Se connecter",
+      "facebookLogin": "Se connecter avec Facebook",
+      "register": "Créer un compte"
+    },
+    "fields": {
+      "email": {
+        "label": "Email",
+        "placeholder": "email{'@'}exemple.com",
+        "examplePlaceholder": "utilisateur{'@'}exemple.com"
+      },
+      "password": {
+        "label": "Mot de passe",
+        "placeholder": "••••••••"
+      },
+      "title": {
+        "label": "Titre"
+      },
+      "content": {
+        "label": "Contenu"
+      },
+      "required": "Obligatoire",
+      "selectFaculty": "Veuillez sélectionner une faculté"
+    },
+    "validation": {
+      "photoRequired": "La photo est requise",
+      "nicRequired": "La CIN est requise",
+      "schoolCertRequired": "Le certificat de scolarité est requis",
+      "passwordMinLength": "Le mot de passe doit contenir au moins 8 caractères",
+      "passwordsMismatch": "Les mots de passe ne correspondent pas",
+      "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+      "addTagPrompt": "Ajoutez un tag et appuyez sur Entrée",
+      "firstNameRequired": "Le prénom est requis",
+      "lastNameRequired": "Le nom est requis",
+      "usernameRequired": "Le nom d'utilisateur est requis"
+    }
+  }
+}

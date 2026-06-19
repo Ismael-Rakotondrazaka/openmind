@@ -1,0 +1,45 @@
+{
+  "forms": {
+    "buttons": {
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "save": "Save",
+      "reset": "Reset",
+      "send": "Send",
+      "signIn": "Sign in",
+      "facebookLogin": "Sign in with Facebook",
+      "register": "Create account"
+    },
+    "fields": {
+      "email": {
+        "label": "Email",
+        "placeholder": "email{'@'}example.com",
+        "examplePlaceholder": "user{'@'}example.com"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "••••••••"
+      },
+      "title": {
+        "label": "Title"
+      },
+      "content": {
+        "label": "Content"
+      },
+      "required": "Required",
+      "selectFaculty": "Please select a faculty"
+    },
+    "validation": {
+      "photoRequired": "Photo is required",
+      "nicRequired": "ID card is required",
+      "schoolCertRequired": "School certificate is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordsMismatch": "Passwords do not match",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "addTagPrompt": "Add a tag and press Enter",
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "usernameRequired": "Username is required"
+    }
+  }
+}

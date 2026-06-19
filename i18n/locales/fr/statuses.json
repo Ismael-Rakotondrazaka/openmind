@@ -1,0 +1,65 @@
+{
+  "statuses": {
+    "renewal": {
+      "pending": "En attente",
+      "accepted": "Accepté",
+      "refused": "Refusé",
+      "validated": "Validé"
+    },
+    "maintenance": {
+      "pending": "En attente",
+      "accepted": "Accepté",
+      "refused": "Refusé",
+      "done": "Terminé"
+    },
+    "maintenanceType": {
+      "electrical": "Électrique",
+      "equipment": "Équipement",
+      "hvac": "CVC",
+      "other": "Autre",
+      "plumbing": "Plomberie"
+    },
+    "housingApplication": {
+      "pending": "En attente",
+      "accepted": "Accepté",
+      "refused": "Refusé",
+      "validated": "Validé"
+    },
+    "announcement": {
+      "draft": "Brouillon",
+      "published": "Publié"
+    },
+    "occupancy": {
+      "available": "Disponible",
+      "full": "Complet",
+      "overbooked": "Surpeuplé"
+    }
+  },
+  "selects": {
+    "status": "Statut",
+    "type": "Type",
+    "allStatuses": "Tous les statuts",
+    "allTypes": "Tous les types",
+    "selectFaculty": "Sélectionner une faculté...",
+    "selectBuilding": "Sélectionner un bâtiment...",
+    "academicSessions": "Sessions académiques"
+  },
+  "workflow": {
+    "acceptDialog": {
+      "title": "Accepter la demande",
+      "hint": "La demande passera au statut accepté."
+    },
+    "rejectDialog": {
+      "title": "Refuser la demande",
+      "confirm": "Confirmer le refus"
+    },
+    "validateDialog": {
+      "title": "Valider la demande",
+      "hint": "Assignez une chambre avant de valider.",
+      "confirm": "Confirmer la validation"
+    },
+    "chooseReason": "Choisir un motif",
+    "chooseLodgment": "Choisir une chambre",
+    "chooseRole": "Choisir un rôle"
+  }
+}

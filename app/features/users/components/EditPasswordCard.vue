@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod';
+import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
 import { z } from 'zod';
 
@@ -18,17 +19,27 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { useUpdateAuthUserPassword } from '@/features/auth/auth.query';
 import { PasswordUpdateBodySchema } from '@/features/auth/auth.schema';
-import { useUpdateAuthUserPassword } from '@/features/auth/composables/useUpdateAuthUserPassword';
+
+const { t } = useI18n();
 
 const ChangePasswordBodySchema = PasswordUpdateBodySchema.extend({
-  confirmPassword: z.string().min(8, 'Password must be at least 8 characters'),
+  confirmPassword: z.string().min(8),
 }).refine(values => values.password === values.confirmPassword, {
-  message: 'Passwords do not match',
+  message: t('users.passwordsDoNotMatch'),
   path: ['confirmPassword'],
 });
 
-const { handleSubmit, isSubmitting, resetForm } = useForm({
+// Custom validator with translation for password min length
+const validatePasswordMinLength = (password: string): string | undefined => {
+  if (password.length < 8) {
+    return t('users.passwordMinLength');
+  }
+  return undefined;
+};
+
+const { handleSubmit, isSubmitting, resetForm, setFieldError } = useForm({
   initialValues: {
     confirmPassword: '',
     password: '',
@@ -36,15 +47,32 @@ const { handleSubmit, isSubmitting, resetForm } = useForm({
   validationSchema: toTypedSchema(ChangePasswordBodySchema),
 });
 
-const updateAuthUserPasswordMutation = useUpdateAuthUserPassword();
+const updateAuthUserPasswordMutation = useMutation(useUpdateAuthUserPassword());
 
 const onSubmit = handleSubmit(async values => {
+  // Validate password min length with translation
+  const passwordError = validatePasswordMinLength(values.password);
+  if (passwordError) {
+    setFieldError('password', passwordError);
+    return;
+  }
+
+  const confirmPasswordError = validatePasswordMinLength(
+    values.confirmPassword
+  );
+  if (confirmPasswordError) {
+    setFieldError('confirmPassword', confirmPasswordError);
+    return;
+  }
+
   try {
-    await updateAuthUserPasswordMutation.mutateAsync(values.password);
+    await updateAuthUserPasswordMutation.mutateAsync({
+      password: values.password,
+    });
     resetForm({ values: { confirmPassword: '', password: '' } });
-    toast.success('Password updated successfully');
+    toast.success(t('toasts.password.updated'));
   } catch {
-    toast.error('Failed to update password');
+    toast.error(t('toasts.password.failedToUpdate'));
   }
 });
 </script>
@@ -52,39 +80,41 @@ const onSubmit = handleSubmit(async values => {
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>Change Password</CardTitle>
+      <CardTitle>{{ t('users.changePassword') }}</CardTitle>
       <CardDescription>
-        Update your account password. Use at least 8 characters.
+        {{ t('users.changePasswordDescription') }}
       </CardDescription>
     </CardHeader>
     <CardContent>
       <form id="password" method="POST" @submit="onSubmit">
         <FieldGroup>
-          <VeeField v-slot="{ field, errors }" name="password">
+          <VeeField v-slot="{ errors, componentField }" name="password">
             <Field :data-invalid="!!errors.length">
-              <FieldLabel for="password">New password</FieldLabel>
+              <FieldLabel for="password">{{
+                t('users.newPassword')
+              }}</FieldLabel>
               <Input
                 id="password"
-                :model-value="field.value"
+                v-bind="componentField"
                 type="password"
                 autocomplete="new-password"
                 :aria-invalid="!!errors.length"
-                @update:model-value="field.onChange"
               />
               <FieldError v-if="errors.length" :errors="errors" />
             </Field>
           </VeeField>
 
-          <VeeField v-slot="{ field, errors }" name="confirmPassword">
+          <VeeField v-slot="{ errors, componentField }" name="confirmPassword">
             <Field :data-invalid="!!errors.length">
-              <FieldLabel for="confirmPassword">Confirm password</FieldLabel>
+              <FieldLabel for="confirmPassword">{{
+                t('users.confirmPassword')
+              }}</FieldLabel>
               <Input
                 id="confirmPassword"
-                :model-value="field.value"
+                v-bind="componentField"
                 type="password"
                 autocomplete="new-password"
                 :aria-invalid="!!errors.length"
-                @update:model-value="field.onChange"
               />
               <FieldError v-if="errors.length" :errors="errors" />
             </Field>
@@ -92,7 +122,11 @@ const onSubmit = handleSubmit(async values => {
 
           <Field>
             <Button type="submit" :disabled="isSubmitting">
-              {{ isSubmitting ? 'Updating password...' : 'Update password' }}
+              {{
+                isSubmitting
+                  ? t('loading.changingPassword')
+                  : t('buttons.changePassword')
+              }}
             </Button>
           </Field>
         </FieldGroup>

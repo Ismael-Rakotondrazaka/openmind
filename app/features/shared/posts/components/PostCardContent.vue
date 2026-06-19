@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="mb-2 line-clamp-2 text-lg font-bold text-slate-900 md:text-xl">
-      <NuxtLink
+      <NuxtLinkLocale
         :to="{
           name: 'u-userKey-p-postId-postSlug',
           params: {
@@ -10,7 +10,7 @@
             postSlug: post.slug,
           },
         }"
-        >{{ post.title }}</NuxtLink
+        >{{ post.title }}</NuxtLinkLocale
       >
     </h1>
 
@@ -20,8 +20,8 @@
       </Badge>
     </div>
 
-    <figure v-if="post.cover_url !== null" class="mb-3">
-      <NuxtLink
+    <figure v-if="post.coverUrl !== null" class="mb-3">
+      <NuxtLinkLocale
         :to="{
           name: 'u-userKey-p-postId-postSlug',
           params: {
@@ -32,11 +32,11 @@
         }"
       >
         <img
-          :src="post.cover_url"
+          :src="post.coverUrl"
           class="aspect-video w-full rounded-md object-cover object-center"
           :alt="post.title"
         />
-      </NuxtLink>
+      </NuxtLinkLocale>
     </figure>
 
     <p
@@ -49,18 +49,21 @@
 </template>
 
 <script lang="ts" setup>
+import type { OutputData } from '@editorjs/editorjs';
+import type { PostListItem } from '#shared/features/posts';
+
 import Badge from '~/components/ui/badge/Badge.vue';
 
-import type { Post } from '../post.model';
-
 type Props = {
-  post: Post;
+  post: Serialize<PostListItem>;
 };
 
 const props = defineProps<Props>();
 
 const contentPreview = computed(() => {
-  const blocks = props.post.content?.blocks;
+  if (!('content' in props.post)) return '';
+
+  const blocks = (props.post.content as OutputData)?.blocks;
   if (!blocks?.length) return '';
   return blocks
     .filter(

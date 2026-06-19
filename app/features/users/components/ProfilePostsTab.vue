@@ -1,7 +1,10 @@
 <script lang="ts" setup>
-import { refDebounced } from '@vueuse/core';
+import type { PostStatus } from '#shared/features/posts';
 
-import type { PostStatus } from '~/features/shared/posts/post.model';
+import { useQuery } from '@pinia/colada';
+import { refDebounced } from '@vueuse/core';
+import { PostStatuses } from '#shared/features/posts';
+import { useI18n } from 'vue-i18n';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,9 +23,8 @@ import {
 } from '@/components/ui/select';
 import Pagination from '~/features/shared/paginations/components/Pagination.vue';
 import PostCard from '~/features/shared/posts/components/PostCard.vue';
-import { useGetPosts } from '~/features/shared/posts/composables/useGetPosts';
-import { PostStatuses } from '~/features/shared/posts/post.model';
-import { useGetTags } from '~/features/shared/tags/composables/useGetTags';
+import { postListQuery } from '~/features/shared/posts/post.query';
+import { tagListQuery } from '~/features/shared/tags/tag.query';
 
 interface Props {
   isOwnProfile?: boolean;
@@ -30,6 +32,8 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+const { t } = useI18n();
 
 const postSearch = ref('');
 const debouncedPostSearch = refDebounced(postSearch, 300);
@@ -53,8 +57,11 @@ const toggleTag = (tagId: string) => {
 
 const isTagPopoverOpen = ref(false);
 const tagSearch = ref('');
+const fetchFn = useRequestFetch();
 
-const { data: allTagsData } = useGetTags(() => ({ limit: 100 }));
+const { data: allTagsData } = useQuery(() =>
+  tagListQuery({ fetchFn, pageSize: 100 })
+);
 const allTags = computed(() => allTagsData.value?.data ?? []);
 
 const filteredTagOptions = computed(() => {
@@ -67,14 +74,17 @@ const selectedTagObjects = computed(() =>
   allTags.value.filter(t => selectedTagIds.value.includes(t.id))
 );
 
-const { data: postsData, isPending: isPostsPending } = useGetPosts(() => ({
-  author_id: props.profileId,
-  limit: postsLimit.value,
-  page: postsPage.value,
-  search: debouncedPostSearch.value || undefined,
-  status: selectedStatus.value === 'all' ? undefined : selectedStatus.value,
-  tagIds: selectedTagIds.value.length ? selectedTagIds.value : undefined,
-}));
+const { data: postsData, isLoading: isPostsPending } = useQuery(() =>
+  postListQuery({
+    authorId: props.profileId,
+    fetchFn,
+    page: postsPage.value,
+    pageSize: postsLimit.value,
+    search: debouncedPostSearch.value || undefined,
+    status: selectedStatus.value === 'all' ? undefined : selectedStatus.value,
+    tagIds: selectedTagIds.value.length ? selectedTagIds.value : undefined,
+  })
+);
 
 const postsTotalPages = computed(() =>
   Math.ceil((postsData.value?.count ?? 0) / postsLimit.value)
@@ -84,14 +94,17 @@ const postsTotalPages = computed(() =>
 <template>
   <div class="mt-4 flex flex-col gap-4">
     <div class="flex flex-col gap-2">
-      <Input v-model="postSearch" placeholder="Search posts..." />
+      <Input
+        v-model="postSearch"
+        :placeholder="t('common.search.placeholderPosts')"
+      />
       <div class="flex flex-wrap items-center gap-2">
         <Select v-if="isOwnProfile" v-model="selectedStatus">
           <SelectTrigger class="h-8 w-36 text-sm">
-            <SelectValue placeholder="Status" />
+            <SelectValue :placeholder="t('selects.status')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">{{ t('selects.allStatuses') }}</SelectItem>
             <SelectItem
               v-for="status in PostStatuses"
               :key="status"
@@ -105,7 +118,7 @@ const postsTotalPages = computed(() =>
           <PopoverTrigger as-child>
             <Button variant="outline" size="sm" class="gap-1.5">
               <Icon name="mdi:tag-outline" size="1rem" />
-              Tags
+              {{ t('posts.tagsButton') }}
               <Badge
                 v-if="selectedTagIds.length"
                 variant="secondary"
@@ -118,7 +131,7 @@ const postsTotalPages = computed(() =>
           <PopoverContent class="w-56 p-2" align="start">
             <Input
               v-model="tagSearch"
-              placeholder="Search tags..."
+              :placeholder="t('posts.searchTags')"
               class="mb-2 h-8 text-sm"
             />
             <div class="max-h-48 overflow-y-auto">
@@ -126,7 +139,7 @@ const postsTotalPages = computed(() =>
                 v-if="filteredTagOptions.length === 0"
                 class="text-muted-foreground py-3 text-center text-sm"
               >
-                No tags found.
+                {{ t('posts.noTagsFound') }}
               </p>
               <button
                 v-for="tag in filteredTagOptions"
@@ -168,7 +181,7 @@ const postsTotalPages = computed(() =>
     </div>
 
     <div v-if="isPostsPending" class="text-muted-foreground text-sm">
-      Loading...
+      {{ t('users.loadingMessage') }}
     </div>
     <template v-else>
       <PostCard v-for="post in postsData?.data" :key="post.id" :post="post" />
@@ -176,7 +189,7 @@ const postsTotalPages = computed(() =>
         v-if="!postsData?.data?.length"
         class="text-muted-foreground py-6 text-center text-sm"
       >
-        No posts yet.
+        {{ t('users.noPostsYet') }}
       </p>
       <Pagination
         v-if="(postsData?.count ?? 0) > postsLimit"

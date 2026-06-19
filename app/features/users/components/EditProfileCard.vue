@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import slugify from 'slugify';
+import type { User } from '#shared/features/users';
+
+import { useMutation, useQuery } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
 import { z } from 'zod';
-
-import type { User } from '~/features/shared/users/user.model';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -21,41 +22,43 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { usernameExistsQuery } from '@/features/auth/auth.query';
+import TagsInputAutocomplete from '@/features/shared/tags/components/TagsInputAutocomplete.vue';
+import { useStoreTag } from '@/features/shared/tags/tag.query';
+import { findTagByValue } from '@/features/shared/tags/tag.service';
 import {
-  TagsInput,
-  TagsInputInput,
-  TagsInputItem,
-  TagsInputItemDelete,
-  TagsInputItemText,
-} from '@/components/ui/tags-input';
-import { useIsUsernameExists } from '@/features/auth/composables/useIsUsernameExists';
-import { useUpdateAuthUserMetadata } from '@/features/auth/composables/useUpdateAuthUserMetadata';
-import { useCreateTag } from '@/features/shared/tags/composables/useCreateTag';
-import { useFindTagByValue } from '@/features/shared/tags/composables/useFindTagByValue';
-import { useCreateUserTag } from '@/features/shared/user-tags/composables/useCreateUserTag';
-import { useDeleteUserTag } from '@/features/shared/user-tags/composables/useDeleteUserTag';
-import { useGetUserTagsWithDetails } from '@/features/shared/user-tags/composables/useGetUserTagsWithDetails';
-import { useUpdateUser } from '@/features/shared/users/composables/useUpdateUser';
+  useDestroyUserTag,
+  userTagListQuery,
+  useStoreUserTag,
+} from '@/features/shared/user-tags/user-tag.query';
 import { useUploadUserAvatar } from '@/features/shared/users/composables/useUploadUserAvatar';
 import { getUserFullname } from '@/features/shared/users/composables/useUserFullname';
+import { useUpdateProfile } from '@/features/shared/users/user.query';
 import { formatFallbackUrl } from '@/features/users/composables/useUserImageUrl';
 
+const { t } = useI18n();
+
 interface Props {
-  user: User;
+  user: Serialize<User>;
 }
 
 const props = defineProps<Props>();
 
 const SettingsSchema = z.object({
-  firstName: z.string().trim().min(1, 'First name is required'),
-  lastName: z.string().trim().min(1, 'Last name is required'),
+  firstName: z.string().trim().min(1),
+  lastName: z.string().trim().min(1),
   tags: z.array(z.string().min(1)),
-  username: z.string().trim().min(1, 'Username is required'),
+  username: z.string().trim().min(1),
 });
 
-const { data: userTagsData } = useGetUserTagsWithDetails(() => props.user.id);
+const fetchFn = useRequestFetch();
 
-const tags = computed(() => userTagsData.value ?? []);
+const { data: userTagsData } = useQuery(() => ({
+  ...userTagListQuery({ fetchFn, userId: props.user.id }),
+  enabled: Boolean(props.user.id),
+}));
+
+const tags = computed(() => userTagsData.value?.data ?? []);
 
 const avatarFile = ref<File | null>(null);
 const avatarPreviewUrl = ref<null | string>(null);
@@ -63,8 +66,8 @@ const avatarInputRef = ref<HTMLInputElement | null>(null);
 
 const avatarUrl = computed(
   () =>
-    props.user.image_url ??
-    formatFallbackUrl(props.user.first_name, props.user.last_name)
+    props.user.imageUrl ??
+    formatFallbackUrl(props.user.firstName, props.user.lastName)
 );
 
 const currentAvatarUrl = computed(
@@ -87,85 +90,111 @@ const handleAvatarChange = (event: Event) => {
 
 const { handleSubmit, isSubmitting, resetForm, setFieldError } = useForm({
   initialValues: {
-    firstName: '',
-    lastName: '',
+    firstName: props.user.firstName ?? '',
+    lastName: props.user.lastName ?? '',
     tags: [] as string[],
-    username: '',
+    username: props.user.username ?? '',
   },
   validationSchema: toTypedSchema(SettingsSchema),
 });
 
-watchEffect(() => {
-  if (props.user && userTagsData.value !== undefined) {
-    resetForm({
-      values: {
-        firstName: props.user.first_name ?? '',
-        lastName: props.user.last_name ?? '',
-        tags: userTagsData.value.map(t => t.tag.value),
-        username: props.user.username ?? '',
-      },
-    });
+// Custom field validator with translations
+const validateField = (
+  field: 'firstName' | 'lastName' | 'username',
+  value: string
+): string | undefined => {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    const keyMap = {
+      firstName: 'users.firstNameRequired',
+      lastName: 'users.lastNameRequired',
+      username: 'users.usernameRequired',
+    };
+    return t(keyMap[field]);
   }
-});
+  return undefined;
+};
+
+watch(
+  [() => props.user, userTagsData],
+  ([user, tagsData]) => {
+    if (user && tagsData !== undefined) {
+      resetForm({
+        values: {
+          firstName: user.firstName ?? '',
+          lastName: user.lastName ?? '',
+          tags: tags.value.map(t => t.tag.value),
+          username: user.username ?? '',
+        },
+      });
+    }
+  },
+  { immediate: true }
+);
 
 const usernameToCheck = ref('');
-const usernameExistsQuery = useIsUsernameExists({
-  get username() {
-    return usernameToCheck.value;
-  },
-});
+const { refetch: refetchUsernameExists } = useQuery(() =>
+  usernameExistsQuery({ fetchFn, username: usernameToCheck.value })
+);
 
-const updateUserMutation = useUpdateUser();
+const { mutateAsync: updateProfile } = useMutation(useUpdateProfile());
 const uploadUserAvatar = useUploadUserAvatar();
-const createTagMutation = useCreateTag();
-const createUserTagMutation = useCreateUserTag();
-const deleteUserTagMutation = useDeleteUserTag();
-const findTagByValue = useFindTagByValue();
-
-const updateAuthUserMetadataMutation = useUpdateAuthUserMetadata();
+const { mutateAsync: storeTag } = useMutation(useStoreTag());
+const { mutateAsync: storeUserTag } = useMutation(useStoreUserTag());
+const { mutateAsync: destroyUserTag } = useMutation(useDestroyUserTag());
 
 const onSubmit = handleSubmit(async values => {
   if (!props.user) return;
+
+  // Validate required fields with translations
+  const firstNameError = validateField('firstName', values.firstName);
+  const lastNameError = validateField('lastName', values.lastName);
+  const usernameError = validateField('username', values.username);
+
+  if (firstNameError) {
+    setFieldError('firstName', firstNameError);
+    return;
+  }
+  if (lastNameError) {
+    setFieldError('lastName', lastNameError);
+    return;
+  }
+  if (usernameError) {
+    setFieldError('username', usernameError);
+    return;
+  }
 
   try {
     if (values.username !== props.user.username) {
       usernameToCheck.value = values.username;
       const { data: isExists, error: usernameError } =
-        await usernameExistsQuery.refetch();
+        await refetchUsernameExists();
       if (usernameError) {
-        toast.error('Unable to validate username uniqueness right now.');
+        toast.error(t('toasts.mustBeLoggedIn'));
         return;
       }
       if (isExists) {
-        setFieldError('username', 'Username already taken');
+        setFieldError('username', t('users.usernameAlreadyTaken'));
         return;
       }
     }
 
-    let imageUrl = props.user.image_url;
+    let imageUrl = props.user.imageUrl;
     if (avatarFile.value) {
       imageUrl = await uploadUserAvatar(props.user.id, avatarFile.value);
     }
 
-    await updateUserMutation.mutateAsync({
-      id: props.user.id,
-      updates: {
-        first_name: values.firstName,
-        image_url: imageUrl,
-        last_name: values.lastName,
+    await updateProfile({
+      body: {
+        firstName: values.firstName,
+        imageUrl: imageUrl ?? undefined,
+        lastName: values.lastName,
         username: values.username,
       },
+      id: props.user.id,
     });
 
-    await updateAuthUserMetadataMutation.mutateAsync({
-      first_name: values.firstName,
-      image_url: imageUrl,
-      last_name: values.lastName,
-    });
-
-    const originalTagMap = new Map(
-      tags.value.map(t => [t.tag.value, t.tag_id])
-    );
+    const originalTagMap = new Map(tags.value.map(t => [t.tag.value, t.tagId]));
     const uniqueTagValues = [...new Set(values.tags)];
 
     const resolvedTagIds: string[] = [];
@@ -177,10 +206,7 @@ const onSubmit = handleSubmit(async values => {
         if (existing) {
           resolvedTagIds.push(existing.id);
         } else {
-          const tag = await createTagMutation.mutateAsync({
-            slug: slugify(value, { lower: true, strict: true }),
-            value,
-          });
+          const tag = await storeTag({ body: { value } });
           resolvedTagIds.push(tag.id);
         }
       }
@@ -189,149 +215,146 @@ const onSubmit = handleSubmit(async values => {
     const originalIds = new Set(originalTagMap.values());
     for (const tagId of resolvedTagIds) {
       if (!originalIds.has(tagId)) {
-        await createUserTagMutation.mutateAsync({
-          tag_id: tagId,
-          user_id: props.user.id,
-        });
+        await storeUserTag({ body: { tagId, userId: props.user.id } });
       }
     }
 
     const resolvedSet = new Set(resolvedTagIds);
     for (const [, tagId] of originalTagMap) {
       if (!resolvedSet.has(tagId)) {
-        await deleteUserTagMutation.mutateAsync({
-          tagId,
-          userId: props.user.id,
-        });
+        await destroyUserTag({ tagId, userId: props.user.id });
       }
     }
 
     avatarFile.value = null;
     avatarPreviewUrl.value = null;
 
-    toast.success('Profile updated successfully');
+    toast.success(t('toasts.profile.updated'));
   } catch (error) {
     toast.error(
-      error instanceof Error ? error.message : 'Failed to update profile'
+      error instanceof Error
+        ? error.message
+        : t('toasts.profile.failedToUpdate')
     );
   }
 });
 </script>
 
 <template>
-  <Card>
-    <CardHeader>
-      <CardTitle>Profile</CardTitle>
-      <CardDescription>
-        Update your personal information and profile picture.
-      </CardDescription>
-    </CardHeader>
-    <CardContent>
-      <form id="settings" method="POST" @submit="onSubmit">
-        <FieldGroup>
-          <Field class="items-center">
-            <FieldLabel>Profile picture</FieldLabel>
-            <button
-              type="button"
-              class="group relative cursor-pointer self-start rounded-full"
-              @click="handleAvatarClick"
-            >
-              <Avatar class="size-20">
-                <AvatarImage
-                  :src="currentAvatarUrl"
-                  :alt="getUserFullname(props.user)"
-                />
-                <AvatarFallback>{{
-                  props.user.first_name?.charAt(0) ??
-                  props.user.last_name?.charAt(0) ??
-                  props.user.username?.charAt(0) ??
-                  'U'
-                }}</AvatarFallback>
-              </Avatar>
-              <div
-                class="bg-background/70 absolute inset-0 flex items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+  <ClientOnly>
+    <Card>
+      <CardHeader>
+        <CardTitle>{{ t('buttons.profile') }}</CardTitle>
+        <CardDescription>
+          {{ t('users.profileUpdateDescription') }}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form id="settings" method="POST" @submit="onSubmit">
+          <FieldGroup>
+            <Field class="items-center">
+              <FieldLabel>{{ t('users.profilePicture') }}</FieldLabel>
+              <button
+                type="button"
+                class="group relative cursor-pointer self-start rounded-full"
+                @click="handleAvatarClick"
               >
-                <Icon name="mdi:camera" class="text-foreground size-6" />
-              </div>
-            </button>
-            <input
-              ref="avatarInputRef"
-              type="file"
-              accept="image/jpeg,image/png,image/gif,image/webp"
-              class="hidden"
-              @change="handleAvatarChange"
-            />
-          </Field>
-
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <VeeField v-slot="{ field, errors }" name="firstName">
-              <Field :data-invalid="!!errors.length">
-                <FieldLabel for="firstName">First name</FieldLabel>
-                <Input
-                  id="firstName"
-                  v-bind="field"
-                  :aria-invalid="!!errors.length"
-                />
-                <FieldError v-if="errors.length" :errors="errors" />
-              </Field>
-            </VeeField>
-
-            <VeeField v-slot="{ field, errors }" name="lastName">
-              <Field :data-invalid="!!errors.length">
-                <FieldLabel for="lastName">Last name</FieldLabel>
-                <Input
-                  id="lastName"
-                  v-bind="field"
-                  :aria-invalid="!!errors.length"
-                />
-                <FieldError v-if="errors.length" :errors="errors" />
-              </Field>
-            </VeeField>
-          </div>
-
-          <VeeField v-slot="{ field, errors }" name="username">
-            <Field :data-invalid="!!errors.length">
-              <FieldLabel for="username">Username</FieldLabel>
-              <Input
-                id="username"
-                v-bind="field"
-                placeholder="yourusername"
-                :aria-invalid="!!errors.length"
-              />
-              <FieldError v-if="errors.length" :errors="errors" />
-            </Field>
-          </VeeField>
-
-          <VeeField v-slot="{ field, errors }" name="tags">
-            <Field :data-invalid="!!errors.length">
-              <FieldLabel>Interests & skills</FieldLabel>
-              <TagsInput
-                :model-value="field.value"
-                :aria-invalid="!!errors.length"
-                class="min-h-10"
-                @update:model-value="field.onChange"
-              >
-                <TagsInputItem
-                  v-for="tag in field.value"
-                  :key="tag"
-                  :value="tag"
+                <Avatar class="size-20">
+                  <AvatarImage
+                    :src="currentAvatarUrl"
+                    :alt="
+                      getUserFullname(props.user, t('users.defaultUsername'))
+                    "
+                  />
+                  <AvatarFallback>{{
+                    props.user.firstName?.charAt(0) ??
+                    props.user.lastName?.charAt(0) ??
+                    props.user.username?.charAt(0) ??
+                    'U'
+                  }}</AvatarFallback>
+                </Avatar>
+                <div
+                  class="bg-background/70 absolute inset-0 flex items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100"
                 >
-                  <TagsInputItemText />
-                  <TagsInputItemDelete />
-                </TagsInputItem>
-                <TagsInputInput placeholder="Add a tag and press Enter" />
-              </TagsInput>
-              <FieldError v-if="errors.length" :errors="errors" />
+                  <Icon name="mdi:camera" class="text-foreground size-6" />
+                </div>
+              </button>
+              <input
+                ref="avatarInputRef"
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                class="hidden"
+                @change="handleAvatarChange"
+              />
             </Field>
-          </VeeField>
 
-          <Field>
-            <Button type="submit" :disabled="isSubmitting">
-              {{ isSubmitting ? 'Saving...' : 'Save changes' }}
-            </Button>
-          </Field>
-        </FieldGroup>
-      </form>
-    </CardContent>
-  </Card>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <VeeField v-slot="{ errors, componentField }" name="firstName">
+                <Field :data-invalid="!!errors.length">
+                  <FieldLabel for="firstName">{{
+                    t('users.firstName')
+                  }}</FieldLabel>
+                  <Input
+                    id="firstName"
+                    v-bind="componentField"
+                    :aria-invalid="!!errors.length"
+                  />
+                  <FieldError v-if="errors.length" :errors="errors" />
+                </Field>
+              </VeeField>
+
+              <VeeField v-slot="{ errors, componentField }" name="lastName">
+                <Field :data-invalid="!!errors.length">
+                  <FieldLabel for="lastName">{{
+                    t('users.lastName')
+                  }}</FieldLabel>
+                  <Input
+                    id="lastName"
+                    v-bind="componentField"
+                    :aria-invalid="!!errors.length"
+                  />
+                  <FieldError v-if="errors.length" :errors="errors" />
+                </Field>
+              </VeeField>
+            </div>
+
+            <VeeField v-slot="{ errors, componentField }" name="username">
+              <Field :data-invalid="!!errors.length">
+                <FieldLabel for="username">{{
+                  t('users.username')
+                }}</FieldLabel>
+                <Input
+                  id="username"
+                  v-bind="componentField"
+                  :placeholder="t('users.usernamePlaceholder')"
+                  :aria-invalid="!!errors.length"
+                />
+                <FieldError v-if="errors.length" :errors="errors" />
+              </Field>
+            </VeeField>
+
+            <VeeField v-slot="{ errors, field, handleChange }" name="tags">
+              <Field :data-invalid="!!errors.length">
+                <FieldLabel>{{ t('users.interestsSkills') }}</FieldLabel>
+                <TagsInputAutocomplete
+                  :model-value="field.value"
+                  :aria-invalid="!!errors.length"
+                  @update:model-value="handleChange($event)"
+                />
+                <FieldError v-if="errors.length" :errors="errors" />
+              </Field>
+            </VeeField>
+
+            <Field>
+              <Button type="submit" :disabled="isSubmitting">
+                {{
+                  isSubmitting ? t('loading.saving') : t('buttons.saveChanges')
+                }}
+              </Button>
+            </Field>
+          </FieldGroup>
+        </form>
+      </CardContent>
+    </Card>
+  </ClientOnly>
 </template>

@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { useQuery } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +10,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { useGetTags } from '~/features/shared/tags/composables/useGetTags';
+import { tagListQuery } from '~/features/shared/tags/tag.query';
+
+const { t } = useI18n();
 
 interface Props {
   modelValue: string[];
@@ -22,7 +27,11 @@ const emit = defineEmits<{
 const isOpen = ref(false);
 const tagSearch = ref('');
 
-const { data: tagsData } = useGetTags(() => ({ limit: 100 }));
+const fetchFn = useRequestFetch();
+
+const { data: tagsData } = useQuery(() =>
+  tagListQuery({ fetchFn, pageSize: 100 })
+);
 const allTags = computed(() => tagsData.value?.data ?? []);
 
 const filteredTags = computed(() => {
@@ -64,7 +73,7 @@ function toggleTag(tagId: string) {
       <PopoverTrigger as-child>
         <Button variant="outline" size="sm" class="gap-1.5">
           <Icon name="mdi:tag-outline" size="1rem" />
-          Tags
+          {{ t('posts.tagsButton') }}
           <Badge
             v-if="modelValue.length"
             variant="secondary"
@@ -77,7 +86,7 @@ function toggleTag(tagId: string) {
       <PopoverContent class="w-56 p-2" align="start">
         <Input
           v-model="tagSearch"
-          placeholder="Search tags..."
+          :placeholder="t('posts.searchTags')"
           class="mb-2 h-8 text-sm"
         />
         <div class="max-h-48 overflow-y-auto">
@@ -85,7 +94,7 @@ function toggleTag(tagId: string) {
             v-if="filteredTags.length === 0"
             class="text-muted-foreground py-3 text-center text-sm"
           >
-            No tags found.
+            {{ t('posts.noTagsFound') }}
           </p>
           <button
             v-for="tag in filteredTags"

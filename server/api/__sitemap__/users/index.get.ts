@@ -1,41 +1,35 @@
 import type { SitemapUrl } from '#sitemap/types';
 
-import { serverSupabaseServiceRole } from '#supabase/server';
-
 export default defineCachedEventHandler(
-  async (event): Promise<SitemapUrl[]> => {
-    const client = serverSupabaseServiceRole(event);
-
-    const { data: users } = await client.from('users').select(
-      `
-      id,
-      username,
-      image_url,
-      updated_at
-      `,
-      { count: 'exact' }
-    );
-
-    if (!users) return [];
+  async (): Promise<SitemapUrl[]> => {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        imageUrl: true,
+        updatedAt: true,
+        username: true,
+      },
+      where: { deletedAt: null },
+    });
 
     return users.map(
       (user): SitemapUrl => ({
         _sitemap: 'users',
-        images: user.image_url
+        images: user.imageUrl
           ? [
               {
                 caption: `Profile image for ${user.username}`,
-                loc: user.image_url,
+                loc: user.imageUrl,
                 title: `Profile image for ${user.username}`,
               },
             ]
           : undefined,
-        lastmod: user.updated_at,
+        lastmod: user.updatedAt.toISOString(),
         loc: `/u/${user.username ?? user.id}`,
       })
     );
   },
   {
-    maxAge: 60 * 60, // 1 hour
+    maxAge: 60 * 60,
   }
 );

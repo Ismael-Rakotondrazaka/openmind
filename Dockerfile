@@ -1,17 +1,13 @@
 # ---------- BUILD STAGE ----------
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 ARG NUXT_PUBLIC_APP_URL
 ARG NUXT_PUBLIC_APP_VERSION
 ARG NUXT_PUBLIC_SITE_URL
-ARG NUXT_PUBLIC_SUPABASE_URL
-ARG NUXT_PUBLIC_SUPABASE_KEY
 
 ENV NUXT_PUBLIC_APP_URL=$NUXT_PUBLIC_APP_URL
 ENV NUXT_PUBLIC_APP_VERSION=$NUXT_PUBLIC_APP_VERSION
 ENV NUXT_PUBLIC_SITE_URL=$NUXT_PUBLIC_SITE_URL
-ENV NUXT_PUBLIC_SUPABASE_URL=$NUXT_PUBLIC_SUPABASE_URL
-ENV NUXT_PUBLIC_SUPABASE_KEY=$NUXT_PUBLIC_SUPABASE_KEY
 
 WORKDIR /app
 
@@ -20,11 +16,12 @@ RUN npm ci --ignore-scripts
 
 COPY . .
 
+RUN npx prisma generate
 RUN npm run build
 
 
 # ---------- PRODUCTION STAGE ----------
-FROM node:20-alpine
+FROM node:22-alpine
 
 ENV NODE_ENV=production
 # @link https://nuxt.com/docs/getting-started/deployment#entry-point

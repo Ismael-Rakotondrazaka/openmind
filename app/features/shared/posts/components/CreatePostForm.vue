@@ -2,8 +2,8 @@
 import type { OutputData } from '@editorjs/editorjs';
 import type { HTMLAttributes } from 'vue';
 
-import { nanoid } from 'nanoid';
-import slugify from 'slugify';
+import { useMutation } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
 
 import { Button } from '@/components/ui/button';
@@ -15,24 +15,22 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import {
-  TagsInput,
-  TagsInputInput,
-  TagsInputItem,
-  TagsInputItemDelete,
-  TagsInputItemText,
-} from '@/components/ui/tags-input';
-import { useCreatePostTag } from '@/features/shared/post-tags/composables/useCreatePostTag';
-import { useCreatePost } from '@/features/shared/posts/composables/useCreatePost';
+import { useStorePostTag } from '@/features/shared/post-tags/post-tag.query';
 import { useUploadPostFile } from '@/features/shared/posts/composables/useUploadPostFile';
+import { useStorePost } from '@/features/shared/posts/post.query';
 import { CreatePostSchema } from '@/features/shared/posts/post.schema';
-import { useCreateTag } from '@/features/shared/tags/composables/useCreateTag';
-import { useFindTagByValue } from '@/features/shared/tags/composables/useFindTagByValue';
+import TagsInputAutocomplete from '@/features/shared/tags/components/TagsInputAutocomplete.vue';
+import { useStoreTag } from '@/features/shared/tags/tag.query';
+import { findTagByValue } from '@/features/shared/tags/tag.service';
 import { cn } from '@/lib/utils';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];
 }>();
+
+const localePath = useLocalePath();
 
 const { handleSubmit, isSubmitting, resetForm, setFieldValue } = useForm({
   initialValues: {
@@ -45,12 +43,11 @@ const { handleSubmit, isSubmitting, resetForm, setFieldValue } = useForm({
   validationSchema: toTypedSchema(CreatePostSchema),
 });
 
-const user = useSupabaseUser();
+const { user } = useUserSession();
 const uploadPostFile = useUploadPostFile();
-const createPostMutation = useCreatePost();
-const createTagMutation = useCreateTag();
-const createPostTagMutation = useCreatePostTag();
-const findTagByValue = useFindTagByValue();
+const { mutateAsync: storePost } = useMutation(useStorePost());
+const { mutateAsync: storeTag } = useMutation(useStoreTag());
+const { mutateAsync: storePostTag } = useMutation(useStorePostTag());
 const coverUploading = ref(false);
 const submitStatus = ref<'draft' | 'published'>('draft');
 
@@ -63,7 +60,7 @@ const handleCoverChange = async (event: Event) => {
     const { publicUrl } = await uploadPostFile(user.value.id, file);
     setFieldValue('coverUrl', publicUrl);
   } catch {
-    toast.error('Failed to upload cover image');
+    toast.error(t('toasts.post.failedToUploadCover'));
   } finally {
     coverUploading.value = false;
     input.value = '';
@@ -71,23 +68,19 @@ const handleCoverChange = async (event: Event) => {
 };
 
 const onSubmit = handleSubmit(async values => {
-  const authorId = user.value?.sub;
-  console.log(authorId);
-  if (!authorId) {
-    toast.error('You must be logged in to create a post');
+  if (!user.value?.id) {
+    toast.error(t('toasts.mustBeLoggedIn'));
     return;
   }
 
-  const slug = `${slugify(values.title, { lower: true, strict: true })}-${nanoid(6)}`;
-
   try {
-    const post = await createPostMutation.mutateAsync({
-      author_id: authorId,
-      content: values.content as unknown as Tables<'posts'>['content'],
-      cover_url: values.coverUrl ?? null,
-      slug,
-      status: submitStatus.value,
-      title: values.title,
+    const post = await storePost({
+      body: {
+        content: values.content as unknown as Record<string, unknown>,
+        coverUrl: values.coverUrl ?? null,
+        status: submitStatus.value,
+        title: values.title,
+      },
     });
 
     const tagIds: string[] = [...values.existingTags];
@@ -98,33 +91,29 @@ const onSubmit = handleSubmit(async values => {
       if (existingTag) {
         tagIds.push(existingTag.id);
       } else {
-        const tag = await createTagMutation.mutateAsync({
-          slug: slugify(value, { lower: true, strict: true }),
-          value,
-        });
+        const tag = await storeTag({ body: { value } });
         tagIds.push(tag.id);
       }
     }
 
     for (const tagId of tagIds) {
-      await createPostTagMutation.mutateAsync({
-        post_id: post.id,
-        tag_id: tagId,
-      });
+      await storePostTag({ body: { postId: post.id, tagId } });
     }
 
     toast.success(
       submitStatus.value === 'published'
-        ? 'Post published'
-        : 'Post saved as draft'
+        ? t('toasts.post.published')
+        : t('toasts.post.savedDraft')
     );
     resetForm();
-    await navigateTo({
-      name: 'profile',
-    });
+    await navigateTo(
+      localePath({
+        name: 'profile',
+      })
+    );
   } catch (error) {
     toast.error(
-      error instanceof Error ? error.message : 'Failed to create post'
+      error instanceof Error ? error.message : t('toasts.post.failedToCreate')
     );
   }
 });
@@ -132,27 +121,26 @@ const onSubmit = handleSubmit(async values => {
 
 <template>
   <div :class="cn('flex flex-col gap-6 pb-2', props.class)">
-    <h3 class="leading-none font-semibold">Create a post</h3>
+    <h3 class="leading-none font-semibold">
+      {{ t('posts.createPostTitle') }}
+    </h3>
     <p class="text-muted-foreground text-sm">
-      Get ready to share your thoughts! Creating an article is easy. Just fill
-      out the form below, and let your ideas shine. Start now and be part of our
-      community!
+      {{ t('posts.createPostDescription') }}
     </p>
 
     <form id="create-post" method="POST" @submit="onSubmit">
       <FieldGroup>
-        <VeeField v-slot="{ field, errors }" name="title">
+        <VeeField v-slot="{ errors, componentField }" name="title">
           <Field :data-invalid="!!errors.length">
-            <FieldLabel for="title">Title</FieldLabel>
+            <FieldLabel for="title">{{ t('posts.title') }}</FieldLabel>
             <FieldDescription>
-              Craft a captivating headline that summarizes the essence of your
-              article and sparks curiosity.
+              {{ t('posts.titleDescription') }}
             </FieldDescription>
             <Input
               id="title"
-              v-bind="field"
+              v-bind="componentField"
               type="text"
-              placeholder="Your post title"
+              :placeholder="t('posts.titlePlaceholder')"
               :aria-invalid="!!errors.length"
             />
             <FieldError v-if="errors.length" :errors="errors" />
@@ -161,10 +149,9 @@ const onSubmit = handleSubmit(async values => {
 
         <VeeField v-slot="{ field, errors }" name="content">
           <Field :data-invalid="!!errors.length">
-            <FieldLabel for="content">Content</FieldLabel>
+            <FieldLabel for="content">{{ t('posts.content') }}</FieldLabel>
             <FieldDescription>
-              Pour your ideas, insights, and expertise into engaging and
-              informative prose to captivate your audience.
+              {{ t('posts.contentDescription') }}
             </FieldDescription>
             <EditorJs
               :content="field.value ?? { blocks: [] }"
@@ -176,9 +163,11 @@ const onSubmit = handleSubmit(async values => {
         </VeeField>
 
         <Field>
-          <FieldLabel>Cover image (optional)</FieldLabel>
+          <FieldLabel
+            >{{ t('posts.coverImage') }} {{ t('posts.optional') }}</FieldLabel
+          >
           <FieldDescription>
-            Choose an eye-catching image to grab your audience's attention.
+            {{ t('posts.coverImageDescription') }}
           </FieldDescription>
           <input
             type="file"
@@ -188,29 +177,23 @@ const onSubmit = handleSubmit(async values => {
             @change="handleCoverChange"
           />
           <p v-if="coverUploading" class="text-muted-foreground mt-1 text-sm">
-            Uploading...
+            {{ t('loading.uploading') }}
           </p>
         </Field>
 
-        <VeeField v-slot="{ field, errors }" name="newTags">
+        <VeeField v-slot="{ errors, field, handleChange }" name="newTags">
           <Field :data-invalid="!!errors.length">
-            <FieldLabel for="newTags">Tags (optional)</FieldLabel>
+            <FieldLabel for="newTags"
+              >{{ t('posts.tags') }} {{ t('posts.optional') }}</FieldLabel
+            >
             <FieldDescription>
-              Add descriptive keywords to categorize your article and improve
-              discoverability.
+              {{ t('posts.tagsDescription') }}
             </FieldDescription>
-            <TagsInput
+            <TagsInputAutocomplete
               :model-value="field.value"
               :aria-invalid="!!errors.length"
-              class="min-h-10"
-              @update:model-value="field.onChange"
-            >
-              <TagsInputItem v-for="tag in field.value" :key="tag" :value="tag">
-                <TagsInputItemText />
-                <TagsInputItemDelete />
-              </TagsInputItem>
-              <TagsInputInput placeholder="Add a tag and press Enter" />
-            </TagsInput>
+              @update:model-value="handleChange($event)"
+            />
             <FieldError v-if="errors.length" :errors="errors" />
           </Field>
         </VeeField>
@@ -223,7 +206,7 @@ const onSubmit = handleSubmit(async values => {
           >
             <Icon name="mdi:publish" size="1rem" />
 
-            {{ isSubmitting ? 'Creating...' : 'Publish' }}
+            {{ isSubmitting ? t('loading.creating') : t('buttons.publish') }}
           </Button>
           <Button
             type="submit"
@@ -233,7 +216,7 @@ const onSubmit = handleSubmit(async values => {
           >
             <Icon name="mdi:content-save-outline" size="1rem" />
 
-            {{ isSubmitting ? 'Saving...' : 'Save as draft' }}
+            {{ isSubmitting ? t('loading.saving') : t('buttons.saveDraft') }}
           </Button>
         </div>
       </FieldGroup>

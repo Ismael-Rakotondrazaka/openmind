@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import EditPostPage from '~/features/shared/posts/pages/EditPostPage.vue';
 
+definePageMeta({
+  middleware: 'auth',
+});
+
 useSeoMeta({
   ogImage: '/images/og-openmind.png',
   twitterCard: 'summary_large_image',

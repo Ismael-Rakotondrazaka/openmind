@@ -7,13 +7,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { Post } from '../post.model';
+import type { PostListItem } from '#shared/features/posts';
 
 import PostCardContent from './PostCardContent.vue';
 import PostCardFooter from './PostCardFooter.vue';
 import PostCardHeader from './PostCardHeader.vue';
 interface Props {
-  post: Post;
+  post: Serialize<PostListItem>;
 }
 
 defineProps<Props>();

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { CommentConfig } from '../comment.config';
-import { useGetComments } from '../composables/useGetComments';
+import { useI18n } from 'vue-i18n';
+
+import { useCommentList } from '../composables/useCommentList';
 import CommentForm from './CommentForm.vue';
 import CommentListItem from './CommentListItem.vue';
 
@@ -12,6 +13,8 @@ type Props = {
 };
 
 const props = defineProps<Props>();
+
+const { t } = useI18n();
 
 const emit = defineEmits<{
   reply: [];
@@ -36,16 +39,11 @@ watch(
   }
 );
 
-const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-  useGetComments(() => ({
-    limit: CommentConfig.PAGE_SIZE_DEFAULT,
-    parent_id: props.parentId,
-    post_id: props.postId,
-  }));
-
-const replies = computed(() =>
-  [...(data.value?.pages ?? [])].reverse().flatMap(p => [...p.data].reverse())
-);
+const { comments, hasMore, isLoading, isLoadingMore, loadPrevious } =
+  useCommentList(
+    () => props.postId,
+    () => props.parentId
+  );
 </script>
 
 <template>
@@ -55,17 +53,22 @@ const replies = computed(() =>
     </template>
 
     <template v-else>
-      <button
-        v-if="hasNextPage"
-        class="text-muted-foreground hover:text-foreground w-full text-sm transition-colors"
-        :disabled="isFetchingNextPage"
-        @click="() => fetchNextPage()"
-      >
-        {{ isFetchingNextPage ? 'Loading...' : 'Load previous replies' }}
-      </button>
+      <div v-if="hasMore" class="mb-2 flex justify-start">
+        <button
+          class="text-muted-foreground hover:text-foreground text-xs transition-colors disabled:opacity-50"
+          :disabled="isLoadingMore"
+          @click="loadPrevious"
+        >
+          <span v-if="isLoadingMore" class="flex items-center gap-1.5">
+            <span class="size-2.5 animate-spin rounded-full border border-current border-t-transparent" />
+            {{ t('comments.loadPreviousReplies') }}
+          </span>
+          <span v-else>{{ t('comments.loadPreviousReplies') }}</span>
+        </button>
+      </div>
 
       <CommentListItem
-        v-for="reply in replies"
+        v-for="reply in comments"
         :key="reply.id"
         :comment="reply"
         :show-reply-button="true"
@@ -80,7 +83,9 @@ const replies = computed(() =>
         :depth="1"
         :title="
           parentAuthorName
-            ? `Reply to ${parentAuthorName}'s comment`
+            ? t('comments.replyToAuthorComment', {
+                author: parentAuthorName,
+              })
             : undefined
         "
         @cancelled="emit('reply:cancelled')"

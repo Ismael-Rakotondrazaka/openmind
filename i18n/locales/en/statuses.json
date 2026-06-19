@@ -1,0 +1,65 @@
+{
+  "statuses": {
+    "renewal": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "refused": "Refused",
+      "validated": "Validated"
+    },
+    "maintenance": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "refused": "Refused",
+      "done": "Done"
+    },
+    "maintenanceType": {
+      "electrical": "Electrical",
+      "equipment": "Equipment",
+      "hvac": "HVAC",
+      "other": "Other",
+      "plumbing": "Plumbing"
+    },
+    "housingApplication": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "refused": "Refused",
+      "validated": "Validated"
+    },
+    "announcement": {
+      "draft": "Draft",
+      "published": "Published"
+    },
+    "occupancy": {
+      "available": "Available",
+      "full": "Full",
+      "overbooked": "Overbooked"
+    }
+  },
+  "selects": {
+    "status": "Status",
+    "type": "Type",
+    "allStatuses": "All statuses",
+    "allTypes": "All types",
+    "selectFaculty": "Select a faculty...",
+    "selectBuilding": "Select a building...",
+    "academicSessions": "Academic sessions"
+  },
+  "workflow": {
+    "acceptDialog": {
+      "title": "Accept request",
+      "hint": "This will move the request to accepted status."
+    },
+    "rejectDialog": {
+      "title": "Reject request",
+      "confirm": "Confirm rejection"
+    },
+    "validateDialog": {
+      "title": "Validate request",
+      "hint": "Assign a room before validating.",
+      "confirm": "Confirm validation"
+    },
+    "chooseReason": "Choose a reason",
+    "chooseLodgment": "Choose a room",
+    "chooseRole": "Choose a role"
+  }
+}

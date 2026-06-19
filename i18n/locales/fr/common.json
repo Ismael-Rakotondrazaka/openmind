@@ -1,0 +1,99 @@
+{
+  "common": {
+    "accessibility": {
+      "userAvatar": "Avatar utilisateur"
+    },
+    "brand": {
+      "name": "Lumièrebourg"
+    },
+    "auth": {
+      "notAuthenticated": "Non authentifié"
+    },
+    "empty": {
+      "noResults": "Aucun résultat.",
+      "noBuilding": "Aucun bâtiment trouvé.",
+      "noFaculty": "Aucune faculté trouvée.",
+      "noCountry": "Aucun pays trouvé.",
+      "noFileSelected": "Aucun fichier sélectionné",
+      "notAvailable": "Non disponible"
+    },
+    "results": {
+      "countLabel": "Résultats :"
+    },
+    "cards": {
+      "personalInfo": "Informations personnelles",
+      "contact": "Contact",
+      "scolarite": "Scolarité",
+      "documents": "Documents",
+      "lodgment": "Logement",
+      "location": "Localisation",
+      "information": "Informations",
+      "assignedLodgment": "Chambre assignée",
+      "fullName": "Nom et prénom",
+      "gender": "Genre",
+      "origin": "Origine",
+      "nicNumber": "Numéro de carte d'identité",
+      "email": "Email",
+      "phone": "Téléphone",
+      "emergencyContact": "Contact d'urgence",
+      "faculty": "Faculté",
+      "academicSession": "Session académique",
+      "building": "Bâtiment",
+      "floor": "Étage",
+      "room": "Chambre",
+      "capacity": "Capacité",
+      "occupation": "Occupation",
+      "type": "Type",
+      "status": "Statut",
+      "reportedAt": "Date de signalement",
+      "workStart": "Début des travaux",
+      "workEnd": "Fin des travaux",
+      "description": "Description",
+      "actions": "Actions"
+    },
+    "deleteModal": {
+      "title": "Supprimer {entity}",
+      "description": "Cette action est irréversible."
+    },
+    "tables": {
+      "photo": "Photo",
+      "fullName": "Nom et prénom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "status": "Statut",
+      "submittedAt": "Date d'envoi",
+      "action": "Action",
+      "actions": "Actions"
+    },
+    "notFound": {
+      "renewal": "Renouvellement introuvable ou supprimé.",
+      "housingApplication": "Demande introuvable ou supprimée.",
+      "maintenance": "Maintenance introuvable ou supprimée.",
+      "announcement": "Annonce introuvable ou supprimée."
+    },
+    "allRoles": "Tous les rôles",
+    "announcements": {
+      "detailTitle": "Annonce",
+      "listDescription": "Restez informé des dernières actualités et événements de la Cité Universitaire Lumièrebourg.",
+      "listTitle": "Annonces"
+    },
+    "search": {
+      "placeholder": "Rechercher...",
+      "placeholderBuilding": "Rechercher un bâtiment...",
+      "placeholderAnnouncement": "Rechercher une annonce...",
+      "placeholderFaculty": "Rechercher une filière...",
+      "placeholderMaintainer": "Rechercher un mainteneur...",
+      "country": "Rechercher un pays...",
+      "placeholderPosts": "Rechercher des posts...",
+      "placeholderTags": "Rechercher des tags...",
+      "placeholderFollowers": "Rechercher des abonnés...",
+      "placeholderFollowing": "Rechercher des abonnements..."
+    },
+    "seo": {
+      "readPostBy": "Lire",
+      "onBrand": "sur",
+      "viewProfile": "Voir",
+      "profileOf": "le profil de"
+    }
+  }
+}

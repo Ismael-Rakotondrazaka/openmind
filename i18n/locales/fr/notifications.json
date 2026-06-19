@@ -1,0 +1,24 @@
+{
+  "notifications": {
+    "notificationsTitle": "Notifications",
+    "markAllAsRead": "Marquer tout comme lu",
+    "noNotificationsYet": "Pas encore de notifications",
+    "loadMore": "Charger plus",
+    "reactedToYourComment": "a réagi à votre commentaire",
+    "repliedToYourComment": "a répondu à votre commentaire",
+    "commentedOnYourPost": "a commenté votre post",
+    "reactedToYourPost": "a réagi à votre post",
+    "startedFollowingYou": "a commencé à vous suivre",
+    "welcomeVerified": "Bienvenue ! Votre compte a été vérifié.",
+    "andXOthers": "et {count} autres",
+    "someone": "Quelqu'un",
+    "userFallback": "Utilisateur",
+    "interactedWithContent": "a interagi avec votre contenu",
+    "preferencesComments": "Commentaires",
+    "preferencesFollows": "Abonnements",
+    "preferencesReactions": "Réactions",
+    "descriptionComments": "Quand quelqu'un commente vos posts ou répond à vos commentaires",
+    "descriptionFollows": "Quand quelqu'un vous suit",
+    "descriptionReactions": "Quand quelqu'un réagit à vos posts ou commentaires"
+  }
+}

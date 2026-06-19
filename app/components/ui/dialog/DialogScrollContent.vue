@@ -11,6 +11,7 @@ import {
   DialogPortal,
   useForwardPropsEmits,
 } from 'reka-ui';
+import { useI18n } from 'vue-i18n';
 
 import { cn } from '@/lib/utils';
 
@@ -22,6 +23,8 @@ const props = defineProps<
   { class?: HTMLAttributes['class'] } & DialogContentProps
 >();
 const emits = defineEmits<DialogContentEmits>();
+
+const { t } = useI18n();
 
 const delegatedProps = reactiveOmit(props, 'class');
 
@@ -57,10 +60,11 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
         <slot />
 
         <DialogClose
+          :aria-label="t('buttons.close')"
           class="hover:bg-secondary absolute top-4 right-4 rounded-md p-0.5 transition-colors"
         >
           <X class="h-4 w-4" />
-          <span class="sr-only">Close</span>
+          <span class="sr-only">{{ t('buttons.close') }}</span>
         </DialogClose>
       </DialogContent>
     </DialogOverlay>

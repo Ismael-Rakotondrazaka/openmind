@@ -1,28 +1,21 @@
-import { nanoid } from 'nanoid';
-import slugify from 'slugify';
-
-const PROFILE_IMAGES_BUCKET = 'profile-images';
-
 export const useUploadUserAvatar = () => {
   const upload = async (userId: string, file: File): Promise<string> => {
-    const client = useSupabaseClient();
-    const lastDot = file.name.lastIndexOf('.');
-    const baseName = lastDot > 0 ? file.name.slice(0, lastDot) : file.name;
-    const ext = lastDot > 0 ? file.name.slice(lastDot) : '';
-    const sanitizedName = slugify(baseName, { lower: true, strict: true });
-    const uniqueId = nanoid();
-    const uniqueName = `openmind__${sanitizedName}__${uniqueId}${ext}`;
-    const path = `${userId}/${uniqueName}`;
+    const { publicUrl, uploadUrl } = await $fetch<{
+      publicUrl: string;
+      uploadUrl: string;
+    }>(
+      `/api/storage/users/${userId}/avatar/presign` as '/api/storage/users/${string}/avatar/presign',
+      {
+        body: { contentType: file.type, fileName: file.name },
+        method: 'POST',
+      }
+    );
 
-    const { error } = await client.storage
-      .from(PROFILE_IMAGES_BUCKET)
-      .upload(path, file, { upsert: false });
-
-    if (error) throw error;
-
-    const {
-      data: { publicUrl },
-    } = client.storage.from(PROFILE_IMAGES_BUCKET).getPublicUrl(path);
+    await fetch(uploadUrl, {
+      body: file,
+      headers: { 'Content-Type': file.type },
+      method: 'PUT',
+    });
 
     return publicUrl;
   };

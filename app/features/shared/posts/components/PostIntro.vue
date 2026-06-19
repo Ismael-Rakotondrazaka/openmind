@@ -11,9 +11,9 @@
       </Badge>
     </div>
 
-    <figure v-if="post.cover_url !== null" class="mb-3">
+    <figure v-if="post.coverUrl !== null" class="mb-3">
       <img
-        :src="post.cover_url"
+        :src="post.coverUrl"
         class="aspect-video w-full rounded-md object-cover object-center"
         :alt="post.title"
       />
@@ -22,12 +22,12 @@
 </template>
 
 <script lang="ts" setup>
+import type { Post } from '#shared/features/posts';
+
 import Badge from '~/components/ui/badge/Badge.vue';
 
-import type { Post } from '../post.model';
-
 type Props = {
-  post: Post;
+  post: Serialize<Post>;
 };
 
 defineProps<Props>();
