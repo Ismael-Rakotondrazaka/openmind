@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -17,13 +19,17 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   compact: false,
 });
+
+const { t } = useI18n();
 </script>
 
 <template>
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div class="flex flex-wrap items-center gap-4">
       <div class="flex items-center gap-2">
-        <Label v-if="!compact" for="rows-per-page">Rows per page</Label>
+        <Label v-if="!compact" for="rows-per-page">{{
+          t('pagination.rowsPerPage')
+        }}</Label>
         <Select disabled :model-value="'20'">
           <SelectTrigger id="rows-per-page" class="w-20">
             <SelectValue />

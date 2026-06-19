@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useQuery } from '@pinia/colada';
 import { toast } from 'vue-sonner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -13,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useNotificationRealtime } from '~/features/shared/notifications/composables/useNotificationRealtime';
-import { useGetUser } from '~/features/shared/users/composables/useGetUser';
+import { unreadNotificationsCountQuery } from '~/features/shared/notifications/notification.query';
 
 interface Props {
   imageUrl: string;
@@ -22,29 +23,37 @@ interface Props {
 
 defineProps<Props>();
 
-const authUser = useSupabaseUser();
-const { data: currentUser } = useGetUser(() => authUser.value?.sub);
+const fetchFn = useRequestFetch();
 
-const unreadCount = computed(
-  () => currentUser.value?.unread_notifications_count ?? 0
+const { data: unreadData } = useQuery(
+  unreadNotificationsCountQuery({ fetchFn })
 );
+
+const unreadCount = computed(() => unreadData.value?.count ?? 0);
 const badgeLabel = computed(() =>
   unreadCount.value > 99 ? '+99' : String(unreadCount.value)
 );
 
 useNotificationRealtime();
 
+const { close: closeWs, open: openWs } = useGlobalWs();
+onMounted(openWs);
+
+const localePath = useLocalePath();
+
+const { fetch: fetchSession } = useUserSession();
+const { t } = useI18n();
+
 const handleLogout = async () => {
-  const userSBClient = useSupabaseClient();
-  const { error } = await userSBClient.auth.signOut();
-  if (error) {
-    toast.error(getAuthErrorMessage(error));
-    return;
+  try {
+    await $fetch('/api/auth/logout', { method: 'POST' });
+    closeWs();
+    await fetchSession();
+    toast.success(t('toasts.loggedOutSuccessfully'));
+  } catch {
+    toast.error(t('toasts.failedToLogOut'));
   }
-  toast.success('Logged out successfully');
-  navigateTo({
-    name: 'index',
-  });
+  navigateTo(localePath({ name: 'index' }));
 };
 </script>
 
@@ -54,25 +63,27 @@ const handleLogout = async () => {
   >
     <nav class="flex items-center justify-between gap-4">
       <div class="flex items-center">
-        <NuxtLink :to="{ name: 'index' }" as-child>
+        <NuxtLinkLocale :to="{ name: 'index' }" as-child>
           <Button variant="ghost">
             <NuxtImg
               src="/images/logo-150x150.png"
-              alt="Openmind"
+              :alt="t('common.brand.name')"
               class="h-6 w-6"
               width="24"
               height="24"
             />
 
-            <span class="sr-only text-base font-bold md:not-sr-only"
-              >Openmind</span
-            >
+            <span class="sr-only text-base font-bold md:not-sr-only">{{
+              t('common.brand.name')
+            }}</span>
           </Button>
-        </NuxtLink>
+        </NuxtLinkLocale>
       </div>
 
       <div class="flex items-center gap-2">
-        <NuxtLink :to="{ name: 'notifications' }" as-child>
+        <HeaderLocaleSwitcher />
+
+        <NuxtLinkLocale :to="{ name: 'notifications' }" as-child>
           <Button variant="ghost" size="icon" class="relative rounded-full">
             <Icon name="mdi:bell-outline" size="1.25rem" />
             <span
@@ -81,11 +92,11 @@ const handleLogout = async () => {
             >
               {{ badgeLabel }}
             </span>
-            <span class="sr-only">Notificationsm</span>
+            <span class="sr-only">{{ t('buttons.notifications') }}</span>
           </Button>
-        </NuxtLink>
+        </NuxtLinkLocale>
 
-        <NuxtLink
+        <NuxtLinkLocale
           :to="{
             name: 'posts-new',
           }"
@@ -93,9 +104,9 @@ const handleLogout = async () => {
         >
           <Button variant="default" size="icon" class="rounded-full">
             <Icon name="mdi:add" size="1rem" />
-            <span class="sr-only">New post</span>
+            <span class="sr-only">{{ t('header.newPost') }}</span>
           </Button>
-        </NuxtLink>
+        </NuxtLinkLocale>
 
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
@@ -107,29 +118,29 @@ const handleLogout = async () => {
 
           <DropdownMenuContent class="w-56" align="start">
             <DropdownMenuGroup>
-              <NuxtLink :to="{ name: 'profile' }" as-child>
+              <NuxtLinkLocale :to="{ name: 'profile' }" as-child>
                 <DropdownMenuItem>
-                  Profile
+                  {{ t('buttons.profile') }}
                   <DropdownMenuShortcut>
                     <Icon name="mdi:account" size="1rem" />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
-              </NuxtLink>
+              </NuxtLinkLocale>
 
-              <NuxtLink :to="{ name: 'settings' }" as-child>
+              <NuxtLinkLocale :to="{ name: 'settings' }" as-child>
                 <DropdownMenuItem>
-                  Setting
+                  {{ t('buttons.settings') }}
                   <DropdownMenuShortcut>
                     <Icon name="mdi:cog" size="1rem" />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
-              </NuxtLink>
+              </NuxtLinkLocale>
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
 
             <DropdownMenuItem @click="handleLogout">
-              Log out
+              {{ t('buttons.logout') }}
               <DropdownMenuShortcut>
                 <Icon name="mdi:logout" size="1rem" />
               </DropdownMenuShortcut>

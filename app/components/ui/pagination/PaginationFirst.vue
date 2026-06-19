@@ -5,6 +5,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { ChevronLeftIcon } from 'lucide-vue-next';
 import { PaginationFirst, useForwardProps } from 'reka-ui';
+import { useI18n } from 'vue-i18n';
 
 import type { ButtonVariants } from '@/components/ui/button';
 
@@ -24,6 +25,8 @@ const props = withDefaults(
   }
 );
 
+const { t } = useI18n();
+
 const delegatedProps = reactiveOmit(props, 'class', 'size');
 const forwarded = useForwardProps(delegatedProps);
 </script>
@@ -42,7 +45,7 @@ const forwarded = useForwardProps(delegatedProps);
   >
     <slot>
       <ChevronLeftIcon />
-      <span class="hidden sm:block">First</span>
+      <span class="hidden sm:block">{{ t('buttons.first') }}</span>
     </slot>
   </PaginationFirst>
 </template>

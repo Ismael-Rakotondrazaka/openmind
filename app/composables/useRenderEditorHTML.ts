@@ -48,15 +48,17 @@ const renderListBlock = (data: ListData): string => {
 
 const parser = edjsHTML({
   image: ({ data }: { data: ImageData }) => {
-    const classes = [
+    const figureClasses = [
       data.withBorder ? 'with-border' : '',
       data.withBackground ? 'with-background' : '',
       data.stretched ? 'stretched' : '',
     ]
       .filter(Boolean)
       .join(' ');
-    const img = `<img src="${data.file.url}" alt="${data.caption ?? ''}" />`;
-    return `<figure${classes ? ` class="${classes}"` : ''}>${img}${data.caption ? `<figcaption>${data.caption}</figcaption>` : ''}</figure>`;
+    const imgClasses =
+      'aspect-video w-full rounded-md object-cover object-center';
+    const img = `<img src="${data.file.url}" alt="${data.caption ?? ''}" class="${imgClasses}" />`;
+    return `<figure${figureClasses ? ` class="${figureClasses}"` : ''}>${img}${data.caption ? `<figcaption>${data.caption}</figcaption>` : ''}</figure>`;
   },
   list: ({ data }: { data: ListData }) => renderListBlock(data),
 });
@@ -66,11 +68,13 @@ const renderEditorJs = (content: OutputData) => {
   const raw = parser.parse(content);
   const html = Array.isArray(raw) ? raw.join('') : (raw as string);
   return DOMPurify.sanitize(html, {
-    ADD_ATTR: ['checked', 'disabled', 'type'],
+    ADD_ATTR: ['checked', 'disabled', 'type', 'class'],
     ADD_TAGS: ['input'],
   });
 };
 
-export const useRenderEditorHTML = (content: MaybeRefOrGetter<OutputData>) => {
-  return computed(() => renderEditorJs(toValue(content)));
+export const useRenderEditorHTML = (
+  content: MaybeRefOrGetter<Serialize<OutputData> | undefined>
+) => {
+  return computed(() => renderEditorJs(toValue(content) as OutputData));
 };

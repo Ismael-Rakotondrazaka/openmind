@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import { useUserImageUrl } from '~/features/users/composables/useUserImageUrl';
 
-const user = useSupabaseUser();
+const { user } = useUserSession();
 
-const imageUrl = useUserImageUrl({
-  first_name: user?.value?.user_metadata?.first_name,
-  image_url: user?.value?.user_metadata?.image_url,
-  last_name: user?.value?.user_metadata?.last_name,
-});
+const userImageUrlProps = computed(() => ({
+  firstName: user.value?.firstName ?? null,
+  imageUrl: user.value?.imageUrl ?? null,
+  lastName: user.value?.lastName ?? null,
+}));
+
+const imageUrl = useUserImageUrl(() => userImageUrlProps.value);
 </script>
+
 <template>
-  <HeaderPublic v-if="!user" />
-  <HeaderAuth
-    v-else
-    :image-url="imageUrl"
-    :username="user?.value?.user_metadata?.username || ''"
-  />
+  <ClientOnly>
+    <HeaderPublic v-if="!user" />
+    <HeaderAuth v-else :image-url="imageUrl" :username="user?.username || ''" />
+    <template #fallback>
+      <HeaderPublic />
+    </template>
+  </ClientOnly>
 </template>
