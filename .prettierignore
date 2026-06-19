@@ -38,12 +38,15 @@ logs
 # Vercel
 .vercel
 
-# Supabase
-.supabase
-
 # Nuxt dev/build outputs
 .output
 .data
 .nuxt
 .nitro
 .cache
+
+# Old files
+old
+
+# Docs
+docs

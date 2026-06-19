@@ -27,7 +27,14 @@ logs
 temp
 tmp
 
-# Supabase
-supabase/.temp/
-supabase/.trash/
-supabase/functions/.env
+# Old files
+old
+
+# Prisma
+prisma/generated/
+
+# Temporary files
+temp/
+
+# ESLint cache
+.eslintcache
