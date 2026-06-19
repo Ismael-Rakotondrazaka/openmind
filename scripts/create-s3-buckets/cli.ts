@@ -50,6 +50,7 @@ function buildClient(): S3Client {
     endpoint: requiredEnv('NUXT_S3_HOST'),
     forcePathStyle: true,
     region: requiredEnv('NUXT_S3_REGION'),
+    requestChecksumCalculation: 'WHEN_REQUIRED',
   });
 }
 
