@@ -211,7 +211,7 @@ const isExpanded = ref(false);
         />
         <!-- eslint-enable vue/no-v-html -->
         <button
-          class="text-muted-foreground hover:text-foreground text-xs text-left font-medium transition-colors"
+          class="text-muted-foreground hover:text-foreground text-left text-xs font-medium transition-colors"
           type="button"
           @click="isExpanded = !isExpanded"
         >

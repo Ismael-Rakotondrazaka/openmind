@@ -1,4 +1,8 @@
-import { type Comment, CommentConfig, WsCommentMessageType } from '#shared/features/comments';
+import {
+  type Comment,
+  CommentConfig,
+  WsCommentMessageType,
+} from '#shared/features/comments';
 import { SortOrder } from '#shared/utils/enums';
 import { WsEvent } from '#shared/utils/ws';
 

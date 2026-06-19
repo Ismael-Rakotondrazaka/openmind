@@ -97,7 +97,7 @@ const addSuggestion = (value: string) => {
       :model-value="modelValue"
       :aria-invalid="ariaInvalid"
       class="min-h-10"
-      @update:model-value="emit('update:modelValue', ($event as string[]))"
+      @update:model-value="emit('update:modelValue', $event as string[])"
     >
       <TagsInputItem v-for="tag in modelValue" :key="tag" :value="tag">
         <TagsInputItemText />

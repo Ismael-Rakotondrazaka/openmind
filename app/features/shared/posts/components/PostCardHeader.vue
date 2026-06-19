@@ -87,7 +87,11 @@
 
 <script lang="ts" setup>
 import { useMutation, useQuery } from '@pinia/colada';
-import { type PostListItem, PostStatus, PostStatusLabel } from '#shared/features/posts';
+import {
+  type PostListItem,
+  PostStatus,
+  PostStatusLabel,
+} from '#shared/features/posts';
 import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
 

@@ -38,7 +38,7 @@ export const RoleLabelKeys: Record<Role, string> = {
 
 export const getRoleLabel = (
   role: Role,
-  t: (key: string) => string,
+  t: (key: string) => string
 ): string => {
   return t(RoleLabelKeys[role]);
 };

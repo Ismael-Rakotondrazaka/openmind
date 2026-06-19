@@ -20,7 +20,11 @@ useSeoMeta({
       </CardHeader>
       <CardContent class="flex flex-col items-center gap-4">
         <picture class="block w-full max-w-xs">
-          <img src="/images/logo.svg" :alt="t('aboutPage.logo')" class="w-full object-cover" />
+          <img
+            src="/images/logo.svg"
+            :alt="t('aboutPage.logo')"
+            class="w-full object-cover"
+          />
         </picture>
         <p class="text-center">
           {{ t('footerComponent.creator') }}

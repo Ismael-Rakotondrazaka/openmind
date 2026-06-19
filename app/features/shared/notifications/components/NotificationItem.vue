@@ -3,7 +3,10 @@ import type { RouteLocationRaw } from 'vue-router';
 
 import { useMutation } from '@pinia/colada';
 import { useTimeAgo } from '@vueuse/core';
-import { type Notification, NotificationType } from '#shared/features/notifications';
+import {
+  type Notification,
+  NotificationType,
+} from '#shared/features/notifications';
 import { useI18n } from 'vue-i18n';
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';

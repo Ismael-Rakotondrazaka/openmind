@@ -45,7 +45,9 @@ const handleReply = (commentId: string) => {
           @click="loadPrevious"
         >
           <span v-if="isLoadingMore" class="flex items-center gap-1.5">
-            <span class="size-3 animate-spin rounded-full border border-current border-t-transparent" />
+            <span
+              class="size-3 animate-spin rounded-full border border-current border-t-transparent"
+            />
             {{ t('comments.loadPrevious') }}
           </span>
           <span v-else>{{ t('comments.loadPrevious') }}</span>

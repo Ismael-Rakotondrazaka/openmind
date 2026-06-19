@@ -3,7 +3,12 @@ import type { UserProfile } from '../users/user.model';
 
 export type { ReactionModel };
 
-export const ReactionTypes = ['like', 'love', 'celebrate', 'insightful'] as const;
+export const ReactionTypes = [
+  'like',
+  'love',
+  'celebrate',
+  'insightful',
+] as const;
 
 export const ReactionType = {
   celebrate: 'celebrate',

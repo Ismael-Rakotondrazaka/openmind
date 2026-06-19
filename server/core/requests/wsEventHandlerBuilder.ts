@@ -61,11 +61,15 @@ export class WSEventHandlerBuilder<
         const validatedMessage = validatorSchema.parse(message);
 
         const locale =
-          peer.request.headers.get('cookie')
+          peer.request.headers
+            .get('cookie')
             ?.split('; ')
             .find(c => c.startsWith('i18n_locale='))
             ?.split('=')[1] ??
-          peer.request.headers.get('accept-language')?.split(',')[0]?.split('-')[0] ??
+          peer.request.headers
+            .get('accept-language')
+            ?.split(',')[0]
+            ?.split('-')[0] ??
           'fr';
 
         const output = await handler({

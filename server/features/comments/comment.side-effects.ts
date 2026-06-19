@@ -2,10 +2,7 @@ import type { CommentModel } from '#shared/features/comments';
 
 import { enqueueNotification } from '#server/features/notifications/notification.repository';
 import { wsRegistry } from '#server/utils/ws-registry';
-import {
-  commentsTopic,
-  WsCommentMessageType,
-} from '#shared/features/comments';
+import { commentsTopic, WsCommentMessageType } from '#shared/features/comments';
 import { WsEvent } from '#shared/utils/ws';
 
 import { getCommentWithAuthor } from './comment.service';
@@ -72,7 +69,9 @@ const enqueueCommentNotifications = async (
   }
 };
 
-export const onCommentCreated = async (comment: CommentModel): Promise<void> => {
+export const onCommentCreated = async (
+  comment: CommentModel
+): Promise<void> => {
   await Promise.allSettled([
     broadcastCommentCreated(comment),
     enqueueCommentNotifications(comment),

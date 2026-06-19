@@ -2,10 +2,7 @@
 import type { Comment } from '#shared/features/comments';
 
 import { useQuery } from '@pinia/colada';
-import {
-  ReactionStatusIcon,
-  ReactionType,
-} from '#shared/features/reactions';
+import { ReactionStatusIcon, ReactionType } from '#shared/features/reactions';
 import { useI18n } from 'vue-i18n';
 
 import { reactionsQuery } from '../../reactions/reaction.query';

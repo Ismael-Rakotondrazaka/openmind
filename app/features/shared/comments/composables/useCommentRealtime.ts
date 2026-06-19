@@ -7,5 +7,7 @@ export const useCommentRealtime = (postId: MaybeRefOrGetter<string>) => {
   const topic = commentsTopic(id);
 
   onMounted(() => send(JSON.stringify({ topic, type: WsControl.SUBSCRIBE })));
-  onUnmounted(() => send(JSON.stringify({ topic, type: WsControl.UNSUBSCRIBE })));
+  onUnmounted(() =>
+    send(JSON.stringify({ topic, type: WsControl.UNSUBSCRIBE }))
+  );
 };

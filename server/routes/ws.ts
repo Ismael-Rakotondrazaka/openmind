@@ -14,10 +14,14 @@ export default defineWebSocketHandler({
       return;
     }
     try {
-      const { topic, type } = JSON.parse(text) as { topic?: string; type: string };
+      const { topic, type } = JSON.parse(text) as {
+        topic?: string;
+        type: string;
+      };
       if (!topic) return;
       if (type === WsControl.SUBSCRIBE) wsRegistry.addPeer(topic, peer);
-      else if (type === WsControl.UNSUBSCRIBE) wsRegistry.removePeer(topic, peer);
+      else if (type === WsControl.UNSUBSCRIBE)
+        wsRegistry.removePeer(topic, peer);
     } catch {
       // ignore malformed messages
     }

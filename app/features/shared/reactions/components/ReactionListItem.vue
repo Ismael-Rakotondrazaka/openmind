@@ -24,7 +24,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ReactionStatusIcon, type ReactionWithUser } from '#shared/features/reactions';
+import {
+  ReactionStatusIcon,
+  type ReactionWithUser,
+} from '#shared/features/reactions';
 import { useI18n } from 'vue-i18n';
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';

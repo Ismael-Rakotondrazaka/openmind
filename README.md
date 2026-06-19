@@ -63,19 +63,19 @@ Copy `.env.example` to `.env` and fill in the values:
 cp .env.example .env
 ```
 
-| Variable                     | Description                          |
-| ---------------------------- | ------------------------------------ |
-| `NUXT_PUBLIC_APP_URL`        | Public frontend URL                  |
-| `NUXT_PUBLIC_SITE_URL`       | SEO site URL                         |
-| `NUXT_PUBLIC_APP_VERSION`    | App version label                    |
-| `DATABASE_URL`               | PostgreSQL connection string         |
-| `NUXT_SESSION_PASSWORD`      | Cookie signing secret (≥32 chars)    |
-| `NUXT_OG_IMAGE_SECRET`       | Secret for OG image generation       |
-| `NUXT_S3_HOST`               | S3/SeaweedFS host URL                |
-| `NUXT_S3_REGION`             | S3 region                            |
-| `NUXT_S3_ACCESS_KEY`         | S3 access key                        |
-| `NUXT_S3_SECRET_KEY`         | S3 secret key                        |
-| `NUXT_BREVO_API_KEY`         | Brevo API key (transactional emails) |
+| Variable                  | Description                          |
+| ------------------------- | ------------------------------------ |
+| `NUXT_PUBLIC_APP_URL`     | Public frontend URL                  |
+| `NUXT_PUBLIC_SITE_URL`    | SEO site URL                         |
+| `NUXT_PUBLIC_APP_VERSION` | App version label                    |
+| `DATABASE_URL`            | PostgreSQL connection string         |
+| `NUXT_SESSION_PASSWORD`   | Cookie signing secret (≥32 chars)    |
+| `NUXT_OG_IMAGE_SECRET`    | Secret for OG image generation       |
+| `NUXT_S3_HOST`            | S3/SeaweedFS host URL                |
+| `NUXT_S3_REGION`          | S3 region                            |
+| `NUXT_S3_ACCESS_KEY`      | S3 access key                        |
+| `NUXT_S3_SECRET_KEY`      | S3 secret key                        |
+| `NUXT_BREVO_API_KEY`      | Brevo API key (transactional emails) |
 
 ### Local Database
 

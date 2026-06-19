@@ -1,9 +1,6 @@
 <template>
   <Select :model-value="locale" @update:model-value="handleSelect">
-    <SelectTrigger
-      class="w-fit border-0 bg-transparent shadow-none"
-      size="sm"
-    >
+    <SelectTrigger class="w-fit border-0 bg-transparent shadow-none" size="sm">
       <SelectValue>
         <Icon name="mdi:translate" class="size-5 shrink-0" />
         <span class="hidden lg:inline">{{ currentLabel }}</span>

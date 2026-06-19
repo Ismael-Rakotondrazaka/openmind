@@ -9,7 +9,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { PostListItem, PostReactionsDetails } from '#shared/features/posts';
+import type {
+  PostListItem,
+  PostReactionsDetails,
+} from '#shared/features/posts';
 
 import { useReactionsDrawer } from '../../reactions/composables/useReactionsDrawer';
 import PostInteraction from './PostInteraction.vue';
