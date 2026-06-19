@@ -1,33 +1,46 @@
 export interface UseUserFullnameProps {
-  first_name?: null | string;
-  last_name?: null | string;
+  firstName?: null | string;
+  lastName?: null | string;
   username?: null | string;
 }
 
-export const getUserFullname = <T extends UseUserFullnameProps>(user: T) => {
-  if (!user.username && !user.first_name && !user.last_name) {
-    return 'User';
+/**
+ * Get user fullname with fallback to username or default
+ * Always pass defaultUsername from i18n (t('users.defaultUsername'))
+ */
+export const getUserFullname = <T extends UseUserFullnameProps>(
+  user: T,
+  defaultUsername?: string
+) => {
+  if (!user.username && !user.firstName && !user.lastName) {
+    return defaultUsername || '';
   }
 
-  if (!user.first_name && !user.last_name) {
-    return user.username || 'User';
+  if (!user.firstName && !user.lastName) {
+    return user.username || defaultUsername || '';
   }
 
   return (
-    `${user.first_name || ''} ${user.last_name || ''}`.trim() ||
+    `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
     user.username ||
-    'User'
+    defaultUsername ||
+    ''
   );
 };
 
+/**
+ * Composable to get user fullname
+ * Optionally pass defaultUsername from t('users.defaultUsername')
+ */
 export const useUserFullname = <
   T extends MaybeRefOrGetter<UseUserFullnameProps>,
 >(
-  user: T
+  user: T,
+  defaultUsername?: string
 ) => {
   return computed<string>(() => {
     const userValue = toValue(user);
 
-    return getUserFullname(userValue);
+    return getUserFullname(userValue, defaultUsername);
   });
 };
