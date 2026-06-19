@@ -1,0 +1,75 @@
+{
+  "toasts": {
+    "deleteFailed": "An error occurred while deleting.",
+    "notAssignedToLodgment": "You are not assigned to a room yet.",
+    "documentsRequired": "All documents are required.",
+    "loggedOutSuccessfully": "Logged out successfully",
+    "failedToLogOut": "Failed to log out. Please try again.",
+    "mustBeLoggedIn": "You must be logged in to perform this action.",
+    "copyToClipboard": "Copied to clipboard",
+    "failedToCopy": "Failed to copy to clipboard",
+    "announcement": {
+      "created": "Announcement created successfully",
+      "updated": "Announcement updated",
+      "deleted": "Announcement deleted successfully"
+    },
+    "academicSession": {
+      "created": "Academic session created",
+      "updated": "Academic session updated",
+      "deleted": "Academic session deleted successfully"
+    },
+    "maintainer": {
+      "created": "Maintainer created successfully",
+      "updated": "Maintainer updated successfully",
+      "deleted": "Maintainer deleted successfully"
+    },
+    "admin": {
+      "deleted": "Administrator deleted successfully",
+      "roleUpdated": "Role updated"
+    },
+    "housingApplication": {
+      "updated": "Application updated"
+    },
+    "renewal": {
+      "updated": "Renewal updated",
+      "submitted": "Renewal request submitted"
+    },
+    "maintenance": {
+      "submitted": "Maintenance request submitted",
+      "statusUpdated": "Status updated"
+    },
+    "post": {
+      "published": "Post published successfully",
+      "saved": "Post saved",
+      "savedDraft": "Post saved as draft",
+      "created": "Post created successfully",
+      "updated": "Post updated successfully",
+      "deleted": "Post deleted successfully",
+      "failedToCreate": "Failed to create post",
+      "failedToUpdate": "Failed to update post",
+      "failedToDelete": "Failed to delete post",
+      "failedToUploadCover": "Failed to upload cover image"
+    },
+    "comment": {
+      "created": "Comment posted successfully",
+      "deleted": "Comment deleted successfully",
+      "failedToCreate": "Failed to post comment",
+      "failedToDelete": "Failed to delete comment"
+    },
+    "profile": {
+      "updated": "Profile updated successfully",
+      "failedToUpdate": "Failed to update profile"
+    },
+    "password": {
+      "updated": "Password updated successfully",
+      "resetEmailSent": "Password reset email sent. Check your inbox.",
+      "failedToUpdate": "Failed to update password",
+      "failedToSendResetEmail": "Failed to send password reset email. Please try again.",
+      "invalidResetLink": "Invalid or expired password reset link."
+    },
+    "email": {
+      "changeRequested": "Email change requested. Check your new email for confirmation.",
+      "failedToChange": "Failed to update email"
+    }
+  }
+}

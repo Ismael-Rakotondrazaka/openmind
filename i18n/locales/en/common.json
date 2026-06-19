@@ -1,0 +1,99 @@
+{
+  "common": {
+    "accessibility": {
+      "userAvatar": "User avatar"
+    },
+    "brand": {
+      "name": "Lumièrebourg"
+    },
+    "auth": {
+      "notAuthenticated": "Not authenticated"
+    },
+    "empty": {
+      "noResults": "No results.",
+      "noBuilding": "No building found.",
+      "noFaculty": "No faculty found.",
+      "noCountry": "No country found.",
+      "noFileSelected": "No file selected",
+      "notAvailable": "Not available"
+    },
+    "results": {
+      "countLabel": "Results:"
+    },
+    "cards": {
+      "personalInfo": "Personal information",
+      "contact": "Contact",
+      "scolarite": "Education",
+      "documents": "Documents",
+      "lodgment": "Lodging",
+      "location": "Location",
+      "information": "Information",
+      "assignedLodgment": "Assigned room",
+      "fullName": "Full name",
+      "gender": "Gender",
+      "origin": "Origin",
+      "nicNumber": "ID number",
+      "email": "Email",
+      "phone": "Phone",
+      "emergencyContact": "Emergency contact",
+      "faculty": "Faculty",
+      "academicSession": "Academic session",
+      "building": "Building",
+      "floor": "Floor",
+      "room": "Room",
+      "capacity": "Capacity",
+      "occupation": "Occupancy",
+      "type": "Type",
+      "status": "Status",
+      "reportedAt": "Reported on",
+      "workStart": "Work start",
+      "workEnd": "Work end",
+      "description": "Description",
+      "actions": "Actions"
+    },
+    "deleteModal": {
+      "title": "Delete {entity}",
+      "description": "This action cannot be undone."
+    },
+    "tables": {
+      "photo": "Photo",
+      "fullName": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "submittedAt": "Submitted on",
+      "action": "Action",
+      "actions": "Actions"
+    },
+    "notFound": {
+      "renewal": "Renewal not found or deleted.",
+      "housingApplication": "Application not found or deleted.",
+      "maintenance": "Maintenance not found or deleted.",
+      "announcement": "Announcement not found or deleted."
+    },
+    "allRoles": "All roles",
+    "announcements": {
+      "detailTitle": "Announcement",
+      "listDescription": "Stay up to date with the latest news and events at Lumièrebourg University City.",
+      "listTitle": "Announcements"
+    },
+    "search": {
+      "placeholder": "Search...",
+      "placeholderBuilding": "Search for a building...",
+      "placeholderAnnouncement": "Search for an announcement...",
+      "placeholderFaculty": "Search for a faculty...",
+      "placeholderMaintainer": "Search for a maintainer...",
+      "country": "Search country...",
+      "placeholderPosts": "Search posts...",
+      "placeholderTags": "Search tags...",
+      "placeholderFollowers": "Search followers...",
+      "placeholderFollowing": "Search following..."
+    },
+    "seo": {
+      "readPostBy": "Read",
+      "onBrand": "on",
+      "viewProfile": "View",
+      "profileOf": "'s profile"
+    }
+  }
+}

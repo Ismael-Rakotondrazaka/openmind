@@ -1,0 +1,75 @@
+{
+  "toasts": {
+    "deleteFailed": "Une erreur est survenue lors de la suppression.",
+    "notAssignedToLodgment": "Vous n'êtes pas encore assigné à un logement",
+    "documentsRequired": "Tous les documents sont requis",
+    "loggedOutSuccessfully": "Déconnexion réussie",
+    "failedToLogOut": "Impossible de se déconnecter. Veuillez réessayer.",
+    "mustBeLoggedIn": "Vous devez être connecté pour effectuer cette action.",
+    "copyToClipboard": "Copié dans le presse-papiers",
+    "failedToCopy": "Impossible de copier dans le presse-papiers",
+    "announcement": {
+      "created": "Annonce créée avec succès",
+      "updated": "Annonce mise à jour",
+      "deleted": "L'annonce a été supprimée avec succès"
+    },
+    "academicSession": {
+      "created": "Session académique créée",
+      "updated": "Session académique mise à jour",
+      "deleted": "La session académique a été supprimée avec succès"
+    },
+    "maintainer": {
+      "created": "Mainteneur créé avec succès",
+      "updated": "Mainteneur mis à jour avec succès",
+      "deleted": "Le mainteneur a été supprimé avec succès"
+    },
+    "admin": {
+      "deleted": "L'administrateur a été supprimé avec succès",
+      "roleUpdated": "Rôle mis à jour"
+    },
+    "housingApplication": {
+      "updated": "Demande mise à jour"
+    },
+    "renewal": {
+      "updated": "Renouvellement mis à jour",
+      "submitted": "Demande de renouvellement envoyée"
+    },
+    "maintenance": {
+      "submitted": "Demande de maintenance envoyée",
+      "statusUpdated": "Statut mis à jour"
+    },
+    "post": {
+      "published": "Post publié avec succès",
+      "saved": "Post enregistré",
+      "savedDraft": "Post enregistré comme brouillon",
+      "created": "Post créé avec succès",
+      "updated": "Post mis à jour avec succès",
+      "deleted": "Post supprimé avec succès",
+      "failedToCreate": "Impossible de créer le post",
+      "failedToUpdate": "Impossible de mettre à jour le post",
+      "failedToDelete": "Impossible de supprimer le post",
+      "failedToUploadCover": "Impossible de télécharger l'image de couverture"
+    },
+    "comment": {
+      "created": "Commentaire posté avec succès",
+      "deleted": "Commentaire supprimé avec succès",
+      "failedToCreate": "Impossible de poster le commentaire",
+      "failedToDelete": "Impossible de supprimer le commentaire"
+    },
+    "profile": {
+      "updated": "Profil mis à jour avec succès",
+      "failedToUpdate": "Impossible de mettre à jour le profil"
+    },
+    "password": {
+      "updated": "Mot de passe mis à jour avec succès",
+      "resetEmailSent": "Email de réinitialisation du mot de passe envoyé. Vérifiez votre boîte de réception.",
+      "failedToUpdate": "Impossible de mettre à jour le mot de passe",
+      "failedToSendResetEmail": "Impossible d'envoyer l'email de réinitialisation. Veuillez réessayer.",
+      "invalidResetLink": "Lien de réinitialisation invalide ou expiré."
+    },
+    "email": {
+      "changeRequested": "Changement d'email demandé. Vérifiez votre nouvel email pour la confirmation.",
+      "failedToChange": "Impossible de mettre à jour l'email"
+    }
+  }
+}

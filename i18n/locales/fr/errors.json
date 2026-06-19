@@ -1,0 +1,61 @@
+{
+  "errors": {
+    "default": "Quelque chose ne fonctionne pas correctement. Veuillez réessayer.",
+    "requests": {
+      "defaults": {
+        "badRequest": "La requête est invalide.",
+        "unauthorized": "Vous n'êtes pas autorisé.",
+        "forbidden": "Vous n'avez pas la permission d'accéder à cette ressource.",
+        "notFound": "La ressource est introuvable.",
+        "internalServer": "Une erreur interne du serveur s'est produite.",
+        "notImplemented": "Cette fonctionnalité n'est pas implémentée."
+      },
+      "register": {
+        "email": {
+          "alreadyUsed": "Le mail est déjà utilisé."
+        }
+      },
+      "auth": {
+        "signin": {
+          "Signin": "Essayez de vous connecter avec un autre compte.",
+          "OAuthSignin": "Essayez de vous connecter avec un autre compte.",
+          "OAuthCallback": "Essayez de vous connecter avec un autre compte.",
+          "OAuthCreateAccount": "Essayez de vous connecter avec un autre compte.",
+          "EmailCreateAccount": "Essayez de vous connecter avec un autre compte.",
+          "Callback": "Essayez de vous connecter avec un autre compte.",
+          "OAuthAccountNotLinked": "Pour confirmer votre identité, connectez-vous avec le même compte que celui utilisé initialement.",
+          "EmailSignin": "Vérifiez votre boîte de réception.",
+          "CredentialsSignin": "La connexion a échoué. Vérifiez que les informations fournies sont correctes.",
+          "SessionRequired": "Veuillez vous connecter pour cette page.",
+          "default": "Impossible de se connecter."
+        }
+      },
+      "housingApplications": {
+        "cannotEditTerminal": "La demande ne peut être modifiée une fois refusée ou validée.",
+        "noChange": "Au moins une modification est requise.",
+        "mustBeAcceptedBeforeValidated": "La demande doit être acceptée avant d'être validée.",
+        "lodgmentRequiredForValidation": "Une chambre est requise pour valider la demande.",
+        "academicSessionNotFound": "Session académique introuvable."
+      },
+      "renewals": {
+        "cannotEditTerminal": "La demande de renouvellement ne peut être modifiée une fois refusée ou validée.",
+        "noChange": "Au moins une modification est requise.",
+        "mustBeAcceptedBeforeValidated": "La demande de renouvellement doit être acceptée avant d'être validée.",
+        "academicSessionNotFound": "Session académique introuvable.",
+        "alreadyExists": "Une demande de renouvellement existe déjà pour cette session."
+      },
+      "maintenances": {
+        "invalidStatusTransition": "Transition de statut invalide : {from} → {to}",
+        "cannotAssignMaintainer": "Impossible d'assigner un mainteneur à une maintenance terminée ou refusée",
+        "cannotUnassignMaintainer": "Impossible de désassigner un mainteneur d'une maintenance terminée ou refusée"
+      }
+    },
+    "ctas": {
+      "goBackHome": "Retour à l'accueil"
+    },
+    "pages": {
+      "loadingPost": "Chargement du post...",
+      "postNotFound": "Post introuvable."
+    }
+  }
+}

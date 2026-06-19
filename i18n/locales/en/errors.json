@@ -1,0 +1,61 @@
+{
+  "errors": {
+    "default": "Something is not working properly. Please try again.",
+    "requests": {
+      "defaults": {
+        "badRequest": "The request is invalid.",
+        "unauthorized": "You are not authorized.",
+        "forbidden": "You do not have permission to access this resource.",
+        "notFound": "The resource is not found.",
+        "internalServer": "An internal server error occurred.",
+        "notImplemented": "This feature is not implemented."
+      },
+      "register": {
+        "email": {
+          "alreadyUsed": "The email is already in use."
+        }
+      },
+      "auth": {
+        "signin": {
+          "Signin": "Try signing in with a different account.",
+          "OAuthSignin": "Try signing in with a different account.",
+          "OAuthCallback": "Try signing in with a different account.",
+          "OAuthCreateAccount": "Try signing in with a different account.",
+          "EmailCreateAccount": "Try signing in with a different account.",
+          "Callback": "Try signing in with a different account.",
+          "OAuthAccountNotLinked": "To confirm your identity, sign in with the same account you used originally.",
+          "EmailSignin": "Check your email inbox.",
+          "CredentialsSignin": "Sign in failed. Check the details you provided are correct.",
+          "SessionRequired": "Please sign in to view this page.",
+          "default": "Unable to sign in."
+        }
+      },
+      "housingApplications": {
+        "cannotEditTerminal": "The application cannot be modified once it has been refused or validated.",
+        "noChange": "At least one change is required.",
+        "mustBeAcceptedBeforeValidated": "The application must be accepted before it can be validated.",
+        "lodgmentRequiredForValidation": "A room is required to validate the application.",
+        "academicSessionNotFound": "Academic session not found."
+      },
+      "renewals": {
+        "cannotEditTerminal": "The renewal request cannot be modified once it has been refused or validated.",
+        "noChange": "At least one change is required.",
+        "mustBeAcceptedBeforeValidated": "The renewal request must be accepted before it can be validated.",
+        "academicSessionNotFound": "Academic session not found.",
+        "alreadyExists": "A renewal request already exists for this session."
+      },
+      "maintenances": {
+        "invalidStatusTransition": "Invalid status transition: {from} → {to}",
+        "cannotAssignMaintainer": "Cannot assign a maintainer to a completed or refused maintenance request.",
+        "cannotUnassignMaintainer": "Cannot unassign a maintainer from a completed or refused maintenance request."
+      }
+    },
+    "ctas": {
+      "goBackHome": "Go Home"
+    },
+    "pages": {
+      "loadingPost": "Loading post...",
+      "postNotFound": "Post not found."
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "reactions": {
+    "reactionsDrawerTitle": "Reactions",
+    "allTab": "All",
+    "celebrate": "Celebrate",
+    "insightful": "Insightful",
+    "like": "Like",
+    "love": "Love",
+    "noReactionsYet": "No reactions yet",
+    "you": "You",
+    "youAndOne": "You and 1 other person",
+    "youNameAndOthers": "You, {name} and {count} others",
+    "youAndOthers": "You and {count} others",
+    "onePerson": "1 person",
+    "nameAndOneOther": "{name} and 1 other",
+    "reactToComments": "react to comments",
+    "reactToPosts": "react to posts",
+    "replyToComments": "reply to comments"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "comments": {
+    "heading": "Comments",
+    "commentOnPost": "Comment on {name}'s post",
+    "noCommentsYet": "No comments yet. Be the first to comment!",
+    "deleteComment": "Delete comment",
+    "deleteCommentDescription": "This action cannot be undone. The comment will be permanently deleted.",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "reply": "Reply",
+    "replyToAuthorComment": "Reply to {author}'s comment",
+    "replyToComments": "reply to comments",
+    "loadPrevious": "Load previous comments",
+    "loadPreviousReplies": "Load previous replies",
+    "showMore": "Show more",
+    "showLess": "Show less"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "posts": {
+    "createPostTitle": "Créer un post",
+    "createPostDescription": "Préparez-vous à partager vos pensées ! Créer un article est facile. Remplissez simplement le formulaire ci-dessous et laissez vos idées briller. Commencez maintenant et rejoignez notre communauté !",
+    "editPostTitle": "Modifier le post",
+    "editPostDescription": "Mettez à jour les détails de votre post ci-dessous. Les modifications seront reflétées immédiatement après la sauvegarde.",
+    "title": "Titre",
+    "titlePlaceholder": "Le titre de votre post",
+    "titleDescription": "Rédigez un titre captivant qui résume l'essence de votre article et pique la curiosité.",
+    "content": "Contenu",
+    "contentPlaceholder": "Partagez vos pensées...",
+    "contentDescription": "Versez vos idées, vos perspectives et votre expertise dans une prose attrayante et informative pour captiver votre audience.",
+    "coverImage": "Image de couverture",
+    "coverImageDescription": "Choisissez une image accrocheuse pour attirer l'attention de votre audience.",
+    "tags": "Tags",
+    "tagsDescription": "Ajoutez des mots-clés descriptifs pour catégoriser votre article et améliorer la découvrabilité.",
+    "optional": "(optionnel)",
+    "reactions": "Réactions",
+    "all": "Tous",
+    "recent": "Récent",
+    "top": "Meilleur",
+    "noNotifications": "Aucune notification pour le moment",
+    "createdBy": "Créé par",
+    "feedTitle": "Fil d'actualité",
+    "sortBy": "Trier par",
+    "searchPosts": "Rechercher des posts...",
+    "loadMore": "Charger plus",
+    "tagsButton": "Tags",
+    "searchTags": "Rechercher des tags...",
+    "noTagsFound": "Aucun tag trouvé",
+    "editPost": "Modifier le post",
+    "saveForLater": "Enregistrer pour plus tard",
+    "removeFromSaved": "Supprimer des enregistrements",
+    "reactToPosts": "Réagir aux posts",
+    "notFound": "Post non trouvé",
+    "shareTitle": "Partager",
+    "shareUrlCopied": "URL de partage copiée dans le presse-papiers",
+    "failedToCopyShareUrl": "Impossible de copier l'URL de partage"
+  },
+  "tags": {
+    "noMatching": "Aucun tag correspondant."
+  }
+}

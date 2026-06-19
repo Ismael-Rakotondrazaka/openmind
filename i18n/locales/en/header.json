@@ -1,0 +1,38 @@
+{
+  "header": {
+    "brand": {
+      "name": "Lumièrebourg"
+    },
+    "newPost": "New post",
+    "end": {
+      "signIn": "Sign in",
+      "joinCommunity": "Join the community",
+      "dashboard": "Dashboard"
+    },
+    "logout": {
+      "label": "Log out",
+      "success": "You have been successfully logged out."
+    },
+    "postStatus": {
+      "draft": "Draft",
+      "published": "Published"
+    }
+  },
+  "headerPublic": {
+    "signIn": "Sign In",
+    "register": "Register"
+  },
+  "footerComponent": {
+    "logoAlt": "Openmind logo",
+    "email": "Email",
+    "github": "GitHub",
+    "creator": "Created by",
+    "ismael": "Ismael",
+    "copyright": "© Copyright"
+  },
+  "aboutPage": {
+    "openmind": "Openmind",
+    "tagline": "Unleash Your Thoughts, Explore Every Topic.",
+    "logo": "Logo"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "reactions": {
+    "reactionsDrawerTitle": "Réactions",
+    "allTab": "Tous",
+    "celebrate": "Célébrer",
+    "insightful": "Instructif",
+    "like": "J'aime",
+    "love": "J'adore",
+    "noReactionsYet": "Aucune réaction pour le moment",
+    "you": "Vous",
+    "youAndOne": "Vous et 1 autre personne",
+    "youNameAndOthers": "Vous, {name} et {count} autres",
+    "youAndOthers": "Vous et {count} autres",
+    "onePerson": "1 personne",
+    "nameAndOneOther": "{name} et 1 autre",
+    "reactToComments": "réagir aux commentaires",
+    "reactToPosts": "réagir aux posts",
+    "replyToComments": "répondre aux commentaires"
+  }
+}
