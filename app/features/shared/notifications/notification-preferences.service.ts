@@ -1,34 +1,19 @@
 import type { NotificationPreference } from './notification-preferences.model';
 
 export const getNotificationPreferences = async (
-  userId: string
+  _userId: string
 ): Promise<NotificationPreference[]> => {
-  const client = useSupabaseClient();
-
-  const { data, error } = await client
-    .from('notification_preferences')
-    .select('*')
-    .eq('user_id', userId);
-
-  if (error) throw error;
-
-  return data ?? [];
+  return $fetch<NotificationPreference[]>('/api/notifications/preferences');
 };
 
 export const setNotificationPreference = async (
-  userId: string,
+  _userId: string,
   groupName: string,
   channel: string,
   enabled: boolean
 ): Promise<void> => {
-  const client = useSupabaseClient();
-
-  const { error } = await client.from('notification_preferences').upsert({
-    channel,
-    enabled,
-    group_name: groupName,
-    user_id: userId,
+  await $fetch('/api/notifications/preferences', {
+    body: { channel, enabled, groupName },
+    method: 'PATCH',
   });
-
-  if (error) throw error;
 };
