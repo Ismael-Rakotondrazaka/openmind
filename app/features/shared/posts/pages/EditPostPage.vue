@@ -1,20 +1,29 @@
 <script lang="ts" setup>
+import { useQuery } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
+
 import EditPostForm from '../components/EditPostForm.vue';
-import { useGetPost } from '../composables/useGetPost';
+import { postByIdQuery } from '../post.query';
 
+const { t } = useI18n();
 const route = useRoute('posts-postId-edit');
-const postId = computed(() => route.params.postId);
+const postId = computed(() => route.params.postId as string);
+const fetchFn = useRequestFetch();
 
-const { data: post, isError, isLoading } = useGetPost(postId);
+const {
+  data: post,
+  error,
+  isLoading,
+} = useQuery(() => postByIdQuery({ fetchFn, id: postId.value }));
 </script>
 
 <template>
   <div class="mx-auto mt-15 min-h-svh w-full max-w-175 px-2">
     <div v-if="isLoading" class="text-muted-foreground py-12 text-center">
-      Loading post...
+      {{ t('buttons.loadingPost') }}
     </div>
-    <div v-else-if="isError || !post" class="py-12 text-center text-red-500">
-      Post not found.
+    <div v-else-if="error || !post" class="py-12 text-center text-red-500">
+      {{ t('posts.notFound') }}
     </div>
     <EditPostForm v-else :post="post" />
   </div>

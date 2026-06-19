@@ -3,28 +3,32 @@
     <PostInteraction
       :post="post"
       :reactions-drawer-open="reactionsDrawerOpen"
-      @reactions-drawer:open="reactionsDrawerOpen = true"
-      @reactions-drawer:close="reactionsDrawerOpen = false"
-    />
-    <ReactionsDrawer
-      v-model:open="reactionsDrawerOpen"
-      :post-id="post.id"
-      :reactions-details="post.reactions_details"
+      @reactions-drawer:open="onOpenReactions"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { Post } from '../post.model';
+import type { PostListItem, PostReactionsDetails } from '#shared/features/posts';
 
-import ReactionsDrawer from '../../reactions/components/ReactionsDrawer.vue';
+import { useReactionsDrawer } from '../../reactions/composables/useReactionsDrawer';
 import PostInteraction from './PostInteraction.vue';
 
 type Props = {
-  post: Post;
+  post: Serialize<PostListItem>;
 };
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
-const reactionsDrawerOpen = ref(false);
+const { openForPost, state } = useReactionsDrawer();
+const reactionsDrawerOpen = computed(
+  () => state.open && state.postId === props.post.id
+);
+
+function onOpenReactions() {
+  openForPost(
+    props.post.id,
+    props.post.reactionsDetails as PostReactionsDetails
+  );
+}
 </script>

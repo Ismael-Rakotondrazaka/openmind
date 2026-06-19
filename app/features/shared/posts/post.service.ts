@@ -1,169 +1,77 @@
-import type { PaginationResult } from '@/features/shared/paginations/pagination.model';
-
-import type { Post, PostFilters, PostInsert, PostUpdate } from './post.model';
-
-import { PostConfig } from './post.config';
+import type { PaginationResult } from '#shared/features/paginations';
+import type {
+  CreatePostBody,
+  IndexPostsQuery,
+  Post,
+  PostListItem,
+  UpdatePostBody,
+} from '#shared/features/posts';
+import type { H3Event$Fetch } from 'nitropack/types';
 
 export const getPosts = async (
-  filters: PostFilters
-): Promise<PaginationResult<Post>> => {
-  const client = useSupabaseClient();
+  filters: IndexPostsQuery,
+  fetchFn: H3Event$Fetch | typeof $fetch = $fetch
+): Promise<PaginationResult<Serialize<PostListItem>>> => {
+  const result = await fetchFn('/api/posts', {
+    query: filters,
+  });
+  return result as unknown as PaginationResult<Serialize<PostListItem>>;
+};
 
-  let query = client.from('posts').select(
-    `
-    *,
-    author:author_id(*),
-    tags:post_tags(tag:tag_id(*))
-    `,
-    { count: 'exact' }
+export const getPost = async (
+  postId: string,
+  fetchFn: H3Event$Fetch | typeof $fetch = $fetch
+): Promise<Serialize<Post>> => {
+  const { data } = await fetchFn(
+    `/api/posts/${postId}` as '/api/posts/${postId}'
   );
-
-  if (filters.author_id) {
-    query = query.eq('author_id', filters.author_id);
-  }
-
-  if (filters.status) {
-    query = query.eq('status', filters.status);
-  }
-
-  if (filters.search) {
-    query = query.ilike('title', `%${filters.search}%`);
-  }
-
-  if (filters.tagIds && filters.tagIds.length > 0) {
-    const { data: postTagData, error: ptError } = await client
-      .from('post_tags')
-      .select('post_id')
-      .in('tag_id', filters.tagIds);
-
-    if (ptError) throw ptError;
-
-    const postIds = [...new Set(postTagData?.map(pt => pt.post_id) ?? [])];
-
-    if (postIds.length === 0) {
-      return { count: 0, data: [] };
-    }
-
-    query = query.in('id', postIds);
-  }
-
-  const page = filters.page ?? PostConfig.PAGE_DEFAULT;
-
-  const limit = filters.limit ?? PostConfig.PAGE_SIZE_DEFAULT;
-
-  const from = (page - 1) * limit;
-  const to = from + limit - 1;
-
-  query = query
-    .order(filters.orderBy ?? 'created_at', {
-      ascending: filters.sortOrder === SortOrder.asc,
-    })
-    .range(from, to);
-
-  const { count, data, error } = await query;
-
-  if (error) throw error;
-
-  return {
-    count: count ?? 0,
-    data: (data ?? []) as unknown as Post[],
-  };
+  return data as unknown as Serialize<Post>;
 };
 
-export const getPostsCount = async (
-  filters: PostFilters = {}
-): Promise<number> => {
-  const client = useSupabaseClient();
-
-  let query = client.from('posts').select('id', { count: 'exact', head: true });
-
-  if (filters.author_id) {
-    query = query.eq('author_id', filters.author_id);
-  }
-
-  if (filters.status) {
-    query = query.eq('status', filters.status);
-  }
-
-  if (filters.search) {
-    query = query.ilike('title', `%${filters.search}%`);
-  }
-
-  const { count, error } = await query;
-
-  if (error) throw error;
-
-  return count ?? 0;
-};
-
-export const getPost = async (id: string): Promise<null | Post> => {
-  const client = useSupabaseClient();
-
-  const { data, error } = await client
-    .from('posts')
-    .select(
-      `
-    *,
-    author:author_id(*),
-    tags:post_tags(tag:tag_id(*))
-    `
-    )
-    .eq('id', id)
-    .maybeSingle();
-
-  if (error) throw error;
-
-  return data as unknown as null | Post;
-};
-
-export const createPost = async (post: PostInsert): Promise<Post> => {
-  const client = useSupabaseClient();
-
-  const { data, error } = await client
-    .from('posts')
-    .insert(post)
-    .select(
-      `
-    *,
-    author:author_id(*),
-    tags:post_tags(tag:tag_id(*))
-    `
-    )
-    .single();
-
-  if (error) throw error;
-
-  return data as unknown as Post;
+export const storePost = async (
+  body: CreatePostBody,
+  fetchFn: H3Event$Fetch | typeof $fetch = $fetch
+) => {
+  const { data } = await fetchFn('/api/posts', {
+    body,
+    method: 'POST',
+  });
+  return data;
 };
 
 export const updatePost = async (
-  id: string,
-  updates: PostUpdate
-): Promise<Post> => {
-  const client = useSupabaseClient();
-
-  const { data, error } = await client
-    .from('posts')
-    .update(updates)
-    .eq('id', id)
-    .select(
-      `
-    *,
-    author:author_id(*),
-    tags:post_tags(tag:tag_id(*))
-    `
-    )
-    .single();
-
-  if (error) throw error;
-
-  return data as unknown as Post;
+  postId: string,
+  body: UpdatePostBody,
+  fetchFn: H3Event$Fetch | typeof $fetch = $fetch
+) => {
+  const { data } = await fetchFn(
+    `/api/posts/${postId}` as '/api/posts/${postId}',
+    {
+      body,
+      method: 'PATCH',
+    }
+  );
+  return data;
 };
 
-export const deletePost = async (id: string): Promise<void> => {
-  const client = useSupabaseClient();
+export const publishPost = async (
+  postId: string,
+  fetchFn: H3Event$Fetch | typeof $fetch = $fetch
+) => {
+  const { data } = await fetchFn(
+    `/api/posts/${postId}/publish` as '/api/posts/${postId}/publish',
+    {
+      method: 'POST',
+    }
+  );
+  return data;
+};
 
-  const { error } = await client.from('posts').delete().eq('id', id);
-
-  if (error) throw error;
+export const destroyPost = async (
+  postId: string,
+  fetchFn: H3Event$Fetch | typeof $fetch = $fetch
+) => {
+  await fetchFn(`/api/posts/${postId}` as '/api/posts/${postId}', {
+    method: 'DELETE',
+  });
 };

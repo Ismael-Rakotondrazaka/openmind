@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import type { Post } from '#shared/features/posts';
+
+import { useMutation, useQuery } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,59 +18,50 @@ import {
 import { useUserFullname } from '~/features/shared/users/composables/useUserFullname';
 import { useUserImageUrl } from '~/features/users/composables/useUserImageUrl';
 
-import type { Post } from '../post.model';
-
-import { useCreateSavedPost } from '../../saved-posts/composables/useCreateSavedPost';
-import { useDeleteSavedPost } from '../../saved-posts/composables/useDeleteSavedPost';
-import { useIsPostSaved } from '../../saved-posts/composables/useIsPostSaved';
+import {
+  savedPostIsSavedQuery,
+  useToggleSavedPost,
+} from '../../saved-posts/saved-post.query';
 import PostPublishDate from './PostPublishDate.vue';
 
+const { t } = useI18n();
+
 type Props = {
-  post: Post;
+  post: Serialize<Post>;
 };
 
 const props = defineProps<Props>();
 
+const localePath = useLocalePath();
+
 const authorImageUrl = useUserImageUrl(() => props.post.author);
-const authorFullname = useUserFullname(() => props.post.author);
+const authorFullname = useUserFullname(
+  () => props.post.author,
+  t('users.defaultUsername')
+);
 
-const user = useSupabaseUser();
+const { user } = useUserSession();
 
-const isAuthor = computed(() => user.value?.sub === props.post.author.id);
+const isAuthor = computed(() => user.value?.id === props.post.author.id);
 
-const { data: isPostSaved } = useIsPostSaved(() => ({
-  postId: props.post.id,
-  userId: user.value?.sub,
-}));
+const hasVisibleMenuOptions = computed(() => !!user.value || isAuthor.value);
 
-const createSavedPost = useCreateSavedPost();
+const fetchFn = useRequestFetch();
+
+const { data: isPostSaved } = useQuery(() =>
+  savedPostIsSavedQuery({ fetchFn, postId: props.post.id })
+);
+
+const { mutateAsync: toggleSaved } = useMutation(useToggleSavedPost());
 
 const handleSavePost = async () => {
-  if (!user.value?.sub) {
-    return;
-  }
-
-  await createSavedPost.mutateAsync({
-    post_id: props.post.id,
-    user_id: user.value.sub,
-  });
-
-  toast.success('Post saved');
+  await toggleSaved({ body: { postId: props.post.id } });
+  toast.success(t('toasts.post.saved'));
 };
 
-const deleteSavedPost = useDeleteSavedPost();
-
 const handleDeleteSavedPost = async () => {
-  if (!user.value?.sub) {
-    return;
-  }
-
-  await deleteSavedPost.mutateAsync({
-    postId: props.post.id,
-    userId: user.value.sub,
-  });
-
-  toast.info('Post removed from saved');
+  await toggleSaved({ body: { postId: props.post.id } });
+  toast.info(t('toasts.post.saved'));
 };
 
 const router = useRouter();
@@ -75,7 +70,7 @@ const goBack = () => {
   if (window?.history?.length > 1) {
     router.back();
   } else {
-    navigateTo('/');
+    navigateTo(localePath({ name: 'index' }));
   }
 };
 </script>
@@ -101,7 +96,7 @@ const goBack = () => {
           </AvatarFallback>
         </Avatar>
         <div>
-          <NuxtLink
+          <NuxtLinkLocale
             :to="{
               name: 'u-userKey',
               params: {
@@ -111,13 +106,13 @@ const goBack = () => {
             class="text-text hover:text-primary inline-block font-bold hover:underline"
           >
             {{ authorFullname }}
-          </NuxtLink>
-          <PostPublishDate :date="post.published_at || post.created_at" />
+          </NuxtLinkLocale>
+          <PostPublishDate :date="post.publishedAt || post.createdAt" />
         </div>
       </div>
     </address>
 
-    <DropdownMenu>
+    <DropdownMenu v-if="hasVisibleMenuOptions">
       <DropdownMenuTrigger as-child>
         <Button variant="ghost" size="icon">
           <Icon name="mdi:dots-vertical" size="1rem" />
@@ -126,25 +121,25 @@ const goBack = () => {
 
       <DropdownMenuContent class="w-56" align="start">
         <DropdownMenuGroup>
-          <DropdownMenuItem v-if="!isPostSaved" @click="handleSavePost">
-            Save for later
+          <DropdownMenuItem v-if="user && !isPostSaved" @click="handleSavePost">
+            {{ t('posts.saveForLater') }}
             <DropdownMenuShortcut>
               <Icon name="mdi:bookmark" size="1rem" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            v-else
+            v-if="user && isPostSaved"
             variant="destructive"
             @click="handleDeleteSavedPost"
           >
-            Remove from saved
+            {{ t('posts.removeFromSaved') }}
             <DropdownMenuShortcut>
               <Icon name="mdi:bookmark-remove" size="1rem" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
 
-          <NuxtLink
+          <NuxtLinkLocale
             v-if="isAuthor"
             :to="{
               name: 'posts-postId-edit',
@@ -155,12 +150,12 @@ const goBack = () => {
             as-child
           >
             <DropdownMenuItem>
-              Edit
+              {{ t('buttons.edit') }}
               <DropdownMenuShortcut>
                 <Icon name="mdi:pencil" size="1rem" />
               </DropdownMenuShortcut>
             </DropdownMenuItem>
-          </NuxtLink>
+          </NuxtLinkLocale>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

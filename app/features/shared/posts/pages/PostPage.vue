@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import type { Post } from '../post.model';
+import type { Post } from '#shared/features/posts';
+
+import { ReactionTypes } from '#shared/features/reactions';
 
 import PostComments from '../../comments/components/PostComments.vue';
 import ReactionsDrawer from '../../reactions/components/ReactionsDrawer.vue';
-import { ReactionTypes } from '../../reactions/reaction.model';
 import PostContent from '../components/PostContent.vue';
 import PostHeader from '../components/PostHeader.vue';
 import PostInteraction from '../components/PostInteraction.vue';
@@ -33,7 +34,11 @@ const reactionsTab = useRouteQuery<string, ReactionTab>('reactionsTab', 'all', {
   },
 });
 
-defineProps<{ post: Post }>();
+interface Props {
+  post: Serialize<Post>;
+}
+
+defineProps<Props>();
 
 const showReactionsDrawer = () => {
   reactionsDrawerOpen.value = true;
@@ -60,9 +65,10 @@ const hideReactionsDrawer = () => {
       v-model:open="reactionsDrawerOpen"
       v-model:selected-reaction-tab="reactionsTab"
       :post-id="post.id"
-      :reactions-details="post.reactions_details"
+      :reactions-details="post.reactionsDetails"
     />
   </div>
 </template>
+s
 
 <style scoped></style>

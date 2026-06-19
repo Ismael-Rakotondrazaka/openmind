@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import { useQuery } from '@pinia/colada';
 import { watchDebounced } from '@vueuse/core';
-import { SortOrder } from '#imports';
+import { PostConfig, PostStatus } from '#shared/features/posts';
+import { useI18n } from 'vue-i18n';
 
 import { Input } from '@/components/ui/input';
 import {
@@ -14,12 +16,12 @@ import {
 } from '@/components/ui/select';
 
 import Pagination from '../../paginations/components/Pagination.vue';
+import ReactionsDrawer from '../../reactions/components/ReactionsDrawer.vue';
+import { useReactionsDrawer } from '../../reactions/composables/useReactionsDrawer';
 import FeedTagFilter from '../components/FeedTagFilter.vue';
 import PostCard from '../components/PostCard.vue';
 import PostCardSkeleton from '../components/PostCardSkeleton.vue';
-import { useGetPosts } from '../composables/useGetPosts';
-import { PostConfig } from '../post.config';
-import { type PostFilters, PostStatus } from '../post.model';
+import { postListQuery } from '../post.query';
 
 const SortOptions = ['recent', 'top'] as const;
 
@@ -27,9 +29,11 @@ const SortOption = createEnumConstants(SortOptions);
 
 type SortOption = (typeof SortOption)[keyof typeof SortOption];
 
+const { t } = useI18n();
+
 const SortLabel: Record<SortOption, string> = {
-  [SortOption.recent]: 'Recent',
-  [SortOption.top]: 'Top',
+  [SortOption.recent]: t('posts.recent'),
+  [SortOption.top]: t('posts.top'),
 };
 
 const sort = useRouteQuery<SortOption>('sort', SortOption.recent);
@@ -37,24 +41,22 @@ const sort = useRouteQuery<SortOption>('sort', SortOption.recent);
 const sortOrderMap: Record<
   SortOption,
   {
-    orderBy: PostFilters['orderBy'];
-    sortOrder: SortOrder;
+    orderBy: 'createdAt' | 'reactionsCount';
+    sortOrder: 'asc' | 'desc';
   }
 > = {
   [SortOption.recent]: {
-    orderBy: 'created_at',
-    sortOrder: SortOrder.desc,
+    orderBy: 'createdAt',
+    sortOrder: 'desc',
   },
   [SortOption.top]: {
-    orderBy: 'reactions_count',
-    sortOrder: SortOrder.desc,
+    orderBy: 'reactionsCount',
+    sortOrder: 'desc',
   },
 };
 
-const sortBy = computed<PostFilters['orderBy']>(
-  () => sortOrderMap[sort.value].orderBy
-);
-const sortOrder = computed<SortOrder>(() => sortOrderMap[sort.value].sortOrder);
+const sortBy = computed(() => sortOrderMap[sort.value].orderBy);
+const sortOrder = computed(() => sortOrderMap[sort.value].sortOrder);
 
 const searchQuery = useRouteQuery<string>('search', '');
 const searchInput = ref(searchQuery.value);
@@ -92,19 +94,23 @@ watch(limit, value => {
     limit.value = PostConfig.PAGE_SIZE_DEFAULT;
     return;
   }
-
   page.value = PostConfig.PAGE_DEFAULT;
 });
 
-const { data, isPending } = useGetPosts(() => ({
-  limit: limit.value,
-  orderBy: sortBy.value,
-  page: page.value,
-  search: searchQuery.value || undefined,
-  sortOrder: sortOrder.value,
-  status: PostStatus.published,
-  tagIds: selectedTagIds.value.length ? selectedTagIds.value : undefined,
-}));
+const fetchFn = useRequestFetch();
+
+const { data, isPending } = useQuery(() =>
+  postListQuery({
+    fetchFn,
+    orderBy: sortBy.value,
+    page: page.value,
+    pageSize: limit.value,
+    search: searchQuery.value || undefined,
+    sortOrder: sortOrder.value,
+    status: PostStatus.published,
+    tagIds: selectedTagIds.value.length ? selectedTagIds.value : undefined,
+  })
+);
 
 const posts = computed(() => data.value?.data ?? []);
 const totalCount = computed(() => data.value?.count ?? 0);
@@ -117,11 +123,13 @@ watch(totalPages, pages => {
     page.value = pages;
   }
 });
+
+const { state: reactionsDrawerState } = useReactionsDrawer();
 </script>
 
 <template>
   <div class="mx-auto mt-15 min-h-svh w-full max-w-175 px-2">
-    <h1 class="mb-4 text-2xl font-bold">Feed</h1>
+    <h1 class="mb-4 text-2xl font-bold">{{ t('posts.feedTitle') }}</h1>
 
     <div class="flex flex-wrap items-center gap-2">
       <div class="relative min-w-48 flex-1">
@@ -132,7 +140,7 @@ watch(totalPages, pages => {
         />
         <Input
           v-model="searchInput"
-          placeholder="Search posts..."
+          :placeholder="t('posts.searchPosts')"
           class="pl-8"
         />
       </div>
@@ -141,11 +149,11 @@ watch(totalPages, pages => {
 
       <Select v-model="sort">
         <SelectTrigger class="w-35">
-          <SelectValue placeholder="Sort" />
+          <SelectValue :placeholder="t('posts.sortBy')" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Sort by</SelectLabel>
+            <SelectLabel>{{ t('posts.sortBy') }}</SelectLabel>
             <SelectItem
               v-for="option in SortOptions"
               :key="option"
@@ -191,6 +199,13 @@ watch(totalPages, pages => {
       @page-size-change="limit = $event"
     />
   </div>
+
+  <ReactionsDrawer
+    v-model:open="reactionsDrawerState.open"
+    v-model:selected-reaction-tab="reactionsDrawerState.selectedTab"
+    :post-id="reactionsDrawerState.postId ?? undefined"
+    :reactions-details="reactionsDrawerState.reactionsDetails"
+  />
 </template>
 
 <style scoped></style>
