@@ -1,8 +1,8 @@
-<script></script>
-
 <script setup lang="ts">
+import { useQueryCache } from '@pinia/colada';
 import { authErrorCodeMessageMap } from '~~/shared/utils/errors';
 
+import { Button } from '@/components/ui/button';
 import {
   Empty,
   EmptyDescription,
@@ -10,6 +10,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
+import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 
 const ConfirmStatus = {
@@ -19,74 +20,64 @@ const ConfirmStatus = {
 } as const;
 
 type ConfirmSuccess = (typeof ConfirmStatus)[keyof typeof ConfirmStatus];
-const user = useSupabaseUser();
-const redirectInfo = useSupabaseCookieRedirect();
 
 const status = ref<ConfirmSuccess>(ConfirmStatus.processing);
+const errorCode = ref<string | undefined>();
+const resendEmail = ref('');
+const resendSent = ref(false);
+const isResending = ref(false);
 
 const route = useRoute('confirm');
+const { t } = useI18n();
 
-const titleMap: Record<ConfirmSuccess, string> = {
-  [ConfirmStatus.failed]: 'Error encountered',
-  [ConfirmStatus.processing]: 'Confirming your email',
-  [ConfirmStatus.success]: 'Email confirmed',
-};
+const { fetch: fetchSession } = useUserSession();
 
-const title = computed(() => titleMap[status.value]);
-
-const errorCode = ref<string | undefined>();
-
-const descriptionMap: Record<ConfirmSuccess, string> = {
-  [ConfirmStatus.failed]: 'Could not confirm.',
-  [ConfirmStatus.processing]:
-    'Please wait while we confirm your email. Do not refresh the page.',
-  [ConfirmStatus.success]: 'Your email has been confirmed. Redirecting...',
-};
+const title = computed(() => t(`auth.confirm.title.${status.value}`));
 
 const description = computed(() =>
   errorCode.value
-    ? (authErrorCodeMessageMap[errorCode.value] ?? 'Could not confirm.')
-    : descriptionMap[status.value]
+    ? (authErrorCodeMessageMap[errorCode.value] ??
+      t('auth.confirm.description.failed'))
+    : t(`auth.confirm.description.${status.value}`)
 );
 
-onMounted(() => {
-  setTimeout(() => {
-    if (typeof route.query.error_code === 'string') {
-      errorCode.value = route.query.error_code;
-      status.value = ConfirmStatus.failed;
-    }
-  }, 3000);
-});
+const queryCache = useQueryCache();
+const localePath = useLocalePath();
 
-const queryClient = useQueryClient();
-const supabase = useSupabaseClient();
-
-const refreshAuthUserData = () => {
-  // Supabase client does not automatically update the user data after email confirmation
-  supabase.auth.refreshSession();
-  queryClient.invalidateQueries({ queryKey: ['auth-user'] });
+const handleResend = async () => {
+  if (!resendEmail.value) return;
+  isResending.value = true;
+  try {
+    await $fetch('/api/auth/confirm/resend', {
+      body: { email: resendEmail.value },
+      method: 'POST',
+    });
+    resendSent.value = true;
+  } finally {
+    isResending.value = false;
+  }
 };
 
-watch(
-  user,
-  () => {
-    if (user.value) {
-      setTimeout(() => {
-        status.value = ConfirmStatus.success;
+onMounted(async () => {
+  const token = route.query.token;
+  if (typeof token !== 'string' || !token) {
+    errorCode.value = t('auth.confirm.errors.invalidToken');
+    status.value = ConfirmStatus.failed;
+    return;
+  }
 
-        refreshAuthUserData();
-
-        setTimeout(() => {
-          // Get redirect path, and clear it from the cookie
-          const path = redirectInfo.pluck();
-          // Redirect to the saved path, or fallback to home
-          return navigateTo(path || '/');
-        }, 3000);
-      }, 3000);
-    }
-  },
-  { immediate: true }
-);
+  try {
+    await $fetch('/api/auth/confirm', { query: { token } });
+    await fetchSession();
+    status.value = ConfirmStatus.success;
+    queryCache.invalidateQueries({ key: ['auth-user'] });
+    setTimeout(() => navigateTo(localePath({ name: 'index' })), 2000);
+  } catch (err: unknown) {
+    const msg = (err as { data?: { message?: string } })?.data?.message;
+    errorCode.value = msg ?? t('auth.confirm.errors.invalidToken');
+    status.value = ConfirmStatus.failed;
+  }
+});
 </script>
 
 <template>
@@ -114,6 +105,31 @@ watch(
             {{ description }}
           </EmptyDescription>
         </EmptyHeader>
+
+        <div
+          v-if="status === ConfirmStatus.failed && !resendSent"
+          class="mt-4 flex flex-col gap-2"
+        >
+          <p class="text-muted-foreground text-sm">
+            {{ t('auth.confirm.resend.label') }}
+          </p>
+          <Input
+            v-model="resendEmail"
+            type="email"
+            :placeholder="t('auth.confirm.resend.placeholder')"
+          />
+          <Button :disabled="isResending || !resendEmail" @click="handleResend">
+            {{
+              isResending
+                ? t('auth.confirm.resend.sending')
+                : t('auth.confirm.resend.button')
+            }}
+          </Button>
+        </div>
+
+        <p v-if="resendSent" class="text-muted-foreground mt-4 text-sm">
+          {{ t('auth.confirm.resend.success') }}
+        </p>
       </Empty>
     </div>
   </div>

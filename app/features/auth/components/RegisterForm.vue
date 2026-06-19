@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { FetchError } from 'ofetch';
 import type { HTMLAttributes } from 'vue';
 
+import { useQuery } from '@pinia/colada';
 import { toast } from 'vue-sonner';
 
 import { Button } from '@/components/ui/button';
@@ -18,13 +20,15 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { usernameExistsQuery } from '@/features/auth/auth.query';
 import { RegisterBodySchema } from '@/features/auth/auth.schema';
-import { useIsUsernameExists } from '@/features/auth/composables/useIsUsernameExists';
 import { cn } from '@/lib/utils';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];
 }>();
+
+const { t } = useI18n();
 
 const { handleSubmit, isSubmitting, resetForm, setFieldError } = useForm({
   initialValues: {
@@ -37,56 +41,42 @@ const { handleSubmit, isSubmitting, resetForm, setFieldError } = useForm({
   validationSchema: toTypedSchema(RegisterBodySchema),
 });
 
-const userSBClient = useSupabaseClient();
-const config = useRuntimeConfig();
+const fetchFn = useRequestFetch();
+
 const usernameToCheck = ref('');
-const usernameExistsQuery = useIsUsernameExists({
-  get username() {
-    return usernameToCheck.value;
-  },
-});
+const { refetch: checkUsernameExists } = useQuery(() =>
+  usernameExistsQuery({ fetchFn, username: usernameToCheck.value })
+);
 
 const showConfirmEmailModal = ref(false);
 
 const createMessageHandler = handleSubmit(async values => {
-  usernameToCheck.value = values.username;
+  usernameToCheck.value = values.username ?? '';
 
   const { data: isUsernameExists, error: usernameExistsError } =
-    await usernameExistsQuery.refetch();
+    await checkUsernameExists();
 
   if (usernameExistsError) {
-    toast.error('Unable to validate username uniqueness right now.');
+    toast.error(t('auth.register.form.unableToValidateUsername'));
     return;
   }
 
   if (isUsernameExists) {
-    setFieldError('username', 'Username already exists');
+    setFieldError('username', t('auth.register.form.usernameAlreadyExists'));
     return;
   }
 
-  const { error } = await userSBClient.auth.signUp({
-    email: values.email,
-    options: {
-      data: {
-        first_name: values.firstName,
-        last_name: values.lastName,
-        username: values.username,
-      },
-      emailRedirectTo: `${config.public.appUrl}/confirm`,
-    },
-    password: values.password,
-  });
+  try {
+    await $fetch('/api/auth/register', { body: values, method: 'POST' });
 
-  if (error) {
-    toast.error(getAuthErrorMessage(error));
-    return;
+    setTimeout(() => {
+      resetForm();
+    }, 3000);
+    showConfirmEmailModal.value = true;
+  } catch (error: unknown) {
+    const msg = (error as FetchError)?.data?.message ?? 'errors.default';
+    toast.error(getAuthErrorMessage({ code: msg, message: msg }));
   }
-
-  setTimeout(() => {
-    resetForm();
-  }, 3000);
-
-  showConfirmEmailModal.value = true;
 });
 </script>
 
@@ -94,35 +84,37 @@ const createMessageHandler = handleSubmit(async values => {
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader>
-        <CardTitle>Create your account</CardTitle>
+        <CardTitle>{{ t('auth.register.form.createAccountTitle') }}</CardTitle>
         <CardDescription>
-          Join us by creating your account! Unlock a world of possibilities and
-          exclusive features. Fill in the required information to start your
-          personalized journey with us.
+          {{ t('auth.register.form.createAccountDescription') }}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form id="register" method="POST" @submit="createMessageHandler">
           <FieldGroup>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <VeeField v-slot="{ field, errors }" name="firstName">
+              <VeeField v-slot="{ errors, componentField }" name="firstName">
                 <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="firstName">First name</FieldLabel>
+                  <FieldLabel for="firstName">{{
+                    t('users.firstName')
+                  }}</FieldLabel>
                   <Input
                     id="firstName"
-                    v-bind="field"
+                    v-bind="componentField"
                     :aria-invalid="!!errors.length"
                   />
                   <FieldError v-if="errors.length" :errors="errors" />
                 </Field>
               </VeeField>
 
-              <VeeField v-slot="{ field, errors }" name="lastName">
+              <VeeField v-slot="{ errors, componentField }" name="lastName">
                 <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="lastName">Last name</FieldLabel>
+                  <FieldLabel for="lastName">{{
+                    t('users.lastName')
+                  }}</FieldLabel>
                   <Input
                     id="lastName"
-                    v-bind="field"
+                    v-bind="componentField"
                     :aria-invalid="!!errors.length"
                   />
                   <FieldError v-if="errors.length" :errors="errors" />
@@ -130,38 +122,44 @@ const createMessageHandler = handleSubmit(async values => {
               </VeeField>
             </div>
 
-            <VeeField v-slot="{ field, errors }" name="username">
+            <VeeField v-slot="{ errors, componentField }" name="username">
               <Field :data-invalid="!!errors.length">
-                <FieldLabel for="username">Username</FieldLabel>
+                <FieldLabel for="username">{{
+                  t('users.username')
+                }}</FieldLabel>
                 <Input
                   id="username"
-                  v-bind="field"
-                  placeholder="yourusername"
+                  v-bind="componentField"
+                  :placeholder="t('users.usernamePlaceholder')"
                   :aria-invalid="!!errors.length"
                 />
                 <FieldError v-if="errors.length" :errors="errors" />
               </Field>
             </VeeField>
 
-            <VeeField v-slot="{ field, errors }" name="email">
+            <VeeField v-slot="{ errors, componentField }" name="email">
               <Field :data-invalid="!!errors.length">
-                <FieldLabel for="email">Email</FieldLabel>
+                <FieldLabel for="email">{{
+                  t('forms.fields.email.label')
+                }}</FieldLabel>
                 <Input
                   id="email"
-                  v-bind="field"
-                  placeholder="email@example.com"
+                  v-bind="componentField"
+                  :placeholder="t('forms.fields.email.placeholder')"
                   :aria-invalid="!!errors.length"
                 />
                 <FieldError v-if="errors.length" :errors="errors" />
               </Field>
             </VeeField>
 
-            <VeeField v-slot="{ field, errors }" name="password">
+            <VeeField v-slot="{ errors, componentField }" name="password">
               <Field :data-invalid="!!errors.length">
-                <FieldLabel for="password">Password</FieldLabel>
+                <FieldLabel for="password">{{
+                  t('forms.fields.password.label')
+                }}</FieldLabel>
                 <Input
                   id="password"
-                  v-bind="field"
+                  v-bind="componentField"
                   type="password"
                   :aria-invalid="!!errors.length"
                 />
@@ -171,11 +169,13 @@ const createMessageHandler = handleSubmit(async values => {
 
             <Field>
               <Button type="submit" :disabled="isSubmitting">
-                {{ isSubmitting ? 'Creating account...' : 'Create account' }}
+                {{ isSubmitting ? t('loading.creating') : t('buttons.create') }}
               </Button>
               <FieldDescription class="text-center">
-                Already have an account?
-                <NuxtLink to="login">Login</NuxtLink>
+                {{ t('auth.register.form.alreadyHaveAccount') }}
+                <NuxtLinkLocale :to="{ name: 'login' }">{{
+                  t('buttons.login')
+                }}</NuxtLinkLocale>
               </FieldDescription>
             </Field>
           </FieldGroup>
@@ -185,16 +185,17 @@ const createMessageHandler = handleSubmit(async values => {
 
     <ResponsiveModal v-model:open="showConfirmEmailModal">
       <template #title>
-        <h2 class="text-2xl font-bold">Confirm your email</h2>
+        <h2 class="text-2xl font-bold">
+          {{ t('auth.register.form.confirmEmailTitle') }}
+        </h2>
       </template>
       <template #description>
         <p class="text-sm text-gray-500">
-          We've sent you a confirmation email. Please check your inbox and click
-          the link to confirm your email address.
+          {{ t('auth.register.form.confirmEmailDescription') }}
         </p>
       </template>
       <template #close>
-        <Button variant="outline">Close</Button>
+        <Button variant="outline">{{ t('buttons.close') }}</Button>
       </template>
     </ResponsiveModal>
   </div>

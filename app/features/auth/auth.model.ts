@@ -1,5 +1,5 @@
 export interface UserMetadata {
-  first_name?: null | string;
-  image_url?: null | string;
-  last_name?: null | string;
+  firstName?: null | string;
+  imageUrl?: null | string;
+  lastName?: null | string;
 }
