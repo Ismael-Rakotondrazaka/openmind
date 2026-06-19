@@ -7,12 +7,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { ReactionWithUser } from '../reaction.model';
+import type { ReactionWithUser } from '#shared/features/reactions';
 
 import ReactionListItem from './ReactionListItem.vue';
 
 interface props {
-  reactions: ReactionWithUser[];
+  reactions: Serialize<ReactionWithUser>[];
 }
 
 const props = defineProps<props>();
