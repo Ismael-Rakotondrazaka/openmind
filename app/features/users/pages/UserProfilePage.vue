@@ -1,11 +1,15 @@
 <script lang="ts" setup>
+import { useMutation, useQuery } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useCreateFollow } from '~/features/shared/follows/composables/useCreateFollow';
-import { useDeleteFollow } from '~/features/shared/follows/composables/useDeleteFollow';
-import { useGetFollowByRelationship } from '~/features/shared/follows/composables/useGetFollowByRelationship';
-import { useGetUserTagsWithDetails } from '~/features/shared/user-tags/composables/useGetUserTagsWithDetails';
-import { useGetUsers } from '~/features/shared/users/composables/useGetUsers';
+import {
+  followByRelationshipQuery,
+  useToggleFollow,
+} from '~/features/shared/follows/follow.query';
+import { userTagListQuery } from '~/features/shared/user-tags/user-tag.query';
 import { useUserFullname } from '~/features/shared/users/composables/useUserFullname';
+import { userListQuery } from '~/features/shared/users/user.query';
 import ProfileActions from '~/features/users/components/ProfileActions.vue';
 import ProfileFollowersTab from '~/features/users/components/ProfileFollowersTab.vue';
 import ProfileFollowingTab from '~/features/users/components/ProfileFollowingTab.vue';
@@ -13,62 +17,68 @@ import ProfileHeader from '~/features/users/components/ProfileHeader.vue';
 import ProfilePostsTab from '~/features/users/components/ProfilePostsTab.vue';
 import { useUserImageUrl } from '~/features/users/composables/useUserImageUrl';
 
+const { t } = useI18n();
 const route = useRoute('u-userKey');
-const authUser = useSupabaseUser();
+const { user: authUser } = useUserSession();
 const config = useRuntimeConfig();
 const router = useRouter();
+const localePath = useLocalePath();
 
-const { data: usersData } = useGetUsers(() => ({
-  username: route.params.userKey,
-}));
+const fetchFn = useRequestFetch();
+
+const { data: usersData } = useQuery(() =>
+  userListQuery({ fetchFn, username: route.params.userKey as string })
+);
 
 const profile = computed(() => usersData.value?.data[0] ?? null);
 
-const profileFullname = useUserFullname(() => profile.value ?? {});
+const profileFullname = useUserFullname(
+  () => profile.value ?? {},
+  t('users.defaultUsername')
+);
 const profileImageUrl = useUserImageUrl(() => profile.value ?? {});
 
-const isOwner = computed(() => authUser.value?.sub === profile.value?.id);
+const isOwner = computed(() => authUser.value?.id === profile.value?.id);
 
-const { data: userTagsData } = useGetUserTagsWithDetails(
-  () => profile.value?.id
-);
+const { data: userTagsData } = useQuery(() => ({
+  ...userTagListQuery(
+    profile.value?.id ? { fetchFn, userId: profile.value.id } : { fetchFn }
+  ),
+  enabled: Boolean(profile.value?.id),
+}));
 
-const tags = computed(() => userTagsData.value ?? []);
+const tags = computed(() => userTagsData.value?.data ?? []);
 
 const shareUrl = computed(() => {
-  const resolved = router.resolve({
-    name: 'u-userKey',
-    params: { userKey: profile.value?.username || profile.value?.id || '' },
-  });
+  const resolved = router.resolve(
+    localePath({
+      name: 'u-userKey',
+      params: { userKey: profile.value?.username || profile.value?.id || '' },
+    })
+  );
   return `${config.public.appUrl}${resolved.fullPath}`;
 });
 
-const { data: followData, isPending: isFollowPending } =
-  useGetFollowByRelationship(
-    () => authUser.value?.sub,
-    () => profile.value?.id
-  );
+const { data: followData, isLoading: isFollowPending } = useQuery(() =>
+  followByRelationshipQuery({
+    fetchFn,
+    followerId: authUser.value?.id,
+    followingId: profile.value?.id,
+  })
+);
 
-const existingFollow = computed(() => followData.value?.data[0] ?? null);
-const isFollowing = computed(() => Boolean(existingFollow.value));
+const isFollowing = computed(() => (followData.value?.count ?? 0) > 0);
 
-const { isPending: isCreatingFollow, mutate: createFollow } = useCreateFollow();
-const { isPending: isDeletingFollow, mutate: deleteFollow } = useDeleteFollow();
+const { isLoading: isTogglingFollow, mutate: toggleFollowMutate } =
+  useMutation(useToggleFollow());
 
 const isFollowLoading = computed(
-  () =>
-    isFollowPending.value || isCreatingFollow.value || isDeletingFollow.value
+  () => isFollowPending.value || isTogglingFollow.value
 );
 
 const handleFollowToggle = () => {
-  if (isFollowing.value && existingFollow.value) {
-    deleteFollow(existingFollow.value.id);
-  } else if (authUser.value?.sub && profile.value?.id) {
-    createFollow({
-      follower_id: authUser.value.sub,
-      following_id: profile.value.id,
-    });
-  }
+  if (!profile.value?.id) return;
+  toggleFollowMutate({ body: { followingId: profile.value.id } });
 };
 </script>
 
@@ -94,13 +104,16 @@ const handleFollowToggle = () => {
       <Tabs default-value="posts">
         <TabsList class="w-full">
           <TabsTrigger value="posts">
-            {{ toNumericAbbreviation(profile.posts_count) }} Posts
+            {{ toNumericAbbreviation(profile.postsCount) }}
+            {{ t('users.postsTab') }}
           </TabsTrigger>
           <TabsTrigger value="followers">
-            {{ toNumericAbbreviation(profile.follower_count) }} Followers
+            {{ toNumericAbbreviation(profile.followerCount) }}
+            {{ t('users.followersTab') }}
           </TabsTrigger>
           <TabsTrigger value="following">
-            {{ toNumericAbbreviation(profile.following_count) }} Following
+            {{ toNumericAbbreviation(profile.followingCount) }}
+            {{ t('users.followingTab') }}
           </TabsTrigger>
         </TabsList>
 

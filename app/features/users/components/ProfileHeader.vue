@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import type { UserTagWithDetails } from '~/features/shared/user-tags/user-tag.model';
-import type { User } from '~/features/shared/users/user.model';
+import type { UserTagWithDetails } from '#shared/features/user-tags';
+import type { User } from '#shared/features/users';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 
 interface Props {
-  profile: User;
+  profile: Serialize<User>;
   profileFullname: string;
   profileImageUrl: string;
-  tags: UserTagWithDetails[];
+  tags: Serialize<UserTagWithDetails>[];
 }
 
 defineProps<Props>();
@@ -30,7 +30,7 @@ defineProps<Props>();
       <div v-if="tags.length > 0" class="flex flex-wrap gap-2">
         <Badge
           v-for="userTag in tags"
-          :key="userTag.tag_id"
+          :key="userTag.tagId"
           variant="secondary"
           class="rounded-full"
         >

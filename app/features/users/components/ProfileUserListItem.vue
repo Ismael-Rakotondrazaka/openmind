@@ -1,22 +1,28 @@
 <script lang="ts" setup>
-import type { User } from '~/features/shared/users/user.model';
+import type { User } from '#shared/features/users';
+
+import { useI18n } from 'vue-i18n';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useUserFullname } from '~/features/shared/users/composables/useUserFullname';
 import { useUserImageUrl } from '~/features/users/composables/useUserImageUrl';
 
+const { t } = useI18n();
+
 interface Props {
-  user: User;
+  user: Serialize<User>;
 }
 
 const props = defineProps<Props>();
 
-const fullname = useUserFullname(() => props.user);
+const fullname = useUserFullname(() => props.user, t('users.defaultUsername'));
 const imageUrl = useUserImageUrl(() => props.user);
 </script>
 
 <template>
-  <NuxtLink :to="`/u/${user.username || user.id}`">
+  <NuxtLinkLocale
+    :to="{ name: 'u-userKey', params: { userKey: user.username || user.id } }"
+  >
     <div
       class="hover:bg-muted flex items-center gap-3 rounded-lg p-3 transition-colors"
     >
@@ -27,11 +33,12 @@ const imageUrl = useUserImageUrl(() => props.user);
       <div class="min-w-0">
         <p class="truncate font-medium">{{ fullname }}</p>
         <p class="text-muted-foreground text-sm">
-          {{ user.posts_count }} posts • {{ user.follower_count }} followers
+          {{ user.postsCount }} {{ t('pagination.posts') }} •
+          {{ user.followerCount }} {{ t('pagination.followers') }}
         </p>
       </div>
     </div>
-  </NuxtLink>
+  </NuxtLinkLocale>
 </template>
 
 <style></style>

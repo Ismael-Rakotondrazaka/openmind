@@ -1,8 +1,11 @@
 <script lang="ts" setup>
+import { useQuery } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useGetUserTagsWithDetails } from '~/features/shared/user-tags/composables/useGetUserTagsWithDetails';
-import { useGetUser } from '~/features/shared/users/composables/useGetUser';
+import { userTagListQuery } from '~/features/shared/user-tags/user-tag.query';
 import { useUserFullname } from '~/features/shared/users/composables/useUserFullname';
+import { userByIdQuery } from '~/features/shared/users/user.query';
 import ProfileActions from '~/features/users/components/ProfileActions.vue';
 import ProfileFollowersTab from '~/features/users/components/ProfileFollowersTab.vue';
 import ProfileFollowingTab from '~/features/users/components/ProfileFollowingTab.vue';
@@ -10,26 +13,40 @@ import ProfileHeader from '~/features/users/components/ProfileHeader.vue';
 import ProfilePostsTab from '~/features/users/components/ProfilePostsTab.vue';
 import { useUserImageUrl } from '~/features/users/composables/useUserImageUrl';
 
-const authUser = useSupabaseUser();
+const { t } = useI18n();
+const { user: authUser } = useUserSession();
 const config = useRuntimeConfig();
 const router = useRouter();
+const localePath = useLocalePath();
+const fetchFn = useRequestFetch();
 
-const { data: profile } = useGetUser(() => authUser.value?.sub);
+const { data: profile } = useQuery(() => ({
+  ...userByIdQuery({ fetchFn, id: authUser.value?.id ?? '' }),
+  enabled: Boolean(authUser.value?.id),
+}));
 
-const profileFullname = useUserFullname(() => profile.value ?? {});
+const profileFullname = useUserFullname(
+  () => profile.value ?? {},
+  t('users.defaultUsername')
+);
 const profileImageUrl = useUserImageUrl(() => profile.value ?? {});
 
-const { data: userTagsData } = useGetUserTagsWithDetails(
-  () => profile.value?.id
-);
+const { data: userTagsData } = useQuery(() => ({
+  ...userTagListQuery(
+    profile.value?.id ? { fetchFn, userId: profile.value.id } : { fetchFn }
+  ),
+  enabled: Boolean(profile.value?.id),
+}));
 
-const tags = computed(() => userTagsData.value ?? []);
+const tags = computed(() => userTagsData.value?.data ?? []);
 
 const shareUrl = computed(() => {
-  const resolved = router.resolve({
-    name: 'u-userKey',
-    params: { userKey: profile.value?.username || profile.value?.id || '' },
-  });
+  const resolved = router.resolve(
+    localePath({
+      name: 'u-userKey',
+      params: { userKey: profile.value?.username || profile.value?.id || '' },
+    })
+  );
   return `${config.public.appUrl}${resolved.fullPath}`;
 });
 </script>
@@ -55,13 +72,16 @@ const shareUrl = computed(() => {
       <Tabs default-value="posts">
         <TabsList class="w-full">
           <TabsTrigger value="posts">
-            {{ toNumericAbbreviation(profile.posts_count) }} Posts
+            {{ toNumericAbbreviation(profile.postsCount) }}
+            {{ t('users.postsTab') }}
           </TabsTrigger>
           <TabsTrigger value="followers">
-            {{ toNumericAbbreviation(profile.follower_count) }} Followers
+            {{ toNumericAbbreviation(profile.followerCount) }}
+            {{ t('users.followersTab') }}
           </TabsTrigger>
           <TabsTrigger value="following">
-            {{ toNumericAbbreviation(profile.following_count) }} Following
+            {{ toNumericAbbreviation(profile.followingCount) }}
+            {{ t('users.followingTab') }}
           </TabsTrigger>
         </TabsList>
 

@@ -1,6 +1,9 @@
 <script lang="ts" setup>
+import { useQuery } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
+
 import { Input } from '@/components/ui/input';
-import { useGetFollowing } from '~/features/shared/follows/composables/useGetFollowing';
+import { followListQuery } from '~/features/shared/follows/follow.query';
 import Pagination from '~/features/shared/paginations/components/Pagination.vue';
 import ProfileUserListItem from '~/features/users/components/ProfileUserListItem.vue';
 
@@ -10,15 +13,20 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const { t } = useI18n();
+
 const followingSearch = ref('');
 const followingPage = ref(1);
 const followingLimit = ref(10);
 
-const { data: followingData, isPending: isFollowingPending } = useGetFollowing(
-  () => ({
-    follower_id: props.profileId,
-    limit: followingLimit.value,
+const fetchFn = useRequestFetch();
+
+const { data: followingData, isLoading: isFollowingPending } = useQuery(() =>
+  followListQuery({
+    fetchFn,
+    followerId: props.profileId,
     page: followingPage.value,
+    pageSize: followingLimit.value,
   })
 );
 
@@ -32,8 +40,8 @@ const filteredFollowing = computed(() => {
     f =>
       !search ||
       f.following.username?.toLowerCase().includes(search) ||
-      f.following.first_name?.toLowerCase().includes(search) ||
-      f.following.last_name?.toLowerCase().includes(search)
+      f.following.firstName?.toLowerCase().includes(search) ||
+      f.following.lastName?.toLowerCase().includes(search)
   );
 });
 </script>
@@ -42,12 +50,12 @@ const filteredFollowing = computed(() => {
   <div class="mt-4 flex flex-col">
     <Input
       v-model="followingSearch"
-      placeholder="Search following..."
+      :placeholder="t('common.search.placeholderFollowing')"
       class="mb-4"
     />
 
     <div v-if="isFollowingPending" class="text-muted-foreground text-sm">
-      Loading...
+      {{ t('users.loadingMessage') }}
     </div>
     <template v-else>
       <ProfileUserListItem
@@ -59,7 +67,7 @@ const filteredFollowing = computed(() => {
         v-if="!filteredFollowing.length"
         class="text-muted-foreground py-6 text-center text-sm"
       >
-        No following yet.
+        {{ t('users.noFollowingYet') }}
       </p>
       <Pagination
         v-if="(followingData?.count ?? 0) > followingLimit"

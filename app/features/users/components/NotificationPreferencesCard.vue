@@ -1,5 +1,11 @@
 <script lang="ts" setup>
-import type { NotificationPreferenceGroup } from '~/features/shared/notifications/notification-preferences.model';
+import { useMutation, useQuery } from '@pinia/colada';
+import { useI18n } from 'vue-i18n';
+
+import type {
+  NotificationPreferenceGroup,
+  NotificationPreferenceMap,
+} from '~/features/shared/notifications/notification-preferences.model';
 
 import {
   Card,
@@ -9,22 +15,53 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { useGetNotificationPreferences } from '~/features/shared/notifications/composables/useGetNotificationPreferences';
-import { useSetNotificationPreference } from '~/features/shared/notifications/composables/useSetNotificationPreference';
 import {
   NotificationChannels,
   NotificationPreferenceGroupDescription,
   NotificationPreferenceGroupLabel,
   NotificationPreferenceGroups,
 } from '~/features/shared/notifications/notification-preferences.model';
+import {
+  notificationPreferencesQuery,
+  useUpdateNotificationPreference,
+} from '~/features/shared/notifications/notification.query';
 
-const authUser = useSupabaseUser();
+const { t } = useI18n();
+const fetchFn = useRequestFetch();
 
-const { data: preferenceMap } = useGetNotificationPreferences(
-  () => authUser.value?.sub
+const { data: preferencesData } = useQuery(() =>
+  notificationPreferencesQuery({ fetchFn })
 );
 
-const { isPending, mutate } = useSetNotificationPreference();
+const preferenceMap = computed<NotificationPreferenceMap>(() => {
+  const rows =
+    (preferencesData.value as Array<{
+      channel: string;
+      enabled: boolean;
+      groupName: string;
+    }> | null) ?? [];
+
+  const map = Object.fromEntries(
+    NotificationPreferenceGroups.map(g => [
+      g,
+      Object.fromEntries(NotificationChannels.map(c => [c, true])),
+    ])
+  ) as NotificationPreferenceMap;
+
+  for (const row of rows) {
+    const group = row.groupName as keyof NotificationPreferenceMap;
+    const channel = row.channel as (typeof NotificationChannels)[number];
+    if (group in map && channel in map[group]) {
+      map[group][channel] = row.enabled;
+    }
+  }
+
+  return map;
+});
+
+const { isLoading: isPending, mutate } = useMutation(
+  useUpdateNotificationPreference()
+);
 
 const isEnabled = (
   group: NotificationPreferenceGroup,
@@ -36,16 +73,16 @@ const onToggle = (
   channel: (typeof NotificationChannels)[number],
   enabled: boolean
 ) => {
-  mutate({ channel, enabled, groupName: group });
+  mutate({ body: { channel, enabled, groupName: group } });
 };
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>Notification Preferences</CardTitle>
+      <CardTitle>{{ t('users.notificationPreferences') }}</CardTitle>
       <CardDescription>
-        Choose which notifications you want to receive.
+        {{ t('users.notificationPreferencesDescription') }}
       </CardDescription>
     </CardHeader>
     <CardContent>

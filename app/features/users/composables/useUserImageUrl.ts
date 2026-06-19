@@ -1,9 +1,9 @@
 import { withQuery } from 'ufo';
 
 export interface UseUserImageUrlProps {
-  first_name?: null | string;
-  image_url?: null | string;
-  last_name?: null | string;
+  firstName?: null | string;
+  imageUrl?: null | string;
+  lastName?: null | string;
 }
 
 interface FormatFallbackUrlOptions {
@@ -15,9 +15,7 @@ interface FormatFallbackUrlOptions {
   size?: number;
 }
 
-// Default options merged with custom options
 const defaultOptions: FormatFallbackUrlOptions = {
-  // background: 'random',
   bold: true,
   color: 'ffffff',
   format: 'png' as const,
@@ -33,41 +31,43 @@ export const useUserImageUrl = <
   return computed(() => {
     const userValue = toValue(user);
 
-    if (userValue.image_url) {
-      return userValue.image_url;
+    if (userValue.imageUrl) {
+      return userValue.imageUrl;
     }
 
     return formatFallbackUrl(
-      userValue.first_name,
-      userValue.last_name,
+      userValue.firstName,
+      userValue.lastName,
       defaultOptions
     );
   });
 };
 
+/**
+ * Generate avatar fallback URL from name parts
+ * @param displayName - Translated fallback name (e.g., t('users.defaultUsername'))
+ */
 export const formatFallbackUrl = (
-  first_name?: null | string,
-  last_name?: null | string,
-  options: FormatFallbackUrlOptions = {}
+  firstName?: null | string,
+  lastName?: null | string,
+  options: FormatFallbackUrlOptions = {},
+  displayName: string = ''
 ) => {
-  // Determine the name to display
-  let displayName = 'Utilisateur';
+  let name = displayName;
 
   const parts: string[] = [];
-  if (first_name?.trim()) parts.push(first_name.trim());
-  if (last_name?.trim()) parts.push(last_name.trim());
+  if (firstName?.trim()) parts.push(firstName.trim());
+  if (lastName?.trim()) parts.push(lastName.trim());
 
   if (parts.length > 0) {
-    displayName = parts.join(' ');
+    name = parts.join(' ');
   }
 
-  // Merge options (custom options override defaults)
   const params = {
     ...options,
-    name: displayName,
+    name,
   };
 
-  // Clean up undefined values
   Object.keys(params).forEach(key => {
     const paramKey = key as keyof typeof params;
     if (params[paramKey] === undefined || params[paramKey] === null) {
@@ -76,6 +76,5 @@ export const formatFallbackUrl = (
     }
   });
 
-  // UFO handles all the encoding and URL construction
   return withQuery('https://ui-avatars.com/api/', params);
 };

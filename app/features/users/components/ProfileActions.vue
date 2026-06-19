@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useClipboard } from '@vueuse/core';
+import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
 
 import { Button } from '@/components/ui/button';
@@ -31,14 +32,15 @@ const emit = defineEmits<{
   followToggle: [];
 }>();
 
+const { t } = useI18n();
 const { copy } = useClipboard();
 
 const handleCopyShareUrl = async () => {
   try {
     await copy(props.shareUrl);
-    toast.success('Share URL copied to clipboard');
+    toast.success(t('posts.shareUrlCopied'));
   } catch {
-    toast.error('Failed to copy share URL');
+    toast.error(t('posts.failedToCopyShareUrl'));
   }
 };
 </script>
@@ -46,12 +48,12 @@ const handleCopyShareUrl = async () => {
 <template>
   <div class="mb-4 flex items-center justify-between">
     <div class="flex items-center gap-2">
-      <NuxtLink v-if="isOwner" to="/posts/new" as-child>
+      <NuxtLinkLocale v-if="isOwner" :to="{ name: 'posts-new' }" as-child>
         <Button>
           <Icon name="mdi:plus" />
-          New article
+          {{ t('users.newArticleButton') }}
         </Button>
-      </NuxtLink>
+      </NuxtLinkLocale>
 
       <Button
         v-if="isAuthenticated && !isOwner"
@@ -60,7 +62,7 @@ const handleCopyShareUrl = async () => {
         @click="emit('followToggle')"
       >
         <Icon :name="isFollowing ? 'mdi:account-check' : 'mdi:account-plus'" />
-        {{ isFollowing ? 'Following' : 'Follow' }}
+        {{ isFollowing ? t('users.followingButton') : t('users.followButton') }}
       </Button>
     </div>
 
@@ -69,13 +71,15 @@ const handleCopyShareUrl = async () => {
         <PopoverTrigger as-child>
           <Button variant="outline">
             <Icon name="mdi:share-variant" />
-            Share
+            {{ t('buttons.share') }}
           </Button>
         </PopoverTrigger>
         <PopoverContent class="w-80">
           <div class="grid gap-4">
             <div class="space-y-2">
-              <h4 class="leading-none font-medium">Share</h4>
+              <h4 class="leading-none font-medium">
+                {{ t('posts.shareTitle') }}
+              </h4>
             </div>
 
             <div class="flex flex-row flex-nowrap items-center gap-2">
@@ -86,7 +90,7 @@ const handleCopyShareUrl = async () => {
                 @click="handleCopyShareUrl"
               >
                 <Icon name="mdi:content-copy" />
-                <span class="sr-only">Copy</span>
+                <span class="sr-only">{{ t('buttons.copy') }}</span>
               </Button>
             </div>
 
@@ -135,7 +139,9 @@ const handleCopyShareUrl = async () => {
         <DropdownMenuContent align="end" class="w-48">
           <DropdownMenuGroup>
             <DropdownMenuItem as-child>
-              <NuxtLink to="/profile/edit">Edit profile</NuxtLink>
+              <NuxtLinkLocale :to="{ name: 'settings' }">{{
+                t('users.editProfile')
+              }}</NuxtLinkLocale>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
