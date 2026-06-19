@@ -1,8 +1,9 @@
 <script lang="ts" setup>
+import { useI18n } from 'vue-i18n';
+
 import { getUserFullname } from '~/features/shared/users/composables/useUserFullname';
 
-import { CommentConfig } from '../comment.config';
-import { useGetComments } from '../composables/useGetComments';
+import { useCommentList } from '../composables/useCommentList';
 import CommentListItem from './CommentListItem.vue';
 import CommentReplies from './CommentReplies.vue';
 
@@ -11,19 +12,12 @@ type Props = {
 };
 
 const props = defineProps<Props>();
+const { t } = useI18n();
 
 const replyingTo = ref<null | string>(null);
 
-const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-  useGetComments(() => ({
-    limit: CommentConfig.PAGE_SIZE_DEFAULT,
-    parent_id: null,
-    post_id: props.postId,
-  }));
-
-const comments = computed(() =>
-  [...(data.value?.pages ?? [])].reverse().flatMap(p => [...p.data].reverse())
-);
+const { comments, hasMore, isLoading, isLoadingMore, loadPrevious } =
+  useCommentList(() => props.postId);
 
 const handleReply = (commentId: string) => {
   replyingTo.value = replyingTo.value === commentId ? null : commentId;
@@ -44,14 +38,19 @@ const handleReply = (commentId: string) => {
     </template>
 
     <template v-else>
-      <button
-        v-if="hasNextPage"
-        class="text-muted-foreground hover:text-foreground w-full text-sm transition-colors"
-        :disabled="isFetchingNextPage"
-        @click="() => fetchNextPage()"
-      >
-        {{ isFetchingNextPage ? 'Loading...' : 'Load previous comments' }}
-      </button>
+      <div v-if="hasMore" class="mb-4 flex justify-center">
+        <button
+          class="text-muted-foreground hover:text-foreground text-sm transition-colors disabled:opacity-50"
+          :disabled="isLoadingMore"
+          @click="loadPrevious"
+        >
+          <span v-if="isLoadingMore" class="flex items-center gap-1.5">
+            <span class="size-3 animate-spin rounded-full border border-current border-t-transparent" />
+            {{ t('comments.loadPrevious') }}
+          </span>
+          <span v-else>{{ t('comments.loadPrevious') }}</span>
+        </button>
+      </div>
 
       <template v-if="comments.length">
         <div v-for="comment in comments" :key="comment.id">
@@ -73,7 +72,7 @@ const handleReply = (commentId: string) => {
       </template>
 
       <p v-else class="text-muted-foreground text-sm">
-        No comments yet. Be the first to comment!
+        {{ t('comments.noCommentsYet') }}
       </p>
     </template>
   </div>

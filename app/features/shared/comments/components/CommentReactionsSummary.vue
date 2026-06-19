@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-import type { Comment } from '../comment.model';
+import type { Comment } from '#shared/features/comments';
 
-import { useGetUserReactionToComment } from '../../reactions/composables/useGetUserReactionToComment';
-import { useGetUsersWhoReactedToComment } from '../../reactions/composables/useGetUsersWhoReactedToComment';
+import { useQuery } from '@pinia/colada';
 import {
   ReactionStatusIcon,
   ReactionType,
-} from '../../reactions/reaction.model';
+} from '#shared/features/reactions';
+import { useI18n } from 'vue-i18n';
+
+import { reactionsQuery } from '../../reactions/reaction.query';
 import { getUserFullname } from '../../users/composables/useUserFullname';
 
 type Props = {
-  comment: Comment;
+  comment: Serialize<Comment>;
 };
 
 const emit = defineEmits<{
@@ -19,80 +21,112 @@ const emit = defineEmits<{
 
 const props = defineProps<Props>();
 
-const user = useSupabaseUser();
+const { t } = useI18n();
 
-const { data: userReactionToComment } = useGetUserReactionToComment(() => ({
-  commentId: props.comment.id,
-  userId: user.value?.sub,
+const { user } = useUserSession();
+
+const fetchFn = useRequestFetch();
+
+const { data: myReactionPage } = useQuery(() => ({
+  ...reactionsQuery({
+    commentId: props.comment.id,
+    fetchFn,
+    pageSize: 1,
+    userId: user.value?.id ?? undefined,
+  }),
+  enabled: Boolean(user.value?.id),
 }));
 
-const { data: usersWhoReactedToComment } = useGetUsersWhoReactedToComment(
-  () => ({
+const userReactionToComment = computed(
+  () => myReactionPage.value?.data[0] ?? null
+);
+
+const { data: othersReactionPage } = useQuery(() =>
+  reactionsQuery({
     commentId: props.comment.id,
-    excludeUserId: user.value?.sub,
+    excludeUserId: user.value?.id,
+    fetchFn,
+    pageSize: 1,
   })
 );
 
+const usersWhoReactedToComment = computed(
+  () => othersReactionPage.value?.data.map(r => r.user) ?? []
+);
+
 const reactionsSummaryText = computed<string>(() => {
-  if (props.comment.reactions_count === 0) {
+  if (props.comment.reactionsCount === 0) {
     return '';
   }
 
   if (userReactionToComment.value) {
-    if (props.comment.reactions_count === 1) {
-      return 'You';
+    if (props.comment.reactionsCount === 1) {
+      return t('reactions.you');
     }
 
-    if (props.comment.reactions_count === 2) {
+    if (props.comment.reactionsCount === 2) {
       if (
         usersWhoReactedToComment.value &&
         usersWhoReactedToComment.value.length === 1
       ) {
-        return `You and ${getUserFullname(usersWhoReactedToComment.value[0]!)}`;
+        return `${t('reactions.you')} and ${getUserFullname(usersWhoReactedToComment.value[0]!, t('users.defaultUsername'))}`;
       }
 
-      return 'You and 1 other person';
+      return t('reactions.youAndOne');
     }
 
     if (
       usersWhoReactedToComment.value &&
       usersWhoReactedToComment.value.length > 0
     ) {
-      return `You, ${getUserFullname(usersWhoReactedToComment.value[0]!)} and ${toNumericAbbreviation(props.comment.reactions_count - 2)} others`;
+      return t('reactions.youNameAndOthers', {
+        count: toNumericAbbreviation(props.comment.reactionsCount - 2),
+        name: getUserFullname(
+          usersWhoReactedToComment.value[0]!,
+          t('users.defaultUsername')
+        ),
+      });
     }
 
-    return `You and ${toNumericAbbreviation(props.comment.reactions_count - 1)} others`;
+    return t('reactions.youAndOthers', {
+      count: toNumericAbbreviation(props.comment.reactionsCount - 1),
+    });
   }
 
-  if (props.comment.reactions_count === 1) {
+  if (props.comment.reactionsCount === 1) {
     if (
       usersWhoReactedToComment.value &&
       usersWhoReactedToComment.value.length === 1
     ) {
-      return `${getUserFullname(usersWhoReactedToComment.value[0]!)}`;
+      return `${getUserFullname(usersWhoReactedToComment.value[0]!, t('users.defaultUsername'))}`;
     }
 
-    return '1 person';
+    return t('reactions.onePerson');
   }
 
   if (
     usersWhoReactedToComment.value &&
     usersWhoReactedToComment.value.length === 1
   ) {
-    if (props.comment.reactions_count === 2) {
-      return `${getUserFullname(usersWhoReactedToComment.value[0]!)} and 1 other`;
+    if (props.comment.reactionsCount === 2) {
+      return t('reactions.nameAndOneOther', {
+        name: getUserFullname(
+          usersWhoReactedToComment.value[0]!,
+          t('users.defaultUsername')
+        ),
+      });
     }
 
-    return `${getUserFullname(usersWhoReactedToComment.value[0]!)} and ${toNumericAbbreviation(props.comment.reactions_count - 1)} others`;
+    return `${getUserFullname(usersWhoReactedToComment.value[0]!, t('users.defaultUsername'))} and ${toNumericAbbreviation(props.comment.reactionsCount - 1)} others`;
   }
 
-  return `${props.comment.reactions_count} others`;
+  return `${props.comment.reactionsCount} others`;
 });
 </script>
 
 <template>
   <button
-    v-if="comment.reactions_count"
+    v-if="comment.reactionsCount"
     class="group flex flex-row items-center justify-start gap-1"
     type="button"
     @click="emit('reactions-drawer:open')"
@@ -100,7 +134,7 @@ const reactionsSummaryText = computed<string>(() => {
     <div
       class="*:data-[slot=avatar]:ring-background flex -space-x-1 *:data-[slot=avatar]:ring-1 *:data-[slot=avatar]:grayscale"
     >
-      <Avatar v-if="comment.reactions_details.like" class="size-4">
+      <Avatar v-if="comment.reactionsDetails.like" class="size-4">
         <AvatarFallback class="text-[8px]">
           <Icon
             :name="ReactionStatusIcon.active[ReactionType.like]"
@@ -108,7 +142,7 @@ const reactionsSummaryText = computed<string>(() => {
           />
         </AvatarFallback>
       </Avatar>
-      <Avatar v-if="comment.reactions_details.love" class="size-4">
+      <Avatar v-if="comment.reactionsDetails.love" class="size-4">
         <AvatarFallback class="text-[8px]">
           <Icon
             :name="ReactionStatusIcon.active[ReactionType.love]"
@@ -116,7 +150,7 @@ const reactionsSummaryText = computed<string>(() => {
           />
         </AvatarFallback>
       </Avatar>
-      <Avatar v-if="comment.reactions_details.celebrate" class="size-4">
+      <Avatar v-if="comment.reactionsDetails.celebrate" class="size-4">
         <AvatarFallback class="text-[8px]">
           <Icon
             :name="ReactionStatusIcon.active[ReactionType.celebrate]"
@@ -126,10 +160,19 @@ const reactionsSummaryText = computed<string>(() => {
       </Avatar>
     </div>
 
-    <span
-      class="text-secondary-foreground group-hover:text-primary text-xs group-hover:underline"
-    >
-      {{ reactionsSummaryText }}
-    </span>
+    <ClientOnly>
+      <span
+        class="text-secondary-foreground group-hover:text-primary text-xs group-hover:underline"
+      >
+        {{ reactionsSummaryText }}
+      </span>
+      <template #fallback>
+        <span
+          class="text-secondary-foreground group-hover:text-primary text-xs group-hover:underline"
+        >
+          {{ comment.reactionsCount }}
+        </span>
+      </template>
+    </ClientOnly>
   </button>
 </template>
