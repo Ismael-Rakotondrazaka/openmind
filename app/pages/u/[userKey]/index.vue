@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-import { useGetUsers } from '~/features/shared/users/composables/useGetUsers';
+import { useQuery } from '@pinia/colada';
+
+import { userListQuery } from '~/features/shared/users/user.query';
 import { formatFallbackUrl } from '~/features/users/composables/useUserImageUrl';
 import UserProfilePage from '~/features/users/pages/UserProfilePage.vue';
 
 const route = useRoute('u-userKey');
+const fetchFn = useRequestFetch();
 
-const { data: usersData } = useGetUsers(() => ({
-  limit: 1,
-  username: route.params.userKey,
-}));
+const { data: usersData } = useQuery(() =>
+  userListQuery({ fetchFn, username: route.params.userKey as string })
+);
 
 const profile = computed(() => usersData.value?.data[0] ?? null);
 
@@ -16,14 +18,14 @@ const profileName = computed(() => {
   const user = profile.value;
   if (!user) return undefined;
 
-  const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
+  const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ');
   return fullName || user.username || undefined;
 });
 
 const profileImage = computed(
   () =>
-    profile.value?.image_url ??
-    formatFallbackUrl(profile.value?.first_name, profile.value?.last_name)
+    profile.value?.imageUrl ??
+    formatFallbackUrl(profile.value?.firstName, profile.value?.lastName)
 );
 
 const profileDescription = computed(() => {

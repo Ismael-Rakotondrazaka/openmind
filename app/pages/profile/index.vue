@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import AuthUserProfilePage from '~/features/users/pages/AuthUserProfilePage.vue';
 
+definePageMeta({
+  middleware: 'auth',
+});
+
 useSeoMeta({
   ogImage: '/images/og-openmind.png',
   twitterCard: 'summary_large_image',
