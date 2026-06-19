@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:22-alpine
 
 # @link https://nuxt.com/docs/getting-started/deployment#entry-point
 ENV NITRO_HOST=0.0.0.0

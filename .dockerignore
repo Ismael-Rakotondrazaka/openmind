@@ -36,9 +36,3 @@ Thumbs.db
 
 # Local editor metadata
 .fleet
-
-# Supabase local artifacts
-supabase/.temp/
-supabase/.trash/
-supabase/.branches/
-supabase/functions/.env

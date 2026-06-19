@@ -11,9 +11,14 @@ services:
       NUXT_PUBLIC_APP_URL: ${NUXT_PUBLIC_APP_URL}
       NUXT_PUBLIC_APP_VERSION: ${NUXT_PUBLIC_APP_VERSION:-latest}
       NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL}
-      NUXT_PUBLIC_SUPABASE_URL: ${NUXT_PUBLIC_SUPABASE_URL}
-      NUXT_PUBLIC_SUPABASE_KEY: ${NUXT_PUBLIC_SUPABASE_KEY}
-      NUXT_SUPABASE_SECRET_KEY: ${NUXT_SUPABASE_SECRET_KEY}
+      DATABASE_URL: ${DATABASE_URL}
+      NUXT_SESSION_PASSWORD: ${NUXT_SESSION_PASSWORD}
+      NUXT_OG_IMAGE_SECRET: ${NUXT_OG_IMAGE_SECRET}
+      NUXT_S3_HOST: ${NUXT_S3_HOST}
+      NUXT_S3_REGION: ${NUXT_S3_REGION}
+      NUXT_S3_ACCESS_KEY: ${NUXT_S3_ACCESS_KEY}
+      NUXT_S3_SECRET_KEY: ${NUXT_S3_SECRET_KEY}
+      NUXT_BREVO_API_KEY: ${NUXT_BREVO_API_KEY}
     develop:
       watch:
         - action: sync
@@ -32,10 +37,10 @@ services:
         - action: rebuild
           path: package.json
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.openmind.rule=Host(`openmind.localhost`)"
-      - "traefik.http.routers.openmind.entrypoints=web"
-      - "traefik.http.services.openmind.loadbalancer.server.port=3000"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.openmind.rule=Host(`openmind.localhost`)'
+      - 'traefik.http.routers.openmind.entrypoints=web'
+      - 'traefik.http.services.openmind.loadbalancer.server.port=3000'
     networks:
       - web
 
