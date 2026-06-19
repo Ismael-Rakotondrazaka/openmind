@@ -70,7 +70,9 @@ function publicReadPolicy(bucket: string): string {
 }
 
 async function createBuckets(): Promise<void> {
-  logger.info(`Endpoint: ${process.env.NUXT_S3_HOST} | Key: ${process.env.NUXT_S3_ACCESS_KEY?.slice(0, 8)}…`);
+  logger.info(
+    `Endpoint: ${process.env.NUXT_S3_HOST} | Key: ${process.env.NUXT_S3_ACCESS_KEY?.slice(0, 8)}…`
+  );
   const client = buildClient();
 
   for (const bucket of BUCKETS) {
@@ -92,7 +94,7 @@ async function createBuckets(): Promise<void> {
       } else {
         const res = (err as any).$response;
         logger.error(
-          `Failed to create ${bucket.name}: HTTP ${res?.statusCode ?? '?'} — ${err}`,
+          `Failed to create ${bucket.name}: HTTP ${res?.statusCode ?? '?'} — ${err}`
         );
         process.exit(1);
       }
