@@ -136,6 +136,7 @@ export default defineNuxtConfig({
     s3: {
       accessKey: '', // NUXT_S3_ACCESS_KEY
       host: '', // NUXT_S3_HOST
+      publicHost: '', // NUXT_S3_PUBLIC_HOST
       region: '', // NUXT_S3_REGION
       secretKey: '', // NUXT_S3_SECRET_KEY
     },

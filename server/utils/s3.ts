@@ -10,13 +10,16 @@ const UPLOAD_TTL = 5 * 60; // 5 min - enough for a single upload
 const DOWNLOAD_TTL = 60 * 60; // 1 hour
 
 let _client: null | S3Client = null;
+let _publicClient: null | S3Client = null;
 
 export async function createS3DownloadUrl(
   bucket: string,
   key: string
 ): Promise<string> {
   const command = new GetObjectCommand({ Bucket: bucket, Key: key });
-  return getSignedUrl(getS3Client(), command, { expiresIn: DOWNLOAD_TTL });
+  return getSignedUrl(getS3PublicClient(), command, {
+    expiresIn: DOWNLOAD_TTL,
+  });
 }
 
 export async function createS3UploadUrl(
@@ -29,7 +32,7 @@ export async function createS3UploadUrl(
     ContentType: contentType,
     Key: key,
   });
-  return getSignedUrl(getS3Client(), command, { expiresIn: UPLOAD_TTL });
+  return getSignedUrl(getS3PublicClient(), command, { expiresIn: UPLOAD_TTL });
 }
 
 export async function deleteS3Object(
@@ -43,9 +46,10 @@ export async function deleteS3Object(
 
 export function getS3PublicUrl(bucket: string, key: string): string {
   const { s3 } = useRuntimeConfig();
-  return `${s3.host}/${bucket}/${key}`;
+  return `${s3.publicHost}/${bucket}/${key}`;
 }
 
+// Internal client — used for server-side operations (delete, etc.)
 function getS3Client(): S3Client {
   if (_client) return _client;
   const { s3 } = useRuntimeConfig();
@@ -60,4 +64,21 @@ function getS3Client(): S3Client {
     requestChecksumCalculation: 'WHEN_REQUIRED',
   });
   return _client;
+}
+
+// Public client — used for presigned URLs handed to browsers
+function getS3PublicClient(): S3Client {
+  if (_publicClient) return _publicClient;
+  const { s3 } = useRuntimeConfig();
+  _publicClient = new S3Client({
+    credentials: {
+      accessKeyId: s3.accessKey,
+      secretAccessKey: s3.secretKey,
+    },
+    endpoint: s3.publicHost,
+    forcePathStyle: true,
+    region: s3.region,
+    requestChecksumCalculation: 'WHEN_REQUIRED',
+  });
+  return _publicClient;
 }
