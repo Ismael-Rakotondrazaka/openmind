@@ -1,0 +1,16 @@
+name: Trigger Boot Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Boot Deploy
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.BOOT_PAT }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository_owner }}/${{ vars.BOOT_REPO }}/actions/workflows/deploy.yml/dispatch" \
+            -d '{"ref":"main"}'
